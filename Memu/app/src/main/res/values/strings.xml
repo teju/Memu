@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Memu</string>
+    <string name="ok">ok</string>
+    <string name="no_connection">Poor or no internet connection found.\nPlease check your internet connection.</string>
+
 </resources>
