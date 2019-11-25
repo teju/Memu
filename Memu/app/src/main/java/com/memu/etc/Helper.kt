@@ -3,42 +3,16 @@ package com.memu.etc
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
-import android.net.ConnectivityManager
-import android.os.Build
 import android.os.Environment
-import android.provider.Settings
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageView
 import androidx.annotation.Nullable
-import androidx.core.content.res.ResourcesCompat
-import com.bumptech.glide.Glide
 
-import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.HTTPAsyncTask
 import com.iapps.libs.objects.Response
-import com.memu.ActivityMain
 import com.memu.R
 import java.io.*
-import java.security.InvalidKeyException
-import java.security.KeyFactory
-import java.security.NoSuchAlgorithmException
-import java.security.spec.InvalidKeySpecException
-import java.security.spec.X509EncodedKeySpec
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.ArrayBlockingQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
-import javax.crypto.BadPaddingException
-import javax.crypto.Cipher
-import javax.crypto.IllegalBlockSizeException
-import javax.crypto.NoSuchPaddingException
 
 open class Helper  {
     open class GenericHttpAsyncTask(internal var taskListener: TaskListener?) : HTTPAsyncTask() {
@@ -131,6 +105,11 @@ open class Helper  {
             throwable.printStackTrace(pw)
             return sw.buffer.toString()
         }
+        fun dpToPx(context: Context, dp: Int): Int {
+            val displayMetrics = context.resources.displayMetrics
+            return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))
+        }
+
         fun hideSoftKeyboard(activity: Activity) {
             try {
                 val inputMethodManager = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager

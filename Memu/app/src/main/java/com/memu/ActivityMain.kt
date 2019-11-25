@@ -1,12 +1,8 @@
 package com.memu
 
 import android.content.Context
-import android.graphics.Color
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.franmontiel.localechanger.LocaleChanger
@@ -15,8 +11,8 @@ import com.iapps.libs.helpers.BaseUIHelper
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
 import com.memu.ui.BaseFragment
-import com.memu.ui.MainFragment
-import com.memu.ui.dialog.SignUpFragment
+import com.memu.ui.fragments.HomeFragment
+import com.memu.ui.fragments.MainFragment
 import java.util.ArrayList
 
 class ActivityMain : AppCompatActivity(){
@@ -30,20 +26,10 @@ class ActivityMain : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-    }
-
-    fun showSplashScreen(){
-//        btnstart.setOnClickListener {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                val window = window
-//                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-//                window.statusBarColor = Color.WHITE
-//            }
-//            ivSplash.visibility = View.GONE
-//            triggerMainProcess()
-//        }
+        triggerMainProcess()
 
     }
+
 
     override fun attachBaseContext(newBase: Context) {
         var newBase = newBase
@@ -97,9 +83,9 @@ class ActivityMain : AppCompatActivity(){
     fun triggerMainProcess(){
 
         if(!BaseHelper.isEmpty(UserInfoManager.getInstance(this).authToken))
-            setFragment(MainFragment())
+            setFragment(HomeFragment())
         else
-            setFragment(SignUpFragment())
+            setFragment(MainFragment())
     }
 
 
