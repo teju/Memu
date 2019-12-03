@@ -3,6 +3,7 @@ package com.memu.etc
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.ConnectivityManager
 import android.os.Environment
 import android.util.DisplayMetrics
 import android.util.Log
@@ -118,6 +119,25 @@ open class Helper  {
             }
 
         }
+        fun isNetworkAvailable(ctx: Context): Boolean {
+            try {
+                val manager = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val networkInfo = manager.activeNetworkInfo
+
+                var isAvailable = false
+                if (networkInfo != null && networkInfo.isConnected) {
+                    isAvailable = true
+                }
+                if (!isAvailable) {
+                    logException(null, null)
+                }
+                return isAvailable
+            } catch (e: Exception) {
+                return true
+            }
+
+        }
+
     }
 
 }
