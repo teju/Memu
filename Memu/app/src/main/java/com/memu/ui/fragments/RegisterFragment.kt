@@ -20,7 +20,6 @@ import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import com.memu.webservices.GetVehicleTypeViewModel
 import com.memu.webservices.PostUserSignupViewModel
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.onboarding_four.*
 import kotlinx.android.synthetic.main.onboarding_one.*
 import kotlinx.android.synthetic.main.onboarding_three.*

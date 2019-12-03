@@ -20,6 +20,16 @@
                 android:adjustViewBounds="true"
                 android:layout_height="wrap_content">
             </ImageView>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                </LinearLayout>
+            </FrameLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:adjustViewBounds="true"
@@ -50,4 +60,12 @@
             <include layout="@layout/onboarding_four"></include>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+    <com.iapps.libs.views.LoadingCompound
+        android:id="@+id/ld"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:visibility="gone" />
+
 </RelativeLayout>
