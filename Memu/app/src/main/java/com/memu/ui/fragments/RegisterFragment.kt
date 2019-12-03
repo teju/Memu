@@ -13,11 +13,28 @@ import com.memu.ui.BaseFragment
 import kotlinx.android.synthetic.main.register_fragment.*
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.iapps.gon.etc.callback.NotifyListener
+import com.iapps.libs.helpers.BaseHelper
+import com.memu.webservices.GetVehicleTypeViewModel
+import com.memu.webservices.PostUserSignupViewModel
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.onboarding_four.*
+import kotlinx.android.synthetic.main.onboarding_one.*
+import kotlinx.android.synthetic.main.onboarding_three.*
+import kotlinx.android.synthetic.main.onboarding_two.*
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 class RegisterFragment : BaseFragment() , View.OnClickListener {
 
+    lateinit var getVehicleTypeViewModel: GetVehicleTypeViewModel
+    lateinit var postUserSignupViewModel: PostUserSignupViewModel
+    val jsonArray = JSONArray()
+    val state = State()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.register_fragment, container, false)
@@ -30,21 +47,37 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
     }
 
     private fun initUI() {
-        no_vehicle.setOnClickListener(this)
-        private_vehicle.setOnClickListener(this)
-        cab_vehicle.setOnClickListener(this)
-        ll!!.setAllParentsClip(false)
-        rv.setLayoutManager(LinearLayoutManager(activity))
-        rv.setHasFixedSize(true)
-    }
+        no_vehicle_btn.setOnClickListener(this)
+        private_vehicle_btn.setOnClickListener(this)
+        cab_vehicle_btn.setOnClickListener(this)
 
-    fun View.setAllParentsClip(enabled: Boolean) {
-        var parent = parent
-        while (parent is ViewGroup) {
-            parent.clipChildren = enabled
-            parent.clipToPadding = enabled
-            parent = parent.parent
-        }
+    }
+    fun validateForm() : Boolean {
+        if(BaseHelper.isEmpty(State.first_name))
+            return false
+
+        if(BaseHelper.isEmpty(State.last_name))
+            return false
+
+        if(BaseHelper.isEmpty(State.gender))
+            return false
+
+        if(BaseHelper.isEmpty(State.email))
+            return false
+
+        if(BaseHelper.isEmpty(State.office_email))
+            return false
+
+        if(BaseHelper.isEmpty(State.office_email))
+            return false
+
+        if(BaseHelper.isEmpty(State.role_type))
+            return false
+
+        if(BaseHelper.isEmpty(State.referel_code))
+            return false
+
+        return true
     }
     override fun onClick(v: View?) {
         if(destination != null) {
@@ -52,7 +85,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
         }
         when (v?.id)
         {
-            R.id.no_vehicle ->{
+            R.id.no_vehicle_btn ->{
 
                 white_car.visibility = View.VISIBLE
                 yellow_car.visibility = View.GONE
@@ -60,7 +93,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
                 destination = onbording_3
                 startAnimation(white_car,R.drawable.white_car,300 )
             }
-            R.id.private_vehicle ->{
+            R.id.private_vehicle_btn ->{
                 white_car.visibility = View.VISIBLE
                 yellow_car.visibility = View.GONE
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
@@ -68,14 +101,12 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
 
                 startAnimation(white_car,R.drawable.white_car,300 )
             }
-            R.id.cab_vehicle ->{
+            R.id.cab_vehicle_btn ->{
                 white_car.visibility = View.GONE
                 yellow_car.visibility = View.VISIBLE
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 startAnimation(yellow_car,R.drawable.yellow_car,700 )
-
-
             }
         }
     }
@@ -168,6 +199,166 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
 
         return animator
     }
+    fun setUSerSignUpAPIObserver() {
+        postUserSignupViewModel = ViewModelProviders.of(this).get(PostUserSignupViewModel::class.java).apply {
+            this@RegisterFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostUserSignupViewModel.NEXT_STEP -> {
 
+                        }
+                    }
+                })
+
+            }
+        }
+    }
+
+    fun setVehicleTypeAPIObserver() {
+        getVehicleTypeViewModel = ViewModelProviders.of(this).get(GetVehicleTypeViewModel::class.java).apply {
+            this@RegisterFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        GetVehicleTypeViewModel.NEXT_STEP -> {
+
+                        }
+                    }
+                })
+
+            }
+        }
+    }
+    class State {
+        companion object {
+            val first_name = ""
+            val last_name = ""
+            val gender = ""
+            val email = ""
+            val office_email = ""
+            val mobile = ""
+            val role_type = ""
+            val referel_code = ""
+            val vehicle_type = ""
+            val vehicle_brand = ""
+            val vehicle_name = ""
+            val vehicle_no = ""
+            val type = ""
+            val address_line1 = ""
+            val lattitude = ""
+            val longitude = ""
+            val formatted_address = ""
+            val otp_code = ""
+
+        }
+
+        fun OtpForm() :JSONObject {
+            val obj = JSONObject()
+            if(!BaseHelper.isEmpty(otp_code))
+                obj.put("otp_code", otp_code)
+            return obj
+        }
+
+        fun Address() :JSONObject {
+            val obj = JSONObject()
+            if(!BaseHelper.isEmpty(type))
+                obj.put("type", type)
+
+            if(!BaseHelper.isEmpty(address_line1))
+                obj.put("address_line1", address_line1)
+
+            if(!BaseHelper.isEmpty(lattitude))
+                obj.put("lattitude", lattitude)
+
+            if(!BaseHelper.isEmpty(longitude))
+                obj.put("longitude", longitude)
+
+            if(!BaseHelper.isEmpty(formatted_address))
+                obj.put("formatted_address", formatted_address)
+
+            return obj
+        }
+
+        fun Vehicle() : JSONObject {
+            val obj = JSONObject()
+            if(!BaseHelper.isEmpty(vehicle_type))
+                obj.put("vehicle_type", vehicle_type)
+
+            if(!BaseHelper.isEmpty(vehicle_brand))
+                obj.put("vehicle_brand", vehicle_brand)
+
+            if(!BaseHelper.isEmpty(vehicle_name))
+                obj.put("vehicle_name", vehicle_name)
+
+            if(!BaseHelper.isEmpty(vehicle_no))
+                obj.put("vehicle_no", vehicle_no)
+
+            return obj
+        }
+
+        fun ApiSignupForm() : JSONObject {
+            val obj = JSONObject()
+            if(!BaseHelper.isEmpty(first_name))
+                obj.put("first_name", first_name)
+
+            if(!BaseHelper.isEmpty(last_name))
+                obj.put("last_name", last_name)
+
+            if(!BaseHelper.isEmpty(gender))
+                obj.put("gender", gender)
+
+            if(!BaseHelper.isEmpty(email))
+                obj.put("email", email)
+
+            if(!BaseHelper.isEmpty(office_email))
+                obj.put("office_email", office_email)
+
+            if(!BaseHelper.isEmpty(mobile))
+                obj.put("mobile", mobile)
+
+            if(!BaseHelper.isEmpty(role_type))
+                obj.put("role_type", role_type)
+
+            if(!BaseHelper.isEmpty(referel_code))
+                obj.put("referel_code", referel_code)
+
+            return obj
+        }
+
+    }
 
 }
+
+
+

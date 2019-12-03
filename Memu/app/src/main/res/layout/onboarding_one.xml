@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:src="@drawable/flyover_bg"
         android:scaleType="fitXY"
-        android:layout_below="@+id/onbording_2"
+        android:layout_below="@+id/onbording_1"
         android:layout_height="wrap_content">
     </ImageView>
 
@@ -20,30 +20,6 @@
         android:visibility="visible"
         android:layout_height="match_parent">
     </ImageView>
-    <LinearLayout
-        android:layout_width="80dp"
-        android:orientation="vertical"
-        android:layout_marginLeft="60dp"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:src="@drawable/white_car"
-            android:id="@+id/white_car"
-            android:layout_gravity="center_horizontal"
-            android:visibility="visible"
-            android:layout_marginTop="200dp"
-            android:layout_height="wrap_content">
-        </ImageView>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:src="@drawable/yellow_car"
-            android:id="@+id/yellow_car"
-            android:layout_marginTop="350dp"
-            android:layout_gravity="center_horizontal"
-            android:visibility="visible"
-            android:layout_height="wrap_content">
-        </ImageView>
-    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

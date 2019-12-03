@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:id="@+id/onboarding_three"
+    android:id="@+id/onbording_4"
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_marginTop="15dp"
-        android:layout_below="@+id/onbording_3"
+        android:layout_below="@+id/rl"
         android:orientation="vertical"
         android:layout_height="wrap_content">
         <ImageView
@@ -58,7 +58,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:adjustViewBounds="true"
-        android:id="@+id/onbording_3"
+        android:id="@+id/rl"
         android:layout_marginLeft="160dp"
         android:layout_marginRight="15dp"
         android:layout_height="wrap_content">
