@@ -1,211 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:src="@drawable/flyover_bg"
-        android:scaleType="fitXY"
-        android:layout_below="@+id/onbording_1"
-        android:layout_height="wrap_content">
-    </ImageView>
-
-    <ImageView
-        android:layout_width="80dp"
-        android:src="@drawable/road"
-        android:scaleType="fitXY"
-        android:adjustViewBounds="true"
-        android:layout_marginLeft="60dp"
-        android:visibility="visible"
-        android:layout_height="match_parent">
-    </ImageView>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:adjustViewBounds="true"
-        android:layout_marginLeft="150dp"
-        android:layout_marginRight="15dp"
-        android:id="@+id/onbording_1"
         android:layout_height="wrap_content">
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/memu_logo"
-            android:id="@+id/memu_logo"
+            android:src="@drawable/flyover_bg"
+            android:scaleType="fitXY"
+            android:layout_below="@+id/onbording_1"
             android:layout_height="wrap_content">
         </ImageView>
-        <TextView
-            android:layout_width="wrap_content"
-            android:textSize="30dp"
-            android:layout_alignParentRight="true"
-            android:text="Do you drive a vehicle?"
-            android:textColor="@color/DarkBlue"
-            android:id="@+id/tv1"
-            android:layout_below="@+id/memu_logo"
-            android:layout_height="wrap_content">
-        </TextView>
         <ImageView
             android:layout_width="wrap_content"
-            android:src="@drawable/bus_shelter"
-            android:layout_below="@+id/tv1"
-            android:layout_marginTop="10dp"
-            android:id="@+id/bus_shelter"
+            android:src="@drawable/flyover"
+            android:id="@+id/flyover"
+            android:layout_below="@+id/onbording_1"
+            android:scaleType="fitXY"
+            android:layout_gravity="top"
             android:layout_height="wrap_content">
         </ImageView>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/no_vehicle"
-            android:layout_below="@+id/bus_shelter"
-            android:layout_height="wrap_content">
-            <Button
-                android:layout_width="50dp"
-                android:layout_marginLeft="20dp"
-                android:id="@+id/no_vehicle_btn"
-                android:background="@drawable/radio_btn"
-                android:layout_height="50dp">
-            </Button>
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/radio_connector"
-                    android:id="@+id/radio_connector"
-                    android:layout_height="60dp">
-                </ImageView>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="40dp"
-                    android:layout_toRightOf="@+id/radio_connector"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:text="NOO"
-                        android:layout_height="wrap_content">
 
-                    </TextView>
-                    <TextView
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:adjustViewBounds="true"
+            android:layout_marginLeft="150dp"
+            android:layout_marginRight="15dp"
+            android:id="@+id/onbording_1"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/memu_logo"
+                android:id="@+id/memu_logo"
+                android:layout_height="wrap_content">
+            </ImageView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:textSize="30dp"
+                android:layout_alignParentRight="true"
+                android:text="Do you drive a vehicle?"
+                android:textColor="@color/DarkBlue"
+                android:id="@+id/tv1"
+                android:layout_below="@+id/memu_logo"
+                android:layout_height="wrap_content">
+            </TextView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/bus_shelter"
+                android:layout_below="@+id/tv1"
+                android:layout_marginTop="10dp"
+                android:id="@+id/bus_shelter"
+                android:layout_height="wrap_content">
+            </ImageView>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/no_vehicle"
+                android:layout_below="@+id/bus_shelter"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_width="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/no_vehicle_btn"
+                    android:background="@drawable/radio_btn"
+                    android:layout_height="50dp">
+                </Button>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content">
+                    <ImageView
                         android:layout_width="wrap_content"
-                        android:text="I prefer public transport or\nCar/bike pooling"
+                        android:src="@drawable/radio_connector"
+                        android:id="@+id/radio_connector"
+                        android:layout_height="60dp">
+                    </ImageView>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="40dp"
                         android:layout_toRightOf="@+id/radio_connector"
                         android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="NOO"
+                            android:layout_height="wrap_content">
 
-                    </TextView>
+                        </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="I prefer public transport or\nCar/bike pooling"
+                            android:layout_toRightOf="@+id/radio_connector"
+                            android:layout_height="wrap_content">
 
-                </LinearLayout>
+                        </TextView>
 
-            </RelativeLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/private_vehicle"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/no_vehicle"
-            android:layout_height="wrap_content">
-            <Button
-                android:layout_width="50dp"
-                android:layout_marginLeft="20dp"
-                android:id="@+id/private_vehicle_btn"
+                    </LinearLayout>
 
-                android:background="@drawable/radio_btn"
-                android:layout_height="50dp">
-            </Button>
-            <RelativeLayout
+                </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:id="@+id/private_vehicle"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/no_vehicle"
                 android:layout_height="wrap_content">
-                <ImageView
+                <Button
+                    android:layout_width="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/private_vehicle_btn"
+
+                    android:background="@drawable/radio_btn"
+                    android:layout_height="50dp">
+                </Button>
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:src="@drawable/radio_connector"
-                    android:id="@+id/radio_connector_private_vehicle"
-                    android:layout_height="60dp">
-                </ImageView>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="40dp"
-                    android:layout_toRightOf="@+id/radio_connector_private_vehicle"
+                    android:layout_marginLeft="20dp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_height="wrap_content">
-                    <TextView
+                    <ImageView
                         android:layout_width="wrap_content"
-                        android:text="Yes,Private"
-                        android:layout_height="wrap_content">
-
-                    </TextView>
-                    <TextView
+                        android:src="@drawable/radio_connector"
+                        android:id="@+id/radio_connector_private_vehicle"
+                        android:layout_height="60dp">
+                    </ImageView>
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:text="(White Board - Car/Motorbike)"
-                        android:layout_toRightOf="@+id/radio_connector"
+                        android:orientation="vertical"
+                        android:layout_marginTop="40dp"
+                        android:layout_toRightOf="@+id/radio_connector_private_vehicle"
                         android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="Yes,Private"
+                            android:layout_height="wrap_content">
 
-                    </TextView>
+                        </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="(White Board - Car/Motorbike)"
+                            android:layout_toRightOf="@+id/radio_connector"
+                            android:layout_height="wrap_content">
 
-                </LinearLayout>
+                        </TextView>
 
-            </RelativeLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/cab_vehicle"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/private_vehicle"
-            android:layout_height="wrap_content">
-            <Button
-                android:layout_width="50dp"
-                android:layout_marginLeft="20dp"
-                android:id="@+id/cab_vehicle_btn"
+                    </LinearLayout>
 
-                android:background="@drawable/radio_btn"
-                android:layout_height="50dp">
-            </Button>
-            <RelativeLayout
+                </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:id="@+id/cab_vehicle"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/private_vehicle"
                 android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/radio_connector"
-                    android:id="@+id/radio_connector_cab_vehicle"
-                    android:layout_height="60dp">
-                </ImageView>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="40dp"
-                    android:layout_toRightOf="@+id/radio_connector_cab_vehicle"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:text="Yes,Private"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:text="(White Board - Car/Motorbike)"
-                        android:layout_toRightOf="@+id/radio_connector"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                </LinearLayout>
+                <Button
+                    android:layout_width="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/cab_vehicle_btn"
 
-            </RelativeLayout>
-        </LinearLayout>
+                    android:background="@drawable/radio_btn"
+                    android:layout_height="50dp">
+                </Button>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:src="@drawable/radio_connector"
+                        android:id="@+id/radio_connector_cab_vehicle"
+                        android:layout_height="60dp">
+                    </ImageView>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="40dp"
+                        android:layout_toRightOf="@+id/radio_connector_cab_vehicle"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="Yes,Private"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="(White Board - Car/Motorbike)"
+                            android:layout_toRightOf="@+id/radio_connector"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
+
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_marginLeft="60dp"
+        android:background="@drawable/themegray_rounded_rectangle"
+        android:layout_height="match_parent">
+    </ImageView>
+    <View
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="100dp"
+        android:background="@drawable/dottedlines" />
+
     <ImageView
         android:layout_width="wrap_content"
-        android:src="@drawable/flyover"
-        android:scaleType="fitXY"
-        android:layout_below="@+id/onbording_1"
+        android:src="@drawable/white_car"
+        android:layout_marginLeft="75dp"
+        android:id="@+id/white_car"
+        android:visibility="visible"
+        android:layout_marginTop="300dp"
+        android:layout_height="wrap_content">
+    </ImageView>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:src="@drawable/yellow_car"
+        android:layout_marginLeft="75dp"
+        android:id="@+id/yellow_car"
+        android:visibility="visible"
+        android:layout_marginTop="600dp"
         android:layout_height="wrap_content">
     </ImageView>
 
-</RelativeLayout>
+</FrameLayout>

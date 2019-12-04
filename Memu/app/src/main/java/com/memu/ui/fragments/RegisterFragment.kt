@@ -3,9 +3,7 @@ package com.memu.ui.fragments
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.animation.doOnEnd
 import com.memu.R
 import com.memu.etc.Helper
@@ -26,6 +24,11 @@ import kotlinx.android.synthetic.main.onboarding_three.*
 import kotlinx.android.synthetic.main.onboarding_two.*
 import org.json.JSONArray
 import org.json.JSONObject
+import android.widget.Toast
+import android.view.ViewTreeObserver
+
+
+
 
 
 class RegisterFragment : BaseFragment() , View.OnClickListener {
@@ -49,8 +52,15 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
         no_vehicle_btn.setOnClickListener(this)
         private_vehicle_btn.setOnClickListener(this)
         cab_vehicle_btn.setOnClickListener(this)
-
+        onScrolledUp()
+        flyover.bringToFront();
+        val params = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(0,1600,0,0)
+        bottom_img.layoutParams = params
     }
+
     fun validateForm() : Boolean {
         if(BaseHelper.isEmpty(State.first_name))
             return false
@@ -78,6 +88,18 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
 
         return true
     }
+    fun onScrolledUp() {
+        sv.getViewTreeObserver()
+            .addOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener {
+                if (sv != null) {
+                    if (onbording_1.getScrollY() === 0) {
+                        Toast.makeText(context, "top", Toast.LENGTH_SHORT).show()
+                    } else {
+
+                    }
+                }
+            })
+    }
     override fun onClick(v: View?) {
         if(destination != null) {
             destination!!.removeView(textViewNew)
@@ -86,26 +108,22 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
         {
             R.id.no_vehicle_btn ->{
 
-                white_car.visibility = View.VISIBLE
-                yellow_car.visibility = View.GONE
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = onbording_3
                 startAnimation(white_car,R.drawable.white_car,300 )
             }
             R.id.private_vehicle_btn ->{
-                white_car.visibility = View.VISIBLE
-                yellow_car.visibility = View.GONE
+
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
                 destination = onbording_5
 
                 startAnimation(white_car,R.drawable.white_car,300 )
             }
             R.id.cab_vehicle_btn ->{
-                white_car.visibility = View.GONE
-                yellow_car.visibility = View.VISIBLE
+
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
-                startAnimation(yellow_car,R.drawable.yellow_car,700 )
+                startAnimation(yellow_car,R.drawable.yellow_car,600 )
             }
         }
     }
@@ -115,13 +133,13 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
 
     private fun startAnimation(textView:ImageView,drawable : Int,top_margin : Int) {
         textView.visibility = View.GONE
-        val origin = textView?.getParent() as RelativeLayout
+        val origin = textView?.getParent() as FrameLayout
         textViewNew = ImageView(activity)
         // Create another TextView and initialise it to match textView
         val params = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        params.setMargins(Helper.dpToPx(activity!!,75),Helper.dpToPx(activity!!,200),0,0)
+        params.setMargins(Helper.dpToPx(activity!!,90),Helper.dpToPx(activity!!,top_margin),0,0)
         textViewNew!!.setImageDrawable(activity?.getDrawable(drawable))
         textViewNew!!.layoutParams = params
 
@@ -198,6 +216,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
 
         return animator
     }
+
     fun setUSerSignUpAPIObserver() {
         postUserSignupViewModel = ViewModelProviders.of(this).get(PostUserSignupViewModel::class.java).apply {
             this@RegisterFragment.let { thisFragReference ->
