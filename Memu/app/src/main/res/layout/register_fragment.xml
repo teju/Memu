@@ -20,23 +20,27 @@
                 android:layout_width="match_parent"
                 android:src="@drawable/onbording_1"
                 android:adjustViewBounds="true"
+                android:visibility="gone"
                 android:layout_height="wrap_content">
             </ImageView>
+            <include layout="@layout/onboarding_start"></include>
             <include layout="@layout/onboarding_one"></include>
             <include layout="@layout/onboarding_two"></include>
             <include layout="@layout/onboarding_three"></include>
             <include layout="@layout/onboarding_four"></include>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-    <Button
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:text="next"
+        android:layout_margin="15dp"
+        android:src="@drawable/chevron_right"
         android:id="@+id/btnNExt"
         android:layout_height="wrap_content">
 
-    </Button>
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
     <com.iapps.libs.views.LoadingCompound
         android:id="@+id/ld"
         android:layout_width="match_parent"

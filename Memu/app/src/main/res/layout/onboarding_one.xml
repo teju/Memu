@@ -2,6 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:id="@+id/fl_one"
     android:layout_width="match_parent"
     android:background="@color/soft_transparent_grey"
     android:layout_height="match_parent">
@@ -26,11 +27,11 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/memu_logo"
                 android:id="@+id/memu_logo"
-                android:layout_height="wrap_content">
+                android:layout_height="50dp">
             </ImageView>
             <TextView
                 android:layout_width="wrap_content"
@@ -48,9 +49,9 @@
                 android:layout_below="@+id/tv1"
                 android:layout_marginTop="10dp"
                 android:id="@+id/bus_shelter"
-                android:layout_height="wrap_content">
+                android:layout_height="200dp">
             </ImageView>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:orientation="vertical"
                 android:id="@+id/no_vehicle"
@@ -61,19 +62,13 @@
                     android:layout_marginLeft="20dp"
                     android:id="@+id/no_vehicle_btn"
                     android:background="@drawable/radio_btn"
-                    android:layout_height="50dp">
+                    android:layout_height="60dp">
                 </Button>
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="80dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_height="wrap_content">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:src="@drawable/radio_connector"
-                        android:id="@+id/radio_connector"
-                        android:layout_height="60dp">
-                    </ImageView>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:orientation="vertical"
@@ -82,7 +77,7 @@
                         android:layout_height="wrap_content">
                         <TextView
                             android:layout_width="wrap_content"
-                            android:text="NOO"
+                            android:text="NO"
                             android:layout_height="wrap_content">
 
                         </TextView>
@@ -95,10 +90,18 @@
                         </TextView>
 
                     </LinearLayout>
+                    <ImageView
+                        android:layout_width="60dp"
+                        android:src="@drawable/radio_connector"
+                        android:id="@+id/radio_connector"
+                        android:visibility="gone"
+                        android:layout_marginTop="-22dp"
+                        android:layout_height="60dp">
+                    </ImageView>
 
                 </RelativeLayout>
-            </LinearLayout>
-            <LinearLayout
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:orientation="vertical"
                 android:id="@+id/private_vehicle"
@@ -109,18 +112,18 @@
                     android:layout_width="50dp"
                     android:layout_marginLeft="20dp"
                     android:id="@+id/private_vehicle_btn"
-
                     android:background="@drawable/radio_btn"
-                    android:layout_height="50dp">
+                    android:layout_height="60dp">
                 </Button>
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="80dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="60dp"
                         android:src="@drawable/radio_connector"
+                        android:visibility="gone"
                         android:id="@+id/radio_connector_private_vehicle"
                         android:layout_height="60dp">
                     </ImageView>
@@ -147,8 +150,8 @@
                     </LinearLayout>
 
                 </RelativeLayout>
-            </LinearLayout>
-            <LinearLayout
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:orientation="vertical"
                 android:id="@+id/cab_vehicle"
@@ -161,15 +164,16 @@
                     android:id="@+id/cab_vehicle_btn"
 
                     android:background="@drawable/radio_btn"
-                    android:layout_height="50dp">
+                    android:layout_height="60dp">
                 </Button>
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="80dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="60dp"
+                        android:visibility="gone"
                         android:src="@drawable/radio_connector"
                         android:id="@+id/radio_connector_cab_vehicle"
                         android:layout_height="60dp">
@@ -194,7 +198,7 @@
                     </LinearLayout>
 
                 </RelativeLayout>
-            </LinearLayout>
+            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -202,6 +206,7 @@
     <ImageView
         android:layout_width="80dp"
         android:layout_marginLeft="60dp"
+        android:layout_marginTop="-10dp"
         android:background="@drawable/themegray_rounded_rectangle"
         android:layout_height="match_parent">
     </ImageView>
@@ -210,16 +215,42 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="100dp"
         android:background="@drawable/dottedlines" />
-
-    <ImageView
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:src="@drawable/white_car"
-        android:layout_marginLeft="75dp"
-        android:id="@+id/white_car"
-        android:visibility="visible"
-        android:layout_marginTop="300dp"
+        android:orientation="vertical"
         android:layout_height="wrap_content">
-    </ImageView>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="65dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="300dp"
+            android:src="@drawable/light_left"
+            android:visibility="visible"></ImageView>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="65dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="90dp"
+            android:src="@drawable/light_left"
+            android:visibility="visible"></ImageView>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="65dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="90dp"
+            android:src="@drawable/light_left"
+            android:visibility="visible"></ImageView>
+
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/white_car"
+        android:layout_width="61dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="300dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/white_car"
+        android:visibility="visible"></ImageView>
     <ImageView
         android:layout_width="wrap_content"
         android:src="@drawable/flyover"
@@ -230,13 +261,13 @@
     </ImageView>
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="61dp"
         android:src="@drawable/yellow_car"
-        android:layout_marginLeft="75dp"
+        android:layout_marginLeft="72dp"
         android:id="@+id/yellow_car"
         android:visibility="visible"
-        android:layout_marginTop="600dp"
-        android:layout_height="wrap_content">
+        android:layout_marginTop="500dp"
+        android:layout_height="80dp">
     </ImageView>
 
 </FrameLayout>

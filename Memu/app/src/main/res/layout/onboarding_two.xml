@@ -14,11 +14,11 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:layout_width="wrap_content"
-                android:src="@drawable/flyover"
+                android:src="@drawable/hill_garden"
                 android:scaleType="fitXY"
                 android:layout_below="@+id/top_rl"
                 android:id="@+id/bottom_img"
-                android:layout_height="wrap_content">
+                android:layout_height="250dp">
             </ImageView>
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -51,11 +51,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <ImageView
-                            android:layout_width="wrap_content"
+                            android:layout_width="200dp"
                             android:layout_alignParentRight="true"
                             android:src="@drawable/memu_logo"
                             android:id="@+id/memu_logo"
-                            android:layout_height="wrap_content">
+                            android:layout_height="50dp">
                         </ImageView>
                         <TextView
                             android:layout_width="wrap_content"
@@ -223,5 +223,46 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="100dp"
             android:background="@drawable/dottedlines" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="170dp"
+                android:src="@drawable/welcomeboard"
+                android:visibility="visible"></ImageView>
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="65dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/tree"
+                android:visibility="visible"></ImageView>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="65dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/tree"
+                android:visibility="visible"></ImageView>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="65dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/tree"
+                android:visibility="visible"></ImageView>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="65dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/bush"
+                android:visibility="visible"></ImageView>
+
+        </LinearLayout>
+
     </FrameLayout>
 </RelativeLayout>

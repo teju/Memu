@@ -39,9 +39,11 @@ import com.memu.webservices.PostVerifyOtpViewModel
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.iapps.gon.etc.callback.PermissionListener
+import kotlinx.android.synthetic.main.onboarding_start.*
 
 
-class RegisterFragment : BaseFragment() , View.OnClickListener {
+class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListener {
+
 
     lateinit var getVehicleTypeViewModel: GetVehicleTypeViewModel
     lateinit var postUserSignupViewModel: PostUserSignupViewModel
@@ -50,7 +52,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
     val jsonArray = JSONArray()
     val state = State()
     private var locationManager : LocationManager? = null
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.register_fragment, container, false)
         return v
@@ -68,6 +69,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
         get_otp.setOnClickListener(this)
         verify_otp.setOnClickListener(this)
         cab_vehicle_btn.setOnClickListener(this)
+        home_address.setOnClickListener(this)
+        female_button.setOnClickListener(this)
+        male_button.setOnClickListener(this)
         setVehicleTypeAPIObserver()
         setUSerSignUpAPIObserver()
         setRequestOtpAPIObserver()
@@ -124,6 +128,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
         override fun onProviderEnabled(provider: String) {}
         override fun onProviderDisabled(provider: String) {}
     }
+
     fun onScrolledUp() {
         sv.getViewTreeObserver()
             .addOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener {
@@ -139,28 +144,31 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
 
     override fun onClick(v: View?) {
         if(destination != null) {
-            destination!!.removeView(textViewNew)
+            destination!!.removeView(temp_image_view)
         }
+        val vlp = white_car?.layoutParams as ViewGroup.MarginLayoutParams
+        val topMargin = Helper.dpToPx(activity!!,vlp.topMargin)
+
         when (v?.id)
         {
+
             R.id.no_vehicle_btn ->{
                 State.type = State.NoVehicles
-                ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
-                destination = onbording_3
-                startAnimation(white_car,R.drawable.white_car,300 )
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
+                destination = onbording_4
+                startAnimation(white_car,R.drawable.white_car,300,onbording_1)
             }
             R.id.private_vehicle_btn ->{
                 State.type = State.White_board
-                ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
-                destination = onbording_5
-
-                startAnimation(white_car,R.drawable.white_car,300 )
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
+                destination = onbording_3
+                startAnimation(white_car,R.drawable.white_car,400,onbording_1 )
             }
             R.id.cab_vehicle_btn ->{
                 State.type = State.YELLOW_BOARD
-                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
-                destination = onbording_4
-                startAnimation(yellow_car,R.drawable.yellow_car,600 )
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
+                destination = onbording_3
+                startAnimation(yellow_car,R.drawable.yellow_car,600,onbording_1 )
             }
              R.id.btnNExt ->{
                prepareParams()
@@ -173,35 +181,62 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
             }
              R.id.verify_otp ->{
                  State.otp_code = otp_number.text.toString()
-                 if(validateOTPForm()) {
+                 if(validateOTp()) {
                      callAPIVerifyOTP()
                  }
             }
+            R.id.female_button ->{
+                 State.gender = "Female"
+
+            }
+            R.id.male_button ->{
+                State.gender = "Male"
+            }
+
         }
     }
 
-    var destination: RelativeLayout? = null
-    var textViewNew:ImageView? = null
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+       when(v?.id) {
+           R.id.home_address ->{
+               ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
+               destination = onbording_4
+               startAnimation(white_car,R.drawable.white_car,300,onbording_1 )
+           }
+       }
+        return true
+    }
 
-    private fun startAnimation(textView:ImageView,drawable : Int,top_margin : Int) {
-        textView.visibility = View.GONE
-        val origin = textView?.getParent() as FrameLayout
-        textViewNew = ImageView(activity)
+    fun resetCarPosition(car_image:ImageView,temporigin : View) {
+        (car_image.parent as ViewGroup).removeView(car_image)
+        destination?.addView(temporigin)
+
+    }
+
+    var destination: RelativeLayout? = null
+    var temp_image_view:ImageView? = null
+
+    private fun startAnimation(car_image:ImageView,drawable : Int,top_margin : Int,temporigin : View) {
+        car_image.visibility = View.GONE
+        val origin = car_image?.getParent() as View
+        temp_image_view = ImageView(activity)
         // Create another TextView and initialise it to match textView
         val params = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         )
+        params.height = Helper.dpToPx(activity!!,100)
+        params.width = Helper.dpToPx(activity!!,81)
         params.setMargins(Helper.dpToPx(activity!!,90),Helper.dpToPx(activity!!,top_margin),0,0)
-        textViewNew!!.setImageDrawable(activity?.getDrawable(drawable))
-        textViewNew!!.layoutParams = params
-
+        temp_image_view!!.setImageDrawable(activity?.getDrawable(drawable))
+        temp_image_view!!.layoutParams = params
+        //(car_image.parent as ViewGroup).removeView(car_image)
         // Add the new TextView to the destination LinearLayout
-        destination?.addView(textViewNew)
+        destination?.addView(temp_image_view)
 
         // Create animations based on origin and destination LinearLayouts
-        val outAnimator = getOutAnimator(origin, destination!!,textView)
+        val outAnimator = getOutAnimator(origin, destination!!,temp_image_view!!)
         // The in animator also requires a reference to the new TextView
-        val inAnimator = getInAnimator(textViewNew!!, origin, destination!!,textView,top_margin)
+        val inAnimator = getInAnimator(temp_image_view!!, origin, destination!!,temp_image_view!!,top_margin)
         // All animators must be created before any are started because they are calculated
         // using values that are modified by the animation itself.
         outAnimator.start()
@@ -258,7 +293,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
 
         // finalX relative to destination == initialX relative to origin
         val finalX = textView?.getX()
-
         val animator = ObjectAnimator.ofFloat(
             newView, "y",
             initialX!!, finalX!!
@@ -270,9 +304,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
     }
 
     fun prepareParams() {
-        State.first_name = "Teju"
-        State.last_name = "N"
-        State.gender = "F"
+        State.first_name = first_name.text.toString()
+        State.last_name = last_name.text.toString()
         State.email = edtEmail.text.toString()
         State.office_email = edtofficeEmail.text.toString()
         State.mobile = mobileNo.text.toString()
@@ -281,7 +314,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
         State.vehicle_brand = edtVehicleBrand.text.toString()
         State.vehicle_name = VehicleName.text.toString()
         State.vehicle_no = reg_no.text.toString()
-        State.type = State.NoVehicles
         State.address_line1 = home_address.text.toString()
         State.formatted_address = home_address.text.toString()
         State.office_address_line1 = officeAddress.text.toString()
@@ -322,21 +354,41 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
 
         if(BaseHelper.isEmpty(State.vehicle_brand)) {
             er_tv1.visibility = View.VISIBLE
+            er_tv1.text = "Enter vehicle brand"
+            edtVehicleBrand.requestFocus();
             return false
         } else {
+            edtVehicleBrand.clearFocus();
             er_tv1.visibility = View.GONE
         }
         if(BaseHelper.isEmpty(State.vehicle_name)) {
             er_tv1.visibility = View.VISIBLE
+            er_tv1.text = "Enter vehicle name"
+            VehicleName.requestFocus();
             return false
         } else {
+            VehicleName.clearFocus();
             er_tv1.visibility = View.GONE
         }
+
         if(BaseHelper.isEmpty(State.vehicle_no)){
             er_tv2.visibility = View.VISIBLE
+            reg_no.requestFocus()
+            er_tv1.text = "Enter vehicle number"
+
             return false
         } else {
+            reg_no.clearFocus()
             er_tv2.visibility = View.GONE
+        }
+        if(BaseHelper.isEmpty(State.dl_number)){
+            er_tv3.visibility = View.VISIBLE
+            er_tv1.text = "Enter DL Number"
+            dl.requestFocus()
+            return false
+        } else {
+            dl.clearFocus()
+            er_tv3.visibility = View.GONE
         }
 
         return true
@@ -345,105 +397,138 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
     fun validateaddressForm() :Boolean{
         if(BaseHelper.isEmpty(State.address_line1)) {
             er_mtv5.visibility = View.VISIBLE
+            home_address.requestFocus()
+            er_tv1.text = "Enter Address"
             return false
         } else {
+            home_address.clearFocus()
             er_mtv5.visibility = View.GONE
         }
-
-        if(BaseHelper.isEmpty(State.formatted_address)){
-            er_mtv5.visibility = View.VISIBLE
-            return false
-        } else {
-            er_mtv5.visibility = View.GONE
-        }
-
-
-        /* if(State.lattitude == 0.0)
-               return false
-
-           if(State.longitude == 0.0)
-               return false*/
-
-        return true
-    }
-
-    fun validateOTPForm() :Boolean{
-        if(BaseHelper.isEmpty(State.otp_code)) {
-            er_mtv3.visibility = View.VISIBLE
-            return false
-        } else {
-            er_mtv3.visibility = View.GONE
-        }
-        if(BaseHelper.isEmpty(State.mobile) || !Helper.isValidMobile(State.mobile)) {
-            er_mtv1.visibility = View.VISIBLE
-            return false
-        } else {
-            er_mtv1.visibility = View.GONE
-
-        }
-        return true
-    }
-
-    fun validateMobileNumber() :Boolean{
-
-        return true
-    }
-
-    fun validateAPIForm() :Boolean{
-        if(BaseHelper.isEmpty(State.first_name))
-            return false
-
-        if(BaseHelper.isEmpty(State.last_name))
-            return false
-
-        if(BaseHelper.isEmpty(State.gender))
-            return false
 
         if(BaseHelper.isEmpty(State.email) || !Helper.isValidEmail(State.email)) {
             er_mtv4.visibility = View.VISIBLE
+            edtEmail.requestFocus()
+            er_tv1.text = "Enter valid email id"
             return false
         } else {
+            edtEmail.clearFocus()
             er_mtv4.visibility = View.GONE
+        }
+        if(BaseHelper.isEmpty(State.office_address_line1)){
+            er_otv1.visibility = View.VISIBLE
+            edtofficeEmail.requestFocus()
+            er_tv1.text = "Enter Address"
+            return false
+        } else {
+            edtofficeEmail.clearFocus()
+            er_otv1.visibility = View.GONE
         }
 
         if(BaseHelper.isEmpty(State.office_email)|| !Helper.isValidEmail(State.office_email)){
             er_otv2.visibility = View.VISIBLE
+            edtofficeEmail.requestFocus()
+            er_tv1.text = "Enter valid office mail id"
             return false
         } else {
+            edtofficeEmail.clearFocus()
             er_otv2.visibility = View.GONE
         }
 
-        if(BaseHelper.isEmpty(State.role_type))
-            return false
+        return true
+    }
 
-        if(!validateMobileNumber())
+    fun validateMobileNumber() :Boolean{
+        if(BaseHelper.isEmpty(State.mobile) || !Helper.isValidMobile(State.mobile)) {
+            er_mtv1.visibility = View.VISIBLE
+            mobileNo.requestFocus()
+            er_tv1.text = "Enter valid mobile number"
             return false
+        } else {
+            mobileNo.clearFocus()
+            er_mtv1.visibility = View.GONE
+
+        }
+
+
+        return true
+    }
+
+    fun validateOTp() :Boolean {
+        if(BaseHelper.isEmpty(State.otp_code)) {
+            er_mtv3.visibility = View.VISIBLE
+            otp_number.requestFocus()
+            er_tv1.text = "Enter valid otp number"
+            return false
+        } else {
+            otp_number.clearFocus()
+            er_mtv3.visibility = View.GONE
+        }
+        return true
+    }
+
+    fun validateAPIForm() :Boolean{
+        if(BaseHelper.isEmpty(State.first_name)) {
+            er_start.visibility = View.VISIBLE
+            first_name.requestFocus()
+            er_start.text = "Enter your first name"
+            return false
+        } else {
+            first_name.clearFocus()
+            er_start.visibility = View.GONE
+        }
+
+        if(BaseHelper.isEmpty(State.last_name))
+        {
+            er_start.visibility = View.VISIBLE
+            last_name.requestFocus()
+            er_start.text = "Enter your last name"
+            return false
+        } else {
+            last_name.clearFocus()
+            er_start.visibility = View.GONE
+        }
+
+        if(BaseHelper.isEmpty(State.gender))
+        {
+            er_start.visibility = View.VISIBLE
+            last_name.requestFocus()
+            er_start.text = "Select Gender"
+            return false
+        } else {
+            last_name.clearFocus()
+            er_start.visibility = View.GONE
+        }
+
+
+
+
+
+//        if(BaseHelper.isEmpty(State.role_type))
+//            return false
 
         return true
     }
 
     fun validateForm() {
+        jsonArray.put(0,state.Address())
+        jsonArray.put(1,state.OfficeAddress())
+
         when (State.type) {
             State.NoVehicles -> {
-                println("State.type "+validateOTPForm() +" "+validateaddressForm() +" "+validateAPIForm())
 
-                if(validateOTPForm() && validateaddressForm() ){
+                if(validateAPIForm() && validateMobileNumber()  && validateOTp() && validateaddressForm() ){
                     callRegister()
                 }
             }
 
             State.YELLOW_BOARD -> {
-                if(validateOTPForm() && validateaddressForm() && validateAPIForm() && validateVehicleForm()){
+                if(validateAPIForm() && validateVehicleForm() && validateOTp() && validateaddressForm()  ){
                     callRegister()
-                } else {
-                    Toast.makeText(context, "invalid validations", Toast.LENGTH_SHORT).show()
                 }
             }
             State.White_board -> {
-                if(validateOTPForm() && validateaddressForm() && validateAPIForm() && validateVehicleForm()){
+                if(validateAPIForm() && validateVehicleForm() && validateOTp() && validateaddressForm() ){
                     callRegister()
-                } else {
-                    Toast.makeText(context, "invalid validations", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -577,9 +662,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
 
     class State {
         companion object {
-            var first_name = "teju"
-            var last_name = "N"
-            var gender = "Female"
+            var first_name = ""
+            var last_name = ""
+            var gender = ""
             var email = ""
             var office_email = ""
             var mobile = ""
