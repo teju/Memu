@@ -556,7 +556,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUserSignupViewModel.NEXT_STEP -> {
-
+                            home().setFragment(HomeFragment())
                         }
                     }
                 })

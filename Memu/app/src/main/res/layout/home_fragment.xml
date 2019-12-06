@@ -8,50 +8,15 @@
     android:clipChildren="false"
     android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/layout1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:clipChildren="false"
-        android:background="#FFAABBCC"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="I'm some text"/>
 
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="#FFBBCCAA"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout3"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="#FFCCAABB"
-        android:orientation="vertical">
-
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout4"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="#FFBBAACC"
+        android:background="@drawable/mainmapbg"
         android:orientation="vertical">
 
     </LinearLayout>
