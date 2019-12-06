@@ -12,6 +12,7 @@ class Keys : BaseKeys() {
         val Vehicle = "Vehicle"
         val Address = "Address"
         val OtpForm = "OtpForm"
+        val MOBILE = "mobile"
 
 
     }

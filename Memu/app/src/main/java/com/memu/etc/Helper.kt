@@ -14,6 +14,11 @@ import com.iapps.libs.helpers.HTTPAsyncTask
 import com.iapps.libs.objects.Response
 import com.memu.R
 import java.io.*
+import android.util.Patterns
+import android.text.TextUtils
+
+import java.util.regex.Pattern
+
 
 open class Helper  {
     open class GenericHttpAsyncTask(internal var taskListener: TaskListener?) : HTTPAsyncTask() {
@@ -119,6 +124,16 @@ open class Helper  {
             }
 
         }
+        fun isValidEmail(target: CharSequence): Boolean {
+            return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
+        }
+
+        fun isValidMobile(phone: String): Boolean {
+            return if (!Pattern.matches("[a-zA-Z]+", phone)) {
+                phone.length == 10
+            } else false
+        }
+
         fun isNetworkAvailable(ctx: Context): Boolean {
             try {
                 val manager = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

@@ -3,164 +3,215 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:id="@+id/onbording_3"
+    android:background="@color/soft_transparent_grey"
     android:layout_height="match_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:src="@drawable/flyover"
-            android:scaleType="fitXY"
-            android:id="@+id/bottom_img"
-            android:layout_gravity="bottom"
-            android:layout_height="wrap_content">
-        </ImageView>
-
         <RelativeLayout
             android:layout_width="match_parent"
-            android:id="@+id/top_rl"
             android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:visibility="visible"
-                android:layout_below="@+id/rl"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/flyover"
+                android:scaleType="fitXY"
+                android:layout_below="@+id/top_rl"
+                android:id="@+id/bottom_img"
                 android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/right_light"
-                    android:scaleType="fitXY"
-                    android:layout_marginLeft="130dp"
-                    android:layout_marginTop="50dp"
-                    android:layout_height="wrap_content">
-                </ImageView>
-            </RelativeLayout>
-
+            </ImageView>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:adjustViewBounds="true"
-                android:id="@+id/rl"
-                android:layout_marginLeft="140dp"
-                android:layout_marginRight="15dp"
+                android:id="@+id/top_rl"
                 android:layout_height="wrap_content">
                 <RelativeLayout
                     android:layout_width="match_parent"
+                    android:visibility="visible"
+                    android:layout_below="@+id/rl"
                     android:layout_height="wrap_content">
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/memu_logo"
-                        android:id="@+id/memu_logo"
-                        android:layout_height="wrap_content">
-                    </ImageView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:textSize="30dp"
-                        android:layout_marginLeft="20dp"
-                        android:text="Fantastic!"
-                        android:textColor="@color/DarkBlue"
-                        android:id="@+id/tv2"
-                        android:layout_below="@+id/memu_logo"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:textSize="25dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="10dp"
-                        android:text="Can you add following details of your vehicle?"
-                        android:textColor="@color/DarkBlue"
-                        android:id="@+id/tv3"
-                        android:layout_below="@+id/tv2"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_below="@+id/tv3"
-                        android:layout_marginLeft="-5dp"
-                        android:id="@+id/right_light"
                         android:src="@drawable/right_light"
+                        android:scaleType="fitXY"
+                        android:layout_marginLeft="130dp"
+                        android:layout_marginTop="50dp"
                         android:layout_height="wrap_content">
                     </ImageView>
-                    <LinearLayout
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:adjustViewBounds="true"
+                    android:id="@+id/rl"
+                    android:background="@color/transparent"
+                    android:layout_marginLeft="140dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
                         android:layout_width="match_parent"
-                        android:orientation="vertical"
-                        android:layout_toRightOf="@+id/right_light"
-                        android:id="@+id/llV1"
-                        android:layout_below="@+id/tv3"
-                        android:background="@color/soft_grey"
-                        android:layout_marginTop="20dp"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
                         android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/memu_logo"
+                            android:id="@+id/memu_logo"
+                            android:layout_height="wrap_content">
+                        </ImageView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:textSize="30dp"
+                            android:layout_marginLeft="20dp"
+                            android:text="Fantastic!"
+                            android:textColor="@color/DarkBlue"
+                            android:id="@+id/tv2"
+                            android:layout_below="@+id/memu_logo"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:textSize="25dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="10dp"
+                            android:text="Can you add following details of your vehicle?"
+                            android:textColor="@color/DarkBlue"
+                            android:id="@+id/tv3"
+                            android:layout_below="@+id/tv2"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_below="@+id/tv3"
+                            android:layout_marginLeft="-5dp"
+                            android:id="@+id/right_light"
+                            android:src="@drawable/right_light"
+                            android:layout_height="wrap_content">
+                        </ImageView>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="vertical"
+                            android:layout_toRightOf="@+id/right_light"
+                            android:id="@+id/llV1"
+                            android:layout_below="@+id/tv3"
+                            android:background="@color/soft_grey"
+                            android:layout_marginTop="20dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
+                            android:layout_height="wrap_content">
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:hint="Vehicle Brand"
+                                android:inputType="text"
+                                android:imeOptions="actionNext"
+                                android:paddingTop="7dp"
+                                android:id="@+id/edtVehicleBrand"
+                                android:background="@color/soft_grey"
+                                android:paddingBottom="7dp"
+                                android:layout_height="wrap_content">
+                            </EditText>
+                            <View
+                                android:layout_width="match_parent"
+                                android:background="@color/Gray"
+                                android:layout_marginTop="5dp"
+                                android:layout_height="0.5dp">
+                            </View>
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:hint="Vehicle Name"
+                                android:paddingTop="7dp"
+                                android:inputType="text"
+                                android:imeOptions="actionNext"
+                                android:id="@+id/VehicleName"
+                                android:background="@color/soft_grey"
+                                android:paddingBottom="7dp"
+                                android:layout_height="wrap_content">
+                            </EditText>
+
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="Enter vehicle brand"
+                            android:layout_below="@+id/llV1"
+                            android:id="@+id/er_tv1"
+                            android:layout_marginLeft="35dp"
+                            android:textColor="@color/Red"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content">
+                        </TextView>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_below="@+id/llV1"
+                            android:layout_marginLeft="-5dp"
+                            android:id="@+id/right_light_2"
+                            android:src="@drawable/right_light"
+                            android:layout_height="wrap_content">
+                        </ImageView>
+
                         <EditText
                             android:layout_width="match_parent"
-                            android:hint="Vehicle Brand"
+                            android:hint="Registration Number"
                             android:paddingTop="7dp"
+                            android:layout_toRightOf="@+id/right_light_2"
+                            android:id="@+id/reg_no"
+                            android:inputType="text"
+                            android:imeOptions="actionNext"
+                            android:layout_below="@+id/er_tv1"
+                            android:layout_marginTop="20dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
                             android:background="@color/soft_grey"
                             android:paddingBottom="7dp"
                             android:layout_height="wrap_content">
                         </EditText>
-                        <View
-                            android:layout_width="match_parent"
-                            android:background="@color/Gray"
-                            android:layout_marginTop="5dp"
-                            android:layout_height="0.5dp">
-                        </View>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="Enter vehicle brand"
+                            android:layout_below="@+id/reg_no"
+                            android:id="@+id/er_tv2"
+                            android:layout_marginLeft="35dp"
+                            android:textColor="@color/Red"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content">
+                        </TextView>
+
                         <EditText
                             android:layout_width="match_parent"
-                            android:hint="Vehicle Name"
+                            android:hint="Driving License Number"
                             android:paddingTop="7dp"
-
+                            android:id="@+id/dl"
+                            android:inputType="text"
+                            android:imeOptions="actionNext"
+                            android:layout_toRightOf="@+id/right_light_2"
+                            android:layout_below="@+id/er_tv2"
+                            android:layout_marginTop="20dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="15dp"
                             android:background="@color/soft_grey"
                             android:paddingBottom="7dp"
                             android:layout_height="wrap_content">
                         </EditText>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="Enter vehicle brand"
+                            android:layout_below="@+id/dl"
+                            android:id="@+id/er_tv3"
+                            android:layout_marginLeft="35dp"
+                            android:textColor="@color/Red"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content">
+                        </TextView>
 
-                    </LinearLayout>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_below="@+id/llV1"
-                        android:layout_marginLeft="-5dp"
-                        android:id="@+id/right_light_2"
-                        android:src="@drawable/right_light"
-                        android:layout_height="wrap_content">
-                    </ImageView>
+                    </RelativeLayout>
 
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:hint="Registration Number"
-                        android:paddingTop="7dp"
-                        android:layout_toRightOf="@+id/right_light_2"
-                        android:id="@+id/reg_no"
-                        android:layout_below="@+id/llV1"
-                        android:layout_marginTop="20dp"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:background="@color/soft_grey"
-                        android:paddingBottom="7dp"
-                        android:layout_height="wrap_content">
-                    </EditText>
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:hint="Driving License Number"
-                        android:paddingTop="7dp"
-                        android:layout_toRightOf="@+id/right_light_2"
-                        android:layout_below="@+id/reg_no"
-                        android:layout_marginTop="20dp"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="15dp"
-                        android:background="@color/soft_grey"
-                        android:paddingBottom="7dp"
-                        android:layout_height="wrap_content">
-                    </EditText>
                 </RelativeLayout>
 
             </RelativeLayout>
 
         </RelativeLayout>
+
         <ImageView
             android:layout_width="80dp"
             android:layout_marginLeft="60dp"

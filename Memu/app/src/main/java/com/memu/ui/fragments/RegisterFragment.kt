@@ -2,6 +2,11 @@ package com.memu.ui.fragments
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
+import android.content.Context.LOCATION_SERVICE
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.*
 import androidx.core.animation.doOnEnd
@@ -26,17 +31,25 @@ import org.json.JSONArray
 import org.json.JSONObject
 import android.widget.Toast
 import android.view.ViewTreeObserver
-
-
-
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import com.memu.webservices.PostRequestOtpViewModel
+import com.memu.webservices.PostVerifyOtpViewModel
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
+import com.iapps.gon.etc.callback.PermissionListener
 
 
 class RegisterFragment : BaseFragment() , View.OnClickListener {
 
     lateinit var getVehicleTypeViewModel: GetVehicleTypeViewModel
     lateinit var postUserSignupViewModel: PostUserSignupViewModel
+    lateinit var postRequestOtpViewModel: PostRequestOtpViewModel
+    lateinit var postVerifyOtpViewModel: PostVerifyOtpViewModel
     val jsonArray = JSONArray()
     val state = State()
+    private var locationManager : LocationManager? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.register_fragment, container, false)
@@ -51,42 +64,65 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
     private fun initUI() {
         no_vehicle_btn.setOnClickListener(this)
         private_vehicle_btn.setOnClickListener(this)
+        btnNExt.setOnClickListener(this)
+        get_otp.setOnClickListener(this)
+        verify_otp.setOnClickListener(this)
         cab_vehicle_btn.setOnClickListener(this)
-        onScrolledUp()
-        flyover.bringToFront();
-        val params = FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        params.setMargins(0,1600,0,0)
-        bottom_img.layoutParams = params
+        setVehicleTypeAPIObserver()
+        setUSerSignUpAPIObserver()
+        setRequestOtpAPIObserver()
+        setVerifyOtpAPIObserver()
+        locationManager = activity?.getSystemService(LOCATION_SERVICE) as LocationManager?;
+
+        getVehicleTypeViewModel.loadData()
+        //onScrolledUp()
+
+        onbording_1.getViewTreeObserver()
+            .addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+
+                override fun onGlobalLayout() {
+                    // TODO Auto-generated method stub
+                    val h = onbording_1.getHeight()
+                    val params = FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    params.setMargins(0,h,0,0)
+                    flyover.layoutParams = params
+                }
+            })
+
+        val permissionListener: PermissionListener = object : PermissionListener {
+            override fun onUserNotGrantedThePermission() {
+            }
+
+            override fun onCheckPermission(permission: String, isGranted: Boolean) {
+                if (isGranted) {
+                    onPermissionAlreadyGranted()
+                } else {
+                    onUserNotGrantedThePermission()
+                }
+            }
+
+            @SuppressLint("MissingPermission")
+            override fun onPermissionAlreadyGranted() {
+                locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener);
+            }
+        }
+        val permissions = ArrayList<String>()
+        permissions.add(android.Manifest.permission.CAMERA)
+        permissions.add(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        permissions.add(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        checkPermissions(permissions, permissionListener)
     }
 
-    fun validateForm() : Boolean {
-        if(BaseHelper.isEmpty(State.first_name))
-            return false
-
-        if(BaseHelper.isEmpty(State.last_name))
-            return false
-
-        if(BaseHelper.isEmpty(State.gender))
-            return false
-
-        if(BaseHelper.isEmpty(State.email))
-            return false
-
-        if(BaseHelper.isEmpty(State.office_email))
-            return false
-
-        if(BaseHelper.isEmpty(State.office_email))
-            return false
-
-        if(BaseHelper.isEmpty(State.role_type))
-            return false
-
-        if(BaseHelper.isEmpty(State.referel_code))
-            return false
-
-        return true
+    private val locationListener: LocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            State.lattitude = location.latitude
+            State.longitude = location.longitude
+        }
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+        override fun onProviderEnabled(provider: String) {}
+        override fun onProviderDisabled(provider: String) {}
     }
     fun onScrolledUp() {
         sv.getViewTreeObserver()
@@ -100,6 +136,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
                 }
             })
     }
+
     override fun onClick(v: View?) {
         if(destination != null) {
             destination!!.removeView(textViewNew)
@@ -107,23 +144,38 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
         when (v?.id)
         {
             R.id.no_vehicle_btn ->{
-
+                State.type = State.NoVehicles
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = onbording_3
                 startAnimation(white_car,R.drawable.white_car,300 )
             }
             R.id.private_vehicle_btn ->{
-
+                State.type = State.White_board
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
                 destination = onbording_5
 
                 startAnimation(white_car,R.drawable.white_car,300 )
             }
             R.id.cab_vehicle_btn ->{
-
+                State.type = State.YELLOW_BOARD
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 startAnimation(yellow_car,R.drawable.yellow_car,600 )
+            }
+             R.id.btnNExt ->{
+               prepareParams()
+            }
+            R.id.get_otp ->{
+                State.mobile = mobileNo.text.toString()
+                if(validateMobileNumber()) {
+                    callAPIRequestOTP()
+                }
+            }
+             R.id.verify_otp ->{
+                 State.otp_code = otp_number.text.toString()
+                 if(validateOTPForm()) {
+                     callAPIVerifyOTP()
+                 }
             }
         }
     }
@@ -217,6 +269,186 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
         return animator
     }
 
+    fun prepareParams() {
+        State.first_name = "Teju"
+        State.last_name = "N"
+        State.gender = "F"
+        State.email = edtEmail.text.toString()
+        State.office_email = edtofficeEmail.text.toString()
+        State.mobile = mobileNo.text.toString()
+        State.referel_code = ""
+        State.vehicle_type = State.type
+        State.vehicle_brand = edtVehicleBrand.text.toString()
+        State.vehicle_name = VehicleName.text.toString()
+        State.vehicle_no = reg_no.text.toString()
+        State.type = State.NoVehicles
+        State.address_line1 = home_address.text.toString()
+        State.formatted_address = home_address.text.toString()
+        State.office_address_line1 = officeAddress.text.toString()
+        State.office_formatted_address = officeAddress.text.toString()
+        State.otp_code = otp_number.text.toString()
+        State.dl_number = dl.text.toString()
+
+        validateForm()
+    }
+
+    fun callAPIRequestOTP() {
+        postRequestOtpViewModel.loadData(State.mobile)
+    }
+
+    fun callAPIVerifyOTP() {
+        postVerifyOtpViewModel.loadData(state.OtpForm())
+    }
+
+    fun callRegister() {
+        if(State.type == State.NoVehicles) {
+            postUserSignupViewModel.loadData(
+                state.ApiSignupForm(),
+                JSONObject(),
+                jsonArray,
+                state.OtpForm()
+            )
+        } else {
+            postUserSignupViewModel.loadData(
+                state.ApiSignupForm(),
+                state.Vehicle(),
+                jsonArray,
+                state.OtpForm()
+            )
+        }
+    }
+
+    fun validateVehicleForm() :Boolean{
+
+        if(BaseHelper.isEmpty(State.vehicle_brand)) {
+            er_tv1.visibility = View.VISIBLE
+            return false
+        } else {
+            er_tv1.visibility = View.GONE
+        }
+        if(BaseHelper.isEmpty(State.vehicle_name)) {
+            er_tv1.visibility = View.VISIBLE
+            return false
+        } else {
+            er_tv1.visibility = View.GONE
+        }
+        if(BaseHelper.isEmpty(State.vehicle_no)){
+            er_tv2.visibility = View.VISIBLE
+            return false
+        } else {
+            er_tv2.visibility = View.GONE
+        }
+
+        return true
+    }
+
+    fun validateaddressForm() :Boolean{
+        if(BaseHelper.isEmpty(State.address_line1)) {
+            er_mtv5.visibility = View.VISIBLE
+            return false
+        } else {
+            er_mtv5.visibility = View.GONE
+        }
+
+        if(BaseHelper.isEmpty(State.formatted_address)){
+            er_mtv5.visibility = View.VISIBLE
+            return false
+        } else {
+            er_mtv5.visibility = View.GONE
+        }
+
+
+        /* if(State.lattitude == 0.0)
+               return false
+
+           if(State.longitude == 0.0)
+               return false*/
+
+        return true
+    }
+
+    fun validateOTPForm() :Boolean{
+        if(BaseHelper.isEmpty(State.otp_code)) {
+            er_mtv3.visibility = View.VISIBLE
+            return false
+        } else {
+            er_mtv3.visibility = View.GONE
+        }
+        if(BaseHelper.isEmpty(State.mobile) || !Helper.isValidMobile(State.mobile)) {
+            er_mtv1.visibility = View.VISIBLE
+            return false
+        } else {
+            er_mtv1.visibility = View.GONE
+
+        }
+        return true
+    }
+
+    fun validateMobileNumber() :Boolean{
+
+        return true
+    }
+
+    fun validateAPIForm() :Boolean{
+        if(BaseHelper.isEmpty(State.first_name))
+            return false
+
+        if(BaseHelper.isEmpty(State.last_name))
+            return false
+
+        if(BaseHelper.isEmpty(State.gender))
+            return false
+
+        if(BaseHelper.isEmpty(State.email) || !Helper.isValidEmail(State.email)) {
+            er_mtv4.visibility = View.VISIBLE
+            return false
+        } else {
+            er_mtv4.visibility = View.GONE
+        }
+
+        if(BaseHelper.isEmpty(State.office_email)|| !Helper.isValidEmail(State.office_email)){
+            er_otv2.visibility = View.VISIBLE
+            return false
+        } else {
+            er_otv2.visibility = View.GONE
+        }
+
+        if(BaseHelper.isEmpty(State.role_type))
+            return false
+
+        if(!validateMobileNumber())
+            return false
+
+        return true
+    }
+
+    fun validateForm() {
+        when (State.type) {
+            State.NoVehicles -> {
+                println("State.type "+validateOTPForm() +" "+validateaddressForm() +" "+validateAPIForm())
+
+                if(validateOTPForm() && validateaddressForm() ){
+                    callRegister()
+                }
+            }
+
+            State.YELLOW_BOARD -> {
+                if(validateOTPForm() && validateaddressForm() && validateAPIForm() && validateVehicleForm()){
+                    callRegister()
+                } else {
+                    Toast.makeText(context, "invalid validations", Toast.LENGTH_SHORT).show()
+                }
+            }
+            State.White_board -> {
+                if(validateOTPForm() && validateaddressForm() && validateAPIForm() && validateVehicleForm()){
+                    callRegister()
+                } else {
+                    Toast.makeText(context, "invalid validations", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     fun setUSerSignUpAPIObserver() {
         postUserSignupViewModel = ViewModelProviders.of(this).get(PostUserSignupViewModel::class.java).apply {
             this@RegisterFragment.let { thisFragReference ->
@@ -239,6 +471,68 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUserSignupViewModel.NEXT_STEP -> {
+
+                        }
+                    }
+                })
+
+            }
+        }
+    }
+
+    fun setRequestOtpAPIObserver() {
+        postRequestOtpViewModel = ViewModelProviders.of(this).get(PostRequestOtpViewModel::class.java).apply {
+            this@RegisterFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostRequestOtpViewModel.NEXT_STEP -> {
+
+                        }
+                    }
+                })
+
+            }
+        }
+    }
+
+    fun setVerifyOtpAPIObserver() {
+        postVerifyOtpViewModel = ViewModelProviders.of(this).get(PostVerifyOtpViewModel::class.java).apply {
+            this@RegisterFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostVerifyOtpViewModel.NEXT_STEP -> {
 
                         }
                     }
@@ -278,26 +572,37 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
             }
         }
     }
+
+
+
     class State {
         companion object {
-            val first_name = ""
-            val last_name = ""
-            val gender = ""
-            val email = ""
-            val office_email = ""
-            val mobile = ""
-            val role_type = ""
-            val referel_code = ""
-            val vehicle_type = ""
-            val vehicle_brand = ""
-            val vehicle_name = ""
-            val vehicle_no = ""
-            val type = ""
-            val address_line1 = ""
-            val lattitude = ""
-            val longitude = ""
-            val formatted_address = ""
-            val otp_code = ""
+            var first_name = "teju"
+            var last_name = "N"
+            var gender = "Female"
+            var email = ""
+            var office_email = ""
+            var mobile = ""
+            var role_type = ""
+            var referel_code = ""
+            var vehicle_type = 0
+            var vehicle_brand = ""
+            var vehicle_name = ""
+            var vehicle_no = ""
+            var address_line1 = ""
+            var lattitude = 0.0
+            var longitude = 0.0
+            var formatted_address = ""
+            var otp_code = ""
+            var dl_number = ""
+            var office_address_line1 = ""
+            var office_formatted_address = ""
+
+            var YELLOW_BOARD = 1
+            var White_board = 2
+            var NoVehicles = 4
+
+            var type = NoVehicles
 
         }
 
@@ -305,21 +610,19 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
             val obj = JSONObject()
             if(!BaseHelper.isEmpty(otp_code))
                 obj.put("otp_code", otp_code)
+            if(!BaseHelper.isEmpty(mobile))
+                obj.put("mobile", mobile)
             return obj
         }
 
         fun Address() :JSONObject {
             val obj = JSONObject()
-            if(!BaseHelper.isEmpty(type))
-                obj.put("type", type)
 
             if(!BaseHelper.isEmpty(address_line1))
                 obj.put("address_line1", address_line1)
 
-            if(!BaseHelper.isEmpty(lattitude))
                 obj.put("lattitude", lattitude)
 
-            if(!BaseHelper.isEmpty(longitude))
                 obj.put("longitude", longitude)
 
             if(!BaseHelper.isEmpty(formatted_address))
@@ -328,11 +631,25 @@ class RegisterFragment : BaseFragment() , View.OnClickListener {
             return obj
         }
 
+        fun OfficeAddress() :JSONObject {
+            val obj = JSONObject()
+
+            if(!BaseHelper.isEmpty(office_address_line1))
+                obj.put("address_line1", office_address_line1)
+
+                obj.put("lattitude", lattitude)
+
+                obj.put("longitude", longitude)
+
+            if(!BaseHelper.isEmpty(office_formatted_address))
+                obj.put("formatted_address", office_formatted_address)
+
+            return obj
+        }
+
         fun Vehicle() : JSONObject {
             val obj = JSONObject()
-            if(!BaseHelper.isEmpty(vehicle_type))
-                obj.put("vehicle_type", vehicle_type)
-
+            obj.put("vehicle_type", vehicle_type)
             if(!BaseHelper.isEmpty(vehicle_brand))
                 obj.put("vehicle_brand", vehicle_brand)
 

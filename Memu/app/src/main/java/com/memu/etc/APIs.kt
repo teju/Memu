@@ -16,5 +16,11 @@ class APIs : BaseKeys() {
 
         val postUserSignupWithOtp: String
             get() = BASE_URL!!  + USER+ "user-signup-otp"
+
+        val postRequestOtp: String
+            get() = BASE_URL!!  + USER+ "request-mobile-otp"
+
+        val postVerifyOtp: String
+            get() = BASE_URL!!  + USER+ "mobile-otp-verify"
     }
 }

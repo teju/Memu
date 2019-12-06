@@ -7,6 +7,9 @@ import android.os.Build;
 import android.util.Log;
 import com.iapps.libs.objects.Response;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.*;
@@ -57,12 +60,12 @@ public abstract class HTTPAsyncTask
 	private boolean isEnableSSLCheck = true;
 	private URL url;
 	private String method = BaseConstants.GET;
-	private LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+	private JSONObject params = new JSONObject();
 	private ArrayList<LinkedHashMap<String, String>> fileParams = new ArrayList<LinkedHashMap<String, String>>();
 	private LinkedHashMap<String, byte[]> bytesParams = new LinkedHashMap<String, byte[]>();
 	private HashMap<String, String> mHeaderParams = new HashMap<String, String>();
 
-	public void setParams(LinkedHashMap<String, String> params) {
+	public void setParams(JSONObject params) {
 		this.params = params;
 	}
 
@@ -74,7 +77,7 @@ public abstract class HTTPAsyncTask
 		this.bytesParams = bytesParams;
 	}
 
-	public LinkedHashMap<String, String> getParams() {
+	public JSONObject getParams() {
 		return params;
 	}
 
@@ -209,17 +212,31 @@ public abstract class HTTPAsyncTask
 
 	public void setPostParams(String key, String value) {
 		if (key == null || key.trim().length() <= 0 || value == null || value.trim().length() <= 0) { return; }
-		this.params.put(key, value);
+		try {
+			this.params.put(key, value);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		this.setMethod(BaseConstants.POST);
 	}
 
 	public void setPostParams(String key, String value, boolean allowWhiteSpace) {
 		if (key == null || key.trim().length() <= 0) { return; }
 
-		if(BaseHelper.isEmpty(value))
-			this.params.put(key, "null");
-		else
-			this.params.put(key, value);
+		if(BaseHelper.isEmpty(value)) {
+			try {
+				this.params.put(key, "null");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			try {
+				this.params.put(key, value);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 
 		this.setMethod(BaseConstants.POST);
 	}
@@ -508,11 +525,11 @@ public abstract class HTTPAsyncTask
 
 					if (!isMultipart) {
 						try {
-							String paramsStr = "";
-							for (String key : params.keySet()) {
-								paramsStr += key + "=" + URLEncoder.encode(params.get(key), "utf-8") + "&";
-							}
-							paramsStr = paramsStr.substring(0, paramsStr.length() - 1);
+							String paramsStr = params.toString();
+//							for (String key : params.keySet()) {
+//								paramsStr += key + ":" + URLEncoder.encode(params.get(key), "utf-8") + "&";
+//							}
+//							paramsStr = paramsStr.substring(0, paramsStr.length() - 1);
 							connHttps.setFixedLengthStreamingMode(paramsStr.getBytes().length);
 							connHttps.setRequestProperty("Connection", "Keep-Alive");
 							connHttps.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -586,19 +603,19 @@ public abstract class HTTPAsyncTask
 							outputStream.writeBytes(lineEnd);
 
 						}
-
-						for (String key : params.keySet()) {
-							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-							outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
-									+ "\"");
-							outputStream.writeBytes(lineEnd);
-							outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
-							outputStream.writeBytes(lineEnd);
-							outputStream.writeBytes(params.get(key));
-							Log.d("value", key + ":" + params.get(key));
-							outputStream.writeBytes(lineEnd);
-
-						}
+//
+//						for (String key : params.keySet()) {
+//							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+//							outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
+//									+ "\"");
+//							outputStream.writeBytes(lineEnd);
+//							outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
+//							outputStream.writeBytes(lineEnd);
+//							outputStream.writeBytes(params.get(key));
+//							Log.d("value", key + ":" + params.get(key));
+//							outputStream.writeBytes(lineEnd);
+//
+//						}
 
 						outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 						outputStream.flush();
@@ -660,11 +677,11 @@ public abstract class HTTPAsyncTask
 
 					if (!isMultipart) {
 						try {
-							String paramsStr = "";
-							for (String key : params.keySet()) {
-								paramsStr += key + "=" + URLEncoder.encode(params.get(key), "utf-8") + "&";
-							}
-							paramsStr = paramsStr.substring(0, paramsStr.length() - 1);
+							String paramsStr = params.toString();
+//							for (String key : params.keySet()) {
+//								paramsStr += key + "=" + URLEncoder.encode(params.get(key), "utf-8") + "&";
+//							}
+//							paramsStr = paramsStr.substring(0, paramsStr.length() - 1);
 							connHttp.setFixedLengthStreamingMode(paramsStr.getBytes().length);
 							connHttp.setRequestProperty("Connection", "Keep-Alive");
 							connHttp.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -735,18 +752,18 @@ public abstract class HTTPAsyncTask
 
 						}
 
-						for (String key : params.keySet()) {
-							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-							outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
-									+ "\"");
-							outputStream.writeBytes(lineEnd);
-							outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
-							outputStream.writeBytes(lineEnd);
-							outputStream.writeBytes(params.get(key));
-							Log.d("value", key + ":" + params.get(key));
-							outputStream.writeBytes(lineEnd);
-
-						}
+//						for (String key : params.keySet()) {
+//							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+//							outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
+//									+ "\"");
+//							outputStream.writeBytes(lineEnd);
+//							outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
+//							outputStream.writeBytes(lineEnd);
+//							outputStream.writeBytes(params.get(key));
+//							Log.d("value", key + ":" + params.get(key));
+//							outputStream.writeBytes(lineEnd);
+//
+//						}
 
 						outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 						outputStream.flush();
