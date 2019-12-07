@@ -26,6 +26,7 @@
             <include layout="@layout/onboarding_start"></include>
             <include layout="@layout/onboarding_one"></include>
             <include layout="@layout/onboarding_two"></include>
+            <include layout="@layout/onboarding_two_temp"></include>
             <include layout="@layout/onboarding_three"></include>
             <include layout="@layout/onboarding_four"></include>
         </LinearLayout>

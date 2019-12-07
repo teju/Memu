@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:layout_width="200dp"
+                        android:layout_width="150dp"
                         android:layout_alignParentRight="true"
                         android:src="@drawable/memu_logo"
                         android:id="@+id/memu_logo"
@@ -66,6 +66,7 @@
                         android:layout_width="match_parent"
                         android:hint="Office address"
                         android:paddingTop="7dp"
+                        android:textSize="15dp"
                         android:inputType="text"
                         android:imeOptions="actionNext"
                         android:layout_toRightOf="@+id/right_light_2"
@@ -93,6 +94,7 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:hint="Work email"
+                        android:textSize="15dp"
                         android:inputType="textEmailAddress"
                         android:imeOptions="actionDone"
                         android:id="@+id/edtofficeEmail"
@@ -125,7 +127,6 @@
                 android:layout_width="50dp"
                 android:layout_height="85dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="50dp"
                 android:src="@drawable/solar_light"
                 android:layout_below="@+id/rl"
                 android:visibility="visible"></ImageView>

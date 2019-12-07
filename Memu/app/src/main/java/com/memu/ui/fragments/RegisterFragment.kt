@@ -40,6 +40,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.iapps.gon.etc.callback.PermissionListener
 import kotlinx.android.synthetic.main.onboarding_start.*
+import kotlinx.android.synthetic.main.onboarding_two_temp.*
 
 
 class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListener {
@@ -167,8 +168,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             }
             R.id.cab_vehicle_btn ->{
                 State.type = State.YELLOW_BOARD
-                ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
-                destination = onbording_3
+                ObjectAnimator.ofInt(sv, "scrollY",  cab_onbording_3.getY().toInt()).setDuration(2000).start();
+                destination = cab_onbording_3
                 startAnimation(yellow_car,R.drawable.yellow_car,600,onbording_1 )
             }
              R.id.btnNExt ->{
@@ -316,15 +317,23 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         State.mobile = mobileNo.text.toString()
         State.referel_code = ""
         State.vehicle_type = State.type
-        State.vehicle_brand = edtVehicleBrand.text.toString()
-        State.vehicle_name = VehicleName.text.toString()
-        State.vehicle_no = reg_no.text.toString()
+        if(State.type == State.White_board) {
+            State.vehicle_brand = edtVehicleBrand.text.toString()
+            State.vehicle_name = VehicleName.text.toString()
+            State.vehicle_no = reg_no.text.toString()
+            State.dl_number = dl.text.toString()
+        } else {
+            State.vehicle_brand = cab_edtVehicleBrand.text.toString()
+            State.vehicle_name =  cab_VehicleName.text.toString()
+            State.vehicle_no = cab_reg_no.text.toString()
+            State.dl_number = cab_dl.text.toString()
+        }
+
         State.address_line1 = home_address.text.toString()
         State.formatted_address = home_address.text.toString()
         State.office_address_line1 = officeAddress.text.toString()
         State.office_formatted_address = officeAddress.text.toString()
         State.otp_code = otp_number.text.toString()
-        State.dl_number = dl.text.toString()
 
         validateForm()
     }

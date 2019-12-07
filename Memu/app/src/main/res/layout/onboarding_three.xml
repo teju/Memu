@@ -17,7 +17,6 @@
                 android:layout_width="match_parent"
                 android:src="@drawable/colony_assets"
                 android:scaleType="fitXY"
-                android:layout_marginLeft="-50dp"
                 android:layout_gravity="bottom"
                 android:layout_marginTop="380dp"
                 android:layout_marginRight="-25dp"
@@ -40,7 +39,7 @@
                 android:layout_height="wrap_content">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="75dp"
                     android:layout_below="@+id/rl"
                     android:id="@+id/home_address_rl"
                     android:orientation="vertical"
@@ -55,10 +54,11 @@
                         android:inputType="text"
                         android:imeOptions="actionNext"
                         android:paddingRight="15dp"
+                        android:textSize="15dp"
                         android:background="@color/White"
                         android:paddingBottom="7dp"
                         android:layout_marginLeft="160dp"
-                        android:layout_marginRight="15dp"
+                        android:layout_marginRight="25dp"
                         android:layout_height="wrap_content">
                     </EditText>
                     <TextView
@@ -78,13 +78,14 @@
                         android:hint="Your email"
                         android:id="@+id/edtEmail"
                         android:paddingTop="7dp"
+                        android:textSize="15dp"
                         android:inputType="textEmailAddress"
                         android:imeOptions="actionNext"
                         android:layout_marginTop="20dp"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
                         android:layout_marginLeft="160dp"
-                        android:layout_marginRight="15dp"
+                        android:layout_marginRight="25dp"
                         android:background="@color/White"
                         android:paddingBottom="7dp"
                         android:layout_below="@+id/er_mtv5"
@@ -115,7 +116,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <ImageView
-                            android:layout_width="200dp"
+                            android:layout_width="150dp"
                             android:layout_alignParentRight="true"
                             android:src="@drawable/memu_logo"
                             android:id="@+id/memu_logo"
@@ -145,6 +146,7 @@
                             android:layout_width="match_parent"
                             android:hint="Mobile Number"
                             android:paddingTop="7dp"
+                            android:textSize="15dp"
                             android:inputType="number"
                             android:imeOptions="actionNext"
                             android:layout_toRightOf="@+id/right_light_2"
@@ -186,6 +188,7 @@
                             android:inputType="number"
                             android:imeOptions="actionNext"
                             android:paddingTop="7dp"
+                            android:textSize="15dp"
                             android:layout_toRightOf="@+id/right_light_2"
                             android:layout_below="@+id/get_otp"
                             android:layout_marginTop="20dp"
