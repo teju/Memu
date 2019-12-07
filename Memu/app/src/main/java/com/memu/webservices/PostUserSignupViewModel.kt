@@ -73,15 +73,15 @@ class PostUserSignupViewModel(application: Application) : BaseViewModel(applicat
         })
 
         genericHttpAsyncTask.method = BaseConstants.POST
-        if(otpform == null) {
-            genericHttpAsyncTask.setUrl(APIs.postUserSignup)
-        } else {
-            genericHttpAsyncTask.setUrl(APIs.postUserSignupWithOtp)
-            genericHttpAsyncTask.setPostParams(Keys.OtpForm,otpform.toString())
+        genericHttpAsyncTask.setUrl(APIs.postUserSignup)
+        if(otpform != null) {
+            genericHttpAsyncTask.setPostParams(Keys.OtpForm,otpform)
         }
-        genericHttpAsyncTask.setPostParams(Keys.ApiSignupForm,apisignupform.toString())
-        genericHttpAsyncTask.setPostParams(Keys.Vehicle,vehicle.toString())
-        genericHttpAsyncTask.setPostParams(Keys.Address,address.toString())
+        if(vehicle != null) {
+            genericHttpAsyncTask.setPostParams(Keys.Vehicle,vehicle!!)
+        }
+        genericHttpAsyncTask.setPostParams(Keys.ApiSignupForm,apisignupform!!)
+        genericHttpAsyncTask.setPostParams(Keys.Address,address!!)
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.execute()
 

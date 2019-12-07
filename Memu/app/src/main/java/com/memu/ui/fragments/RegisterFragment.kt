@@ -86,11 +86,12 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
                 override fun onGlobalLayout() {
                     // TODO Auto-generated method stub
-                    val h = onbording_1.getHeight()
+                    val h = onbording_1.getHeight() + Helper.dpToPx(activity!!,80)
                     val params = FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
                     )
-                    params.setMargins(0,h,0,0)
+                    params.width = Helper.dpToPx(activity!!,570)
+                    params.setMargins(-200,h,0,0)
                     flyover.layoutParams = params
                 }
             })
@@ -186,10 +187,14 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                  }
             }
             R.id.female_button ->{
+                female_button.setTextColor(context?.resources?.getColor(R.color.colorAccent)!!)
+                 male_button.setTextColor(context?.resources?.getColor(R.color.DarkBlue)!!)
                  State.gender = "Female"
 
             }
             R.id.male_button ->{
+                female_button.setTextColor(context?.resources?.getColor(R.color.DarkBlue)!!)
+                male_button.setTextColor(context?.resources?.getColor(R.color.colorAccent)!!)
                 State.gender = "Male"
             }
 
@@ -770,8 +775,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             if(!BaseHelper.isEmpty(role_type))
                 obj.put("role_type", role_type)
 
-            if(!BaseHelper.isEmpty(referel_code))
-                obj.put("referel_code", referel_code)
+            obj.put("referel_code", referel_code)
+
+            if(!BaseHelper.isEmpty(dl_number))
+                obj.put("dl_number", dl_number)
 
             return obj
         }

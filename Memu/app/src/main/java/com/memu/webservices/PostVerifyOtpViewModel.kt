@@ -70,7 +70,7 @@ class PostVerifyOtpViewModel(application: Application) : BaseViewModel(applicati
 
         genericHttpAsyncTask.method = BaseConstants.POST
         genericHttpAsyncTask.setUrl(APIs.postVerifyOtp)
-        genericHttpAsyncTask.setPostParams(Keys.OtpForm,OtpForm.toString())
+        genericHttpAsyncTask.setPostParams(Keys.OtpForm,OtpForm)
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.execute()
 

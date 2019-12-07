@@ -5,8 +5,11 @@ import android.net.http.X509TrustManagerExtensions;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+
+import com.google.gson.JsonObject;
 import com.iapps.libs.objects.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -210,8 +213,27 @@ public abstract class HTTPAsyncTask
 		this.isEnableSSLCheck = isDisableSSLCheck;
 	}
 
+	public void setPostParams(String key, JSONObject value) {
+		if (key == null || key.trim().length() <= 0 || value == null ) { return; }
+		try {
+			this.params.put(key, value);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		this.setMethod(BaseConstants.POST);
+	}
+	public void setPostParams(String key, JSONArray value) {
+		if (key == null || key.trim().length() <= 0 || value == null ) { return; }
+		try {
+			this.params.put(key, value);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		this.setMethod(BaseConstants.POST);
+	}
+
 	public void setPostParams(String key, String value) {
-		if (key == null || key.trim().length() <= 0 || value == null || value.trim().length() <= 0) { return; }
+		if (key == null || key.trim().length() <= 0 || value == null ) { return; }
 		try {
 			this.params.put(key, value);
 		} catch (JSONException e) {
@@ -242,15 +264,15 @@ public abstract class HTTPAsyncTask
 	}
 
 
-	public void setPostParams(String key, double value) {
-		String d = String.valueOf(value);
-		this.setPostParams(key, d);
-	}
-
-	public void setPostParams(String key, int value) {
-		String d = String.valueOf(value);
-		this.setPostParams(key, d);
-	}
+//	public void setPostParams(String key, double value) {
+//		String d = String.valueOf(value);
+//		this.setPostParams(key, d);
+//	}
+//
+//	public void setPostParams(String key, int value) {
+//		String d = String.valueOf(value);
+//		this.setPostParams(key, d);
+//	}
 
 	public void setImageParams(String key, String absPath) {
 		this.setFileParams(key, absPath, BaseConstants.MIME_PNG);

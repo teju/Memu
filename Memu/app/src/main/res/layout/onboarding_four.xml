@@ -129,6 +129,16 @@
                 android:src="@drawable/solar_light"
                 android:layout_below="@+id/rl"
                 android:visibility="visible"></ImageView>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_marginTop="50dp"
+                android:scaleType="fitXY"
+                android:layout_marginLeft="-30dp"
+                android:layout_marginRight="-20dp"
+                android:src="@drawable/path_bg"
+                android:layout_below="@+id/rl"
+                android:layout_height="350dp">
+            </ImageView>
 
             <ImageView
                 android:layout_width="match_parent"
