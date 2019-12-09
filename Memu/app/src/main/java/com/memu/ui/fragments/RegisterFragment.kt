@@ -39,6 +39,7 @@ import com.memu.webservices.PostVerifyOtpViewModel
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.iapps.gon.etc.callback.PermissionListener
+import com.memu.etc.GPSTracker
 import com.memu.etc.UserInfoManager
 import kotlinx.android.synthetic.main.onboarding_start.*
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
@@ -53,7 +54,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     lateinit var postVerifyOtpViewModel: PostVerifyOtpViewModel
     val jsonArray = JSONArray()
     val state = State()
-    private var locationManager : LocationManager? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.register_fragment, container, false)
         return v
@@ -78,7 +78,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         setUSerSignUpAPIObserver()
         setRequestOtpAPIObserver()
         setVerifyOtpAPIObserver()
-        locationManager = activity?.getSystemService(LOCATION_SERVICE) as LocationManager?;
 
         getVehicleTypeViewModel.loadData()
         //onScrolledUp()
@@ -112,7 +111,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
             @SuppressLint("MissingPermission")
             override fun onPermissionAlreadyGranted() {
-                locationManager?.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener);
+                val gpsTracker = GPSTracker(activity!!)
+                State.lattitude = gpsTracker.latitude
+                State.lattitude = gpsTracker.longitude
+
             }
         }
         val permissions = ArrayList<String>()

@@ -1,13 +1,16 @@
 package com.memu
 
 import android.content.Context
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.franmontiel.localechanger.LocaleChanger
 import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.helpers.BaseUIHelper
+import com.mapbox.mapboxsdk.Mapbox
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
 import com.memu.ui.BaseFragment
@@ -24,12 +27,14 @@ class ActivityMain : AppCompatActivity(){
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Paper.init(this);
         triggerMainProcess()
         BaseHelper.triggerNotifLog(this);
+        Mapbox.getInstance(this, "pk.eyJ1IjoidGVqYXN3aW5pMTIiLCJhIjoiY2szeW4xNjZpMG5sNjNqczh0Y2Foc3l1YiJ9.2-baGFYmq-h827W1JN2yNQ");
 
     }
 

@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/frame"
+<LinearLayout android:id="@+id/frame"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto">
 
 
-
-
-    <LinearLayout
-        android:id="@+id/layout4"
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapView"
+        mapbox:mapbox_cameraTargetLat="42.149683"
+        mapbox:mapbox_cameraTargetLng="-119.155770"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@drawable/mainmapbg"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
+        android:layout_height="match_parent" />
 </LinearLayout>
