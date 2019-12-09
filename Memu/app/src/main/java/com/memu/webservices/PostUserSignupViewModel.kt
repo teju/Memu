@@ -62,10 +62,9 @@ class PostUserSignupViewModel(application: Application) : BaseViewModel(applicat
                             trigger.postValue(GetVehicleTypeViewModel.NEXT_STEP)
                         }else{
                             errorMessage.value = createErrorMessageObject(response)
-
                         }
                     } catch (e: Exception) {
-                        showUnknowResponseErrorMessage()
+                        errorMessage.value = createErrorMessageObject(true,"Exception",e.toString())
                     }
                 }
 
@@ -83,6 +82,7 @@ class PostUserSignupViewModel(application: Application) : BaseViewModel(applicat
         genericHttpAsyncTask.setPostParams(Keys.ApiSignupForm,apisignupform!!)
         genericHttpAsyncTask.setPostParams(Keys.Address,address!!)
         genericHttpAsyncTask.setCache(false)
+        genericHttpAsyncTask.context = apl.applicationContext
         genericHttpAsyncTask.execute()
 
     }

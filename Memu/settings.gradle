@@ -1,2 +1,2 @@
-include ':app', 'library:common_lib'
+include ':app', 'library:common_lib', ':slide_jsonviewer_lib'
 rootProject.name='Memu'

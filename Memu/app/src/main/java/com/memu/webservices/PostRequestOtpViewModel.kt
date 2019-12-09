@@ -71,6 +71,7 @@ class PostRequestOtpViewModel(application: Application) : BaseViewModel(applicat
         genericHttpAsyncTask.method = BaseConstants.POST
         genericHttpAsyncTask.setUrl(APIs.postRequestOtp)
         genericHttpAsyncTask.setPostParams(Keys.MOBILE,mobile)
+        genericHttpAsyncTask.context = apl.applicationContext
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.execute()
 

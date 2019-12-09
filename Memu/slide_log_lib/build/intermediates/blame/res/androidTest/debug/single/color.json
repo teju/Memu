@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "/Users/tejaswinin/Documents/iApps/iSAN-Android-user/library/slide_log_lib/build/intermediates/res/merged/androidTest/debug/color/abc_primary_text_disable_only_material_dark.xml",
+        "source": "/Users/tejaswinin/.android/build-cache/23790335ee33f13632ca6e3c71cd454b9081a298/output/res/color/abc_primary_text_disable_only_material_dark.xml"
+    },
+    {
+        "merged": "/Users/tejaswinin/Documents/iApps/iSAN-Android-user/library/slide_log_lib/build/intermediates/res/merged/androidTest/debug/color/switch_thumb_material_light.xml",
+        "source": "/Users/tejaswinin/.android/build-cache/23790335ee33f13632ca6e3c71cd454b9081a298/output/res/color/switch_thumb_material_light.xml"
+    },
+    {
+        "merged": "/Users/tejaswinin/Documents/iApps/iSAN-Android-user/library/slide_log_lib/build/intermediates/res/merged/androidTest/debug/color/switch_thumb_material_dark.xml",
+        "source": "/Users/tejaswinin/.android/build-cache/23790335ee33f13632ca6e3c71cd454b9081a298/output/res/color/switch_thumb_material_dark.xml"
+    },
+    {
+        "merged": "/Users/tejaswinin/Documents/iApps/iSAN-Android-user/library/slide_log_lib/build/intermediates/res/merged/androidTest/debug/color/abc_primary_text_disable_only_material_light.xml",
+        "source": "/Users/tejaswinin/.android/build-cache/23790335ee33f13632ca6e3c71cd454b9081a298/output/res/color/abc_primary_text_disable_only_material_light.xml"
+    },
+    {
+        "merged": "/Users/tejaswinin/Documents/iApps/iSAN-Android-user/library/slide_log_lib/build/intermediates/res/merged/androidTest/debug/color/abc_primary_text_material_light.xml",
+        "source": "/Users/tejaswinin/.android/build-cache/23790335ee33f13632ca6e3c71cd454b9081a298/output/res/color/abc_primary_text_material_light.xml"
+    },
+    {
+        "merged": "/Users/tejaswinin/Documents/iApps/iSAN-Android-user/library/slide_log_lib/build/intermediates/res/merged/androidTest/debug/color/abc_secondary_text_material_dark.xml",
+        "source": "/Users/tejaswinin/.android/build-cache/23790335ee33f13632ca6e3c71cd454b9081a298/output/res/color/abc_secondary_text_material_dark.xml"
+    },
+    {
+        "merged": "/Users/tejaswinin/Documents/iApps/iSAN-Android-user/library/slide_log_lib/build/intermediates/res/merged/androidTest/debug/color/abc_secondary_text_material_light.xml",
+        "source": "/Users/tejaswinin/.android/build-cache/23790335ee33f13632ca6e3c71cd454b9081a298/output/res/color/abc_secondary_text_material_light.xml"
+    },
+    {
+        "merged": "/Users/tejaswinin/Documents/iApps/iSAN-Android-user/library/slide_log_lib/build/intermediates/res/merged/androidTest/debug/color/abc_primary_text_material_dark.xml",
+        "source": "/Users/tejaswinin/.android/build-cache/23790335ee33f13632ca6e3c71cd454b9081a298/output/res/color/abc_primary_text_material_dark.xml"
+    },
+    {
+        "merged": "/Users/tejaswinin/Documents/iApps/iSAN-Android-user/library/slide_log_lib/build/intermediates/res/merged/androidTest/debug/color/abc_search_url_text.xml",
+        "source": "/Users/tejaswinin/.android/build-cache/23790335ee33f13632ca6e3c71cd454b9081a298/output/res/color/abc_search_url_text.xml"
+    }
+]

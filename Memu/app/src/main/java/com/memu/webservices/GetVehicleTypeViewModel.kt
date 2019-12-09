@@ -67,6 +67,7 @@ class GetVehicleTypeViewModel(application: Application) : BaseViewModel(applicat
 
         genericHttpAsyncTask.method = BaseConstants.GET
         genericHttpAsyncTask.setUrl(APIs.getVehicleType)
+        genericHttpAsyncTask.context = apl.applicationContext
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.execute()
 

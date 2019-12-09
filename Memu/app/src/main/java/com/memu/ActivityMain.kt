@@ -13,6 +13,7 @@ import com.memu.etc.UserInfoManager
 import com.memu.ui.BaseFragment
 import com.memu.ui.fragments.HomeFragment
 import com.memu.ui.fragments.MainFragment
+import io.paperdb.Paper
 import java.util.ArrayList
 
 class ActivityMain : AppCompatActivity(){
@@ -26,7 +27,9 @@ class ActivityMain : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Paper.init(this);
         triggerMainProcess()
+        BaseHelper.triggerNotifLog(this);
 
     }
 
@@ -37,6 +40,9 @@ class ActivityMain : AppCompatActivity(){
         super.attachBaseContext(newBase)
     }
 
+    fun exitApp() {
+        finish()
+    }
     override fun onBackPressed() {
         val f = getSupportFragmentManager().beginTransaction()
         val list = getSupportFragmentManager().getFragments()
@@ -53,6 +59,7 @@ class ActivityMain : AppCompatActivity(){
         if(!foundVisible)
             proceedDoOnBackPressed()
     }
+
 
     fun proceedDoOnBackPressed(){
         Helper.hideSoftKeyboard(this@ActivityMain)

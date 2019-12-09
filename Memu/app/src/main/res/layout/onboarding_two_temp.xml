@@ -186,7 +186,7 @@
                             android:id="@+id/cab_dl"
                             android:inputType="text"
                             android:textSize="15dp"
-                            android:imeOptions="actionNext"
+                            android:imeOptions="actionDone"
                             android:layout_toRightOf="@+id/cab_right_light_2"
                             android:layout_below="@+id/cab_er_tv2"
                             android:layout_marginTop="20dp"

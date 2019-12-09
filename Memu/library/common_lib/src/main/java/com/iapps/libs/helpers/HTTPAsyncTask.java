@@ -1,18 +1,30 @@
 package com.iapps.libs.helpers;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.net.http.X509TrustManagerExtensions;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
+
 import com.google.gson.JsonObject;
+import com.iapps.common_library.R;
 import com.iapps.libs.objects.Response;
+import com.iapps.logs.com.pascalabs.util.log.helper.Helper;
+import com.iapps.logs.com.pascalabs.util.log.model.BeanLogAPI;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.*;
@@ -830,10 +842,12 @@ public abstract class HTTPAsyncTask
 //				else{
 //
 					Log.v("Log ",  this.getUrl().toString()+"\nhttp status : " + http_status + "\nheader : " + mHeaderParams.toString() + "\nparams : " + params.toString() + "\n" +responseString);
-//				}
+				logThisApi(responseString,String.valueOf(http_status),mHeaderParams.toString());
 
+//				}
 				rawResponseString = responseString;
 				rawResponse = responseString;
+
 				response = new Response(http_status, responseString);
 
 				if (httpsEnabled) {
@@ -947,6 +961,114 @@ public abstract class HTTPAsyncTask
 	public void executeSynchronous(){
 		synchronousResponse = doInBackground();
 		thisResponse = synchronousResponse;
+	}
+
+	public void logThisApi(String content, String statuscode, String headers){
+		String exception = "No Exception";
+
+		try {
+				System.out.println("logThisApi "+content);
+
+
+				BeanLogAPI beanApi = new BeanLogAPI();
+
+				String Title = "";
+
+				try {
+					if(!BaseHelper.isEmpty(this.url.toString()))
+						beanApi.setUrl(this.url.toString());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					if(!BaseHelper.isEmpty(this.getClass().toString()))
+						beanApi.setShortenClassName(this.getClass());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+				Title = "API ";
+
+
+				try {
+					String cacheDesc = "";
+
+
+					try {
+						if(headers != null) {
+							beanApi.setHeader(headers.toString());
+							cacheDesc = "";
+							cacheDesc += "Loaded From: API\n";
+							Title = "API";
+						}else{
+							cacheDesc = "";
+							cacheDesc += "Loaded From: Cache\n";
+							Title = "Cache";
+
+						}
+					} catch (Exception e) {
+						exception = e.toString() ;
+					}
+
+					if(!BaseHelper.isEmpty(this.getMethod()))
+						beanApi.setMethod(this.getMethod() + "\n" + cacheDesc);
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+
+				try {
+					if(content!=null)
+						beanApi.setContent(content);
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					if(!BaseHelper.isEmpty(getParams().toString()))
+						beanApi.setParams(getParams().toString());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					if(!BaseHelper.isEmpty(statuscode))
+						beanApi.setStatuscode(statuscode);
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					if(!BaseHelper.isEmpty(getFileParams().toString()))
+						beanApi.setFileparam(getFileParams().toString());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					if(!BaseHelper.isEmpty(getBytesParams().toString()))
+						beanApi.setByteparam(getBytesParams().toString());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					beanApi.setmHeaderParams(Helper.headerList);
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+				try {
+					beanApi.setParameters(this.getParams().toString());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+				beanApi.setException(exception);
+				Helper.logThisAPI(getContext(), beanApi, Title);
+
+		} catch (Exception e) {
+			System.out.println("logThisApi Exception "+e.toString());
+			exception = e.toString() ;
+		}
 	}
 
 

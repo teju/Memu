@@ -3,6 +3,11 @@ package com.iapps.libs.helpers;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +19,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.InputType;
@@ -25,6 +31,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -33,6 +41,10 @@ import com.iapps.common_library.R;
 import com.iapps.libs.objects.BottomSheetMediaSelectionListener;
 import com.iapps.libs.objects.Response;
 import com.iapps.libs.views.LoadingCompound;
+import com.iapps.logs.com.pascalabs.util.log.activity.ActivityPascaLog;
+import com.iapps.logs.com.pascalabs.util.log.helper.Helper;
+
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.joda.time.format.DateTimeFormat;
@@ -52,8 +64,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
+import io.paperdb.Paper;
 
 
 public class BaseHelper {
@@ -1434,6 +1449,50 @@ public class BaseHelper {
 			return Bitmap.createScaledBitmap(temp, finalWidth, finalHeight, true);
 		} else {
 			return temp;
+		}
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	public static void triggerNotifLog(Activity act){
+		try {
+			Paper.init(act);
+			Intent intent = new Intent(act, ActivityPascaLog.class);
+			PendingIntent pendingIntent = PendingIntent.getActivity(act, 01, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			Notification.Builder builder = new Notification.Builder(act);
+			Helper.setAppPackage(act, act.getPackageName());
+			builder.setContentTitle("Memu User Log is running");
+			builder.setContentText("Click to launch screen");
+			builder.setNumber(101);
+			builder.setContentIntent(pendingIntent);
+			builder.setTicker("Memu Log");
+			builder.setSmallIcon(R.drawable.memu_logo);
+			builder.setAutoCancel(false);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				builder.setPriority(Notification.PRIORITY_HIGH);
+			}
+			builder.setOngoing(true);
+			Notification notification = null;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				notification = builder.build();
+			}
+
+			NotificationManager notificationManger =
+					(NotificationManager) act.getSystemService(Context.NOTIFICATION_SERVICE);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+			{
+				String channelId = "Your_channel_id";
+				int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+				NotificationChannel channel = new NotificationChannel(
+						channelId,
+						"Channel human readable title",
+						importance);
+				notificationManger.createNotificationChannel(channel);
+				builder.setChannelId(channelId);
+			}
+			notificationManger.notify(223456, notification);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

@@ -87,7 +87,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:background="@color/transparent"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:inputType="text"
                 android:id="@+id/last_name"
                 android:hint="Last Name"

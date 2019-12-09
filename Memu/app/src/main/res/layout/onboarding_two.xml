@@ -188,7 +188,7 @@
                             android:id="@+id/dl"
                             android:textSize="15dp"
                             android:inputType="text"
-                            android:imeOptions="actionNext"
+                            android:imeOptions="actionDone"
                             android:layout_toRightOf="@+id/right_light_2"
                             android:layout_below="@+id/er_tv2"
                             android:layout_marginTop="20dp"

@@ -39,6 +39,7 @@ import com.memu.webservices.PostVerifyOtpViewModel
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.iapps.gon.etc.callback.PermissionListener
+import com.memu.etc.UserInfoManager
 import kotlinx.android.synthetic.main.onboarding_start.*
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
 
@@ -173,7 +174,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 startAnimation(yellow_car,R.drawable.yellow_car,600,onbording_1 )
             }
              R.id.btnNExt ->{
-               prepareParams()
+                 prepareParams()
             }
             R.id.get_otp ->{
                 State.mobile = mobileNo.text.toString()
@@ -354,7 +355,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 jsonArray,
                 state.OtpForm()
             )
-        } else {
+        } else  {
             postUserSignupViewModel.loadData(
                 state.ApiSignupForm(),
                 state.Vehicle(),
@@ -409,6 +410,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     }
 
     fun validateaddressForm() :Boolean{
+
         if(BaseHelper.isEmpty(State.address_line1)) {
             er_mtv5.visibility = View.VISIBLE
             home_address.requestFocus()
@@ -428,24 +430,26 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             edtEmail.clearFocus()
             er_mtv4.visibility = View.GONE
         }
-        if(BaseHelper.isEmpty(State.office_address_line1)){
-            er_otv1.visibility = View.VISIBLE
-            edtofficeEmail.requestFocus()
-            er_tv1.text = "Enter Address"
-            return false
-        } else {
-            edtofficeEmail.clearFocus()
-            er_otv1.visibility = View.GONE
-        }
+        if(State.type != State.YELLOW_BOARD) {
+            if (BaseHelper.isEmpty(State.office_address_line1)) {
+                er_otv1.visibility = View.VISIBLE
+                edtofficeEmail.requestFocus()
+                er_tv1.text = "Enter Address"
+                return false
+            } else {
+                edtofficeEmail.clearFocus()
+                er_otv1.visibility = View.GONE
+            }
 
-        if(BaseHelper.isEmpty(State.office_email)|| !Helper.isValidEmail(State.office_email)){
-            er_otv2.visibility = View.VISIBLE
-            edtofficeEmail.requestFocus()
-            er_tv1.text = "Enter valid office mail id"
-            return false
-        } else {
-            edtofficeEmail.clearFocus()
-            er_otv2.visibility = View.GONE
+            if (BaseHelper.isEmpty(State.office_email) || !Helper.isValidEmail(State.office_email)) {
+                er_otv2.visibility = View.VISIBLE
+                edtofficeEmail.requestFocus()
+                er_tv1.text = "Enter valid office mail id"
+                return false
+            } else {
+                edtofficeEmail.clearFocus()
+                er_otv2.visibility = View.GONE
+            }
         }
 
         return true
@@ -455,7 +459,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         if(BaseHelper.isEmpty(State.mobile) || !Helper.isValidMobile(State.mobile)) {
             er_mtv1.visibility = View.VISIBLE
             mobileNo.requestFocus()
-            er_tv1.text = "Enter valid mobile number"
+            er_mtv1.text = "Enter valid mobile number"
             return false
         } else {
             mobileNo.clearFocus()
@@ -524,23 +528,26 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     }
 
     fun validateForm() {
-        jsonArray.put(0,state.Address())
-        jsonArray.put(1,state.OfficeAddress())
+
 
         when (State.type) {
             State.NoVehicles -> {
-
+                jsonArray.put(0,state.Address())
+                jsonArray.put(1,state.OfficeAddress())
                 if(validateAPIForm() && validateMobileNumber()  && validateOTp() && validateaddressForm() ){
                     callRegister()
                 }
             }
 
             State.YELLOW_BOARD -> {
+                jsonArray.put(0,state.Address())
                 if(validateAPIForm() && validateVehicleForm() && validateOTp() && validateaddressForm()  ){
                     callRegister()
                 }
             }
             State.White_board -> {
+                jsonArray.put(0,state.Address())
+                jsonArray.put(1,state.OfficeAddress())
                 if(validateAPIForm() && validateVehicleForm() && validateOTp() && validateaddressForm() ){
                     callRegister()
                 }
@@ -571,6 +578,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     when (state) {
                         PostUserSignupViewModel.NEXT_STEP -> {
                             home().setFragment(HomeFragment())
+                            UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
+                            UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
+                            UserInfoManager.getInstance(activity!!).saveAccountId(
+                                postUserSignupViewModel.obj?.user_id.toString()!!)
                         }
                     }
                 })
@@ -720,9 +731,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             if(!BaseHelper.isEmpty(address_line1))
                 obj.put("address_line1", address_line1)
 
-                obj.put("lattitude", lattitude)
+                obj.put("lattitude", lattitude.toString())
 
-                obj.put("longitude", longitude)
+                obj.put("longitude", longitude.toString())
+                obj.put("type", "home")
 
             if(!BaseHelper.isEmpty(formatted_address))
                 obj.put("formatted_address", formatted_address)
@@ -736,9 +748,11 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             if(!BaseHelper.isEmpty(office_address_line1))
                 obj.put("address_line1", office_address_line1)
 
-                obj.put("lattitude", lattitude)
+                obj.put("lattitude", lattitude.toString())
 
-                obj.put("longitude", longitude)
+                obj.put("longitude", longitude.toString())
+
+            obj.put("type", "office")
 
             if(!BaseHelper.isEmpty(office_formatted_address))
                 obj.put("formatted_address", office_formatted_address)

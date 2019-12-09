@@ -39,6 +39,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 
     }
 
+    override fun onBackTriggered() {
+        home().exitApp()
+    }
 
 
 }
