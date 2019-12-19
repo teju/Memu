@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/frame"
+<FrameLayout android:id="@+id/frame"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,12 +7,307 @@
     android:clipChildren="false"
     android:orientation="horizontal"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto">
-
-
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapView"
-        mapbox:mapbox_cameraTargetLat="42.149683"
-        mapbox:mapbox_cameraTargetLng="-119.155770"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/soft_transparent_grey"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:src="@drawable/home_map_bg"
+                android:id="@+id/home_map_bg"
+                android:scaleType="fitXY"
+                android:layout_marginTop="30dp"
+                android:layout_height="match_parent">
+            </ImageView>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/theme_fullrounded_rectangle"
+                android:backgroundTint="@color/Orange"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:id="@+id/rlTopBar"
+                android:layout_height="70dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/name"
+                    android:layout_centerVertical="true"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="80dp"
+                    android:textColor="@color/White"
+                    android:layout_gravity="center_horizontal"
+                    android:text="sdsdfsdfsdf"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+            </RelativeLayout>
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/circle_shape"
+                android:layout_height="60dp">
+            </ImageView>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_marginTop="150dp"
+                android:id="@+id/rlBestRoute"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/upload_button"
+                    android:layout_marginRight="80dp"
+                    android:layout_below="@+id/bestRoute"
+
+                    android:layout_alignParentRight="true"
+                    android:layout_height="wrap_content">
+
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textAlignment="center"
+                    android:id="@+id/bestRoute"
+                    android:padding="8dp"
+                    android:backgroundTint="@color/unable_myhealth_red"
+                    android:background="@drawable/theme_rounded_rectangle"
+                    android:layout_marginRight="40dp"
+                    android:text="Tap to find\nBest Routes"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_marginTop="320dp"
+                android:id="@+id/rlpooling"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/upload_button"
+                    android:layout_marginLeft="50dp"
+                    android:layout_below="@+id/findPool"
+                    android:layout_height="wrap_content">
+
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textAlignment="center"
+                    android:id="@+id/findPool"
+                    android:padding="8dp"
+                    android:backgroundTint="@color/LightSkyBlue"
+                    android:background="@drawable/theme_rounded_rectangle"
+                    android:layout_marginLeft="40dp"
+                    android:text="Tap to find\nCab/bike Pool"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_marginTop="450dp"
+                android:id="@+id/rlcab"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/upload_button"
+                    android:layout_marginRight="80dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/findcab"
+                    android:layout_height="wrap_content">
+
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textAlignment="center"
+                    android:id="@+id/findcab"
+                    android:padding="8dp"
+                    android:layout_alignParentRight="true"
+                    android:backgroundTint="@color/YellowGreen"
+                    android:background="@drawable/theme_rounded_rectangle"
+                    android:layout_marginRight="40dp"
+                    android:text="Tap to find\nCab/Taxi"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_marginTop="600dp"
+                android:id="@+id/rlprofile"
+
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/upload_button"
+                    android:layout_marginLeft="80dp"
+                    android:layout_below="@+id/my_profile"
+                    android:layout_height="wrap_content">
+
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textAlignment="center"
+                    android:id="@+id/my_profile"
+                    android:padding="8dp"
+                    android:backgroundTint="@color/PeachPuff"
+                    android:background="@drawable/theme_rounded_rectangle"
+                    android:layout_marginLeft="40dp"
+                    android:text="Tap to go to\nyour profile"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:id="@+id/popUpView"
+            android:visibility="gone"
+            android:layout_marginTop="290dp"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:id="@+id/llPooling"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="end"
+                        android:layout_marginRight="20dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="70dp"
+                            android:text="Mon\n09 Dec"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/theme_rounded_rectangle"
+                            android:textAlignment="center"
+                            android:layout_height="60dp">
+
+                        </TextView>
+                        <TextView
+                            android:layout_width="70dp"
+                            android:text="Mon\n09 Dec"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/theme_rounded_rectangle"
+                            android:textAlignment="center"
+                            android:layout_height="60dp">
+
+                        </TextView>
+                        <TextView
+                            android:layout_width="70dp"
+                            android:text="Mon\n09 Dec"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/theme_rounded_rectangle"
+                            android:textAlignment="center"
+                            android:layout_height="60dp">
+
+                        </TextView>
+
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="70dp"
+                        android:text="Mon\n09 Dec"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="end"
+                        android:layout_marginRight="30dp"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/theme_rounded_rectangle"
+                        android:textAlignment="center"
+                        android:layout_height="60dp">
+
+                    </TextView>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:hint="Your current location"
+                        android:paddingLeft="40dp"
+                        android:background="@drawable/theme_rounded_rectangle"
+                        android:layout_height="60dp">
+
+                    </EditText>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="40dp"
+
+                        android:hint="Destination"
+                        android:background="@drawable/theme_rounded_rectangle"
+                        android:layout_height="60dp">
+
+                    </EditText>
+
+                </LinearLayout>
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:text="next"
+                    android:layout_margin="15dp"
+
+                    android:layout_gravity="end"
+                    android:src="@drawable/chevron_right"
+                    android:id="@+id/btnNExt"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </ScrollView>
+    <FrameLayout
+        android:layout_width="60dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/cancel"
+        android:visibility="gone"
+        android:layout_height="60dp">
+        <ImageView
+            android:layout_width="20dp"
+            android:tint="@color/Black"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_cross_dark"
+            android:layout_height="20dp">
+
+        </ImageView>
+    </FrameLayout>
+    <com.iapps.libs.views.LoadingCompound
+        android:id="@+id/ld"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:visibility="gone" />
+
+</FrameLayout>

@@ -3,6 +3,8 @@ package com.memu.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Typeface
+import android.location.Address
+import android.location.Geocoder
 import android.os.AsyncTask
 import android.os.Bundle
 import android.security.keystore.KeyProperties
@@ -33,9 +35,13 @@ import com.memu.ActivityMain
 import com.memu.BuildConfig
 import com.memu.R
 import com.memu.etc.Constants
+import com.memu.etc.GPSTracker
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
 import com.memu.ui.dialog.NotifyDialogFragment
+import com.memu.webservices.GetVehicleTypeViewModel
+import com.memu.webservices.PostUpdateLocationViewModel
+import kotlinx.android.synthetic.main.home_fragment.*
 
 import kotlinx.coroutines.*
 import org.json.JSONArray
@@ -68,7 +74,10 @@ open class BaseFragment : GenericFragment() {
         private set
 
     var v: View? = null
+    companion object {
+        lateinit var postUpdateLocationViewModel: PostUpdateLocationViewModel
 
+    }
 
     var obsNoInternet: Observer<Boolean> = Observer { isHaveInternet ->
         try {
@@ -102,6 +111,8 @@ open class BaseFragment : GenericFragment() {
         v?.let {
             setBackButtonToolbarStyleOne(v!!)
         }
+
+        postUpdateLocationViewModel = ViewModelProviders.of(this).get(PostUpdateLocationViewModel::class.java!!)
 
         v?.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
@@ -448,5 +459,6 @@ open class BaseFragment : GenericFragment() {
             .setName("steps")
             .build()
     }
+
 
 }

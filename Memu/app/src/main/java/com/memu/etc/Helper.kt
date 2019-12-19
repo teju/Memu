@@ -83,14 +83,19 @@ open class Helper  {
 
     }
 
-    fun getVersionCode(context: Context) : String {
-        val manager = context?.packageManager
-        val info = manager?.getPackageInfo(
-            context?.packageName, 0)
-        val versionName = info?.versionName
-        return versionName!!
-    }
     companion object {
+        fun applyHeader(context : Context, async: HTTPAsyncTask?) {
+            if (async == null)
+                return
+
+            async.setCache(false)
+            async.setHeader(Keys.ContentType, "application/json")
+
+            UserInfoManager.getInstance(context).authToken?.let {
+                async.setHeader(Keys.Authorization, "Bearer "+it)
+            }
+        }
+
         fun logException(ctx: Context?, e: Exception?) {
             try {
                 if (Constants.IS_DEBUGGING) {

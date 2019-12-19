@@ -3,7 +3,9 @@ package com.memu.ui.fragments
 import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.content.Context.LOCATION_SERVICE
+import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -21,8 +23,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
-import com.memu.webservices.GetVehicleTypeViewModel
-import com.memu.webservices.PostUserSignupViewModel
 import kotlinx.android.synthetic.main.onboarding_four.*
 import kotlinx.android.synthetic.main.onboarding_one.*
 import kotlinx.android.synthetic.main.onboarding_three.*
@@ -34,13 +34,13 @@ import android.view.ViewTreeObserver
 import android.opengl.ETC1.getHeight
 import android.opengl.ETC1.getWidth
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import com.memu.webservices.PostRequestOtpViewModel
-import com.memu.webservices.PostVerifyOtpViewModel
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.iapps.gon.etc.callback.PermissionListener
 import com.memu.etc.GPSTracker
+import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
+import com.memu.webservices.*
 import kotlinx.android.synthetic.main.onboarding_start.*
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
 
@@ -52,8 +52,18 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     lateinit var postUserSignupViewModel: PostUserSignupViewModel
     lateinit var postRequestOtpViewModel: PostRequestOtpViewModel
     lateinit var postVerifyOtpViewModel: PostVerifyOtpViewModel
+    lateinit var postUploadDocViewModel: PostUploadDocViewModel
     val jsonArray = JSONArray()
+    val docjsonArray = JSONArray()
     val state = State()
+    var registration_certificateID = ""
+    var registration_certificateID_name = ""
+    var driving_licenceID = ""
+    var driving_licenceID_name = ""
+    var vehicleID = ""
+    var vehicleID_name = ""
+    val PICK_PHOTO_DOC = 10001
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.register_fragment, container, false)
         return v
@@ -70,15 +80,23 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         btnNExt.setOnClickListener(this)
         get_otp.setOnClickListener(this)
         verify_otp.setOnClickListener(this)
-        cab_vehicle_btn.setOnClickListener(this)
+        verify_otp.setOnClickListener(this)
+        vehicle_pic.setOnClickListener(this)
         home_address.setOnClickListener(this)
+        uploadreg_no.setOnClickListener(this)
         female_button.setOnClickListener(this)
         male_button.setOnClickListener(this)
+        upload_dl.setOnClickListener(this)
+        cab_upload_vehicle_pic.setOnClickListener(this)
+        upload_cab_reg_no.setOnClickListener(this)
+        cab_upload_dl.setOnClickListener(this)
+
+
         setVehicleTypeAPIObserver()
         setUSerSignUpAPIObserver()
         setRequestOtpAPIObserver()
         setVerifyOtpAPIObserver()
-
+        setUploadDocObserver()
         getVehicleTypeViewModel.loadData()
         //onScrolledUp()
 
@@ -96,7 +114,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     flyover.layoutParams = params
                 }
             })
+        permissions()
+   }
 
+    fun permissions() {
         val permissionListener: PermissionListener = object : PermissionListener {
             override fun onUserNotGrantedThePermission() {
             }
@@ -111,9 +132,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
             @SuppressLint("MissingPermission")
             override fun onPermissionAlreadyGranted() {
-                val gpsTracker = GPSTracker(activity!!)
-                State.lattitude = gpsTracker.latitude
-                State.lattitude = gpsTracker.longitude
 
             }
         }
@@ -121,9 +139,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         permissions.add(android.Manifest.permission.CAMERA)
         permissions.add(android.Manifest.permission.ACCESS_COARSE_LOCATION)
         permissions.add(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        permissions.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
         checkPermissions(permissions, permissionListener)
-    }
 
+    }
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
             State.lattitude = location.latitude
@@ -146,6 +165,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 }
             })
     }
+
 
     override fun onClick(v: View?) {
         if(destination != null) {
@@ -201,10 +221,52 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 male_button.setTextColor(context?.resources?.getColor(R.color.colorAccent)!!)
                 State.gender = "Male"
             }
-
+            R.id.vehicle_pic ->{
+                State.upload_type = PostUploadDocViewModel.VEHICLE_PHOTO
+                pickImage()
+            }
+            R.id.cab_upload_vehicle_pic ->{
+                State.upload_type = PostUploadDocViewModel.VEHICLE_PHOTO
+                pickImage()
+            }
+            R.id.uploadreg_no ->{
+                State.upload_type = PostUploadDocViewModel.VEHICLE_REG_CERT_PHOTO
+                pickImage()
+            }
+            R.id.upload_cab_reg_no ->{
+                State.upload_type = PostUploadDocViewModel.VEHICLE_REG_CERT_PHOTO
+                pickImage()
+            }
+            R.id.upload_dl ->{
+                State.upload_type = PostUploadDocViewModel.VEHICLE_DL_PHOTO
+                pickImage()
+            }
+            R.id.cab_upload_dl ->{
+                State.upload_type = PostUploadDocViewModel.VEHICLE_DL_PHOTO
+                pickImage()
+            }
         }
     }
 
+    fun pickImage() {
+      val intent = Intent(Intent.ACTION_GET_CONTENT);
+      intent.setType("image/*");
+      startActivityForResult(intent, PICK_PHOTO_DOC);
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            try {
+
+                val imageuri = data?.getData ();// Get intent
+                // Get real path and show over text view
+                val real_Path = BaseHelper.getRealPathFromUri (activity, imageuri);
+                postUploadDocViewModel.loadData(State.upload_type,real_Path)
+            } catch (e: Exception) {
+            }
+        }
+    }
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
        when(v?.id) {
            R.id.home_address ->{
@@ -355,6 +417,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 state.ApiSignupForm(),
                 JSONObject(),
                 jsonArray,
+                docjsonArray,
                 state.OtpForm()
             )
         } else  {
@@ -362,9 +425,42 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 state.ApiSignupForm(),
                 state.Vehicle(),
                 jsonArray,
+                docjsonArray,
                 state.OtpForm()
             )
         }
+    }
+    fun validateUploadForm() : Boolean {
+        if(BaseHelper.isEmpty(vehicleID)) {
+            er_tv1.visibility = View.VISIBLE
+            er_tv1.text = "Upload Vehicle Photo"
+            edtVehicleBrand.requestFocus();
+            return false
+        } else {
+            edtVehicleBrand.clearFocus();
+            er_tv1.visibility = View.GONE
+        }
+        if(BaseHelper.isEmpty(registration_certificateID)){
+            er_tv2.visibility = View.VISIBLE
+            reg_no.requestFocus()
+            er_tv1.text = "Upload vehicle registration certificate photo"
+
+            return false
+        } else {
+            reg_no.clearFocus()
+            er_tv2.visibility = View.GONE
+        }
+        if(BaseHelper.isEmpty(driving_licenceID)){
+            er_tv3.visibility = View.VISIBLE
+            er_tv1.text = "upload your DL"
+            dl.requestFocus()
+            return false
+        } else {
+            dl.clearFocus()
+            er_tv3.visibility = View.GONE
+        }
+
+        return true
     }
 
     fun validateVehicleForm() :Boolean{
@@ -522,7 +618,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
 
 
-
 //        if(BaseHelper.isEmpty(State.role_type))
 //            return false
 
@@ -536,6 +631,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             State.NoVehicles -> {
                 jsonArray.put(0,state.Address())
                 jsonArray.put(1,state.OfficeAddress())
+
+
                 if(validateAPIForm() && validateMobileNumber()  && validateOTp() && validateaddressForm() ){
                     callRegister()
                 }
@@ -543,14 +640,56 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
             State.YELLOW_BOARD -> {
                 jsonArray.put(0,state.Address())
-                if(validateAPIForm() && validateVehicleForm() && validateOTp() && validateaddressForm()  ){
+                if(validateAPIForm() && validateVehicleForm() && validateOTp()
+                    && validateaddressForm() && validateUploadForm() ){
+                    val vehicle_photo = JSONObject()
+                    vehicle_photo.put("type",Keys.VEHICLE)
+                    vehicle_photo.put("file_id",vehicleID)
+                    vehicle_photo.put("file_name",vehicleID_name)
+
+                    val vehicle_reg_photo = JSONObject()
+                    vehicle_reg_photo.put("type",Keys.REGISTRATION_CERTIFICATE)
+                    vehicle_reg_photo.put("file_id",registration_certificateID)
+                    vehicle_reg_photo.put("file_name",registration_certificateID_name)
+
+                    val vehicle_dl_photo = JSONObject()
+                    vehicle_dl_photo.put("type",Keys.DRIVING_LICENCE)
+                    vehicle_dl_photo.put("file_id",driving_licenceID)
+                    vehicle_dl_photo.put("file_name",driving_licenceID_name)
+
+
+                    docjsonArray.put(0,vehicle_photo)
+                    docjsonArray.put(1,vehicle_reg_photo)
+                    docjsonArray.put(2,vehicle_dl_photo)
+
                     callRegister()
                 }
             }
             State.White_board -> {
                 jsonArray.put(0,state.Address())
                 jsonArray.put(1,state.OfficeAddress())
-                if(validateAPIForm() && validateVehicleForm() && validateOTp() && validateaddressForm() ){
+                if(validateAPIForm() && validateVehicleForm() && validateOTp()
+                    && validateaddressForm() && validateUploadForm()){
+                    val vehicle_photo = JSONObject()
+                    vehicle_photo.put("type",Keys.VEHICLE)
+                    vehicle_photo.put("file_id",vehicleID)
+                    vehicle_photo.put("file_name",vehicleID_name)
+
+                    val vehicle_reg_photo = JSONObject()
+                    vehicle_reg_photo.put("type",Keys.REGISTRATION_CERTIFICATE)
+                    vehicle_reg_photo.put("file_id",registration_certificateID)
+                    vehicle_reg_photo.put("file_name",registration_certificateID_name)
+
+                    val vehicle_dl_photo = JSONObject()
+                    vehicle_dl_photo.put("type",Keys.DRIVING_LICENCE)
+                    vehicle_dl_photo.put("file_id",driving_licenceID)
+                    vehicle_dl_photo.put("file_name",driving_licenceID_name)
+
+
+                    docjsonArray.put(0,vehicle_photo)
+                    docjsonArray.put(1,vehicle_reg_photo)
+                    docjsonArray.put(2,vehicle_dl_photo)
+
                     callRegister()
                 }
             }
@@ -685,6 +824,49 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
     }
 
+    fun setUploadDocObserver() {
+        postUploadDocViewModel = ViewModelProviders.of(this).get(PostUploadDocViewModel::class.java).apply {
+            this@RegisterFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostUploadDocViewModel.NEXT_STEP -> {
+                            when(State.upload_type) {
+                                PostUploadDocViewModel.VEHICLE_PHOTO -> {
+                                    vehicleID = postUploadDocViewModel.obj?.file_id!!
+                                    vehicleID_name = postUploadDocViewModel.obj?.file_name!!
+                                }
+                                PostUploadDocViewModel.VEHICLE_REG_CERT_PHOTO -> {
+                                    registration_certificateID = postUploadDocViewModel.obj?.file_id!!
+                                    registration_certificateID_name = postUploadDocViewModel.obj?.file_name!!
+                                }
+                                PostUploadDocViewModel.VEHICLE_DL_PHOTO -> {
+                                    driving_licenceID = postUploadDocViewModel.obj?.file_id!!
+                                    driving_licenceID_name = postUploadDocViewModel.obj?.file_name!!
+                                }
+                            }
+                        }
+                    }
+                })
+
+            }
+        }
+    }
 
 
     class State {
@@ -715,7 +897,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             var NoVehicles = 4
 
             var type = NoVehicles
-
+            var upload_type = PostUploadDocViewModel.VEHICLE_PHOTO
         }
 
         fun OtpForm() :JSONObject {

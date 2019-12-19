@@ -22,5 +22,20 @@ class APIs : BaseKeys() {
 
         val postVerifyOtp: String
             get() = BASE_URL!!  + USER+ "mobile-otp-verify"
+
+        val postUploadVehicleCertPhotp: String
+            get() = BASE_URL!!  + USER+ "upload-registration-certificate"
+
+        val postUploadVehiclePhotp: String
+            get() = BASE_URL!!  + USER+ "upload-vehicle-photo"
+
+        val postUploadDlPhoto: String
+            get() = BASE_URL!!  + USER+ "upload-driving-licence"
+
+        val currentVehicleLocation: String
+            get() = BASE_URL!!  + USER+ "current-vehicle-location"
+
+        val getUpdateFcmID: String
+            get() = BASE_URL!!  + USER+ "update-fcm-id"
     }
 }

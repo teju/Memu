@@ -26,9 +26,18 @@ class Keys : BaseKeys() {
 
         val ApiSignupForm = "ApiSignupForm"
         val Vehicle = "Vehicle"
+        val Documents = "Documents"
         val Address = "Address"
         val OtpForm = "OtpForm"
         val MOBILE = "mobile"
+        val PUSHNOTIFICATION = "PushNotification"
+        val DRIVING_LICENCE = "driving_licence"
+        val REGISTRATION_CERTIFICATE = "registration_certificate"
+        val VEHICLE = "vehicle"
+        val ContentType = "Content-Type"
+        val Authorization = "Authorization"
+        val USER_ID = "user_id"
+        val LOCATION_DETAILS = "location_details"
 
         @kotlin.jvm.JvmField
         var GCM_DT : String = "dt"

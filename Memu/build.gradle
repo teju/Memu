@@ -41,7 +41,7 @@ allprojects {
 
     }
 
-    project.ext.applicationId = "com.iapps.gon"
+    project.ext.applicationId = "com.memu"
 
     project.ext.myCompileSdkVersion = 28
     project.ext.myBuildToolsVersion = "28.0.3"
