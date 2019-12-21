@@ -22,7 +22,9 @@ class Keys : BaseKeys() {
         val UPDATE_SUPER_MAIN_ACTIVITY = "UPDATE_SUPER_MAIN_ACTIVITY"
         @kotlin.jvm.JvmField
         val NEARBYTELLERSERVICECOMPELETE = "NearbyTellerServiceCompleted"
-
+        val SHORTESTROUTE = 101
+        val POOLING = 102
+        var MAPTYPE = 0
 
         val ApiSignupForm = "ApiSignupForm"
         val Vehicle = "Vehicle"
@@ -38,6 +40,13 @@ class Keys : BaseKeys() {
         val Authorization = "Authorization"
         val USER_ID = "user_id"
         val LOCATION_DETAILS = "location_details"
+        val To = "to"
+        val FROM = "from"
+        val DATE = "date"
+        val TIME = "time"
+        val NO_OF_SEATS = "no_of_seats"
+        val IS_RECURING_RIDE = "is_recuring_ride"
+        val DAYS = "days"
 
         @kotlin.jvm.JvmField
         var GCM_DT : String = "dt"

@@ -721,6 +721,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                             home().setFragment(HomeFragment())
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
+                            UserInfoManager.getInstance(activity!!).saveAccountName(postUserSignupViewModel.obj?.name!!)
                             UserInfoManager.getInstance(activity!!).saveAccountId(
                                 postUserSignupViewModel.obj?.user_id.toString()!!)
                         }

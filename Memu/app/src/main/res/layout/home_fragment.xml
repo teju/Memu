@@ -7,8 +7,10 @@
     android:clipChildren="false"
     android:orientation="horizontal"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto">
+
     <ScrollView
         android:layout_width="match_parent"
+        android:id="@+id/scrollView"
         android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -29,7 +31,9 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
+                android:visibility="visible"
                 android:id="@+id/rlTopBar"
+
                 android:layout_height="70dp">
                 <TextView
                     android:layout_width="wrap_content"
@@ -46,26 +50,39 @@
                 </TextView>
             </RelativeLayout>
             <ImageView
-                android:layout_width="60dp"
-                android:layout_marginTop="25dp"
+                android:layout_width="80dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginLeft="35dp"
                 android:layout_marginRight="30dp"
-                android:background="@drawable/circle_shape"
-                android:layout_height="60dp">
+                android:scaleType="fitXY"
+                android:src="@drawable/dummy_profile_pic"
+                android:layout_height="80dp">
             </ImageView>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_marginTop="95dp"
+                android:layout_marginLeft="85dp"
+                android:visibility="gone"
+                android:id="@+id/arrow_left"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/arrow_left"
+                android:layout_height="40dp">
+            </ImageView>
+
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_marginTop="150dp"
+                android:layout_marginTop="180dp"
                 android:id="@+id/rlBestRoute"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/upload_button"
-                    android:layout_marginRight="80dp"
+                    android:layout_width="140dp"
+                    android:src="@drawable/poolimg"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="-20dp"
                     android:layout_below="@+id/bestRoute"
-
+                    android:scaleType="fitXY"
                     android:layout_alignParentRight="true"
-                    android:layout_height="wrap_content">
+                    android:layout_height="120dp">
 
                 </ImageView>
                 <TextView
@@ -85,22 +102,16 @@
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_marginTop="320dp"
+                android:layout_marginTop="300dp"
                 android:id="@+id/rlpooling"
                 android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/upload_button"
-                    android:layout_marginLeft="50dp"
-                    android:layout_below="@+id/findPool"
-                    android:layout_height="wrap_content">
-
-                </ImageView>
                 <TextView
                     android:layout_width="wrap_content"
                     android:textAlignment="center"
                     android:id="@+id/findPool"
                     android:padding="8dp"
+                    android:layout_marginTop="-10dp"
+                    android:layout_below="@+id/carpoolcar"
                     android:backgroundTint="@color/LightSkyBlue"
                     android:background="@drawable/theme_rounded_rectangle"
                     android:layout_marginLeft="40dp"
@@ -109,47 +120,56 @@
 
                 </TextView>
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/carpoolcar"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/carpoolcar"
+                    android:layout_height="wrap_content">
+
+                </ImageView>
+
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_marginTop="450dp"
                 android:id="@+id/rlcab"
                 android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/upload_button"
-                    android:layout_marginRight="80dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/findcab"
-                    android:layout_height="wrap_content">
-
-                </ImageView>
                 <TextView
                     android:layout_width="wrap_content"
                     android:textAlignment="center"
                     android:id="@+id/findcab"
                     android:padding="8dp"
+                    android:layout_marginTop="25dp"
                     android:layout_alignParentRight="true"
                     android:backgroundTint="@color/YellowGreen"
                     android:background="@drawable/theme_rounded_rectangle"
-                    android:layout_marginRight="40dp"
+                    android:layout_marginRight="75dp"
                     android:text="Tap to find\nCab/Taxi"
                     android:layout_height="wrap_content">
-
                 </TextView>
+                <ImageView
+                    android:layout_width="100dp"
+                    android:src="@drawable/taxi"
+                    android:scaleType="fitXY"
+                    android:layout_marginRight="20dp"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/taxi"
+                    android:layout_height="80dp">
+
+                </ImageView>
 
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_marginTop="600dp"
+                android:layout_marginTop="580dp"
                 android:id="@+id/rlprofile"
-
                 android:layout_height="wrap_content">
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:src="@drawable/upload_button"
-                    android:layout_marginLeft="80dp"
-                    android:layout_below="@+id/my_profile"
+                    android:src="@drawable/profileimg"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/profileimg"
                     android:layout_height="wrap_content">
 
                 </ImageView>
@@ -158,150 +178,290 @@
                     android:textAlignment="center"
                     android:id="@+id/my_profile"
                     android:padding="8dp"
+                    android:layout_marginTop="-25dp"
+                    android:layout_below="@+id/profileimg"
                     android:backgroundTint="@color/PeachPuff"
                     android:background="@drawable/theme_rounded_rectangle"
-                    android:layout_marginLeft="40dp"
+                    android:layout_marginLeft="20dp"
                     android:text="Tap to go to\nyour profile"
                     android:layout_height="wrap_content">
 
                 </TextView>
 
             </RelativeLayout>
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:id="@+id/cancel"
+                android:visibility="gone"
+                android:layout_height="60dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:tint="@color/Black"
+                    android:scaleType="fitXY"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_cross_dark"
+                    android:layout_height="20dp">
+
+                </ImageView>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:id="@+id/popUpView"
+                android:visibility="gone"
+                android:layout_marginTop="290dp"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:id="@+id/llPooling"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_gravity="end"
+                            android:layout_marginRight="20dp"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="70dp"
+                                android:id="@+id/date"
+                                android:gravity="center_vertical"
+                                android:background="@drawable/theme_rounded_rectangle"
+                                android:textAlignment="center"
+                                android:layout_height="60dp">
+
+                            </TextView>
+                            <TextView
+                                android:layout_width="70dp"
+                                android:id="@+id/time"
+                                android:layout_marginLeft="5dp"
+                                android:gravity="center_vertical"
+                                android:background="@drawable/theme_rounded_rectangle"
+                                android:textAlignment="center"
+                                android:layout_height="60dp">
+
+                            </TextView>
+                            <TextView
+                                android:layout_width="70dp"
+                                android:layout_marginLeft="5dp"
+                                android:id="@+id/seatstv"
+                                android:visibility="visible"
+                                android:gravity="center_vertical"
+                                android:background="@drawable/theme_rounded_rectangle"
+                                android:textAlignment="center"
+                                android:layout_height="60dp">
+                            </TextView>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_gravity="end"
+                            android:layout_marginRight="20dp"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/theme_rounded_rectangle"
+                            android:textAlignment="center"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:layout_height="30dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:text="Recurring"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Mo"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Tu"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="We"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Th"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="match_parent">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Fr"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="20dp"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:hint="Your current location"
+                                android:paddingLeft="40dp"
+                                android:gravity="center_vertical"
+                                android:id="@+id/edtScrLoc"
+                                android:background="@drawable/theme_rounded_rectangle"
+                                android:layout_height="60dp">
+                            </TextView>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_marginTop="10dp"
+                                android:paddingLeft="40dp"
+                                android:hint="Destination"
+                                android:id="@+id/edtdestLoc"
+                                android:gravity="center_vertical"
+                                android:background="@drawable/theme_rounded_rectangle"
+                                android:layout_height="60dp">
+
+                            </TextView>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_marginTop="10dp"
+                                android:paddingLeft="40dp"
+                                android:hint="Destination"
+                                android:textSize="12dp"
+                                android:visibility="gone"
+                                android:text="Select Destination location"
+                                android:textColor="@color/Red"
+                                android:id="@+id/edtdestLocerror"
+                                android:gravity="center_vertical"
+                                android:layout_height="wrap_content">
+
+                            </TextView>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:src="@drawable/scr_dest_path"
+                            android:layout_marginLeft="20dp"
+                            android:layout_height="wrap_content">
+
+                        </ImageView>
+
+                    </FrameLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="end"
+                        android:layout_marginRight="40dp"
+                        android:layout_height="wrap_content">
+                        <RelativeLayout
+                            android:layout_width="80dp"
+                            android:id="@+id/find_ride"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/theme_rounded_rectangle"
+                            android:textAlignment="center"
+                            android:layout_height="60dp">
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/white_car"
+                                android:layout_height="wrap_content">
+
+                            </ImageView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:text="Find\nRide"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:layout_alignParentRight="true"
+                                android:textAlignment="center"
+                                android:layout_height="wrap_content">
+
+                            </TextView>
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="80dp"
+                            android:id="@+id/offer_ride"
+                            android:layout_marginLeft="10dp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:background="@drawable/theme_rounded_rectangle"
+                            android:textAlignment="center"
+                            android:layout_height="60dp">
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/white_car"
+                                android:layout_height="wrap_content">
+
+                            </ImageView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:text="Find\nRide"
+                                android:layout_marginRight="10dp"
+                                android:layout_alignParentRight="true"
+                                android:textAlignment="center"
+                                android:layout_height="wrap_content">
+
+                            </TextView>
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:layout_width="wrap_content"
+                        android:text="next"
+                        android:layout_margin="15dp"
+
+                        android:layout_gravity="end"
+                        android:src="@drawable/chevron_right"
+                        android:id="@+id/btnNExt"
+                        android:layout_height="wrap_content">
+
+                    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+                </LinearLayout>
+
+            </FrameLayout>
 
         </RelativeLayout>
     </ScrollView>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:id="@+id/popUpView"
-            android:visibility="gone"
-            android:layout_marginTop="290dp"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:id="@+id/llPooling"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="end"
-                        android:layout_marginRight="20dp"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="70dp"
-                            android:text="Mon\n09 Dec"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/theme_rounded_rectangle"
-                            android:textAlignment="center"
-                            android:layout_height="60dp">
-
-                        </TextView>
-                        <TextView
-                            android:layout_width="70dp"
-                            android:text="Mon\n09 Dec"
-                            android:layout_marginLeft="5dp"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/theme_rounded_rectangle"
-                            android:textAlignment="center"
-                            android:layout_height="60dp">
-
-                        </TextView>
-                        <TextView
-                            android:layout_width="70dp"
-                            android:text="Mon\n09 Dec"
-                            android:layout_marginLeft="5dp"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/theme_rounded_rectangle"
-                            android:textAlignment="center"
-                            android:layout_height="60dp">
-
-                        </TextView>
-
-                    </LinearLayout>
-                    <TextView
-                        android:layout_width="70dp"
-                        android:text="Mon\n09 Dec"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_gravity="end"
-                        android:layout_marginRight="30dp"
-                        android:gravity="center_vertical"
-                        android:background="@drawable/theme_rounded_rectangle"
-                        android:textAlignment="center"
-                        android:layout_height="60dp">
-
-                    </TextView>
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="20dp"
-                    android:orientation="vertical"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:hint="Your current location"
-                        android:paddingLeft="40dp"
-                        android:background="@drawable/theme_rounded_rectangle"
-                        android:layout_height="60dp">
-
-                    </EditText>
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="40dp"
-
-                        android:hint="Destination"
-                        android:background="@drawable/theme_rounded_rectangle"
-                        android:layout_height="60dp">
-
-                    </EditText>
-
-                </LinearLayout>
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:layout_width="wrap_content"
-                    android:text="next"
-                    android:layout_margin="15dp"
-
-                    android:layout_gravity="end"
-                    android:src="@drawable/chevron_right"
-                    android:id="@+id/btnNExt"
-                    android:layout_height="wrap_content">
-
-                </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
-            </LinearLayout>
-
-        </FrameLayout>
-
-    </ScrollView>
-    <FrameLayout
-        android:layout_width="60dp"
-        android:layout_gravity="end"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:id="@+id/cancel"
-        android:visibility="gone"
-        android:layout_height="60dp">
-        <ImageView
-            android:layout_width="20dp"
-            android:tint="@color/Black"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_cross_dark"
-            android:layout_height="20dp">
-
-        </ImageView>
-    </FrameLayout>
     <com.iapps.libs.views.LoadingCompound
         android:id="@+id/ld"
         android:layout_width="match_parent"

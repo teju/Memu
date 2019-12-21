@@ -64,8 +64,8 @@ class LocationBroadCastReceiver : BroadcastReceiver() {
         obj.put("city", getAddress()?.get(0)?.locality)
         obj.put("location",getAddress()?.get(0)?.subLocality)
         obj.put("pincode", getAddress()?.get(0)?.postalCode)
-        obj.put("lattitude",gpsTracker.latitude)
-        obj.put("longitude", getAddress()?.get(0)?.latitude)
+        obj.put("lattitude",gpsTracker.latitude.toString())
+        obj.put("longitude", gpsTracker.longitude.toString())
         obj.put("formatted_address", getAddress()?.get(0)?.getAddressLine(0))
 
         return obj

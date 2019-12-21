@@ -6,6 +6,7 @@ class APIs : BaseKeys() {
     companion object {
         val BASE_URL = "http://memu.world/api/web/"
         val VEHICLE = "vehicle/"
+        val BOOKING = "booking/"
         val USER = "user/"
 
         val getVehicleType: String
@@ -33,9 +34,15 @@ class APIs : BaseKeys() {
             get() = BASE_URL!!  + USER+ "upload-driving-licence"
 
         val currentVehicleLocation: String
-            get() = BASE_URL!!  + USER+ "current-vehicle-location"
+            get() = BASE_URL!!  + VEHICLE+ "current-vehicle-location"
 
         val getUpdateFcmID: String
             get() = BASE_URL!!  + USER+ "update-fcm-id"
+
+        val getPoolerVehicle: String
+            get() = BASE_URL!!  + VEHICLE+ "get-pooler-vehicles"
+
+        val postFindtip: String
+            get() = BASE_URL!!  + BOOKING+ "find-trip"
     }
 }

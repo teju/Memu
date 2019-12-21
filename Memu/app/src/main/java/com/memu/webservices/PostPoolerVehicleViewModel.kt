@@ -6,12 +6,10 @@ import com.google.gson.GsonBuilder
 import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
 import com.memu.etc.*
-import com.memu.modules.GenericResponse
-import com.memu.modules.UserSignup.UserSignUp
-import org.json.JSONArray
-import org.json.JSONObject
+import com.memu.modules.VehicleType.VehicleType
+import com.memu.modules.poolerVehicles.PoolerVehicles
 
-class PostUpdateNotiTokenViewModel(application: Application) : BaseViewModel(application) {
+class PostPoolerVehicleViewModel(application: Application) : BaseViewModel(application) {
 
     private val trigger = SingleLiveEvent<Integer>()
 
@@ -19,7 +17,7 @@ class PostUpdateNotiTokenViewModel(application: Application) : BaseViewModel(app
 
     var apl: Application
 
-    var obj: GenericResponse? = null
+    var obj: PoolerVehicles? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -50,9 +48,9 @@ class PostUpdateNotiTokenViewModel(application: Application) : BaseViewModel(app
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), GenericResponse::class.java)
+                        obj = gson.fromJson(response!!.content.toString(), PoolerVehicles::class.java)
                         if (obj!!.status.equals(Keys.STATUS_CODE)) {
-                            trigger.postValue(GetVehicleTypeViewModel.NEXT_STEP)
+                            trigger.postValue(NEXT_STEP)
                         }else{
                             errorMessage.value = createErrorMessageObject(response)
 
@@ -66,12 +64,9 @@ class PostUpdateNotiTokenViewModel(application: Application) : BaseViewModel(app
         })
 
         genericHttpAsyncTask.method = BaseConstants.POST
-        genericHttpAsyncTask.setUrl(APIs.getUpdateFcmID)
+        genericHttpAsyncTask.setUrl(APIs.getPoolerVehicle)
         Helper.applyHeader(apl,genericHttpAsyncTask)
-        val jsonObject = JSONObject()
-        jsonObject.put("google_fcm_id",UserInfoManager.getInstance(apl).getNotiToken())
-        jsonObject.put("user_id",UserInfoManager.getInstance(apl).getAccountId())
-        genericHttpAsyncTask.setPostParams(Keys.PUSHNOTIFICATION,jsonObject)
+        genericHttpAsyncTask.setPostParams(Keys.USER_ID,UserInfoManager.getInstance(apl).getAccountId())
         genericHttpAsyncTask.context = apl.applicationContext
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.execute()

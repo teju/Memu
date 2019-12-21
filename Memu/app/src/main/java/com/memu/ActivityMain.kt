@@ -34,7 +34,7 @@ class ActivityMain : AppCompatActivity(){
         Paper.init(this);
         triggerMainProcess()
         BaseHelper.triggerNotifLog(this);
-        Mapbox.getInstance(this, "pk.eyJ1IjoidGVqYXN3aW5pMTIiLCJhIjoiY2szeW4xNjZpMG5sNjNqczh0Y2Foc3l1YiJ9.2-baGFYmq-h827W1JN2yNQ");
+        Mapbox.getInstance(this, getString(R.string.map_box_access_token));
 
     }
 
