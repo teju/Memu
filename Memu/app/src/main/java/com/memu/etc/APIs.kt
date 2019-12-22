@@ -44,5 +44,14 @@ class APIs : BaseKeys() {
 
         val postFindtip: String
             get() = BASE_URL!!  + BOOKING+ "find-trip"
+
+        val postFindtipGivers: String
+            get() = BASE_URL!!  + BOOKING+ "invite-ride-givers"
+
+        val postOffersRides: String
+            get() = BASE_URL!!  + BOOKING+ "offer-ride"
+
+        val postRideTakers: String
+            get() = BASE_URL!!  + BOOKING+ "invite-ride-taker"
     }
 }

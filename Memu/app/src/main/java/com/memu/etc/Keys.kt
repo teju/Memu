@@ -47,6 +47,11 @@ class Keys : BaseKeys() {
         val NO_OF_SEATS = "no_of_seats"
         val IS_RECURING_RIDE = "is_recuring_ride"
         val DAYS = "days"
+        val NO_OF_KMS = "no_of_kms"
+        val TRIP_RIDER_ID = "trip_id"
+        val OFFSET = "offset"
+        val LIMIT = "limit"
+        val VEHICLE_ID = "vehicle_id"
 
         @kotlin.jvm.JvmField
         var GCM_DT : String = "dt"

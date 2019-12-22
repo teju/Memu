@@ -38,6 +38,9 @@ import com.memu.etc.Constants
 import com.memu.etc.GPSTracker
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
+import com.memu.modules.TripGivers.Pooler
+import com.memu.modules.riderList.Rider
+import com.memu.ui.dialog.MatchingRidersFragment
 import com.memu.ui.dialog.NotifyDialogFragment
 import com.memu.webservices.GetVehicleTypeViewModel
 import com.memu.webservices.PostUpdateLocationViewModel
@@ -382,6 +385,17 @@ open class BaseFragment : GenericFragment() {
         f.button_positive = button_positive
         f.button_negative = button_negative
         f.isCancelable = false
+        f.show(activity!!.supportFragmentManager, NotifyDialogFragment.TAG)
+    }
+
+    open fun showMatchingRiders(
+        rider_list: List<Rider>,
+        n: NotifyListener){
+        val f = MatchingRidersFragment().apply {
+            this.listener = n
+        }
+        f.rider_list = rider_list
+        f.isCancelable = true
         f.show(activity!!.supportFragmentManager, NotifyDialogFragment.TAG)
     }
 

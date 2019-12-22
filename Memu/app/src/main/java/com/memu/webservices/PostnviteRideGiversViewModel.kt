@@ -5,15 +5,15 @@ import com.google.gson.GsonBuilder
 
 import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
-import com.memu.etc.APIs
-import com.memu.etc.Helper
-import com.memu.etc.Keys
-import com.memu.etc.SingleLiveEvent
-import com.memu.modules.UserSignup.UserSignUp
-import org.json.JSONArray
+import com.memu.etc.*
+import com.memu.modules.FindTrip.FindTRip
+import com.memu.modules.TripGivers.TripGivers
+import com.memu.modules.VehicleType.VehicleType
+import com.memu.modules.poolerVehicles.PoolerVehicles
+import com.memu.modules.riderList.RiderList
 import org.json.JSONObject
 
-class PostUserSignupViewModel(application: Application) : BaseViewModel(application) {
+class PostnviteRideGiversViewModel(application: Application) : BaseViewModel(application) {
 
     private val trigger = SingleLiveEvent<Integer>()
 
@@ -21,7 +21,7 @@ class PostUserSignupViewModel(application: Application) : BaseViewModel(applicat
 
     var apl: Application
 
-    var obj: UserSignUp? = null
+    var obj: RiderList? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -32,13 +32,7 @@ class PostUserSignupViewModel(application: Application) : BaseViewModel(applicat
         this.apl = application
     }
 
-    fun loadData(
-        apisignupform: JSONObject,
-        vehicle: JSONObject,
-        address: JSONArray,
-        documents: JSONArray,
-        otpform: JSONObject?
-    ) {
+    fun loadData(trip_rider_id : String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -58,14 +52,15 @@ class PostUserSignupViewModel(application: Application) : BaseViewModel(applicat
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), UserSignUp::class.java)
+                        obj = gson.fromJson(response!!.content.toString(), RiderList::class.java)
                         if (obj!!.status.equals(Keys.STATUS_CODE)) {
-                            trigger.postValue(GetVehicleTypeViewModel.NEXT_STEP)
+                            trigger.postValue(NEXT_STEP)
                         }else{
                             errorMessage.value = createErrorMessageObject(response)
+
                         }
                     } catch (e: Exception) {
-                        errorMessage.value = createErrorMessageObject(true,"Exception",e.toString())
+                        showUnknowResponseErrorMessage()
                     }
                 }
 
@@ -73,20 +68,14 @@ class PostUserSignupViewModel(application: Application) : BaseViewModel(applicat
         })
 
         genericHttpAsyncTask.method = BaseConstants.POST
-        genericHttpAsyncTask.setUrl(APIs.postUserSignup)
-        if(otpform != null) {
-           // genericHttpAsyncTask.setPostParams(Keys.OtpForm,otpform)
-        }
-        if(vehicle != null) {
-            genericHttpAsyncTask.setPostParams(Keys.Vehicle,vehicle!!)
-        }
-        if(documents != null) {
-            genericHttpAsyncTask.setPostParams(Keys.Documents,documents!!)
-        }
-        genericHttpAsyncTask.setPostParams(Keys.ApiSignupForm,apisignupform!!)
-        genericHttpAsyncTask.setPostParams(Keys.Address,address!!)
-        genericHttpAsyncTask.setCache(false)
+        genericHttpAsyncTask.setUrl(APIs.postRideTakers)
+        Helper.applyHeader(apl,genericHttpAsyncTask)
+        genericHttpAsyncTask.setPostParams(Keys.USER_ID,UserInfoManager.getInstance(apl).getAccountId())
+        genericHttpAsyncTask.setPostParams(Keys.TRIP_RIDER_ID,trip_rider_id)
+        genericHttpAsyncTask.setPostParams(Keys.OFFSET,"0")
+        genericHttpAsyncTask.setPostParams(Keys.LIMIT,"1000")
         genericHttpAsyncTask.context = apl.applicationContext
+        genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.execute()
 
     }

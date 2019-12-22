@@ -27,6 +27,7 @@ import android.graphics.Color
 import android.graphics.Point
 import android.location.Address
 import android.location.Geocoder
+import android.location.Location
 import android.os.Build
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProviders
@@ -45,6 +46,8 @@ import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
+import com.mapbox.turf.TurfConstants
+import com.mapbox.turf.TurfMeasurement
 import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.GPSTracker
 import com.memu.etc.Helper
@@ -191,9 +194,13 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
             longitude = (selectedCarmenFeatureSrc!!.geometry() as com.mapbox.geojson.Point).longitude()
         }
         val from = FromJSon(latitude!!,longitude!!)
+         val distance = BaseHelper.distance(latitude,longitude,
+             (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).latitude(),
+             (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).longitude())
         val To = FromJSon((selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).latitude(),
             (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).longitude())
-        postFindRideViewModel.loadData(strdate,strtime, strseat,"no","",from,To)
+        postFindRideViewModel.loadData(strdate,strtime, strseat,"no","",
+            from,To,distance.toInt().toString(),"1")
 
     }
 
@@ -202,7 +209,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
             R.id.rlBestRoute -> {
                 bestRouteUI()
                 Keys.MAPTYPE = Keys.SHORTESTROUTE
-
             }
 
             R.id.rlpooling -> {
@@ -228,6 +234,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
                             dest = selectedCarmenFeatureDest
                         })
                     } else {
+
                         CallApi()
                     }
 
@@ -288,6 +295,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
             }
         }
     }
+
     val cal = Calendar.getInstance()
 
     val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
@@ -385,6 +393,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
     override fun onBackTriggered() {
         home().exitApp()
     }
+
     fun setUpdateNotiTokenAPIObserver() {
         postUpdateNotiTokenViewModel = ViewModelProviders.of(this).get(PostUpdateNotiTokenViewModel::class.java).apply {
             this@HomeFragment.let { thisFragReference ->
@@ -448,14 +457,21 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
                     }
                 })
                 errorMessage.observe(thisFragReference, Observer { s ->
-
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
                 })
                 isNetworkAvailable.observe(thisFragReference, obsNoInternet)
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostFindRideViewModel.NEXT_STEP -> {
                             home().setFragment(MapFragment().apply {
-
+                                src = selectedCarmenFeatureSrc
+                                dest = selectedCarmenFeatureDest
+                                trip_rider_id = postFindRideViewModel.obj?.trip_id!!
                             })
                         }
                     }
@@ -469,7 +485,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         val jsonObject = JSONObject()
         jsonObject.put("address_line1",getAddress?.get(0)?.getAddressLine(0))
         jsonObject.put("lattitude",lattitude.toString())
-        jsonObject.put("no_of_kms","12")
         jsonObject.put("longitude",longitude.toString())
         jsonObject.put("state",getAddress?.get(0)?.getAdminArea())
         jsonObject.put("formatted_address",getAddress?.get(0)?.getAddressLine(0))
@@ -499,6 +514,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
             selectedCarmenFeatureDest = PlaceAutocomplete.getPlace(data);
             edtdestLoc.setText(selectedCarmenFeatureDest!!.placeName())
         }
+
+
     }
 
 }

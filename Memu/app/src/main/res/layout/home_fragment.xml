@@ -41,7 +41,7 @@
                     android:layout_centerVertical="true"
                     android:textSize="20dp"
                     android:textStyle="bold"
-                    android:layout_marginLeft="80dp"
+                    android:layout_marginLeft="100dp"
                     android:textColor="@color/White"
                     android:layout_gravity="center_horizontal"
                     android:text="sdsdfsdfsdf"
@@ -433,7 +433,8 @@
                             </ImageView>
                             <TextView
                                 android:layout_width="wrap_content"
-                                android:text="Find\nRide"
+                                android:text="Offer\nRide"
+                                android:layout_centerVertical="true"
                                 android:layout_marginRight="10dp"
                                 android:layout_alignParentRight="true"
                                 android:textAlignment="center"
