@@ -1,5 +1,6 @@
 package com.memu.bgTasks
 
+import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -12,8 +13,10 @@ import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
 import android.widget.RemoteViews
+import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -36,6 +39,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notification = remoteMessage.notification
         val data = remoteMessage.data
         sendNotification(notification!!, data)
+        //startForegroundService(remoteMessage)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -70,35 +74,67 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Notification Channel is required for Android O and above
-        createChannel(notificationManager)
+        createChannel(this)
 
         notificationManager.notify(0, notificationBuilder.build())
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun createChannel(notificationManager : NotificationManager): String {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "channel_id", "channel_name", NotificationManager.IMPORTANCE_DEFAULT
-            )
-            channel.description = "channel description"
-            channel.setShowBadge(true)
-            channel.canShowBadge()
-            channel.enableLights(true)
-            channel.lightColor = Color.RED
-            channel.enableVibration(true)
-            channel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500)
-            notificationManager.createNotificationChannel(channel)
+    @NonNull
+    @TargetApi(26)
+    @Synchronized
+    private fun createChannel(context: Context): String {
+        if (Build.VERSION.SDK_INT >= 26){
 
+            val mNotificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val name = "memu notification"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val mChannel = NotificationChannel("memu notification", name, importance)
+            mChannel.enableLights(true)
+            mChannel.lightColor = Color.BLUE
+            mNotificationManager?.createNotificationChannel(mChannel)
         }
         return "memu notification"
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun startForegroundService(content : RemoteMessage) {
-        val contentView = RemoteViews(packageName, R.layout.custom_notification_layout)
+        /*val contentView = RemoteViews(packageName, R.layout.custom_notification_layout)
         var channel: String = ""
 
+        val bundle = content.data
+        val message  = bundle.get(Keys.MESSAGE)
+        val intent = Intent(this, ActivityMain::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0 *//* Request code *//*, intent,
+            PendingIntent.FLAG_ONE_SHOT
+        )
+        val mBuilder = NotificationCompat.Builder(this, channel)
+            .setSmallIcon(R.drawable.memu_logo)
+            .setContentText(bundle.get(Keys.MESSAGE))
+            .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE) //Important for heads-up notification
+            .setPriority(Notification.PRIORITY_HIGH)
+            .setContent(contentView)
+            .setContentIntent(pendingIntent)
+
+        contentView.setTextViewText(R.id.text, message);
+        val buildNotification = mBuilder.build()
+        val mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= 26)
+            channel = createChannel(mNotifyMgr)
+        else {
+            channel = ""
+        }
+        mNotifyMgr.notify(1, buildNotification)*/
+        val contentView = RemoteViews(packageName, R.layout.custom_notification_layout)
+        val channel: String
+        if (Build.VERSION.SDK_INT >= 26)
+            channel = createChannel(this)
+        else {
+            channel = ""
+        }
         val bundle = content.data
         val message  = bundle.get(Keys.MESSAGE)
         val intent = Intent(this, ActivityMain::class.java)
@@ -118,11 +154,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         contentView.setTextViewText(R.id.text, message);
         val buildNotification = mBuilder.build()
         val mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= 26)
-            channel = createChannel(mNotifyMgr)
-        else {
-            channel = ""
-        }
         mNotifyMgr.notify(1, buildNotification)
     }
 }

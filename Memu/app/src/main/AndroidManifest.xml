@@ -32,6 +32,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+
         <service android:name=".etc.LoggingService" android:exported="false" />
         <activity
             android:name="com.iapps.logs.com.pascalabs.util.log.activity.ActivityPascaLog"

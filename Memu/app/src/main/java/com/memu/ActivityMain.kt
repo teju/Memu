@@ -44,15 +44,17 @@ class ActivityMain : AppCompatActivity(){
                 System.out.println("Notification_received key "+key +" value "+value)
 
             }
-            showNotifyDialog(
-                getIntent().getExtras()?.getString("title"),
-                getIntent().getExtras()?.getString("message"),
-                "Reject","Accept",object : NotifyListener {
-                    override fun onButtonClicked(which: Int) {
+            if(getIntent().getExtras()?.getString("title") != null) {
+                showNotifyDialog(
+                    getIntent().getExtras()?.getString("title"),
+                    getIntent().getExtras()?.getString("message"),
+                    "Reject", "Accept", object : NotifyListener {
+                        override fun onButtonClicked(which: Int) {
 
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 

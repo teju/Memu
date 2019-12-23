@@ -70,11 +70,10 @@ class UserInfoManager private constructor() {
     }
 
     fun getAccountName(): String {
-        if (accountName == null) {
-            this.accountName = this.prefs!!.getString(KEY_ACCOUNT_NAME, null)
-        }
+        this.accountName = this.prefs!!.getString(KEY_ACCOUNT_NAME, null)
         return accountName!!
     }
+
     fun saveNotiToken(deviceToken: String?) {
         this.deviceToken = deviceToken
         val editor = this.prefs!!.edit()

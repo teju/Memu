@@ -128,6 +128,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 
         initSearchFab()
         initSearchFabDest()
+
         System.out.println("getAccountName "+UserInfoManager.getInstance(activity!!).getAccountName())
         name.setText(UserInfoManager.getInstance(activity!!).getAccountName())
         date.text = SimpleDateFormat("EEE,\nMMM dd").format(System.currentTimeMillis())

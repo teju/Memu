@@ -130,7 +130,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
         if(gpsTracker?.canGetLocation()!!) {
             mapView!!.getMapAsync(this)
         }
-
+        startButton.isEnabled = false
         when(Keys.MAPTYPE) {
             Keys.SHORTESTROUTE -> {
                 shortes_route_result.visibility = View.VISIBLE
@@ -258,15 +258,11 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
     }
 
     private fun getRoute(origin: Point, destination: Point) {
-
-        val navigationRoute = NavigationRoute.builder(activity)
-        navigationRoute.accessToken(Mapbox.getAccessToken()!!)
-        navigationRoute.origin(origin)
-        navigationRoute.annotations()
-        navigationRoute.alternatives(true)
-        navigationRoute.destination(destination)
-        navigationRoute.addWaypoint(destination)
-        navigationRoute.build()
+        NavigationRoute.builder(activity)
+            .accessToken(Mapbox.getAccessToken()!!)
+            .origin(origin)
+            .destination(destination)
+            .build()
             .getRoute(object : Callback<DirectionsResponse> {
                 override fun onResponse(
                     call: Call<DirectionsResponse>,
@@ -286,20 +282,13 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
                     }
 
                     currentRoute = response.body()!!.routes()[0]
-                    System.out.println("Response code: "+response.body()?.waypoints()?.size)
-                    //time.text = currentRoute?.duration().toString()
-                    time.text = TimeUnit.MILLISECONDS
-                        .toMinutes(currentRoute?.duration()?.toLong()!!).toString()
+
                     // Draw the route on the map
                     if (navigationMapRoute != null) {
                         navigationMapRoute!!.removeRoute()
                     } else {
-                        navigationMapRoute = NavigationMapRoute(
-                            null,
-                            mapView!!,
-                            mapboxMap!!,
-                            R.style.NavigationMapRoute
-                        )
+                        navigationMapRoute =
+                            NavigationMapRoute(null, mapView, mapboxMap!!, R.style.NavigationMapRoute)
                     }
                     navigationMapRoute!!.addRoute(currentRoute)
                 }
@@ -308,7 +297,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
                     Log.e(TAG, "Error: " + throwable.message)
                 }
             })
-
     }
 
 
