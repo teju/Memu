@@ -49,6 +49,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
 
     lateinit var getVehicleTypeViewModel: GetVehicleTypeViewModel
+    lateinit var postLoginViewModel: PostLoginViewModel
     lateinit var postUserSignupViewModel: PostUserSignupViewModel
     lateinit var postRequestOtpViewModel: PostRequestOtpViewModel
     lateinit var postVerifyOtpViewModel: PostVerifyOtpViewModel
@@ -98,6 +99,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         setRequestOtpAPIObserver()
         setVerifyOtpAPIObserver()
         setUploadDocObserver()
+        setLoginAPIObserver()
+
         getVehicleTypeViewModel.loadData()
         //onScrolledUp()
 
@@ -217,6 +220,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 startAnimation(yellow_car,R.drawable.yellow_car,600,onbording_1 )
             }
              R.id.btnNExt ->{
+
                  prepareParams()
             }
             R.id.get_otp ->{
@@ -420,7 +424,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         State.office_address_line1 = officeAddress.text.toString()
         State.office_formatted_address = officeAddress.text.toString()
         State.otp_code = otp_number.text.toString()
-
+        //postLoginViewModel.loadData(State.mobile,"rider")
         validateForm()
     }
 
@@ -892,6 +896,41 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     when (state) {
                         GetVehicleTypeViewModel.NEXT_STEP -> {
 
+                        }
+                    }
+                })
+
+            }
+        }
+    }
+    fun setLoginAPIObserver() {
+        postLoginViewModel = ViewModelProviders.of(this).get(PostLoginViewModel::class.java).apply {
+            this@RegisterFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostLoginViewModel.NEXT_STEP -> {
+                            home().setFragment(HomeFragment())
+                            UserInfoManager.getInstance(activity!!).saveAuthToken(postLoginViewModel.obj?.access_token!!)
+                            UserInfoManager.getInstance(activity!!).saveAuthToken(postLoginViewModel.obj?.access_token!!)
+                            UserInfoManager.getInstance(activity!!).saveAccountName(postLoginViewModel.obj?.name!!)
+                            UserInfoManager.getInstance(activity!!).saveAccountId(
+                                postLoginViewModel.obj?.user_id.toString()!!)
                         }
                     }
                 })

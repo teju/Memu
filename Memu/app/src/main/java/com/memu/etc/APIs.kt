@@ -48,6 +48,9 @@ class APIs : BaseKeys() {
         val postRideTakers: String
             get() = BASE_URL!!  + BOOKING+ "ride-taker-pooler-suggession"
 
+         val postLogin: String
+            get() = BASE_URL!!  + USER+ "login"
+
         val postRequestRide: String
             get() = BASE_URL!!  + BOOKING+ "request-push-notification-to-ridetaker-pooler"
     }
