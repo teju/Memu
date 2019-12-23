@@ -38,9 +38,16 @@ class ActivityMain : AppCompatActivity(){
         BaseHelper.triggerNotifLog(this);
         Mapbox.getInstance(this, getString(R.string.map_box_access_token));
         if (getIntent().getExtras() != null) {
+            for (key in getIntent().getExtras().keySet()!!)
+            {
+                val value = getIntent().getExtras()?.getString(key)
+                System.out.println("Notification_received key "+key +" value "+value)
+
+            }
             showNotifyDialog(
-                getIntent().getExtras()?.getString("title"),  getIntent().getExtras()?.getString("body"),
-                "Accept Request","",object : NotifyListener {
+                getIntent().getExtras()?.getString("title"),
+                getIntent().getExtras()?.getString("message"),
+                "Reject","Accept",object : NotifyListener {
                     override fun onButtonClicked(which: Int) {
 
                     }
