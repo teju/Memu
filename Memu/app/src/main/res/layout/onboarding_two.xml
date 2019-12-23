@@ -5,7 +5,6 @@
     android:id="@+id/onbording_3"
     android:background="@color/soft_transparent_grey"
     android:layout_height="match_parent">
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,6 +16,7 @@
                 android:src="@drawable/hill_garden"
                 android:scaleType="fitXY"
                 android:layout_below="@+id/top_rl"
+                android:layout_marginTop="80dp"
                 android:id="@+id/bottom_img"
                 android:layout_height="250dp">
             </ImageView>
@@ -24,20 +24,6 @@
                 android:layout_width="match_parent"
                 android:id="@+id/top_rl"
                 android:layout_height="wrap_content">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:visibility="visible"
-                    android:layout_below="@+id/rl"
-                    android:layout_height="wrap_content">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:src="@drawable/right_light"
-                        android:scaleType="fitXY"
-                        android:layout_marginLeft="130dp"
-                        android:layout_marginTop="50dp"
-                        android:layout_height="wrap_content">
-                    </ImageView>
-                </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -77,21 +63,13 @@
                             android:layout_below="@+id/tv2"
                             android:layout_height="wrap_content">
                         </TextView>
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_below="@+id/tv3"
-                            android:layout_marginLeft="-5dp"
-                            android:id="@+id/right_light"
-                            android:src="@drawable/right_light"
-                            android:layout_height="wrap_content">
-                        </ImageView>
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_below="@+id/tv3"
                             android:orientation="horizontal"
                             android:layout_marginTop="20dp"
                             android:id="@+id/llV1"
-                            android:layout_toRightOf="@+id/right_light"
+                            android:layout_marginLeft="25dp"
                             android:layout_height="wrap_content">
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -200,19 +178,12 @@
                             android:layout_height="wrap_content">
                         </TextView>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_below="@+id/llV1"
-                            android:layout_marginLeft="-5dp"
-                            android:id="@+id/right_light_2"
-                            android:src="@drawable/right_light"
-                            android:layout_height="wrap_content">
-                        </ImageView>
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_toRightOf="@+id/right_light_2"
                             android:layout_below="@+id/er_tv1"
                             android:layout_marginTop="20dp"
+                            android:layout_marginLeft="25dp"
                             android:id="@+id/rlreg_no"
                             android:layout_height="wrap_content">
                             <EditText
@@ -276,6 +247,8 @@
                             android:layout_toRightOf="@+id/right_light_2"
                             android:layout_below="@+id/er_tv2"
                             android:layout_marginTop="20dp"
+                            android:layout_marginLeft="25dp"
+
                             android:id="@+id/rldl"
                             android:layout_height="wrap_content">
                             <EditText
@@ -344,6 +317,7 @@
 
         <ImageView
             android:layout_width="80dp"
+            android:id="@+id/road"
             android:layout_marginLeft="60dp"
             android:background="@drawable/themegray_rounded_rectangle_top"
             android:layout_height="match_parent">
@@ -391,6 +365,37 @@
                 android:layout_marginTop="50dp"
                 android:src="@drawable/bush"
                 android:visibility="visible"></ImageView>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="130dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/tv3"
+                android:layout_marginLeft="-5dp"
+                android:layout_marginTop="200dp"
+                android:src="@drawable/right_light"
+                android:layout_height="wrap_content">
+            </ImageView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/tv3"
+                android:layout_marginLeft="-5dp"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/right_light"
+                android:layout_height="wrap_content">
+            </ImageView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/tv3"
+                android:layout_marginLeft="-5dp"
+                android:layout_marginTop="70dp"
+                android:src="@drawable/right_light"
+                android:layout_height="wrap_content">
+            </ImageView>
 
         </LinearLayout>
 

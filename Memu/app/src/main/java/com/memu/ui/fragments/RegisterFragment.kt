@@ -50,6 +50,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
     lateinit var getVehicleTypeViewModel: GetVehicleTypeViewModel
     lateinit var postLoginViewModel: PostLoginViewModel
+    lateinit var postOtpViewModel: PostOtpViewModel
     lateinit var postUserSignupViewModel: PostUserSignupViewModel
     lateinit var postRequestOtpViewModel: PostRequestOtpViewModel
     lateinit var postVerifyOtpViewModel: PostVerifyOtpViewModel
@@ -100,7 +101,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         setVerifyOtpAPIObserver()
         setUploadDocObserver()
         setLoginAPIObserver()
-
+        setOtpAPIObserver()
         getVehicleTypeViewModel.loadData()
         //onScrolledUp()
 
@@ -200,6 +201,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         {
 
             R.id.no_vehicle_btn ->{
+                white_car.visibility = View.VISIBLE
+                yellow_car.visibility = View.GONE
                 State.role_id = "4"
                 State.type = State.NoVehicles
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
@@ -207,12 +210,16 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 startAnimation(white_car,R.drawable.white_car,300,onbording_1)
             }
             R.id.private_vehicle_btn ->{
+                white_car.visibility = View.VISIBLE
+                yellow_car.visibility = View.GONE
                 State.type = State.White_board
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = onbording_3
                 startAnimation(white_car,R.drawable.white_car,400,onbording_1 )
             }
             R.id.cab_vehicle_btn ->{
+                white_car.visibility = View.GONE
+                yellow_car.visibility = View.VISIBLE
                 State.role_id = "6"
                 State.type = State.YELLOW_BOARD
                 ObjectAnimator.ofInt(sv, "scrollY",  cab_onbording_3.getY().toInt()).setDuration(2000).start();
@@ -424,8 +431,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         State.office_address_line1 = officeAddress.text.toString()
         State.office_formatted_address = officeAddress.text.toString()
         State.otp_code = otp_number.text.toString()
-        //postLoginViewModel.loadData(State.mobile,"rider")
-        validateForm()
+        postLoginViewModel.loadData(State.mobile,"rider")
+        //validateForm()
     }
 
     fun callAPIRequestOTP() {
@@ -920,11 +927,47 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                             override fun onButtonClicked(which: Int) { }
                         }
                     )
+
+
                 })
                 isNetworkAvailable.observe(thisFragReference, obsNoInternet)
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostLoginViewModel.NEXT_STEP -> {
+                            val jsonObject = JSONObject()
+                            jsonObject.put("otp_code","123456")
+                            val _state = State()
+                            postOtpViewModel.loadData(_state.LoginForm(State.mobile,"rider"),jsonObject)
+
+                        }
+                    }
+                })
+
+            }
+        }
+    }
+    fun setOtpAPIObserver() {
+        postOtpViewModel = ViewModelProviders.of(this).get(PostOtpViewModel::class.java).apply {
+            this@RegisterFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostOtpViewModel.NEXT_STEP -> {
                             home().setFragment(HomeFragment())
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postLoginViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postLoginViewModel.obj?.access_token!!)
@@ -1072,6 +1115,13 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             if(!BaseHelper.isEmpty(vehicle_no))
                 obj.put("vehicle_no", vehicle_no)
 
+            return obj
+        }
+
+        fun LoginForm(username : String,type: String) : JSONObject {
+            val obj = JSONObject()
+            obj.put("username", username)
+            obj.put("type", type)
             return obj
         }
 

@@ -8,6 +8,7 @@ class Keys : BaseKeys() {
         var GCM_MESSAGE: String = "message"
         val MESSAGE = "message"
         val STATUS_CODE = "success"
+        val FAILED = "failed"
         @kotlin.jvm.JvmField
         val TAG = "tag"
         @kotlin.jvm.JvmField
@@ -31,6 +32,7 @@ class Keys : BaseKeys() {
         val Documents = "Documents"
         val Address = "Address"
         val OtpForm = "OtpForm"
+        val LoginForm = "LoginForm"
         val MOBILE = "mobile"
         val PUSHNOTIFICATION = "PushNotification"
         val DRIVING_LICENCE = "driving_licence"

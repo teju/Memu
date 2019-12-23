@@ -53,5 +53,8 @@ class APIs : BaseKeys() {
 
         val postRequestRide: String
             get() = BASE_URL!!  + BOOKING+ "request-push-notification-to-ridetaker-pooler"
+
+        val postOtp: String
+            get() = BASE_URL!!  + USER+ "otp"
     }
 }
