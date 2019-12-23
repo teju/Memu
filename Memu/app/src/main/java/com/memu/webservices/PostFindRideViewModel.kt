@@ -34,7 +34,7 @@ class PostFindRideViewModel(application: Application) : BaseViewModel(applicatio
                  is_recuring_ride : String,days : String,
                  from :JSONObject,to : JSONObject,
                  no_of_kms : String,
-                 vehicle_id : String) {
+                 type : String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -74,11 +74,11 @@ class PostFindRideViewModel(application: Application) : BaseViewModel(applicatio
         Helper.applyHeader(apl,genericHttpAsyncTask)
         genericHttpAsyncTask.setPostParams(Keys.USER_ID,UserInfoManager.getInstance(apl).getAccountId())
         genericHttpAsyncTask.setPostParams(Keys.DATE,date)
-        genericHttpAsyncTask.setPostParams(Keys.VEHICLE_ID,vehicle_id)
         genericHttpAsyncTask.setPostParams(Keys.TIME,time)
         genericHttpAsyncTask.setPostParams(Keys.NO_OF_SEATS,no_of_seats)
         genericHttpAsyncTask.setPostParams(Keys.IS_RECURING_RIDE,is_recuring_ride)
         genericHttpAsyncTask.setPostParams(Keys.DAYS,days)
+        genericHttpAsyncTask.setPostParams(Keys.TYPE,type)
         genericHttpAsyncTask.setPostParams(Keys.NO_OF_KMS,no_of_kms)
         genericHttpAsyncTask.setPostParams(Keys.To,to)
         genericHttpAsyncTask.setPostParams(Keys.FROM,from)

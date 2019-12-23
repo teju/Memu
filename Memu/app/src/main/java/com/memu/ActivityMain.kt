@@ -8,12 +8,14 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.franmontiel.localechanger.LocaleChanger
+import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.helpers.BaseUIHelper
 import com.mapbox.mapboxsdk.Mapbox
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
 import com.memu.ui.BaseFragment
+import com.memu.ui.dialog.NotifyDialogFragment
 import com.memu.ui.fragments.HomeFragment
 import com.memu.ui.fragments.MainFragment
 import io.paperdb.Paper
@@ -35,9 +37,34 @@ class ActivityMain : AppCompatActivity(){
         triggerMainProcess()
         BaseHelper.triggerNotifLog(this);
         Mapbox.getInstance(this, getString(R.string.map_box_access_token));
+        if (getIntent().getExtras() != null) {
+            showNotifyDialog(
+                getIntent().getExtras()?.getString("title"),  getIntent().getExtras()?.getString("body"),
+                "Accept Request","",object : NotifyListener {
+                    override fun onButtonClicked(which: Int) {
 
+                    }
+                }
+            )
+        }
     }
 
+    open fun showNotifyDialog(
+        tittle: String?,
+        messsage: String?,
+        button_positive:String?,
+        button_negative: String?,
+        n: NotifyListener){
+        val f = NotifyDialogFragment().apply {
+            this.listener = n
+        }
+        f.notify_tittle = tittle
+        f.notify_messsage = messsage
+        f.button_positive = button_positive
+        f.button_negative = button_negative
+        f.isCancelable = false
+        f.show(supportFragmentManager, NotifyDialogFragment.TAG)
+    }
 
     override fun attachBaseContext(newBase: Context) {
         var newBase = newBase

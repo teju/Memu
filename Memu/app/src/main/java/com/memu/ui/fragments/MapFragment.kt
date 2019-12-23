@@ -34,6 +34,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.gon.etc.callback.PermissionListener
+import com.iapps.gon.etc.callback.RequestListener
 import com.iapps.libs.helpers.BaseHelper
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -72,6 +73,7 @@ import com.mapbox.turf.TurfConstants
 import com.mapbox.turf.TurfMeasurement
 import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.GPSTracker
+import com.memu.etc.GoogleMapsPath
 import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
 import com.memu.webservices.*
@@ -86,6 +88,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
 import java.io.IOException
+import java.lang.Exception
+import java.util.concurrent.TimeUnit
 
 
 class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, MapboxMap.OnMapClickListener,
@@ -95,6 +99,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
     var src: CarmenFeature? = null
     var dest: CarmenFeature? = null
     var trip_rider_id: String? = ""
+    var type: String? = ""
     private var gpsTracker: GPSTracker? = null
     private var mapboxMap: MapboxMap? = null
     // variables for adding location layer
@@ -105,6 +110,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
     private var navigationMapRoute: NavigationMapRoute? = null
     // variables needed to initialize navigation
     lateinit var postnviteRideGiversViewModel : PostnviteRideGiversViewModel
+    lateinit var postRidersFragment: PostRequestRideViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(com.memu.R.layout.map_fragment, container, false)
@@ -118,6 +124,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
 
     private fun initUI() {
         setInviteRideGiversAPIObserver()
+        setRequestRideAPIObserver()
         find_riders.setOnClickListener(this)
         gpsTracker = GPSTracker(activity)
         if(gpsTracker?.canGetLocation()!!) {
@@ -131,7 +138,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
                 sos.visibility = View.GONE
             }
             Keys.POOLING -> {
-                postnviteRideGiversViewModel.loadData(trip_rider_id!!)
+                postnviteRideGiversViewModel.loadData(trip_rider_id!!,type!!)
                 shortes_route_result.visibility = View.GONE
                 startButton.visibility = View.GONE
                 find_riders.visibility = View.VISIBLE
@@ -144,10 +151,19 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.find_riders ->
-                if(postnviteRideGiversViewModel.obj?.rider_list != null) {
+                if(postnviteRideGiversViewModel.obj?.pooler_list != null) {
+                    showMatchingRiders(postnviteRideGiversViewModel.obj?.pooler_list!!,
+                        object : RequestListener {
+                            override fun onButtonClicked(user_id: String, id: String) {
+                                postRidersFragment.loadData(user_id,id,type!!)
+
+                            }
+                        })
+                } else {
                     showMatchingRiders(postnviteRideGiversViewModel.obj?.rider_list!!,
-                        object : NotifyListener {
-                            override fun onButtonClicked(which: Int) {
+                        object : RequestListener {
+                            override fun onButtonClicked(user_id: String, id: String) {
+                                postRidersFragment.loadData(user_id,id,type!!)
                             }
                         })
                 }
@@ -235,6 +251,10 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
         dist.text = String.format("%.2f", distance)  +" Kms"
         getRoute(originPoint!!, destinationPoint)
         startButton!!.isEnabled = true
+
+
+        GoogleMapsPath().getDirectionsUrl(LatLng(originPoint!!.latitude(), originPoint!!.longitude())
+            , LatLng(destinationPoint.latitude(),destinationPoint.longitude()),activity)
     }
 
     private fun getRoute(origin: Point, destination: Point) {
@@ -267,7 +287,9 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
 
                     currentRoute = response.body()!!.routes()[0]
                     System.out.println("Response code: "+response.body()?.waypoints()?.size)
-                    time.text = currentRoute?.duration().toString()
+                    //time.text = currentRoute?.duration().toString()
+                    time.text = TimeUnit.MILLISECONDS
+                        .toMinutes(currentRoute?.duration()?.toLong()!!).toString()
                     // Draw the route on the map
                     if (navigationMapRoute != null) {
                         navigationMapRoute!!.removeRoute()
@@ -289,17 +311,48 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
 
     }
 
+
     fun addMarkers() {
 
         val symbolLayerIconFeatureList = ArrayList<Feature>()
-        for (x in 0 until postnviteRideGiversViewModel.obj?.rider_list?.size!!) {
-            symbolLayerIconFeatureList.add(
-                Feature.fromGeometry(
-                    Point.fromLngLat(postnviteRideGiversViewModel.obj?.rider_list?.get(x)?.from_address?.longitude!!.toDouble(),
-                        postnviteRideGiversViewModel.obj?.rider_list?.get(x)?.from_address?.lattitude!!.toDouble())
+        try {
+            for (x in 0 until postnviteRideGiversViewModel.obj?.pooler_list?.size!!) {
+                symbolLayerIconFeatureList.add(
+                    Feature.fromGeometry(
+                        Point.fromLngLat(
+                            postnviteRideGiversViewModel.obj?.pooler_list?.get(x)?.from_address?.longitude!!.toDouble(),
+                            postnviteRideGiversViewModel.obj?.pooler_list?.get(x)?.from_address?.lattitude!!.toDouble()
+                        )
+                    )
                 )
-            )
-            System.out.println("addMarkers "+postnviteRideGiversViewModel.obj?.rider_list?.get(x)?.from_address?.longitude!!)
+                System.out.println(
+                    "addMarkers " + postnviteRideGiversViewModel.obj?.pooler_list?.get(
+                        x
+                    )?.from_address?.longitude!!
+                )
+
+            }
+        } catch (e : Exception){
+
+        }
+        try {
+            for (x in 0 until postnviteRideGiversViewModel.obj?.rider_list?.size!!) {
+                symbolLayerIconFeatureList.add(
+                    Feature.fromGeometry(
+                        Point.fromLngLat(
+                            postnviteRideGiversViewModel.obj?.rider_list?.get(x)?.from_address?.longitude!!.toDouble(),
+                            postnviteRideGiversViewModel.obj?.rider_list?.get(x)?.from_address?.lattitude!!.toDouble()
+                        )
+                    )
+                )
+                System.out.println(
+                    "addMarkers " + postnviteRideGiversViewModel.obj?.rider_list?.get(
+                        x
+                    )?.from_address?.longitude!!
+                )
+
+            }
+        } catch (e : Exception){
 
         }
         val drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.map_marker, null);
@@ -390,6 +443,36 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
         }
     }
 
+    fun setRequestRideAPIObserver() {
+        postRidersFragment = ViewModelProviders.of(this).get(PostRequestRideViewModel::class.java).apply {
+            this@MapFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostRequestRideViewModel.NEXT_STEP -> {
+
+                        }
+                    }
+                })
+            }
+        }
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int, @io.reactivex.annotations.NonNull permissions: Array<String>, @io.reactivex.annotations.NonNull grantResults: IntArray) {
         permissionsManager!!.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
@@ -432,13 +515,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
         mapView!!.onSaveInstanceState(outState)
     }
 
-    override fun onBackTriggered() {
-        super.onBackTriggered()
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView!!.onDestroy()
-    }
 
     override fun onLowMemory() {
         super.onLowMemory()

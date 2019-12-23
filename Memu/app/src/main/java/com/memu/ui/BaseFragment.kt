@@ -28,6 +28,7 @@ import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.request.DataReadRequest
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.gon.etc.callback.PermissionListener
+import com.iapps.gon.etc.callback.RequestListener
 import com.iapps.libs.generics.GenericFragment
 import com.iapps.libs.helpers.BaseUIHelper
 import com.iapps.libs.views.LoadingCompound
@@ -390,7 +391,7 @@ open class BaseFragment : GenericFragment() {
 
     open fun showMatchingRiders(
         rider_list: List<Rider>,
-        n: NotifyListener){
+        n: RequestListener){
         val f = MatchingRidersFragment().apply {
             this.listener = n
         }

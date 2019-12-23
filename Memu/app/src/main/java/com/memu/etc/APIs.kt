@@ -42,16 +42,13 @@ class APIs : BaseKeys() {
         val getPoolerVehicle: String
             get() = BASE_URL!!  + VEHICLE+ "get-pooler-vehicles"
 
-        val postFindtip: String
-            get() = BASE_URL!!  + BOOKING+ "find-trip"
-
-        val postFindtipGivers: String
-            get() = BASE_URL!!  + BOOKING+ "invite-ride-givers"
-
         val postOffersRides: String
-            get() = BASE_URL!!  + BOOKING+ "offer-ride"
+            get() = BASE_URL!!  + BOOKING+ "offer-find-ride"
 
         val postRideTakers: String
-            get() = BASE_URL!!  + BOOKING+ "invite-ride-taker"
+            get() = BASE_URL!!  + BOOKING+ "ride-taker-pooler-suggession"
+
+        val postRequestRide: String
+            get() = BASE_URL!!  + BOOKING+ "request-push-notification-to-ridetaker-pooler"
     }
 }

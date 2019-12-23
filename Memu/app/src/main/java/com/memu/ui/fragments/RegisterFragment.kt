@@ -76,6 +76,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
     private fun initUI() {
         no_vehicle_btn.setOnClickListener(this)
+        cab_vehicle_btn.setOnClickListener(this)
         private_vehicle_btn.setOnClickListener(this)
         btnNExt.setOnClickListener(this)
         get_otp.setOnClickListener(this)
@@ -115,6 +116,24 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 }
             })
         permissions()
+
+        car_rd_btn.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(bike_rd_btn.isChecked) {
+                bike_rd_btn.isChecked = false
+            }
+            car_rd_btn.isChecked = isChecked
+            State.role_id = "3"
+            State.type = State.White_board
+
+        }
+        bike_rd_btn.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(car_rd_btn.isChecked) {
+                car_rd_btn.isChecked = false
+            }
+            bike_rd_btn.isChecked = isChecked
+            State.role_id = "5"
+            State.type = State.BIKE_White_board
+        }
    }
 
     fun permissions() {
@@ -178,6 +197,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         {
 
             R.id.no_vehicle_btn ->{
+                State.role_id = "4"
                 State.type = State.NoVehicles
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
@@ -190,6 +210,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 startAnimation(white_car,R.drawable.white_car,400,onbording_1 )
             }
             R.id.cab_vehicle_btn ->{
+                State.role_id = "6"
                 State.type = State.YELLOW_BOARD
                 ObjectAnimator.ofInt(sv, "scrollY",  cab_onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = cab_onbording_3
@@ -443,7 +464,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         if(BaseHelper.isEmpty(registration_certificateID)){
             er_tv2.visibility = View.VISIBLE
             reg_no.requestFocus()
-            er_tv1.text = "Upload vehicle registration certificate photo"
+            er_tv2.text = "Upload vehicle registration certificate photo"
 
             return false
         } else {
@@ -452,12 +473,56 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
         if(BaseHelper.isEmpty(driving_licenceID)){
             er_tv3.visibility = View.VISIBLE
-            er_tv1.text = "upload your DL"
+            er_tv3.text = "upload your DL"
             dl.requestFocus()
             return false
         } else {
             dl.clearFocus()
             er_tv3.visibility = View.GONE
+        }
+
+        return true
+    }
+
+    fun validateCabVehicleForm() :Boolean{
+
+        if(BaseHelper.isEmpty(State.vehicle_brand)) {
+            cab_er_tv1.visibility = View.VISIBLE
+            cab_er_tv1.text = "Enter vehicle brand"
+            cab_edtVehicleBrand.requestFocus();
+            return false
+        } else {
+            edtVehicleBrand.clearFocus();
+            cab_edtVehicleBrand.visibility = View.GONE
+        }
+        if(BaseHelper.isEmpty(State.vehicle_name)) {
+            cab_er_tv1.visibility = View.VISIBLE
+            cab_er_tv1.text = "Enter vehicle name"
+            cab_VehicleName.requestFocus();
+            return false
+        } else {
+            cab_VehicleName.clearFocus();
+            cab_er_tv1.visibility = View.GONE
+        }
+
+        if(BaseHelper.isEmpty(State.vehicle_no)){
+            cab_er_tv1.visibility = View.VISIBLE
+            cab_reg_no.requestFocus()
+            cab_er_tv1.text = "Enter vehicle number"
+
+            return false
+        } else {
+            cab_reg_no.clearFocus()
+            cab_er_tv1.visibility = View.GONE
+        }
+        if(BaseHelper.isEmpty(State.dl_number)){
+            cab_er_tv3.visibility = View.VISIBLE
+            cab_er_tv3.text = "Enter DL Number"
+            cab_dl.requestFocus()
+            return false
+        } else {
+            cab_dl.clearFocus()
+            cab_er_tv3.visibility = View.GONE
         }
 
         return true
@@ -487,7 +552,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         if(BaseHelper.isEmpty(State.vehicle_no)){
             er_tv2.visibility = View.VISIBLE
             reg_no.requestFocus()
-            er_tv1.text = "Enter vehicle number"
+            er_tv2.text = "Enter vehicle number"
 
             return false
         } else {
@@ -496,12 +561,19 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
         if(BaseHelper.isEmpty(State.dl_number)){
             er_tv3.visibility = View.VISIBLE
-            er_tv1.text = "Enter DL Number"
+            er_tv3.text = "Enter DL Number"
             dl.requestFocus()
             return false
         } else {
             dl.clearFocus()
             er_tv3.visibility = View.GONE
+        }
+
+        if(BaseHelper.isEmpty(State.role_id)) {
+            er_tv1.visibility = View.VISIBLE
+            er_tv1.text = "Select Car or Bike"
+            VehicleName.requestFocus();
+            return false
         }
 
         return true
@@ -512,7 +584,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         if(BaseHelper.isEmpty(State.address_line1)) {
             er_mtv5.visibility = View.VISIBLE
             home_address.requestFocus()
-            er_tv1.text = "Enter Address"
+            er_mtv5.text = "Enter Address"
             return false
         } else {
             home_address.clearFocus()
@@ -522,7 +594,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         if(BaseHelper.isEmpty(State.email) || !Helper.isValidEmail(State.email)) {
             er_mtv4.visibility = View.VISIBLE
             edtEmail.requestFocus()
-            er_tv1.text = "Enter valid email id"
+            er_mtv4.text = "Enter valid email id"
             return false
         } else {
             edtEmail.clearFocus()
@@ -532,7 +604,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             if (BaseHelper.isEmpty(State.office_address_line1)) {
                 er_otv1.visibility = View.VISIBLE
                 edtofficeEmail.requestFocus()
-                er_tv1.text = "Enter Address"
+                er_otv1.text = "Enter Address"
                 return false
             } else {
                 edtofficeEmail.clearFocus()
@@ -542,7 +614,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             if (BaseHelper.isEmpty(State.office_email) || !Helper.isValidEmail(State.office_email)) {
                 er_otv2.visibility = View.VISIBLE
                 edtofficeEmail.requestFocus()
-                er_tv1.text = "Enter valid office mail id"
+                er_otv2.text = "Enter valid office mail id"
                 return false
             } else {
                 edtofficeEmail.clearFocus()
@@ -573,7 +645,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         if(BaseHelper.isEmpty(State.otp_code)) {
             er_mtv3.visibility = View.VISIBLE
             otp_number.requestFocus()
-            er_tv1.text = "Enter valid otp number"
+            er_mtv3.text = "Enter valid otp number"
             return false
         } else {
             otp_number.clearFocus()
@@ -617,7 +689,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
 
 
-
 //        if(BaseHelper.isEmpty(State.role_type))
 //            return false
 
@@ -640,7 +711,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
             State.YELLOW_BOARD -> {
                 jsonArray.put(0,state.Address())
-                if(validateAPIForm() && validateVehicleForm() && validateOTp()
+                if(validateAPIForm() && validateCabVehicleForm() && validateOTp()
                     && validateaddressForm() && validateUploadForm() ){
                     val vehicle_photo = JSONObject()
                     vehicle_photo.put("type",Keys.VEHICLE)
@@ -665,9 +736,13 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     callRegister()
                 }
             }
-            State.White_board -> {
+            State.White_board,State.BIKE_White_board -> {
                 jsonArray.put(0,state.Address())
                 jsonArray.put(1,state.OfficeAddress())
+                System.out.println("validateAPIForm() "+validateAPIForm()+
+                        " validateVehicleForm "+validateVehicleForm()
+                        +" validateOTp "+validateOTp()+" validateaddressForm "
+                        +validateaddressForm()+" validateUploadForm "+validateUploadForm())
                 if(validateAPIForm() && validateVehicleForm() && validateOTp()
                     && validateaddressForm() && validateUploadForm()){
                     val vehicle_photo = JSONObject()
@@ -878,7 +953,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             var email = ""
             var office_email = ""
             var mobile = ""
-            var role_type = ""
             var referel_code = ""
             var vehicle_type = 0
             var vehicle_brand = ""
@@ -889,12 +963,14 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             var longitude = 0.0
             var formatted_address = ""
             var otp_code = ""
+            var role_id = ""
             var dl_number = ""
             var office_address_line1 = ""
             var office_formatted_address = ""
 
             var YELLOW_BOARD = 1
             var White_board = 2
+            var BIKE_White_board = 3
             var NoVehicles = 4
 
             var type = NoVehicles
@@ -980,8 +1056,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             if(!BaseHelper.isEmpty(mobile))
                 obj.put("mobile", mobile)
 
-            if(!BaseHelper.isEmpty(role_type))
-                obj.put("role_type", role_type)
+            if(!BaseHelper.isEmpty(role_id))
+                obj.put("role_id", role_id)
 
             obj.put("referel_code", referel_code)
 

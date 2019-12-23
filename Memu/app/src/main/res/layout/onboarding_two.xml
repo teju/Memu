@@ -131,8 +131,8 @@
                                     android:paddingBottom="7dp"
                                     android:layout_height="wrap_content">
                                 </EditText>
-
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:orientation="vertical"
@@ -162,11 +162,36 @@
                             </LinearLayout>
 
                         </RelativeLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:id="@+id/radio_btn"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="25dp"
+                            android:layout_below="@+id/llV1"
+                            android:layout_height="wrap_content">
+                            <RadioButton
+                                android:layout_width="wrap_content"
+                                android:text="it's a Car"
+                                android:id="@+id/car_rd_btn"
+                                android:layout_height="wrap_content">
+
+                            </RadioButton>
+                            <RadioButton
+                                android:layout_width="wrap_content"
+                                android:text="it's a Bike"
+                                android:id="@+id/bike_rd_btn"
+                                android:layout_height="wrap_content">
+
+                            </RadioButton>
+
+                        </LinearLayout>
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_marginTop="10dp"
                             android:text="Enter vehicle brand"
-                            android:layout_below="@+id/llV1"
+                            android:layout_below="@+id/radio_btn"
                             android:id="@+id/er_tv1"
                             android:textSize="15dp"
                             android:layout_marginLeft="35dp"

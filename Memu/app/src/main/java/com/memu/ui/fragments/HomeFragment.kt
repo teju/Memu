@@ -65,23 +65,24 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
     private var pendingIntent: PendingIntent? = null
     private var alarmManager: AlarmManager? = null
     private var gpsTracker: GPSTracker? = null
+
     lateinit var postUpdateNotiTokenViewModel: PostUpdateNotiTokenViewModel
-    lateinit var postPoolerVehicleViewModel: PostPoolerVehicleViewModel
     lateinit var postFindRideViewModel: PostFindRideViewModel
-    var  home: CarmenFeature? = null;
-    var  work: CarmenFeature? = null;
+
+
     private val REQUEST_CODE_AUTOCOMPLETE = 1
     private val REQUEST_CODE_AUTOCOMPLETEDEST = 2
+
     var selectedCarmenFeatureSrc:CarmenFeature? = null
     var selectedCarmenFeatureDest:CarmenFeature? = null
+
     var type = 1
     var FINDRIDER = 1
     var OFFERRIDE = 2
-    var menuList : List<String>? = null
     var strdate =""
     var strtime =""
     var strseat =""
-
+    var strType = "find_ride"
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(com.memu.R.layout.home_fragment, container, false)
         return v
@@ -94,7 +95,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 
     private fun initUI() {
         setUpdateNotiTokenAPIObserver()
-        setPoolerVehicleListAPIObserver()
         setFindTripAPIObserver()
 
         gpsTracker = GPSTracker(activity)
@@ -125,19 +125,21 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         time.setOnClickListener(this)
         seatstv.setOnClickListener(this)
         find_ride.setOnClickListener(this)
+
         initSearchFab()
         initSearchFabDest()
+        System.out.println("getAccountName "+UserInfoManager.getInstance(activity!!).getAccountName())
         name.setText(UserInfoManager.getInstance(activity!!).getAccountName())
         date.text = SimpleDateFormat("EEE,\nMMM dd").format(System.currentTimeMillis())
         time.text = SimpleDateFormat("hh:mm\na").format(System.currentTimeMillis())
         seatstv.text = "01\nSeats"
         find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
         offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)
-        postPoolerVehicleViewModel.loadData()
 
         strdate =  SimpleDateFormat("yyyy-MM-dd").format(System.currentTimeMillis())
         strtime =  SimpleDateFormat("hh:mm a").format(System.currentTimeMillis())
         strseat = "01"
+
     }
 
     fun spinner() {
@@ -162,17 +164,11 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 
     fun memuData(popup:PopupMenu) {
         popup.getMenu().clear()
-        if(type == FINDRIDER) {
-            popup.getMenu().add("01");
-            popup.getMenu().add("02");
-            popup.getMenu().add("03");
-            popup.getMenu().add("04");
-            popup.getMenu().add("05");
-        } else {
-            for (x in 0 until postPoolerVehicleViewModel.obj?.list?.size!!) {
-                popup.getMenu().add(postPoolerVehicleViewModel.obj?.list?.get(x)?.vehicle_name);
-            }
-        }
+        popup.getMenu().add("01");
+        popup.getMenu().add("02");
+        popup.getMenu().add("03");
+        popup.getMenu().add("04");
+        popup.getMenu().add("05");
     }
 
     fun startAlarm() {
@@ -200,7 +196,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         val To = FromJSon((selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).latitude(),
             (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).longitude())
         postFindRideViewModel.loadData(strdate,strtime, strseat,"no","",
-            from,To,distance.toInt().toString(),"1")
+            from,To,distance.toInt().toString(),strType)
 
     }
 
@@ -274,21 +270,17 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
             }
             R.id.time -> {
                 TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
-
             }
             R.id.find_ride -> {
-
+                strType = "find_ride"
                 seatstv.text = "01\nSeats"
                 type = FINDRIDER
                 find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
                 offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)
             }
             R.id.offer_ride -> {
-                if(postPoolerVehicleViewModel.obj?.list?.size != 0) {
-                    seatstv.text = postPoolerVehicleViewModel.obj?.list?.get(0)?.vehicle_name
-                } else {
-                    seatstv.text = ""
-                }
+                seatstv.text = "01\nSeats"
+                strType = "offer_ride"
                 type = OFFERRIDE
                 find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)
                 offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
@@ -326,6 +318,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         arrow_left.visibility = View.VISIBLE
         llPooling.visibility = View.VISIBLE
         cancel.visibility = View.VISIBLE
+        offer_take_ride.visibility = View.VISIBLE
         rlTopBar.visibility = View.GONE
         home_map_bg.alpha = 0.5f
         rlpooling.alpha = 1f
@@ -340,6 +333,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         popUpView.visibility = View.VISIBLE
         cancel.visibility = View.VISIBLE
         rlTopBar.visibility = View.GONE
+        offer_take_ride.visibility = View.GONE
         llPooling.visibility = View.GONE
         arrow_left.visibility = View.VISIBLE
         home_map_bg.alpha = 0.5f
@@ -390,9 +384,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         }
     }
 
-    override fun onBackTriggered() {
-        home().exitApp()
-    }
 
     fun setUpdateNotiTokenAPIObserver() {
         postUpdateNotiTokenViewModel = ViewModelProviders.of(this).get(PostUpdateNotiTokenViewModel::class.java).apply {
@@ -420,31 +411,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         }
     }
 
-    fun setPoolerVehicleListAPIObserver() {
-        postPoolerVehicleViewModel = ViewModelProviders.of(this).get(PostPoolerVehicleViewModel::class.java).apply {
-            this@HomeFragment.let { thisFragReference ->
-                isLoading.observe(thisFragReference, Observer { aBoolean ->
-                    if(aBoolean!!) {
-                        ld.showLoadingV2()
-                    } else {
-                        ld.hide()
-                    }
-                })
-                errorMessage.observe(thisFragReference, Observer { s ->
-
-                })
-                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
-                getTrigger().observe(thisFragReference, Observer { state ->
-                    when (state) {
-                        PostPoolerVehicleViewModel.NEXT_STEP -> {
-
-                        }
-                    }
-                })
-
-            }
-        }
-    }
 
     fun setFindTripAPIObserver() {
         postFindRideViewModel = ViewModelProviders.of(this).get(PostFindRideViewModel::class.java).apply {
@@ -471,7 +437,12 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
                             home().setFragment(MapFragment().apply {
                                 src = selectedCarmenFeatureSrc
                                 dest = selectedCarmenFeatureDest
-                                trip_rider_id = postFindRideViewModel.obj?.trip_id!!
+                                if(postFindRideViewModel.obj?.trip_id != null) {
+                                    trip_rider_id = postFindRideViewModel.obj?.trip_id!!
+                                } else {
+                                    trip_rider_id = postFindRideViewModel.obj?.trip_rider_id!!
+                                }
+                                this.type = strType
                             })
                         }
                     }

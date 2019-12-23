@@ -80,6 +80,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:orientation="vertical"
+                    android:id="@+id/routell"
+                    android:visibility="gone"
                     android:gravity="center_vertical"
                     android:layout_gravity="center_vertical"
                     android:layout_height="match_parent">
@@ -132,6 +134,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:orientation="vertical"
+                    android:id="@+id/pay_ll"
+                    android:visibility="gone"
                     android:gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:layout_gravity="center_vertical"
@@ -165,15 +169,15 @@
             android:layout_marginRight="8dp"
             android:layout_height="wrap_content">
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="20dp"
                 android:src="@drawable/request"
                 android:layout_gravity="center_horizontal"
-                android:layout_height="wrap_content">
+                android:layout_height="20dp">
             </ImageView>
             <TextView
                 android:layout_width="wrap_content"
                 android:id="@+id/req"
-                android:textSize="12dp"
+                android:textSize="10dp"
                 android:text="Request"
                 android:layout_height="wrap_content">
             </TextView>

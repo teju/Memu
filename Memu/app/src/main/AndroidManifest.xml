@@ -19,7 +19,9 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="xxx6c41xxx6ec601xxxd4xxxa2" />
-        <activity android:name=".ActivityMain">
+        <activity android:name=".ActivityMain"
+            android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

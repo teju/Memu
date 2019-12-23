@@ -384,6 +384,8 @@
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
                         android:gravity="end"
+                        android:id="@+id/offer_take_ride"
+                        android:visibility="gone"
                         android:layout_marginRight="40dp"
                         android:layout_height="wrap_content">
                         <RelativeLayout

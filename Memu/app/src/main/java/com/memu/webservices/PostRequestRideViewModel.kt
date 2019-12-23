@@ -7,13 +7,12 @@ import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
 import com.memu.etc.*
 import com.memu.modules.FindTrip.FindTRip
-import com.memu.modules.TripGivers.TripGivers
+import com.memu.modules.GenericResponse
 import com.memu.modules.VehicleType.VehicleType
 import com.memu.modules.poolerVehicles.PoolerVehicles
-import com.memu.modules.riderList.RiderList
 import org.json.JSONObject
 
-class PostnviteRideGiversViewModel(application: Application) : BaseViewModel(application) {
+class PostRequestRideViewModel(application: Application) : BaseViewModel(application) {
 
     private val trigger = SingleLiveEvent<Integer>()
 
@@ -21,7 +20,7 @@ class PostnviteRideGiversViewModel(application: Application) : BaseViewModel(app
 
     var apl: Application
 
-    var obj: RiderList? = null
+    var obj: GenericResponse? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -32,7 +31,7 @@ class PostnviteRideGiversViewModel(application: Application) : BaseViewModel(app
         this.apl = application
     }
 
-    fun loadData(trip_rider_id : String,type : String) {
+    fun loadData(user_id : String,id :String,type : String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -52,7 +51,7 @@ class PostnviteRideGiversViewModel(application: Application) : BaseViewModel(app
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), RiderList::class.java)
+                        obj = gson.fromJson(response!!.content.toString(), GenericResponse::class.java)
                         if (obj!!.status.equals(Keys.STATUS_CODE)) {
                             trigger.postValue(NEXT_STEP)
                         }else{
@@ -68,13 +67,12 @@ class PostnviteRideGiversViewModel(application: Application) : BaseViewModel(app
         })
 
         genericHttpAsyncTask.method = BaseConstants.POST
-        genericHttpAsyncTask.setUrl(APIs.postRideTakers)
+        genericHttpAsyncTask.setUrl(APIs.postRequestRide)
         Helper.applyHeader(apl,genericHttpAsyncTask)
+        genericHttpAsyncTask.setPostParams(Keys.TO_USER_ID,user_id)
+        genericHttpAsyncTask.setPostParams(Keys.ID,id)
         genericHttpAsyncTask.setPostParams(Keys.USER_ID,UserInfoManager.getInstance(apl).getAccountId())
-        genericHttpAsyncTask.setPostParams(Keys.TRIP_RIDER_ID,trip_rider_id)
         genericHttpAsyncTask.setPostParams(Keys.TYPE,type)
-        genericHttpAsyncTask.setPostParams(Keys.OFFSET,"0")
-        genericHttpAsyncTask.setPostParams(Keys.LIMIT,"1000")
         genericHttpAsyncTask.context = apl.applicationContext
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.execute()

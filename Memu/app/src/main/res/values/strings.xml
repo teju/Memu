@@ -3,6 +3,7 @@
     <string name="ok">ok</string>
     <string name="no_connection">Poor or no internet connection found.\nPlease check your internet connection.</string>
     <string name="map_box_access_token">pk.eyJ1IjoidGVqYXN3aW5pMTIiLCJhIjoiY2szeW4xNjZpMG5sNjNqczh0Y2Foc3l1YiJ9.2-baGFYmq-h827W1JN2yNQ</string>
+    <string name="google_maps_key">AIzaSyDxi2FhOwA_lVtNRhp6AJuqLV0nOSYvzmM</string>
     <string-array name="Seats">
         <item>01</item>
         <item>02</item>
