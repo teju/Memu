@@ -56,5 +56,8 @@ class APIs : BaseKeys() {
 
         val postOtp: String
             get() = BASE_URL!!  + USER+ "otp"
+
+        val postAcceptRejectReq : String
+            get() = BASE_URL!!  + BOOKING+ "ride-approve-reject"
     }
 }

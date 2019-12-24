@@ -151,21 +151,30 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.find_riders ->
-                if(postnviteRideGiversViewModel.obj?.pooler_list != null) {
-                    showMatchingRiders(postnviteRideGiversViewModel.obj?.pooler_list!!,
-                        object : RequestListener {
-                            override fun onButtonClicked(user_id: String, id: String) {
-                                postRidersFragment.loadData(user_id,id,type!!)
+                try {
+                    if (postnviteRideGiversViewModel.obj?.pooler_list != null) {
+                        showMatchingRiders(postnviteRideGiversViewModel.obj?.pooler_list!!,
+                            object : RequestListener {
+                                override fun onButtonClicked(user_id: String, id: String) {
+                                    postRidersFragment.loadData(user_id, id, type!!)
 
-                            }
-                        })
-                } else {
-                    showMatchingRiders(postnviteRideGiversViewModel.obj?.rider_list!!,
-                        object : RequestListener {
-                            override fun onButtonClicked(user_id: String, id: String) {
-                                postRidersFragment.loadData(user_id,id,type!!)
-                            }
-                        })
+                                }
+                            })
+                    } else {
+                        showMatchingRiders(postnviteRideGiversViewModel.obj?.rider_list!!,
+                            object : RequestListener {
+                                override fun onButtonClicked(user_id: String, id: String) {
+                                    postRidersFragment.loadData(user_id, id, type!!)
+                                }
+                            })
+                    }
+                } catch (e : Exception){
+                    showNotifyDialog(
+                        "No Matching List found", "",
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
                 }
         }
     }

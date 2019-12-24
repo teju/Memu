@@ -57,6 +57,9 @@ class Keys : BaseKeys() {
         val TYPE = "type"
         val TO_USER_ID = "to_user_id"
         val ID = "id"
+        val TRIP_ID = "trip_id"
+        val TRIP_RIDER_ID_ = "trip_rider_id"
+        val STATUS = "status"
 
         @kotlin.jvm.JvmField
         var GCM_DT : String = "dt"

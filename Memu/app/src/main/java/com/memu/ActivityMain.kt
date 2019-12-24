@@ -7,6 +7,8 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.franmontiel.localechanger.LocaleChanger
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
@@ -18,7 +20,11 @@ import com.memu.ui.BaseFragment
 import com.memu.ui.dialog.NotifyDialogFragment
 import com.memu.ui.fragments.HomeFragment
 import com.memu.ui.fragments.MainFragment
+import com.memu.ui.fragments.MapFragment
+import com.memu.webservices.PostFindRideViewModel
+import com.memu.webservices.PostacceptRejectViewModel
 import io.paperdb.Paper
+import kotlinx.android.synthetic.main.home_fragment.*
 import java.util.ArrayList
 
 class ActivityMain : AppCompatActivity(){
@@ -28,6 +34,7 @@ class ActivityMain : AppCompatActivity(){
         private val MAIN_FLOW_TAG = "MainFlowFragment"
 
     }
+    lateinit var postacceptRejectViewModel: PostacceptRejectViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +43,7 @@ class ActivityMain : AppCompatActivity(){
         Paper.init(this);
         triggerMainProcess()
         BaseHelper.triggerNotifLog(this);
+        setAcceptRejectAPIObserver()
         Mapbox.getInstance(this, getString(R.string.map_box_access_token));
         if (getIntent().getExtras() != null) {
             for (key in getIntent().getExtras().keySet()!!)
@@ -50,7 +58,12 @@ class ActivityMain : AppCompatActivity(){
                     getIntent().getExtras()?.getString("message"),
                     "Reject", "Accept", object : NotifyListener {
                         override fun onButtonClicked(which: Int) {
+                            if(which == NotifyDialogFragment.BUTTON_NEGATIVE) {
 
+                            }
+                            if(which == NotifyDialogFragment.BUTTON_POSITIVE) {
+
+                            }
                         }
                     }
                 )
@@ -313,6 +326,33 @@ class ActivityMain : AppCompatActivity(){
         getSupportFragmentManager().popBackStack("MAIN_TAB", FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         MAIN_FLOW_INDEX = 0
+    }
+
+    fun setAcceptRejectAPIObserver() {
+        postacceptRejectViewModel = ViewModelProviders.of(this).get(PostacceptRejectViewModel::class.java).apply {
+            this@ActivityMain.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+
+                    }
+                })
+            }
+        }
     }
 
     fun removeFragments(fragList: ArrayList<Fragment>) {

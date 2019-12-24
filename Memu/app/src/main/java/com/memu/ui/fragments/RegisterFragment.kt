@@ -431,7 +431,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         State.office_address_line1 = officeAddress.text.toString()
         State.office_formatted_address = officeAddress.text.toString()
         State.otp_code = otp_number.text.toString()
-        postLoginViewModel.loadData(State.mobile,"rider")
+        postLoginViewModel.loadData(state.LoginForm(State.mobile))
         //validateForm()
     }
 
@@ -937,7 +937,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                             val jsonObject = JSONObject()
                             jsonObject.put("otp_code","123456")
                             val _state = State()
-                            postOtpViewModel.loadData(_state.LoginForm(State.mobile,"rider"),jsonObject)
+                            postOtpViewModel.loadData(_state.LoginForm(State.mobile),jsonObject)
 
                         }
                     }
@@ -969,11 +969,11 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     when (state) {
                         PostOtpViewModel.NEXT_STEP -> {
                             home().setFragment(HomeFragment())
-                            UserInfoManager.getInstance(activity!!).saveAuthToken(postLoginViewModel.obj?.access_token!!)
-                            UserInfoManager.getInstance(activity!!).saveAuthToken(postLoginViewModel.obj?.access_token!!)
-                            UserInfoManager.getInstance(activity!!).saveAccountName(postLoginViewModel.obj?.name!!)
+                            UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
+                            UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
+                            UserInfoManager.getInstance(activity!!).saveAccountName(postOtpViewModel.obj?.name!!)
                             UserInfoManager.getInstance(activity!!).saveAccountId(
-                                postLoginViewModel.obj?.user_id.toString()!!)
+                                postOtpViewModel.obj?.user_id.toString()!!)
                         }
                     }
                 })
@@ -1118,10 +1118,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             return obj
         }
 
-        fun LoginForm(username : String,type: String) : JSONObject {
+        fun LoginForm(username : String) : JSONObject {
             val obj = JSONObject()
             obj.put("username", username)
-            obj.put("type", type)
             return obj
         }
 

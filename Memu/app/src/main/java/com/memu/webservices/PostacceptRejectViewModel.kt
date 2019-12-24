@@ -4,17 +4,15 @@ import android.app.Application
 import com.google.gson.GsonBuilder
 
 import com.iapps.libs.helpers.BaseConstants
+import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.objects.Response
-import com.memu.etc.APIs
-import com.memu.etc.Helper
-import com.memu.etc.Keys
-import com.memu.etc.SingleLiveEvent
-import com.memu.modules.GenericResponse
-import com.memu.modules.UserSignup.UserSignUp
-import org.json.JSONArray
+import com.memu.etc.*
+import com.memu.modules.FindTrip.FindTRip
+import com.memu.modules.VehicleType.VehicleType
+import com.memu.modules.poolerVehicles.PoolerVehicles
 import org.json.JSONObject
 
-class PostLoginViewModel(application: Application) : BaseViewModel(application) {
+class PostacceptRejectViewModel(application: Application) : BaseViewModel(application) {
 
     private val trigger = SingleLiveEvent<Integer>()
 
@@ -22,7 +20,7 @@ class PostLoginViewModel(application: Application) : BaseViewModel(application) 
 
     var apl: Application
 
-    var obj: UserSignUp? = null
+    var obj: FindTRip? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -33,7 +31,10 @@ class PostLoginViewModel(application: Application) : BaseViewModel(application) 
         this.apl = application
     }
 
-    fun loadData(mobile: JSONObject) {
+    fun loadData(trip_id : String,
+                 status : String,
+                 trip_rider_id : String,
+                 type : String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -53,9 +54,9 @@ class PostLoginViewModel(application: Application) : BaseViewModel(application) 
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), UserSignUp::class.java)
+                        obj = gson.fromJson(response!!.content.toString(), FindTRip::class.java)
                         if (obj!!.status.equals(Keys.STATUS_CODE)) {
-                            trigger.postValue(GetVehicleTypeViewModel.NEXT_STEP)
+                            trigger.postValue(NEXT_STEP)
                         }else{
                             errorMessage.value = createErrorMessageObject(response)
 
@@ -69,8 +70,18 @@ class PostLoginViewModel(application: Application) : BaseViewModel(application) 
         })
 
         genericHttpAsyncTask.method = BaseConstants.POST
-        genericHttpAsyncTask.setUrl(APIs.postLogin)
-        genericHttpAsyncTask.setPostParams(Keys.LoginForm,mobile)
+        genericHttpAsyncTask.setUrl(APIs.postOffersRides)
+        Helper.applyHeader(apl,genericHttpAsyncTask)
+        genericHttpAsyncTask.setPostParams(Keys.USER_ID,UserInfoManager.getInstance(apl).getAccountId())
+        genericHttpAsyncTask.setPostParams(Keys.TYPE,type)
+        if(!BaseHelper.isEmpty(trip_id)) {
+            genericHttpAsyncTask.setPostParams(Keys.TRIP_ID, trip_id)
+        }
+        if(!BaseHelper.isEmpty(trip_rider_id)) {
+            genericHttpAsyncTask.setPostParams(Keys.TRIP_RIDER_ID_, trip_rider_id)
+        }
+        genericHttpAsyncTask.setPostParams(Keys.STATUS,status)
+
         genericHttpAsyncTask.context = apl.applicationContext
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.execute()
