@@ -150,32 +150,10 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.find_riders ->
-                try {
-                    if (postnviteRideGiversViewModel.obj?.pooler_list != null) {
-                        showMatchingRiders(postnviteRideGiversViewModel.obj?.pooler_list!!,
-                            object : RequestListener {
-                                override fun onButtonClicked(user_id: String, id: String) {
-                                    postRidersFragment.loadData(user_id, id, type!!)
+            R.id.find_riders -> {
+                postnviteRideGiversViewModel.loadData(trip_rider_id!!,type!!)
+            }
 
-                                }
-                            })
-                    } else {
-                        showMatchingRiders(postnviteRideGiversViewModel.obj?.rider_list!!,
-                            object : RequestListener {
-                                override fun onButtonClicked(user_id: String, id: String) {
-                                    postRidersFragment.loadData(user_id, id, type!!)
-                                }
-                            })
-                    }
-                } catch (e : Exception){
-                    showNotifyDialog(
-                        "No Matching List found", "",
-                        getString(R.string.ok),"",object : NotifyListener {
-                            override fun onButtonClicked(which: Int) { }
-                        }
-                    )
-                }
         }
     }
 
@@ -432,6 +410,31 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
                         PostnviteRideGiversViewModel.NEXT_STEP -> {
                             if(Keys.MAPTYPE == Keys.POOLING) {
                                 addMarkers()
+                                try {
+                                    if (postnviteRideGiversViewModel.obj?.pooler_list != null) {
+                                        showMatchingRiders(postnviteRideGiversViewModel.obj?.pooler_list!!,
+                                            object : RequestListener {
+                                                override fun onButtonClicked(user_id: String, id: String) {
+                                                    postRidersFragment.loadData(user_id, id, type!!)
+
+                                                }
+                                            })
+                                    } else {
+                                        showMatchingRiders(postnviteRideGiversViewModel.obj?.rider_list!!,
+                                            object : RequestListener {
+                                                override fun onButtonClicked(user_id: String, id: String) {
+                                                    postRidersFragment.loadData(user_id, id, type!!)
+                                                }
+                                            })
+                                    }
+                                } catch (e : Exception){
+                                    showNotifyDialog(
+                                        "No Matching List found", "",
+                                        getString(R.string.ok),"",object : NotifyListener {
+                                            override fun onButtonClicked(which: Int) { }
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
@@ -524,4 +527,5 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
         private val ICON_ID = "ICON_ID"
         val LAYER_ID = "LAYER_ID"
     }
+
 }

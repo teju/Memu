@@ -79,7 +79,7 @@ open class BaseFragment : GenericFragment() {
 
     var v: View? = null
     companion object {
-        lateinit var postUpdateLocationViewModel: PostUpdateLocationViewModel
+        var postUpdateLocationViewModel: PostUpdateLocationViewModel? = null
 
     }
 
@@ -115,9 +115,12 @@ open class BaseFragment : GenericFragment() {
         v?.let {
             setBackButtonToolbarStyleOne(v!!)
         }
+        try {
+            postUpdateLocationViewModel =
+                ViewModelProviders.of(this).get(PostUpdateLocationViewModel::class.java!!)
+        } catch (e :Exception){
 
-        postUpdateLocationViewModel = ViewModelProviders.of(this).get(PostUpdateLocationViewModel::class.java!!)
-
+        }
         v?.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
                 BaseUIHelper.hideKeyboard(activity)

@@ -1,5 +1,6 @@
 package com.memu
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,21 @@ import com.memu.webservices.PostacceptRejectViewModel
 import io.paperdb.Paper
 import kotlinx.android.synthetic.main.home_fragment.*
 import java.util.ArrayList
+import android.content.Intent
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.content.IntentFilter
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import com.google.gson.GsonBuilder
+import com.memu.modules.GenericResponse
+import com.memu.modules.notification.NotificationResponse
+import com.memu.ui.fragments.MainActivity
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
+
 
 class ActivityMain : AppCompatActivity(){
 
@@ -34,6 +50,9 @@ class ActivityMain : AppCompatActivity(){
         private val MAIN_FLOW_TAG = "MainFlowFragment"
 
     }
+
+    private var mReceiver: BroadcastReceiver? = null
+    private var mIntentFilter: IntentFilter? = null
     lateinit var postacceptRejectViewModel: PostacceptRejectViewModel
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -45,30 +64,45 @@ class ActivityMain : AppCompatActivity(){
         BaseHelper.triggerNotifLog(this);
         setAcceptRejectAPIObserver()
         Mapbox.getInstance(this, getString(R.string.map_box_access_token));
-        if (getIntent().getExtras() != null) {
-            for (key in getIntent().getExtras().keySet()!!)
-            {
-                val value = getIntent().getExtras()?.getString(key)
-                System.out.println("Notification_received key "+key +" value "+value)
+        mReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                //val myNewActivity = Intent(this@ActivityMain, ActivityMain::class.java)
+                //startActivity(myNewActivity)
 
-            }
-            if(getIntent().getExtras()?.getString("title") != null) {
-                showNotifyDialog(
-                    getIntent().getExtras()?.getString("title"),
-                    getIntent().getExtras()?.getString("message"),
-                    "Reject", "Accept", object : NotifyListener {
-                        override fun onButtonClicked(which: Int) {
-                            if(which == NotifyDialogFragment.BUTTON_NEGATIVE) {
+                if(intent.getExtras()?.getString("title") != null) {
+                    val gson = GsonBuilder().create()
+                    val obj = gson.fromJson(intent.getExtras()?.getString("body"), NotificationResponse::class.java)
 
-                            }
-                            if(which == NotifyDialogFragment.BUTTON_POSITIVE) {
+                    showNotifyDialog(
+                        intent.getExtras()?.getString("title"),
+                        intent.getExtras()?.getString("message"),
+                        "Reject", "Accept", object : NotifyListener {
+                            override fun onButtonClicked(which: Int) {
+                                var trip_id = obj.trip_id
+                                var trip_rider_id = obj.trip_rider_id
+                                var status = ""
+                                var type = obj.type
+                                status = "accept"
 
+                                if(which == NotifyDialogFragment.BUTTON_NEGATIVE) {
+                                    status = "accept"
+                                }
+                                if(which == NotifyDialogFragment.BUTTON_POSITIVE) {
+                                    status = "reject"
+                                }
+                                System.out.println("Notification_received key mNotificationReceiver trip_id " +
+                                        trip_id+" status "+status+" trip_rider_id "
+                                        +trip_rider_id+" type "+type +" postacceptRejectViewModel "+postacceptRejectViewModel)
+                                postacceptRejectViewModel?.loadData(trip_id,status,trip_rider_id,obj.type)
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
+
+        mIntentFilter = IntentFilter("OPEN_NEW_ACTIVITY")
+
     }
 
     open fun showNotifyDialog(
@@ -138,8 +172,14 @@ class ActivityMain : AppCompatActivity(){
 
     override fun onResume() {
         super.onResume()
+        registerReceiver(mReceiver, mIntentFilter);
+
     }
 
+    override fun onPause() {
+        super.onPause()
+
+    }
 
     fun triggerMainProcess(){
 
@@ -304,8 +344,15 @@ class ActivityMain : AppCompatActivity(){
     }
 
     fun getCurrentFragmentByTag(): Fragment?{
-        val fragment = getSupportFragmentManager().findFragmentByTag(MAIN_FLOW_TAG + MAIN_FLOW_INDEX)
-        return fragment
+        val fragmentManager = this@ActivityMain.getSupportFragmentManager()
+        val fragments = fragmentManager.getFragments()
+        if (fragments != null) {
+            for (fragment in fragments) {
+                if (fragment != null && fragment!!.isVisible())
+                    return fragment
+            }
+        }
+        return null
     }
 
     fun clearFragment() {
@@ -493,5 +540,7 @@ class ActivityMain : AppCompatActivity(){
     /******************************************
      * LOGOUT FUNCTIONS
      */
+
+
 
 }

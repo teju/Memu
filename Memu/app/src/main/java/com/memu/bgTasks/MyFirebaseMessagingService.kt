@@ -16,20 +16,13 @@ import android.widget.RemoteViews
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.iapps.logs.com.pascalabs.util.log.activity.ActivityPascaLog
-import com.iapps.logs.com.pascalabs.util.log.helper.Helper
 import com.memu.ActivityMain
 import com.memu.R
 import com.memu.etc.Keys
-
-import java.io.IOException
-import java.net.URL
-
-import io.paperdb.Paper
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -39,7 +32,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notification = remoteMessage.notification
         val data = remoteMessage.data
         sendNotification(notification!!, data)
-        //startForegroundService(remoteMessage)
+        startForegroundService(remoteMessage)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -54,6 +47,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val intent = Intent(this, ActivityMain::class.java)
         intent.putExtra("message", notification.body)
         intent.putExtra("title", notification.title)
+        intent.putExtra("body", data.get("body"))
+
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
@@ -100,34 +95,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun startForegroundService(content : RemoteMessage) {
-        /*val contentView = RemoteViews(packageName, R.layout.custom_notification_layout)
-        var channel: String = ""
-
-        val bundle = content.data
-        val message  = bundle.get(Keys.MESSAGE)
-        val intent = Intent(this, ActivityMain::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0 *//* Request code *//*, intent,
-            PendingIntent.FLAG_ONE_SHOT
-        )
-        val mBuilder = NotificationCompat.Builder(this, channel)
-            .setSmallIcon(R.drawable.memu_logo)
-            .setContentText(bundle.get(Keys.MESSAGE))
-            .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE) //Important for heads-up notification
-            .setPriority(Notification.PRIORITY_HIGH)
-            .setContent(contentView)
-            .setContentIntent(pendingIntent)
-
-        contentView.setTextViewText(R.id.text, message);
-        val buildNotification = mBuilder.build()
-        val mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= 26)
-            channel = createChannel(mNotifyMgr)
-        else {
-            channel = ""
-        }
-        mNotifyMgr.notify(1, buildNotification)*/
         val contentView = RemoteViews(packageName, R.layout.custom_notification_layout)
         val channel: String
         if (Build.VERSION.SDK_INT >= 26)
@@ -137,23 +104,30 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
         val bundle = content.data
         val message  = bundle.get(Keys.MESSAGE)
-        val intent = Intent(this, ActivityMain::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0 /* Request code */, intent,
-            PendingIntent.FLAG_ONE_SHOT
-        )
+        //val intent = Intent(this, ActivityMain::class.java)
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//        val pendingIntent = PendingIntent.getActivity(
+//            this, 0 /* Request code */, intent,
+//            PendingIntent.FLAG_ONE_SHOT
+//        )
         val mBuilder = NotificationCompat.Builder(this, channel)
             .setSmallIcon(R.drawable.memu_logo)
             .setContentText(bundle.get(Keys.MESSAGE))
             .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_VIBRATE) //Important for heads-up notification
             .setPriority(Notification.PRIORITY_HIGH)
             .setContent(contentView)
-            .setContentIntent(pendingIntent)
-
+            .setAutoCancel(true)
+            //.setContentIntent(pendingIntent)
+        val broadcast =  Intent();
+        broadcast.putExtra("message", message)
+        broadcast.putExtra("title", content.notification?.title)
+        broadcast.putExtra("body", content.data.get("body"))
+        broadcast.setAction("OPEN_NEW_ACTIVITY");
+        sendBroadcast(broadcast);
         contentView.setTextViewText(R.id.text, message);
         val buildNotification = mBuilder.build()
         val mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         mNotifyMgr.notify(1, buildNotification)
     }
+
 }

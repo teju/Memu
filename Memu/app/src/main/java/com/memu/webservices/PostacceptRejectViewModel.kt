@@ -8,6 +8,7 @@ import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.objects.Response
 import com.memu.etc.*
 import com.memu.modules.FindTrip.FindTRip
+import com.memu.modules.GenericResponse
 import com.memu.modules.VehicleType.VehicleType
 import com.memu.modules.poolerVehicles.PoolerVehicles
 import org.json.JSONObject
@@ -20,7 +21,7 @@ class PostacceptRejectViewModel(application: Application) : BaseViewModel(applic
 
     var apl: Application
 
-    var obj: FindTRip? = null
+    var obj: GenericResponse? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -54,7 +55,7 @@ class PostacceptRejectViewModel(application: Application) : BaseViewModel(applic
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), FindTRip::class.java)
+                        obj = gson.fromJson(response!!.content.toString(), GenericResponse::class.java)
                         if (obj!!.status.equals(Keys.STATUS_CODE)) {
                             trigger.postValue(NEXT_STEP)
                         }else{
@@ -70,7 +71,7 @@ class PostacceptRejectViewModel(application: Application) : BaseViewModel(applic
         })
 
         genericHttpAsyncTask.method = BaseConstants.POST
-        genericHttpAsyncTask.setUrl(APIs.postOffersRides)
+        genericHttpAsyncTask.setUrl(APIs.postAcceptRejectReq)
         Helper.applyHeader(apl,genericHttpAsyncTask)
         genericHttpAsyncTask.setPostParams(Keys.USER_ID,UserInfoManager.getInstance(apl).getAccountId())
         genericHttpAsyncTask.setPostParams(Keys.TYPE,type)

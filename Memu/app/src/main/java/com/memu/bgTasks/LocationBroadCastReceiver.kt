@@ -31,7 +31,7 @@ class LocationBroadCastReceiver : BroadcastReceiver() {
         this.context = context
         gpsTracker = GPSTracker(context!!)
         if(gpsTracker!!.canGetLocation()) {
-            BaseFragment.postUpdateLocationViewModel.loadData(Location())
+            BaseFragment.postUpdateLocationViewModel?.loadData(Location())
         }
 
     }
