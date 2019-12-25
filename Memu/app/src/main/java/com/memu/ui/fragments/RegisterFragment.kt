@@ -431,8 +431,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         State.office_address_line1 = officeAddress.text.toString()
         State.office_formatted_address = officeAddress.text.toString()
         State.otp_code = otp_number.text.toString()
-        postLoginViewModel.loadData(state.LoginForm(State.mobile))
-        //validateForm()
+        //postLoginViewModel.loadData(state.LoginForm(State.mobile))
+        validateForm()
     }
 
     fun callAPIRequestOTP() {

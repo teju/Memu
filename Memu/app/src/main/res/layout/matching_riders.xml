@@ -21,7 +21,7 @@
         </ImageView>
         <TextView
             android:layout_width="wrap_content"
-            android:text="MAtching Buddy List"
+            android:text="Matching Buddy List"
             android:paddingLeft="10dp"
             android:layout_marginTop="-10dp"
             android:textColor="@color/Black"

@@ -1,5 +1,6 @@
 package com.memu
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.os.Build
@@ -39,8 +40,9 @@ import com.memu.modules.notification.NotificationResponse
 import com.memu.ui.fragments.MainActivity
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
-
+import android.os.PersistableBundle
+import android.util.Log
+import com.memu.webservices.PostRequestRideViewModel
 
 
 class ActivityMain : AppCompatActivity(){
@@ -50,6 +52,7 @@ class ActivityMain : AppCompatActivity(){
         private val MAIN_FLOW_TAG = "MainFlowFragment"
 
     }
+    var submitPressed = true;
 
     private var mReceiver: BroadcastReceiver? = null
     private var mIntentFilter: IntentFilter? = null
@@ -64,44 +67,67 @@ class ActivityMain : AppCompatActivity(){
         BaseHelper.triggerNotifLog(this);
         setAcceptRejectAPIObserver()
         Mapbox.getInstance(this, getString(R.string.map_box_access_token));
+
+        showDialog(getIntent())
         mReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                //val myNewActivity = Intent(this@ActivityMain, ActivityMain::class.java)
-                //startActivity(myNewActivity)
-
-                if(intent.getExtras()?.getString("title") != null) {
-                    val gson = GsonBuilder().create()
-                    val obj = gson.fromJson(intent.getExtras()?.getString("body"), NotificationResponse::class.java)
-
-                    showNotifyDialog(
-                        intent.getExtras()?.getString("title"),
-                        intent.getExtras()?.getString("message"),
-                        "Reject", "Accept", object : NotifyListener {
-                            override fun onButtonClicked(which: Int) {
-                                var trip_id = obj.trip_id
-                                var trip_rider_id = obj.trip_rider_id
-                                var status = ""
-                                var type = obj.type
-                                status = "accept"
-
-                                if(which == NotifyDialogFragment.BUTTON_NEGATIVE) {
-                                    status = "accept"
-                                }
-                                if(which == NotifyDialogFragment.BUTTON_POSITIVE) {
-                                    status = "reject"
-                                }
-                                System.out.println("Notification_received key mNotificationReceiver trip_id " +
-                                        trip_id+" status "+status+" trip_rider_id "
-                                        +trip_rider_id+" type "+type +" postacceptRejectViewModel "+postacceptRejectViewModel)
-                                postacceptRejectViewModel?.loadData(trip_id,status,trip_rider_id,obj.type)
-                            }
-                        }
-                    )
-                }
+                showDialog(intent)
             }
         }
 
         mIntentFilter = IntentFilter("OPEN_NEW_ACTIVITY")
+
+    }
+
+    fun showDialog(intent : Intent){
+        if(intent.getExtras()?.getString("title") != null) {
+            println("Notification_received showDialog " )
+
+            try {
+                val gson = GsonBuilder().create()
+                val obj = gson.fromJson(
+                    intent.getExtras()?.getString("body"),
+                    NotificationResponse::class.java
+                )
+
+                showNotifyDialog(
+                    intent.getExtras()?.getString("title"),
+                    intent.getExtras()?.getString("message"),
+                    "Reject", "Accept", object : NotifyListener {
+                        override fun onButtonClicked(which: Int) {
+                            var trip_id = obj.trip_id
+                            var trip_rider_id = obj.trip_rider_id
+                            var status = ""
+                            var type = obj.type
+                            status = "accept"
+
+                            if (which == NotifyDialogFragment.BUTTON_NEGATIVE) {
+                                status = "accept"
+                            }
+                            if (which == NotifyDialogFragment.BUTTON_POSITIVE) {
+                                status = "reject"
+                            }
+                            System.out.println(
+                                "Notification_received key mNotificationReceiver trip_id " +
+                                        trip_id + " status " + status + " trip_rider_id "
+                                        + trip_rider_id + " type " + type + " postacceptRejectViewModel " + postacceptRejectViewModel
+                            )
+                            if(trip_id != null && status != null && trip_rider_id != null
+                                && obj.type != null) {
+                                postacceptRejectViewModel?.loadData(
+                                    trip_id,
+                                    status,
+                                    trip_rider_id,
+                                    obj.type
+                                )
+                            }
+                        }
+                    }
+                )
+            } catch (e : Exception){
+
+            }
+        }
 
     }
 
@@ -111,15 +137,19 @@ class ActivityMain : AppCompatActivity(){
         button_positive:String?,
         button_negative: String?,
         n: NotifyListener){
-        val f = NotifyDialogFragment().apply {
-            this.listener = n
+        try {
+            val f = NotifyDialogFragment().apply {
+                this.listener = n
+            }
+            f.notify_tittle = tittle
+            f.notify_messsage = messsage
+            f.button_positive = button_positive
+            f.button_negative = button_negative
+            f.isCancelable = false
+            f.show(supportFragmentManager, NotifyDialogFragment.TAG)
+        } catch (e : Exception){
+            System.out.println("Notification_received Exception " +e.toString())
         }
-        f.notify_tittle = tittle
-        f.notify_messsage = messsage
-        f.button_positive = button_positive
-        f.button_negative = button_negative
-        f.isCancelable = false
-        f.show(supportFragmentManager, NotifyDialogFragment.TAG)
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -203,13 +233,14 @@ class ActivityMain : AppCompatActivity(){
             MAIN_FLOW_INDEX = MAIN_FLOW_INDEX + 1
             f.add(R.id.layoutFragment, frag, MAIN_FLOW_TAG + MAIN_FLOW_INDEX).addToBackStack(
                 MAIN_FLOW_TAG
-            ).commit()
+            ).commitAllowingStateLoss()
             BaseUIHelper.hideKeyboard(this)
         } catch (e: Exception) {
             Helper.logException(this@ActivityMain, e)
         }
 
     }
+
 
     fun jumpToPreviousFlowThenGoTo(fullFragPackageNameThatStillExistInStack: String, targetFrag: Fragment){
         jumpToPreviousFragment(fullFragPackageNameThatStillExistInStack)
@@ -335,7 +366,7 @@ class ActivityMain : AppCompatActivity(){
             MAIN_FLOW_INDEX = MAIN_FLOW_INDEX + 1
             f.replace(R.id.layoutFragment, frag, MAIN_FLOW_TAG + MAIN_FLOW_INDEX).addToBackStack(
                 MAIN_FLOW_TAG
-            ).commit()
+            ).commitAllowingStateLoss()
             BaseUIHelper.hideKeyboard(this)
         } catch (e: Exception) {
             Helper.logException(this@ActivityMain, e)
@@ -395,6 +426,14 @@ class ActivityMain : AppCompatActivity(){
                 })
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
+                        PostacceptRejectViewModel.NEXT_STEP -> {
+                            showNotifyDialog(
+                                "Request Status", postacceptRejectViewModel.obj?.message,
+                                getString(R.string.ok),"",object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) { }
+                                }
+                            )
+                        }
 
                     }
                 })
@@ -469,7 +508,7 @@ class ActivityMain : AppCompatActivity(){
             }
 
             try {
-                transaction.show(fragment).commit()
+                transaction.show(fragment).commitAllowingStateLoss()
             } catch (e: Exception) {
                 try {
                     transaction.show(fragment).commitAllowingStateLoss()
@@ -492,7 +531,7 @@ class ActivityMain : AppCompatActivity(){
     fun setFragmentInFragment(fragmentLayout: Int, frag: Fragment, tag: String, backstackTag: String) {
         try {
             supportFragmentManager.beginTransaction().add(fragmentLayout, frag, tag).addToBackStack(backstackTag)
-                .commit()
+                .commitAllowingStateLoss()
             BaseUIHelper.hideKeyboard(this)
         } catch (e: Exception) {
             try {

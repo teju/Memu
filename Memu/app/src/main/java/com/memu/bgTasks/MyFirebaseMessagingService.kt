@@ -29,6 +29,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
+        println("Notification_received Notification_received " + remoteMessage.data)
+
         val notification = remoteMessage.notification
         val data = remoteMessage.data
         sendNotification(notification!!, data)
@@ -40,7 +42,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         notification: RemoteMessage.Notification,
         data: Map<String, String>
     ) {
-        println("Notification_received Notification_received " + data + " " + notification.clickAction)
 
         val icon = BitmapFactory.decodeResource(resources, R.drawable.memu_logo)
 

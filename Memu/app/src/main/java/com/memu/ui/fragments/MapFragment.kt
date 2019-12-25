@@ -140,12 +140,13 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
             Keys.POOLING -> {
                 postnviteRideGiversViewModel.loadData(trip_rider_id!!,type!!)
                 shortes_route_result.visibility = View.GONE
-                startButton.visibility = View.GONE
+                startButton.visibility = View.VISIBLE
                 find_riders.visibility = View.VISIBLE
                 sos.visibility = View.VISIBLE
 
             }
         }
+        ld.showLoadingV2()
     }
 
     override fun onClick(v: View?) {
@@ -159,26 +160,23 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
 
     override fun onMapReady(@io.reactivex.annotations.NonNull mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
-        if(Keys.MAPTYPE == Keys.SHORTESTROUTE) {
-            mapboxMap.setStyle(getString(R.string.navigation_guidance_day)) { style ->
-                enableLocationComponent(style)
-                addDestinationIconSymbolLayer(style)
-                mapboxMap.addOnMapClickListener(this@MapFragment)
-                startButton!!.setOnClickListener {
-                    val simulateRoute = true
-                    val options = NavigationLauncherOptions.builder()
-                        .directionsRoute(currentRoute)
-                        .shouldSimulateRoute(simulateRoute)
-                        .build()
-                    // Call this method with Context from within an Activity
-                    NavigationLauncher.startNavigation(activity, options)
+        mapboxMap.setStyle(getString(R.string.navigation_guidance_day)) { style ->
+            enableLocationComponent(style)
+            addDestinationIconSymbolLayer(style)
+            //mapboxMap.addOnMapClickListener(this@MapFragment)
+            startButton!!.setOnClickListener {
+                val simulateRoute = true
+                val options = NavigationLauncherOptions.builder()
+                    .directionsRoute(currentRoute)
+                    .shouldSimulateRoute(simulateRoute)
+                    .build()
+                // Call this method with Context from within an Activity
+                NavigationLauncher.startNavigation(activity, options)
 
-                }
-                showRoute()
             }
-        } else {
-
+            showRoute()
         }
+
 
     }
     private fun addDestinationIconSymbolLayer(@io.reactivex.annotations.NonNull loadedMapStyle: Style) {
@@ -277,6 +275,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
                         navigationMapRoute =
                             NavigationMapRoute(null, mapView, mapboxMap!!, R.style.NavigationMapRoute)
                     }
+                    ld.hide()
                     navigationMapRoute!!.addRoute(currentRoute)
                 }
 
