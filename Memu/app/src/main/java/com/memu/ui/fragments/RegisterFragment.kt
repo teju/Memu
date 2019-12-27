@@ -4,11 +4,11 @@ import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
+import android.graphics.Color
+import android.location.*
 import android.os.Bundle
 import android.view.*
 import androidx.core.animation.doOnEnd
@@ -37,17 +37,32 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.iapps.gon.etc.callback.PermissionListener
+import com.mapbox.api.geocoding.v5.models.CarmenFeature
+import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 import com.memu.etc.GPSTracker
 import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
 import com.memu.webservices.*
+import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.onboarding_start.*
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
+import kotlinx.android.synthetic.main.register_fragment.btnNExt
+import kotlinx.android.synthetic.main.register_fragment.ld
+import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListener {
 
 
+    private val REQUEST_CODE_AUTOCOMPLETE: Int = 1002
+    private val REQUEST_CODE_AUTOCOMPLETE_OFFICE: Int = 1003
+    private val REQUEST_CODE_UPLOAD_VEHICLE: Int = 1004
+    private val REQUEST_CODE_UPLOAD_REG: Int = 1005
+    private val REQUEST_CODE_UPLOAD_DL: Int = 1006
     lateinit var getVehicleTypeViewModel: GetVehicleTypeViewModel
     lateinit var postLoginViewModel: PostLoginViewModel
     lateinit var postOtpViewModel: PostOtpViewModel
@@ -65,7 +80,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     var vehicleID = ""
     var vehicleID_name = ""
     val PICK_PHOTO_DOC = 10001
-
+    var gpsTracker : GPSTracker? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.register_fragment, container, false)
         return v
@@ -93,6 +108,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         cab_upload_vehicle_pic.setOnClickListener(this)
         upload_cab_reg_no.setOnClickListener(this)
         cab_upload_dl.setOnClickListener(this)
+        home_address.setOnClickListener(this)
+        officeAddress.setOnClickListener(this)
 
 
         setVehicleTypeAPIObserver()
@@ -138,6 +155,20 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             State.role_id = "5"
             State.type = State.BIKE_White_board
         }
+        dl.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                mobileNo.requestFocus()
+                true
+            } else {
+                false
+            }
+        }
+        gpsTracker = GPSTracker(activity)
+        if(gpsTracker?.canGetLocation()!!) {
+            val getAddress = getAddress(gpsTracker?.latitude!!, gpsTracker?.longitude!!)
+            home_address.text = getAddress?.get(0)?.getAddressLine(0)
+        }
+
    }
 
     fun permissions() {
@@ -166,28 +197,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         checkPermissions(permissions, permissionListener)
 
     }
-    private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            State.lattitude = location.latitude
-            State.longitude = location.longitude
-        }
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
-        override fun onProviderEnabled(provider: String) {}
-        override fun onProviderDisabled(provider: String) {}
-    }
 
-    fun onScrolledUp() {
-        sv.getViewTreeObserver()
-            .addOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener {
-                if (sv != null) {
-                    if (onbording_1.getScrollY() === 0) {
-                        Toast.makeText(context, "top", Toast.LENGTH_SHORT).show()
-                    } else {
-
-                    }
-                }
-            })
-    }
 
 
     override fun onClick(v: View?) {
@@ -273,6 +283,12 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 State.upload_type = PostUploadDocViewModel.VEHICLE_DL_PHOTO
                 pickImage()
             }
+            R.id.home_address ->{
+                initSearch(REQUEST_CODE_AUTOCOMPLETE)
+            }
+            R.id.officeAddress ->{
+                initSearch(REQUEST_CODE_AUTOCOMPLETE_OFFICE)
+            }
             R.id.cab_upload_dl ->{
                 State.upload_type = PostUploadDocViewModel.VEHICLE_DL_PHOTO
                 pickImage()
@@ -280,8 +296,26 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
     }
 
+    fun initSearch(code : Int) {
+        val intent = PlaceAutocomplete.IntentBuilder()
+            .accessToken(
+                if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken()!! else getString(
+                    R.string.map_box_access_token
+                )
+            )
+            .placeOptions(
+                PlaceOptions.builder()
+                    .backgroundColor(Color.parseColor("#EEEEEE"))
+                    .limit(10)
+                    .build(PlaceOptions.MODE_CARDS)
+            )
+            .build(activity)
+        startActivityForResult(intent, code)
+    }
+
+
     fun pickImage() {
-      val intent = Intent(Intent.ACTION_GET_CONTENT);
+      val intent = Intent(Intent.ACTION_PICK);
       intent.setType("image/*");
       startActivityForResult(intent, PICK_PHOTO_DOC);
     }
@@ -289,13 +323,21 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
-            try {
+            if(requestCode == REQUEST_CODE_AUTOCOMPLETE) {
+                State.selectedCarmenFeaturehome = PlaceAutocomplete.getPlace(data);
+                home_address.setText(State.selectedCarmenFeaturehome !!.placeName())
+            } else if(requestCode == REQUEST_CODE_AUTOCOMPLETE_OFFICE) {
+                State.selectedCarmenFeatureoffice = PlaceAutocomplete.getPlace(data);
+                officeAddress.setText(State.selectedCarmenFeatureoffice !!.placeName())
+            } else {
+                try {
 
-                val imageuri = data?.getData ();// Get intent
-                // Get real path and show over text view
-                val real_Path = BaseHelper.getRealPathFromUri (activity, imageuri);
-                postUploadDocViewModel.loadData(State.upload_type,real_Path)
-            } catch (e: Exception) {
+                    val imageuri = data?.getData();// Get intent
+                    // Get real path and show over text view
+                    val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
+                    postUploadDocViewModel.loadData(State.upload_type, real_Path)
+                } catch (e: Exception) {
+                }
             }
         }
     }
@@ -433,6 +475,19 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         State.otp_code = otp_number.text.toString()
         //postLoginViewModel.loadData(state.LoginForm(State.mobile))
         validateForm()
+    }
+
+    fun getAddress(latitude : Double,longitude : Double): List<Address>? {
+        val geocoder: Geocoder
+        var addresses: List<Address>? = null
+        geocoder = Geocoder(context, Locale.getDefault())
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return addresses
     }
 
     fun callAPIRequestOTP() {
@@ -711,8 +766,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
         when (State.type) {
             State.NoVehicles -> {
-                jsonArray.put(0,state.Address())
-                jsonArray.put(1,state.OfficeAddress())
+                jsonArray.put(0,state.Address(activity!!))
+                jsonArray.put(1,state.OfficeAddress(activity!!))
 
 
                 if(validateAPIForm() && validateMobileNumber()  && validateOTp() && validateaddressForm() ){
@@ -721,7 +776,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             }
 
             State.YELLOW_BOARD -> {
-                jsonArray.put(0,state.Address())
+                jsonArray.put(0,state.Address(activity!!))
                 if(validateAPIForm() && validateCabVehicleForm() && validateOTp()
                     && validateaddressForm() && validateUploadForm() ){
                     val vehicle_photo = JSONObject()
@@ -748,12 +803,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 }
             }
             State.White_board,State.BIKE_White_board -> {
-                jsonArray.put(0,state.Address())
-                jsonArray.put(1,state.OfficeAddress())
-                System.out.println("validateAPIForm() "+validateAPIForm()+
-                        " validateVehicleForm "+validateVehicleForm()
-                        +" validateOTp "+validateOTp()+" validateaddressForm "
-                        +validateaddressForm()+" validateUploadForm "+validateUploadForm())
+                jsonArray.put(0,state.Address(activity!!))
+                jsonArray.put(1,state.OfficeAddress(activity!!))
+                System.out.println("validateAPIForm() Address " +
+                        ""+state.Address(activity!!) +" OfficeAddress "+state.OfficeAddress(activity!!))
                 if(validateAPIForm() && validateVehicleForm() && validateOTp()
                     && validateaddressForm() && validateUploadForm()){
                     val vehicle_photo = JSONObject()
@@ -1008,14 +1061,35 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                                 PostUploadDocViewModel.VEHICLE_PHOTO -> {
                                     vehicleID = postUploadDocViewModel.obj?.file_id!!
                                     vehicleID_name = postUploadDocViewModel.obj?.file_name!!
+                                    if(State.type == State.White_board) {
+                                        tvuploadvehicle_pic.text = "Uploaded"
+                                        tvuploadvehicle_pic.setTextColor(activity?.resources?.getColor(R.color.Green)!!)
+                                    } else {
+                                        tvcab_upload_vehicle_pic.text = "Uploaded"
+                                        tvcab_upload_vehicle_pic.setTextColor(activity?.resources?.getColor(R.color.Green)!!)
+                                    }
                                 }
                                 PostUploadDocViewModel.VEHICLE_REG_CERT_PHOTO -> {
                                     registration_certificateID = postUploadDocViewModel.obj?.file_id!!
                                     registration_certificateID_name = postUploadDocViewModel.obj?.file_name!!
+                                    if(State.type == State.White_board) {
+                                        tvuploadreg_no.text = "Uploaded"
+                                        tvuploadreg_no.setTextColor(activity?.resources?.getColor(R.color.Green)!!)
+                                    } else {
+                                        tvupload_cab_reg_no.text = "Uploaded"
+                                        tvupload_cab_reg_no.setTextColor(activity?.resources?.getColor(R.color.Green)!!)
+                                    }
                                 }
                                 PostUploadDocViewModel.VEHICLE_DL_PHOTO -> {
                                     driving_licenceID = postUploadDocViewModel.obj?.file_id!!
                                     driving_licenceID_name = postUploadDocViewModel.obj?.file_name!!
+                                    if(State.type == State.White_board) {
+                                        tvupload_dl.text = "Uploaded"
+                                        tvupload_dl.setTextColor(activity?.resources?.getColor(R.color.Green)!!)
+                                    } else {
+                                        tvcab_upload_dl.text = "Uploaded"
+                                        tvcab_upload_dl.setTextColor(activity?.resources?.getColor(R.color.Green)!!)
+                                    }
                                 }
                             }
                         }
@@ -1054,6 +1128,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             var White_board = 2
             var BIKE_White_board = 3
             var NoVehicles = 4
+            var selectedCarmenFeaturehome: CarmenFeature? = null
+            var selectedCarmenFeatureoffice: CarmenFeature? = null
 
             var type = NoVehicles
             var upload_type = PostUploadDocViewModel.VEHICLE_PHOTO
@@ -1068,15 +1144,16 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             return obj
         }
 
-        fun Address() :JSONObject {
+        fun Address(context : Context) :JSONObject {
             val obj = JSONObject()
 
             if(!BaseHelper.isEmpty(address_line1))
                 obj.put("address_line1", address_line1)
-
-                obj.put("lattitude", lattitude.toString())
-
-                obj.put("longitude", longitude.toString())
+                val latLng = BaseHelper.getLocationFromAddress(office_address_line1,context)
+                if(latLng != null) {
+                    obj.put("lattitude", latLng.latitude.toString())
+                    obj.put("longitude", latLng.longitude.toString())
+                }
                 obj.put("type", "home")
 
             if(!BaseHelper.isEmpty(formatted_address))
@@ -1085,15 +1162,18 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             return obj
         }
 
-        fun OfficeAddress() :JSONObject {
+        fun OfficeAddress(context : Context) :JSONObject {
             val obj = JSONObject()
 
             if(!BaseHelper.isEmpty(office_address_line1))
                 obj.put("address_line1", office_address_line1)
+                val latLng = BaseHelper.getLocationFromAddress(office_address_line1,context)
+            if(latLng != null) {
 
-                obj.put("lattitude", lattitude.toString())
+                obj.put("lattitude", latLng.latitude.toString())
 
-                obj.put("longitude", longitude.toString())
+                obj.put("longitude", latLng.longitude.toString())
+            }
 
             obj.put("type", "office")
 

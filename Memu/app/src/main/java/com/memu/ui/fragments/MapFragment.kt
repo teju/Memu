@@ -77,7 +77,6 @@ import com.memu.etc.GoogleMapsPath
 import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
 import com.memu.webservices.*
-import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.map_fragment.*
 import kotlinx.android.synthetic.main.map_fragment.ld
 import kotlinx.android.synthetic.main.map_fragment.time
@@ -126,6 +125,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
         setInviteRideGiversAPIObserver()
         setRequestRideAPIObserver()
         find_riders.setOnClickListener(this)
+        arrow_left.setOnClickListener(this)
         gpsTracker = GPSTracker(activity)
         if(gpsTracker?.canGetLocation()!!) {
             mapView!!.getMapAsync(this)
@@ -153,6 +153,9 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
         when (v?.id) {
             R.id.find_riders -> {
                 postnviteRideGiversViewModel.loadData(trip_rider_id!!,type!!)
+            }
+            R.id.arrow_left -> {
+                home().proceedDoOnBackPressed()
             }
 
         }
@@ -231,9 +234,12 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
 
         val source = mapboxMap!!.style!!.getSourceAs<GeoJsonSource>("destination-source-id")
         source?.setGeoJson(Feature.fromGeometry(destinationPoint))
-        val distance = BaseHelper.distance(originPoint?.latitude()!!,originPoint?.longitude()!!,
-            (dest?.geometry() as Point).latitude(),(dest?.geometry() as Point).longitude())
+        val latng1 = com.google.android.gms.maps.model.LatLng(originPoint?.latitude()!!,originPoint?.longitude()!!)
+        val latng2 = com.google.android.gms.maps.model.LatLng((dest?.geometry() as Point).latitude(),(dest?.geometry() as Point).longitude())
+        val distance = BaseHelper.showDistance(latng1!!,latng2!!)
+        val findtime = BaseHelper.showTime(latng1!!,latng2!!)
         dist.text = String.format("%.2f", distance)  +" Kms"
+        //time.text = String.format("%.2f", findtime)  +" Kms"
         getRoute(originPoint!!, destinationPoint)
         startButton!!.isEnabled = true
 
@@ -277,6 +283,14 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
                     }
                     ld.hide()
                     navigationMapRoute!!.addRoute(currentRoute)
+                    val position = CameraPosition.Builder()
+                    .target(LatLng(origin.latitude(), origin.longitude()))
+                    .zoom(10.0)
+                    .tilt(20.0)
+                    .build();
+                    mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
+                    ;
+
                 }
 
                 override fun onFailure(call: Call<DirectionsResponse>, throwable: Throwable) {

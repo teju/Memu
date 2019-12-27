@@ -134,6 +134,7 @@
                                     android:layout_centerVertical="true"
                                     android:textAlignment="center"
                                     android:textSize="8dp"
+                                    android:id="@+id/tvcab_upload_vehicle_pic"
                                     android:text="upload pic\n(show your\ncar to\nothers)"
                                     android:layout_height="wrap_content">
 
@@ -199,6 +200,7 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
                                     android:text="upload ID"
+                                    android:id="@+id/tvupload_cab_reg_no"
                                     android:textAlignment="center"
                                     android:textSize="8dp">
 
@@ -233,7 +235,7 @@
                                 android:inputType="text"
                                 android:layout_marginRight="50dp"
                                 android:textSize="15dp"
-                                android:imeOptions="actionDone"
+                                android:imeOptions="actionNext"
                                 android:paddingLeft="15dp"
                                 android:paddingRight="5dp"
                                 android:background="@color/soft_grey"
@@ -261,6 +263,7 @@
                                     android:layout_centerVertical="true"
                                     android:textAlignment="center"
                                     android:textSize="8dp"
+                                    android:id="@+id/tvcab_upload_dl"
                                     android:text="upload ID"
                                     android:layout_height="wrap_content">
 

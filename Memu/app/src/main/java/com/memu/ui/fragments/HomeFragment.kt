@@ -125,6 +125,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         time.setOnClickListener(this)
         seatstv.setOnClickListener(this)
         find_ride.setOnClickListener(this)
+        arrow_left.setOnClickListener(this)
 
         initSearchFab()
         initSearchFabDest()
@@ -191,9 +192,11 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
             longitude = (selectedCarmenFeatureSrc!!.geometry() as com.mapbox.geojson.Point).longitude()
         }
         val from = FromJSon(latitude!!,longitude!!)
-         val distance = BaseHelper.distance(latitude,longitude,
-             (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).latitude(),
-             (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).longitude())
+        val latng1 = com.google.android.gms.maps.model.LatLng(latitude,longitude)
+        val latng2 = com.google.android.gms.maps.model.LatLng( (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).latitude(),
+            (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).longitude())
+
+        val distance = BaseHelper.showDistance(latng1,latng2)
         val To = FromJSon((selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).latitude(),
             (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).longitude())
         postFindRideViewModel.loadData(strdate,strtime, strseat,"no","",
@@ -240,7 +243,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
                 }
 
             }
-            R.id.cancel -> {
+            R.id.cancel,R.id.arrow_left -> {
                 reset()
 
             }
@@ -318,7 +321,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         popUpView.visibility = View.VISIBLE
         arrow_left.visibility = View.VISIBLE
         llPooling.visibility = View.VISIBLE
-        cancel.visibility = View.VISIBLE
+        cancel.visibility = View.GONE
         offer_take_ride.visibility = View.VISIBLE
         rlTopBar.visibility = View.GONE
         home_map_bg.alpha = 0.5f
@@ -332,7 +335,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 
     fun bestRouteUI() {
         popUpView.visibility = View.VISIBLE
-        cancel.visibility = View.VISIBLE
+        cancel.visibility = View.GONE
         rlTopBar.visibility = View.GONE
         offer_take_ride.visibility = View.GONE
         llPooling.visibility = View.GONE
@@ -377,7 +380,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
                 .placeOptions(
                     PlaceOptions.builder()
                         .backgroundColor(Color.parseColor("#EEEEEE"))
-                        .limit(10)
+                        .country("IN")
                         .build(PlaceOptions.MODE_CARDS)
                 )
                 .build(activity)
@@ -478,13 +481,17 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == REQUEST_CODE_AUTOCOMPLETE) {
-            selectedCarmenFeatureSrc = PlaceAutocomplete.getPlace(data);
-            edtScrLoc.setText(selectedCarmenFeatureSrc!!.placeName())
-        }
-        if(requestCode == REQUEST_CODE_AUTOCOMPLETEDEST) {
-            selectedCarmenFeatureDest = PlaceAutocomplete.getPlace(data);
-            edtdestLoc.setText(selectedCarmenFeatureDest!!.placeName())
+        try {
+            if (requestCode == REQUEST_CODE_AUTOCOMPLETE) {
+                selectedCarmenFeatureSrc = PlaceAutocomplete.getPlace(data);
+                edtScrLoc.setText(selectedCarmenFeatureSrc!!.placeName())
+            }
+            if (requestCode == REQUEST_CODE_AUTOCOMPLETEDEST) {
+                selectedCarmenFeatureDest = PlaceAutocomplete.getPlace(data);
+                edtdestLoc.setText(selectedCarmenFeatureDest!!.placeName())
+            }
+        } catch (e : Exception){
+
         }
 
 

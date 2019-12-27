@@ -74,6 +74,7 @@ dependencies {
     compile('com.google.android.gms:play-services-gcm:+') {
         exclude module: 'support-v4'
     }
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
 }
 
 repositories {

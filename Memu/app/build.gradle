@@ -64,6 +64,7 @@ dependencies {
     implementation project(':library:common_lib')
 
     implementation 'com.github.hkk595:Resizer:v1.5'
+    implementation "com.google.android.gms:play-services-maps:10.0.1"
 
     implementation("com.google.android.gms:play-services-fitness:$project.ext.googleServiceVersion") {
         exclude module: 'support-v4'

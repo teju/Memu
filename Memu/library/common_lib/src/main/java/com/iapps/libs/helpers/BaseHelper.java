@@ -3,7 +3,6 @@ package com.iapps.libs.helpers;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -21,6 +20,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -29,18 +31,16 @@ import android.text.InputType;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.iapps.common_library.R;
 import com.iapps.libs.objects.BottomSheetMediaSelectionListener;
@@ -1538,18 +1538,6 @@ public class BaseHelper {
 		drawable.draw(canvas);
 		return bitmap;
 	}
-	public static double distance(double lat1, double lon1, double lat2, double lon2) {
-		double theta = lon1 - lon2;
-		double dist = Math.sin(deg2rad(lat1))
-				* Math.sin(deg2rad(lat2))
-				+ Math.cos(deg2rad(lat1))
-				* Math.cos(deg2rad(lat2))
-				* Math.cos(deg2rad(theta));
-		dist = Math.acos(dist);
-		dist = rad2deg(dist);
-		dist = dist * 60 * 1.1515;
-		return (dist);
-	}
 
 	private static double deg2rad(double deg) {
 		return (deg * Math.PI / 180.0);
@@ -1558,4 +1546,67 @@ public class BaseHelper {
 	private static double rad2deg(double rad) {
 		return (rad * 180.0 / Math.PI);
 	}
+
+	public static LatLng getLocationFromAddress(String strAddress, Context context){
+
+		Geocoder coder = new Geocoder(context);
+		List<Address> address;
+		LatLng p1 = null;
+
+		try {
+			// May throw an IOException
+			address = coder.getFromLocationName(strAddress, 5);
+			if (address == null) {
+				return null;
+			}
+
+			Address location = address.get(0);
+			p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+		} catch (IOException ex) {
+
+			ex.printStackTrace();
+		}
+
+		return p1;
+	}
+	public static double showDistance(LatLng origin, LatLng dest ) {
+
+		Location locationA = new Location("Location A");
+
+		locationA.setLatitude(origin.latitude);
+
+		locationA.setLongitude(origin.longitude);
+
+		Location locationB = new Location("Location B");
+
+		locationB.setLatitude(dest.latitude);
+
+		locationB.setLongitude(dest.longitude);
+		locationA.getTime();
+		return locationA.distanceTo(locationB) * 0.001;
+
+
+	}
+
+	public static double showTime(LatLng origin, LatLng dest ) {
+
+		Location locationA = new Location("Location A");
+
+		locationA.setLatitude(origin.latitude);
+
+		locationA.setLongitude(origin.longitude);
+
+		Location locationB = new Location("Location B");
+
+		locationB.setLatitude(dest.latitude);
+
+		locationB.setLongitude(dest.longitude);
+		double dist = locationA.distanceTo(locationB) * 0.001 ;
+		int speedIs1KmMinute = 100;
+		double estimatedDriveTimeInMinutes = dist / speedIs1KmMinute;
+		return estimatedDriveTimeInMinutes;
+
+	}
+
 }

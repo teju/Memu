@@ -131,6 +131,7 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
                                     android:textAlignment="center"
+                                    android:id="@+id/tvuploadvehicle_pic"
                                     android:textSize="8dp"
                                     android:text="upload pic\n(show your\ncar to\nothers)"
                                     android:layout_height="wrap_content">
@@ -222,6 +223,7 @@
                                     android:layout_centerVertical="true"
                                     android:textAlignment="center"
                                     android:textSize="8dp"
+                                    android:id="@+id/tvuploadreg_no"
                                     android:text="upload ID"
                                     android:layout_height="wrap_content">
 
@@ -256,6 +258,7 @@
                                 android:hint="Driving License No"
                                 android:paddingTop="7dp"
                                 android:id="@+id/dl"
+                                android:singleLine="true"
                                 android:textSize="15dp"
                                 android:inputType="text"
                                 android:layout_marginRight="50dp"
@@ -287,6 +290,7 @@
                                     android:layout_centerVertical="true"
                                     android:textAlignment="center"
                                     android:textSize="8dp"
+                                    android:id="@+id/tvupload_dl"
                                     android:text="upload ID"
                                     android:layout_height="wrap_content">
 
