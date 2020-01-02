@@ -350,37 +350,38 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
     }
 
     private fun initSearchFab() {
+        val destinationPoint = com.mapbox.geojson.Point.fromLngLat(gpsTracker!!.longitude, gpsTracker!!.latitude)
         edtScrLoc.setOnClickListener {
             val intent = PlaceAutocomplete.IntentBuilder()
                 .accessToken(
                     if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken()!! else getString(
-                        R.string.map_box_access_token
-                    )
-                )
+                        R.string.map_box_access_token))
                 .placeOptions(
                     PlaceOptions.builder()
                         .backgroundColor(Color.parseColor("#EEEEEE"))
-                        .limit(10)
+                        .country("IN")
+                        .proximity(destinationPoint)
                         .build(PlaceOptions.MODE_CARDS)
                 )
-                    .build(activity)
+                .build(activity)
             startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)
         }
     }
 
     private fun initSearchFabDest() {
+        val destinationPoint = com.mapbox.geojson.Point.fromLngLat(gpsTracker!!.longitude, gpsTracker!!.latitude)
 
         edtdestLoc.setOnClickListener {
             val intent = PlaceAutocomplete.IntentBuilder()
                 .accessToken(
                     if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken()!! else getString(
-                        R.string.map_box_access_token
-                    )
-                )
+                        R.string.map_box_access_token))
                 .placeOptions(
                     PlaceOptions.builder()
                         .backgroundColor(Color.parseColor("#EEEEEE"))
                         .country("IN")
+                        .limit(100000)
+                        .proximity(destinationPoint)
                         .build(PlaceOptions.MODE_CARDS)
                 )
                 .build(activity)

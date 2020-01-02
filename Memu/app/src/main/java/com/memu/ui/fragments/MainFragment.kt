@@ -22,13 +22,17 @@ class MainFragment : BaseFragment() , View.OnClickListener {
     }
 
     private fun initUI() {
-        join_league.setOnClickListener(this)
+        sign_up.setOnClickListener(this)
+        login.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.join_league -> {
+            R.id.sign_up -> {
                 home().setFragment(RegisterFragment())
+            }
+            R.id.login -> {
+                home().setFragment(LoginFragment())
             }
         }
     }

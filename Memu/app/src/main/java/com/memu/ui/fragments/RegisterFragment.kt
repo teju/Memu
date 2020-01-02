@@ -64,8 +64,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     private val REQUEST_CODE_UPLOAD_REG: Int = 1005
     private val REQUEST_CODE_UPLOAD_DL: Int = 1006
     lateinit var getVehicleTypeViewModel: GetVehicleTypeViewModel
-    lateinit var postLoginViewModel: PostLoginViewModel
-    lateinit var postOtpViewModel: PostOtpViewModel
     lateinit var postUserSignupViewModel: PostUserSignupViewModel
     lateinit var postRequestOtpViewModel: PostRequestOtpViewModel
     lateinit var postVerifyOtpViewModel: PostVerifyOtpViewModel
@@ -117,8 +115,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         setRequestOtpAPIObserver()
         setVerifyOtpAPIObserver()
         setUploadDocObserver()
-        setLoginAPIObserver()
-        setOtpAPIObserver()
+
         getVehicleTypeViewModel.loadData()
         //onScrolledUp()
 
@@ -170,6 +167,11 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
 
    }
+
+    override fun onBackTriggered() {
+        super.onBackTriggered()
+        home().exitApp()
+    }
 
     fun permissions() {
         val permissionListener: PermissionListener = object : PermissionListener {
@@ -963,77 +965,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             }
         }
     }
-    fun setLoginAPIObserver() {
-        postLoginViewModel = ViewModelProviders.of(this).get(PostLoginViewModel::class.java).apply {
-            this@RegisterFragment.let { thisFragReference ->
-                isLoading.observe(thisFragReference, Observer { aBoolean ->
-                    if(aBoolean!!) {
-                        ld.showLoadingV2()
-                    } else {
-                        ld.hide()
-                    }
-                })
-                errorMessage.observe(thisFragReference, Observer { s ->
-                    showNotifyDialog(
-                        s.title, s.message!!,
-                        getString(R.string.ok),"",object : NotifyListener {
-                            override fun onButtonClicked(which: Int) { }
-                        }
-                    )
-
-
-                })
-                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
-                getTrigger().observe(thisFragReference, Observer { state ->
-                    when (state) {
-                        PostLoginViewModel.NEXT_STEP -> {
-                            val jsonObject = JSONObject()
-                            jsonObject.put("otp_code","123456")
-                            val _state = State()
-                            postOtpViewModel.loadData(_state.LoginForm(State.mobile),jsonObject)
-
-                        }
-                    }
-                })
-
-            }
-        }
-    }
-    fun setOtpAPIObserver() {
-        postOtpViewModel = ViewModelProviders.of(this).get(PostOtpViewModel::class.java).apply {
-            this@RegisterFragment.let { thisFragReference ->
-                isLoading.observe(thisFragReference, Observer { aBoolean ->
-                    if(aBoolean!!) {
-                        ld.showLoadingV2()
-                    } else {
-                        ld.hide()
-                    }
-                })
-                errorMessage.observe(thisFragReference, Observer { s ->
-                    showNotifyDialog(
-                        s.title, s.message!!,
-                        getString(R.string.ok),"",object : NotifyListener {
-                            override fun onButtonClicked(which: Int) { }
-                        }
-                    )
-                })
-                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
-                getTrigger().observe(thisFragReference, Observer { state ->
-                    when (state) {
-                        PostOtpViewModel.NEXT_STEP -> {
-                            home().setFragment(HomeFragment())
-                            UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
-                            UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
-                            UserInfoManager.getInstance(activity!!).saveAccountName(postOtpViewModel.obj?.name!!)
-                            UserInfoManager.getInstance(activity!!).saveAccountId(
-                                postOtpViewModel.obj?.user_id.toString()!!)
-                        }
-                    }
-                })
-
-            }
-        }
-    }
 
     fun setUploadDocObserver() {
         postUploadDocViewModel = ViewModelProviders.of(this).get(PostUploadDocViewModel::class.java).apply {
@@ -1198,11 +1129,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             return obj
         }
 
-        fun LoginForm(username : String) : JSONObject {
-            val obj = JSONObject()
-            obj.put("username", username)
-            return obj
-        }
 
         fun ApiSignupForm() : JSONObject {
             val obj = JSONObject()
