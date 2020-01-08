@@ -168,10 +168,11 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
             addDestinationIconSymbolLayer(style)
             //mapboxMap.addOnMapClickListener(this@MapFragment)
             startButton!!.setOnClickListener {
-                val simulateRoute = true
+                val simulateRoute = false
                 val options = NavigationLauncherOptions.builder()
                     .directionsRoute(currentRoute)
                     .shouldSimulateRoute(simulateRoute)
+
                     .build()
                 // Call this method with Context from within an Activity
                 NavigationLauncher.startNavigation(activity, options)

@@ -1,6 +1,5 @@
 package com.memu
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.os.Build
@@ -22,27 +21,14 @@ import com.memu.ui.BaseFragment
 import com.memu.ui.dialog.NotifyDialogFragment
 import com.memu.ui.fragments.HomeFragment
 import com.memu.ui.fragments.MainFragment
-import com.memu.ui.fragments.MapFragment
-import com.memu.webservices.PostFindRideViewModel
 import com.memu.webservices.PostacceptRejectViewModel
 import io.paperdb.Paper
 import kotlinx.android.synthetic.main.home_fragment.*
 import java.util.ArrayList
 import android.content.Intent
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.content.IntentFilter
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import com.google.gson.GsonBuilder
-import com.memu.modules.GenericResponse
 import com.memu.modules.notification.NotificationResponse
-import com.memu.ui.fragments.MainActivity
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.os.PersistableBundle
-import android.util.Log
-import com.memu.webservices.PostRequestRideViewModel
 
 
 class ActivityMain : AppCompatActivity(){

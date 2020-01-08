@@ -168,11 +168,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
    }
 
-    override fun onBackTriggered() {
-        super.onBackTriggered()
-        home().exitApp()
-    }
-
     fun permissions() {
         val permissionListener: PermissionListener = object : PermissionListener {
             override fun onUserNotGrantedThePermission() {

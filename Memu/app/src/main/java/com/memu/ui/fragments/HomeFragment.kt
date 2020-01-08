@@ -37,6 +37,7 @@ import com.google.firebase.iid.InstanceIdResult
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.gon.etc.callback.PermissionListener
 import com.iapps.libs.helpers.BaseHelper
+import com.mapbox.api.geocoding.v5.GeocodingCriteria
 import com.mapbox.api.geocoding.v5.models.CarmenFeature
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
@@ -93,6 +94,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         initUI();
     }
 
+    override fun onBackTriggered() {
+        super.onBackTriggered()
+        home().exitApp()
+    }
     private fun initUI() {
         setUpdateNotiTokenAPIObserver()
         setFindTripAPIObserver()
@@ -369,6 +374,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
     }
 
     private fun initSearchFabDest() {
+//        edtdestLoc.setOnClickListener {
+//            val intent = Intent(activity,SearchActivity::class.java)
+//            startActivityForResult(intent,REQUEST_CODE_AUTOCOMPLETEDEST);
+//        }
         val destinationPoint = com.mapbox.geojson.Point.fromLngLat(gpsTracker!!.longitude, gpsTracker!!.latitude)
 
         edtdestLoc.setOnClickListener {
@@ -380,13 +389,17 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
                     PlaceOptions.builder()
                         .backgroundColor(Color.parseColor("#EEEEEE"))
                         .country("IN")
-                        .limit(100000)
+                        .geocodingTypes(GeocodingCriteria.TYPE_POI,
+                            GeocodingCriteria.TYPE_LOCALITY,
+                            GeocodingCriteria.TYPE_ADDRESS)
                         .proximity(destinationPoint)
-                        .build(PlaceOptions.MODE_CARDS)
+                        .build(PlaceOptions.PARCELABLE_WRITE_RETURN_VALUE)
                 )
                 .build(activity)
             startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETEDEST)
         }
+
+
     }
 
 

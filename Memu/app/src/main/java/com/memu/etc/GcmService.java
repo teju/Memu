@@ -167,7 +167,7 @@ public class GcmService extends GcmListenerService {
 ////            int NOTIFICATION_ID = gcmobj.getPushid();
 //            int NOTIFICATION_ID = 1111;
 //
-//            Intent i = new Intent(this, MainActivity.class);
+//            Intent i = new Intent(this, PlacePredictionProgrammatically.class);
 //            i.putExtra(Keys.TAG, Application.EXTRA_MESSAGE);
 //            PendingIntent contentIntent = null;
 //            contentIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, i, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -226,7 +226,7 @@ public class GcmService extends GcmListenerService {
         Intent intent = new Intent(this, ActivityMain.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 //        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-//        intent.setClass(this, MainActivity.class);
+//        intent.setClass(this, PlacePredictionProgrammatically.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Keys.TAG, tag);
         intent.putExtra(Keys.SLIDE_TELLER_NEW_REQUEST_MESSAGE, message);
