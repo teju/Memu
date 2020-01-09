@@ -94,9 +94,11 @@ import java.util.concurrent.TimeUnit
 class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, MapboxMap.OnMapClickListener,
     PermissionsListener {
 
+    var srcLat = 0.0
+    var srcLng = 0.0
+    var destLat = 0.0
+    var destLng = 0.0
     private var originPoint: Point? = null
-    var src: CarmenFeature? = null
-    var dest: CarmenFeature? = null
     var trip_rider_id: String? = ""
     var type: String? = ""
     private var gpsTracker: GPSTracker? = null
@@ -218,25 +220,21 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
 
     fun showRoute() {
 
-        val destinationPoint = Point.fromLngLat((dest?.geometry() as Point).longitude(),
-            (dest?.geometry() as Point).latitude())
-        if(src == null) {
+        val destinationPoint = Point.fromLngLat(destLng,destLat)
+        if(srcLat == null) {
             originPoint = Point.fromLngLat(
                 gpsTracker?.longitude!!,
                 gpsTracker?.latitude!!
             )
         } else {
-            originPoint = Point.fromLngLat(
-                (src?.geometry() as Point).longitude(),
-                (src?.geometry() as Point).latitude()
-            )
+            originPoint = Point.fromLngLat(srcLng,srcLat)
         }
 
 
         val source = mapboxMap!!.style!!.getSourceAs<GeoJsonSource>("destination-source-id")
         source?.setGeoJson(Feature.fromGeometry(destinationPoint))
         val latng1 = com.google.android.gms.maps.model.LatLng(originPoint?.latitude()!!,originPoint?.longitude()!!)
-        val latng2 = com.google.android.gms.maps.model.LatLng((dest?.geometry() as Point).latitude(),(dest?.geometry() as Point).longitude())
+        val latng2 = com.google.android.gms.maps.model.LatLng(destLat,destLng)
         val distance = BaseHelper.showDistance(latng1!!,latng2!!)
         val findtime = BaseHelper.showTime(latng1!!,latng2!!)
         dist.text = String.format("%.2f", distance)  +" Kms"

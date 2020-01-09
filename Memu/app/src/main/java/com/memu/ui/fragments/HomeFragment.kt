@@ -69,13 +69,13 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 
     lateinit var postUpdateNotiTokenViewModel: PostUpdateNotiTokenViewModel
     lateinit var postFindRideViewModel: PostFindRideViewModel
-
+    var destLatitide:Double = 0.0
+    var destLongitude:Double = 0.0
+    var srcLongitude:Double = 0.0
+    var srcLatitude:Double = 0.0
 
     private val REQUEST_CODE_AUTOCOMPLETE = 1
     private val REQUEST_CODE_AUTOCOMPLETEDEST = 2
-
-    var selectedCarmenFeatureSrc:CarmenFeature? = null
-    var selectedCarmenFeatureDest:CarmenFeature? = null
 
     var type = 1
     var FINDRIDER = 1
@@ -104,7 +104,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 
         gpsTracker = GPSTracker(activity)
         if(gpsTracker?.canGetLocation()!!) {
-
+            srcLatitude = gpsTracker?.latitude!!
+            srcLongitude = gpsTracker?.longitude!!
         }
         alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as  AlarmManager;
 
@@ -190,20 +191,13 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
     }
 
     fun CallApi() {
-        var latitude = gpsTracker?.latitude
-        var longitude = gpsTracker?.longitude
-        if(selectedCarmenFeatureSrc != null) {
-            latitude = (selectedCarmenFeatureSrc!!.geometry() as com.mapbox.geojson.Point).latitude()
-            longitude = (selectedCarmenFeatureSrc!!.geometry() as com.mapbox.geojson.Point).longitude()
-        }
-        val from = FromJSon(latitude!!,longitude!!)
-        val latng1 = com.google.android.gms.maps.model.LatLng(latitude,longitude)
-        val latng2 = com.google.android.gms.maps.model.LatLng( (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).latitude(),
-            (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).longitude())
+
+        val from = FromJSon(srcLatitude!!,srcLongitude!!)
+        val latng1 = com.google.android.gms.maps.model.LatLng(srcLatitude,srcLongitude)
+        val latng2 = com.google.android.gms.maps.model.LatLng( destLatitide,destLongitude)
 
         val distance = BaseHelper.showDistance(latng1,latng2)
-        val To = FromJSon((selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).latitude(),
-            (selectedCarmenFeatureDest!!.geometry() as com.mapbox.geojson.Point).longitude())
+        val To = FromJSon(destLatitide, destLongitude)
         postFindRideViewModel.loadData(strdate,strtime, strseat,"no","",
             from,To,distance.toInt().toString(),strType)
 
@@ -235,8 +229,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
                     edtdestLocerror.visibility = View.GONE
                     if(Keys.MAPTYPE == Keys.SHORTESTROUTE) {
                         home().setFragment(MapFragment().apply {
-                            src = selectedCarmenFeatureSrc
-                            dest = selectedCarmenFeatureDest
+                            srcLat = srcLatitude
+                            srcLng = srcLongitude
+                            destLng = destLongitude
+                            destLat = destLatitide
                         })
                     } else {
 
@@ -357,7 +353,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
     private fun initSearchFab() {
         val destinationPoint = com.mapbox.geojson.Point.fromLngLat(gpsTracker!!.longitude, gpsTracker!!.latitude)
         edtScrLoc.setOnClickListener {
-            val intent = PlaceAutocomplete.IntentBuilder()
+            /*val intent = PlaceAutocomplete.IntentBuilder()
                 .accessToken(
                     if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken()!! else getString(
                         R.string.map_box_access_token))
@@ -369,7 +365,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
                         .build(PlaceOptions.MODE_CARDS)
                 )
                 .build(activity)
-            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)
+            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)*/
+            startActivityForResult(Intent(activity,MainActivity::class.java),REQUEST_CODE_AUTOCOMPLETE);
+
         }
     }
 
@@ -455,8 +453,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
                     when (state) {
                         PostFindRideViewModel.NEXT_STEP -> {
                             home().setFragment(MapFragment().apply {
-                                src = selectedCarmenFeatureSrc
-                                dest = selectedCarmenFeatureDest
+                                srcLat = srcLatitude
+                                srcLng = srcLongitude
+                                destLng = destLongitude
+                                destLat = destLatitide
                                 if(postFindRideViewModel.obj?.trip_id != null) {
                                     trip_rider_id = postFindRideViewModel.obj?.trip_id!!
                                 } else {
@@ -499,13 +499,20 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         try {
             if (requestCode == REQUEST_CODE_AUTOCOMPLETE) {
-                edtScrLoc.setText(data?.getStringExtra("LatLang"))
+                val lat = data?.getDoubleExtra("Lat",0.0)
+                val lng = data?.getDoubleExtra("Lng",0.0)
+                edtScrLoc.setText(data?.getStringExtra("Address"))
+                srcLatitude = lat!!
+                srcLongitude = lng!!
                 //selectedCarmenFeatureSrc = PlaceAutocomplete.getPlace(data);
                 ///edtScrLoc.setText(selectedCarmenFeatureSrc!!.placeName())
             }
             if (requestCode == REQUEST_CODE_AUTOCOMPLETEDEST) {
-                edtdestLoc.setText(data?.getStringExtra("LatLang"))
-
+                val lat = data?.getDoubleExtra("Lat",0.0)
+                val lng = data?.getDoubleExtra("Lng",0.0)
+                edtdestLoc.setText(data?.getStringExtra("Address"))
+                destLatitide = lat!!
+                destLongitude = lng!!
                 //selectedCarmenFeatureDest = PlaceAutocomplete.getPlace(data);
                 //edtdestLoc.setText(selectedCarmenFeatureDest!!.placeName())
             }

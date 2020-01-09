@@ -13,8 +13,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.gson.Gson;
 import com.memu.R;
 import com.memu.ui.adapters.PlacesAutoCompleteAdapter;
 
@@ -57,8 +59,11 @@ public class MainActivity extends AppCompatActivity implements PlacesAutoComplet
     @Override
     public void click(Place place) {
         Intent data = new Intent();
+
 //---set the data to pass back---
-        data.putExtra("LatLang",place.getAddress());
+        data.putExtra("Address",place.getAddress());
+        data.putExtra("Lat",place.getLatLng().latitude);
+        data.putExtra("Lng",place.getLatLng().longitude);
         //data.setData(Uri.parse(place.toString()));
 
         setResult(RESULT_OK, data);
