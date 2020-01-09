@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +26,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
@@ -69,10 +71,14 @@ public class PlacesAutoCompleteAdapter extends RecyclerView.Adapter<PlacesAutoCo
      */
     @Override
     public Filter getFilter() {
+        System.out.println("ExecutionException getFilter ");
+
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
+                System.out.println("ExecutionException performFiltering "+results.count);
+
                 // Skip the autocomplete query if no constraints are given.
                 if (constraint != null) {
                     // Query the autocomplete API for the (constraint) search string.
@@ -88,6 +94,8 @@ public class PlacesAutoCompleteAdapter extends RecyclerView.Adapter<PlacesAutoCo
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
+                System.out.println("ExecutionException publishResults "+results.count);
+
                 if (results != null && results.count > 0) {
                     // The API returned at least one result, update the data.
                     notifyDataSetChanged();
@@ -107,13 +115,16 @@ public class PlacesAutoCompleteAdapter extends RecyclerView.Adapter<PlacesAutoCo
         // Create a new token for the autocomplete session. Pass this to FindAutocompletePredictionsRequest,
         // and once again when the user makes a selection (for example when calling fetchPlace()).
         AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
-
+        RectangularBounds bounds = RectangularBounds.newInstance(
+                new LatLng(15.317277, 75.713890),
+                new LatLng(15.317277, 75.713890));
         //https://gist.github.com/graydon/11198540
         // Use the builder to create a FindAutocompletePredictionsRequest.
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 // Call either setLocationBias() OR setLocationRestriction().
-                //.setLocationBias(bounds)
+                .setLocationBias(bounds)
                 .setCountry("in")
+
                 //.setTypeFilter(TypeFilter.ADDRESS)
                 .setSessionToken(token)
                 .setQuery(constraint.toString())
@@ -126,8 +137,10 @@ public class PlacesAutoCompleteAdapter extends RecyclerView.Adapter<PlacesAutoCo
         try {
             Tasks.await(autocompletePredictions, 60, TimeUnit.SECONDS);
         } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            System.out.println("ExecutionException "+e.toString());
             e.printStackTrace();
         }
+        System.out.println("ExecutionException isSuccessful "+autocompletePredictions.isSuccessful());
 
         if (autocompletePredictions.isSuccessful()) {
             FindAutocompletePredictionsResponse findAutocompletePredictionsResponse = autocompletePredictions.getResult();

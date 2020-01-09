@@ -381,22 +381,24 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         val destinationPoint = com.mapbox.geojson.Point.fromLngLat(gpsTracker!!.longitude, gpsTracker!!.latitude)
 
         edtdestLoc.setOnClickListener {
-            val intent = PlaceAutocomplete.IntentBuilder()
-                .accessToken(
-                    if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken()!! else getString(
-                        R.string.map_box_access_token))
-                .placeOptions(
-                    PlaceOptions.builder()
-                        .backgroundColor(Color.parseColor("#EEEEEE"))
-                        .country("IN")
-                        .geocodingTypes(GeocodingCriteria.TYPE_POI,
-                            GeocodingCriteria.TYPE_LOCALITY,
-                            GeocodingCriteria.TYPE_ADDRESS)
-                        .proximity(destinationPoint)
-                        .build(PlaceOptions.PARCELABLE_WRITE_RETURN_VALUE)
-                )
-                .build(activity)
-            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETEDEST)
+//            val intent = PlaceAutocomplete.IntentBuilder()
+//                .accessToken(
+//                    if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken()!! else getString(
+//                        R.string.map_box_access_token))
+//                .placeOptions(
+//                    PlaceOptions.builder()
+//                        .backgroundColor(Color.parseColor("#EEEEEE"))
+//                        .country("IN")
+//                        .geocodingTypes(GeocodingCriteria.TYPE_POI,
+//                            GeocodingCriteria.TYPE_LOCALITY,
+//                            GeocodingCriteria.TYPE_ADDRESS)
+//                        .proximity(destinationPoint)
+//                        .build(PlaceOptions.PARCELABLE_WRITE_RETURN_VALUE)
+//                )
+//                .build(activity)
+//            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETEDEST)
+            startActivityForResult(Intent(activity,MainActivity::class.java),REQUEST_CODE_AUTOCOMPLETEDEST);
+
         }
 
 
@@ -497,12 +499,15 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data)
         try {
             if (requestCode == REQUEST_CODE_AUTOCOMPLETE) {
-                selectedCarmenFeatureSrc = PlaceAutocomplete.getPlace(data);
-                edtScrLoc.setText(selectedCarmenFeatureSrc!!.placeName())
+                edtScrLoc.setText(data?.getStringExtra("LatLang"))
+                //selectedCarmenFeatureSrc = PlaceAutocomplete.getPlace(data);
+                ///edtScrLoc.setText(selectedCarmenFeatureSrc!!.placeName())
             }
             if (requestCode == REQUEST_CODE_AUTOCOMPLETEDEST) {
-                selectedCarmenFeatureDest = PlaceAutocomplete.getPlace(data);
-                edtdestLoc.setText(selectedCarmenFeatureDest!!.placeName())
+                edtdestLoc.setText(data?.getStringExtra("LatLang"))
+
+                //selectedCarmenFeatureDest = PlaceAutocomplete.getPlace(data);
+                //edtdestLoc.setText(selectedCarmenFeatureDest!!.placeName())
             }
         } catch (e : Exception){
 

@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -54,6 +56,13 @@ public class MainActivity extends AppCompatActivity implements PlacesAutoComplet
 
     @Override
     public void click(Place place) {
-        Toast.makeText(this, place.getAddress()+", "+place.getLatLng().latitude+place.getLatLng().longitude, Toast.LENGTH_SHORT).show();
+        Intent data = new Intent();
+//---set the data to pass back---
+        data.putExtra("LatLang",place.getAddress());
+        //data.setData(Uri.parse(place.toString()));
+
+        setResult(RESULT_OK, data);
+//---close the activity---
+        finish();
     }
 }
