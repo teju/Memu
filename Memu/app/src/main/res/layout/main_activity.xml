@@ -14,6 +14,7 @@
         <EditText
             android:id="@+id/place_search"
             android:hint="Search"
+            android:fontFamily="@font/opensansregular"
             android:inputType="textPostalAddress"
             android:padding="15dp"
             android:background="@color/White"

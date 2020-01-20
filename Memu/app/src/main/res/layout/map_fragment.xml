@@ -131,6 +131,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:id="@+id/time"
+                        android:fontFamily="@font/opensansregular"
                         android:textStyle="bold"
                         android:textColor="@color/Black"
                         android:layout_height="wrap_content">
@@ -139,6 +140,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:id="@+id/dist"
+                        android:fontFamily="@font/opensansregular"
                         android:textColor="@color/Black"
                         android:layout_height="wrap_content">
 
@@ -168,13 +170,13 @@
                     android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:text="wwqqwq"
+                        android:fontFamily="@font/opensansregular"
                         android:layout_height="wrap_content">
 
                     </TextView>
                     <TextView
                         android:layout_width="wrap_content"
-                        android:text="wwqqwq"
+                        android:fontFamily="@font/opensansregular"
                         android:layout_height="wrap_content">
 
                     </TextView>
@@ -200,6 +202,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:text="Start"
+                android:fontFamily="@font/opensansregular"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:textColor="@color/White"

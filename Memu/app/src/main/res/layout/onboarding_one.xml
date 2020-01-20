@@ -36,6 +36,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:textSize="30dp"
+                android:fontFamily="@font/opensanssemibold"
                 android:layout_alignParentRight="true"
                 android:text="Do you drive a vehicle?"
                 android:textColor="@color/DarkBlue"
@@ -78,11 +79,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="NO"
+                            android:fontFamily="@font/opensanssemibold"
                             android:layout_height="wrap_content">
 
                         </TextView>
                         <TextView
                             android:layout_width="wrap_content"
+                            android:fontFamily="@font/opensansregular"
                             android:text="I prefer public transport or\nCar/bike pooling"
                             android:layout_toRightOf="@+id/radio_connector"
                             android:layout_height="wrap_content">
@@ -136,11 +139,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="Yes,Private"
+                            android:fontFamily="@font/opensanssemibold"
                             android:layout_height="wrap_content">
 
                         </TextView>
                         <TextView
                             android:layout_width="wrap_content"
+                            android:fontFamily="@font/opensansregular"
                             android:text="(White Board - Car/Motorbike)"
                             android:layout_toRightOf="@+id/radio_connector"
                             android:layout_height="wrap_content">
@@ -187,11 +192,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="Yes,Cab/Taxi"
+                            android:fontFamily="@font/opensansregular"
                             android:layout_height="wrap_content">
                         </TextView>
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="(Yellow Board)"
+                            android:fontFamily="@font/opensansregular"
                             android:layout_toRightOf="@+id/radio_connector"
                             android:layout_height="wrap_content">
                         </TextView>

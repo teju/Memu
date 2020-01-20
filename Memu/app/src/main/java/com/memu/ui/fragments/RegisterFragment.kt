@@ -33,6 +33,7 @@ import android.widget.Toast
 import android.view.ViewTreeObserver
 import android.opengl.ETC1.getHeight
 import android.opengl.ETC1.getWidth
+import android.util.DisplayMetrics
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -57,6 +58,7 @@ import kotlin.collections.ArrayList
 
 class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListener {
 
+    public var fbObj: JSONObject? = null
 
     private val REQUEST_CODE_AUTOCOMPLETE: Int = 1002
     private val REQUEST_CODE_AUTOCOMPLETE_OFFICE: Int = 1003
@@ -108,6 +110,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         cab_upload_dl.setOnClickListener(this)
         home_address.setOnClickListener(this)
         officeAddress.setOnClickListener(this)
+        mobileNo.setOnClickListener(this)
 
 
         setVehicleTypeAPIObserver()
@@ -115,6 +118,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         setRequestOtpAPIObserver()
         setVerifyOtpAPIObserver()
         setUploadDocObserver()
+
+        initFb()
 
         getVehicleTypeViewModel.loadData()
         //onScrolledUp()
@@ -154,7 +159,43 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
         dl.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
-                mobileNo.requestFocus()
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
+                destination = onbording_4
+                if(State.type == State.White_board || State.type == State.NoVehicles) {
+                    startAnimation(white_car,R.drawable.white_car,1000,onbording_4 )
+                } else {
+                    startAnimation(yellow_car,R.drawable.yellow_car,1000,onbording_4 )
+                }
+                true
+            } else {
+                false
+            }
+        }
+        cab_dl.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
+                destination = onbording_4
+                if(State.type == State.White_board || State.type == State.NoVehicles) {
+                    startAnimation(white_car,R.drawable.white_car,1800,onbording_4 )
+                } else {
+                    startAnimation(yellow_car,R.drawable.yellow_car,1800,onbording_4 )
+                }
+                true
+            } else {
+                false
+            }
+        }
+        edtEmail.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
+                destination = onbording_5
+                if(State.type == State.White_board || State.type == State.NoVehicles) {
+                    startAnimation(white_car,R.drawable.white_car,2800,onbording_5 )
+                } else {
+                    startAnimation(yellow_car,R.drawable.yellow_car,2800,onbording_5 )
+                }
                 true
             } else {
                 false
@@ -162,12 +203,23 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
         gpsTracker = GPSTracker(activity)
         if(gpsTracker?.canGetLocation()!!) {
-            val getAddress = getAddress(gpsTracker?.latitude!!, gpsTracker?.longitude!!)
-            home_address.text = getAddress?.get(0)?.getAddressLine(0)
+            try {
+                val getAddress = getAddress(gpsTracker?.latitude!!, gpsTracker?.longitude!!)
+                home_address.setText(getAddress?.get(0)?.getAddressLine(0))
+            } catch (e : Exception){
+
+            }
         }
 
    }
 
+    fun initFb(){
+        if(fbObj != null ){
+            first_name.setText(fbObj!!.getString("first_name"))
+            last_name.setText(fbObj!!.getString("last_name"))
+            edtEmail.setText(fbObj!!.getString("email"))
+        }
+    }
     fun permissions() {
         val permissionListener: PermissionListener = object : PermissionListener {
             override fun onUserNotGrantedThePermission() {
@@ -195,12 +247,91 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
     }
 
+    fun initSearch(code : Int) {
+        val intent = PlaceAutocomplete.IntentBuilder()
+            .accessToken(
+                if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken()!! else getString(
+                    R.string.map_box_access_token
+                )
+            )
+            .placeOptions(
+                PlaceOptions.builder()
+                    .backgroundColor(Color.parseColor("#EEEEEE"))
+                    .limit(10)
+                    .build(PlaceOptions.MODE_CARDS)
+            )
+            .build(activity)
+        startActivityForResult(intent, code)
+    }
+
+
+    fun pickImage() {
+        val intent = Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_PHOTO_DOC);
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            if(requestCode == REQUEST_CODE_AUTOCOMPLETE) {
+                State.selectedCarmenFeaturehome = PlaceAutocomplete.getPlace(data);
+                home_address.setText(State.selectedCarmenFeaturehome !!.placeName())
+            } else if(requestCode == REQUEST_CODE_AUTOCOMPLETE_OFFICE) {
+                State.selectedCarmenFeatureoffice = PlaceAutocomplete.getPlace(data);
+                officeAddress.setText(State.selectedCarmenFeatureoffice !!.placeName())
+            } else {
+                try {
+
+                    val imageuri = data?.getData();// Get intent
+                    // Get real path and show over text view
+                    val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
+                    postUploadDocViewModel.loadData(State.upload_type, real_Path)
+                } catch (e: Exception) {
+                }
+            }
+        }
+    }
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        when(v?.id) {
+            R.id.home_address ->{
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
+                destination = onbording_4
+                startAnimation(white_car,R.drawable.white_car,300,onbording_1 )
+            }
+            R.id.mobileNo ->{
+
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
+                destination = onbording_4
+                if(State.type == State.White_board || State.type == State.NoVehicles) {
+                    startAnimation(white_car,R.drawable.white_car,600,onbording_4 )
+                } else {
+                    startAnimation(yellow_car,R.drawable.yellow_car,600,onbording_4 )
+                }
+            }
+            R.id.officeAddress -> {
+
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
+                destination = onbording_5
+                if(State.type == State.White_board || State.type == State.NoVehicles) {
+                    startAnimation(white_car,R.drawable.white_car,600,onbording_5 )
+                } else {
+                    startAnimation(yellow_car,R.drawable.yellow_car,600,onbording_5 )
+                }
+            }
+        }
+        return true
+    }
+
+    fun resetCarPosition(car_image:ImageView,temporigin : View) {
+        (car_image.parent as ViewGroup).removeView(car_image)
+        destination?.addView(temporigin)
+
+    }
 
 
     override fun onClick(v: View?) {
-        if(destination != null) {
-            destination!!.removeView(temp_image_view)
-        }
+
         val vlp = white_car?.layoutParams as ViewGroup.MarginLayoutParams
         val topMargin = Helper.dpToPx(activity!!,vlp.topMargin)
 
@@ -233,8 +364,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 destination = cab_onbording_3
                 startAnimation(yellow_car,R.drawable.yellow_car,600,onbording_1 )
             }
-             R.id.btnNExt ->{
 
+             R.id.btnNExt ->{
                  prepareParams()
             }
             R.id.get_otp ->{
@@ -281,10 +412,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 pickImage()
             }
             R.id.home_address ->{
-                initSearch(REQUEST_CODE_AUTOCOMPLETE)
+               // initSearch(REQUEST_CODE_AUTOCOMPLETE)
             }
             R.id.officeAddress ->{
-                initSearch(REQUEST_CODE_AUTOCOMPLETE_OFFICE)
+                //initSearch(REQUEST_CODE_AUTOCOMPLETE_OFFICE)
             }
             R.id.cab_upload_dl ->{
                 State.upload_type = PostUploadDocViewModel.VEHICLE_DL_PHOTO
@@ -293,72 +424,15 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
     }
 
-    fun initSearch(code : Int) {
-        val intent = PlaceAutocomplete.IntentBuilder()
-            .accessToken(
-                if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken()!! else getString(
-                    R.string.map_box_access_token
-                )
-            )
-            .placeOptions(
-                PlaceOptions.builder()
-                    .backgroundColor(Color.parseColor("#EEEEEE"))
-                    .limit(10)
-                    .build(PlaceOptions.MODE_CARDS)
-            )
-            .build(activity)
-        startActivityForResult(intent, code)
-    }
-
-
-    fun pickImage() {
-      val intent = Intent(Intent.ACTION_PICK);
-      intent.setType("image/*");
-      startActivityForResult(intent, PICK_PHOTO_DOC);
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            if(requestCode == REQUEST_CODE_AUTOCOMPLETE) {
-                State.selectedCarmenFeaturehome = PlaceAutocomplete.getPlace(data);
-                home_address.setText(State.selectedCarmenFeaturehome !!.placeName())
-            } else if(requestCode == REQUEST_CODE_AUTOCOMPLETE_OFFICE) {
-                State.selectedCarmenFeatureoffice = PlaceAutocomplete.getPlace(data);
-                officeAddress.setText(State.selectedCarmenFeatureoffice !!.placeName())
-            } else {
-                try {
-
-                    val imageuri = data?.getData();// Get intent
-                    // Get real path and show over text view
-                    val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
-                    postUploadDocViewModel.loadData(State.upload_type, real_Path)
-                } catch (e: Exception) {
-                }
-            }
-        }
-    }
-    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-       when(v?.id) {
-           R.id.home_address ->{
-               ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
-               destination = onbording_4
-               startAnimation(white_car,R.drawable.white_car,300,onbording_1 )
-           }
-       }
-        return true
-    }
-
-    fun resetCarPosition(car_image:ImageView,temporigin : View) {
-        (car_image.parent as ViewGroup).removeView(car_image)
-        destination?.addView(temporigin)
-
-    }
 
     var destination: RelativeLayout? = null
     var temp_image_view:ImageView? = null
 
     private fun startAnimation(car_image:ImageView,drawable : Int,top_margin : Int,temporigin : View) {
+        Helper.hideSoftKeyboard(activity!!)
+        if(destination != null) {
+            destination!!.removeView(temp_image_view)
+        }
         car_image.visibility = View.GONE
         val origin = car_image?.getParent() as View
         temp_image_view = ImageView(activity)
@@ -366,9 +440,13 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         val params = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        params.height = Helper.dpToPx(activity!!,100)
-        params.width = Helper.dpToPx(activity!!,81)
-        params.setMargins(Helper.dpToPx(activity!!,90),Helper.dpToPx(activity!!,top_margin),0,0)
+        params.height = Helper.toDp(activity!!,80f)
+        params.width = Helper.toDp(activity!!,61f)
+        val displayMetrics = DisplayMetrics();
+        activity?.getWindowManager()?.getDefaultDisplay()?.getMetrics(displayMetrics);
+
+        params.setMargins(Helper.toDp(activity!!,75f), Helper.dpToPx(activity!!, top_margin), 0, 0)
+
         temp_image_view!!.setImageDrawable(activity?.getDrawable(drawable))
         temp_image_view!!.layoutParams = params
         //(car_image.parent as ViewGroup).removeView(car_image)
@@ -854,7 +932,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUserSignupViewModel.NEXT_STEP -> {
-                            home().setFragment(HomeFragment())
+                            home().setFragment(DummyFragment())
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAccountName(postUserSignupViewModel.obj?.name!!)

@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -30,6 +31,7 @@ import android.provider.MediaStore;
 import android.text.InputType;
 import android.text.format.DateFormat;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -62,6 +64,8 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -1563,7 +1567,7 @@ public class BaseHelper {
 			Address location = address.get(0);
 			p1 = new LatLng(location.getLatitude(), location.getLongitude() );
 
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 
 			ex.printStackTrace();
 		}
@@ -1608,5 +1612,26 @@ public class BaseHelper {
 		return estimatedDriveTimeInMinutes;
 
 	}
-
+	public static String getHAshKey(Context context){
+		PackageInfo info;
+		try {
+			info = context.getPackageManager().getPackageInfo("com.memu", PackageManager.GET_SIGNATURES);
+			for (Signature signature : info.signatures) {
+				MessageDigest md;
+				md = MessageDigest.getInstance("SHA");
+				md.update(signature.toByteArray());
+				String something = new String(Base64.encodeBase64(md.digest(), false));
+				//String something = new String(Base64.encodeBytes(md.digest()));
+				Log.e("hash key", something);
+				return something;
+			}
+		} catch (NameNotFoundException e1) {
+			Log.e("name not found", e1.toString());
+		} catch (NoSuchAlgorithmException e) {
+			Log.e("no such an algorithm", e.toString());
+		} catch (Exception e) {
+			Log.e("exception", e.toString());
+		}
+		return "";
+	}
 }

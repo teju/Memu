@@ -29,6 +29,14 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.google.gson.GsonBuilder
 import com.memu.modules.notification.NotificationResponse
+import androidx.core.os.HandlerCompat.postDelayed
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.os.Handler
+import android.view.View
+import com.memu.ui.fragments.DummyFragment
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.home_fragment.ld
 
 
 class ActivityMain : AppCompatActivity(){
@@ -49,7 +57,15 @@ class ActivityMain : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Paper.init(this);
-        triggerMainProcess()
+        Handler().postDelayed(
+            Runnable // Using handler with postDelayed called runnable run method
+
+            {
+                memo_logo_icon.visibility = View.GONE
+                triggerMainProcess()
+
+            }, 2 * 1000
+        ) // wait for 5 s
         BaseHelper.triggerNotifLog(this);
         setAcceptRejectAPIObserver()
         Mapbox.getInstance(this, getString(R.string.map_box_access_token));
@@ -62,7 +78,7 @@ class ActivityMain : AppCompatActivity(){
         }
 
         mIntentFilter = IntentFilter("OPEN_NEW_ACTIVITY")
-
+        BaseHelper.getHAshKey(this)
     }
 
     fun showDialog(intent : Intent){
@@ -200,7 +216,7 @@ class ActivityMain : AppCompatActivity(){
     fun triggerMainProcess(){
 
         if(!BaseHelper.isEmpty(UserInfoManager.getInstance(this).authToken))
-            setFragment(HomeFragment())
+            setFragment(DummyFragment())
         else
             setFragment(MainFragment())
     }
@@ -556,7 +572,11 @@ class ActivityMain : AppCompatActivity(){
             } else null
         }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        MainFragment().onActivityResult(requestCode, resultCode, data);
 
+    }
     /******************************************
      * COMMON FUNCTIONS
      */

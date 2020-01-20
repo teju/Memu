@@ -45,6 +45,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:textSize="30dp"
+                        android:fontFamily="@font/opensanssemibold"
                         android:text="All set…"
                         android:textColor="@color/DarkBlue"
                         android:id="@+id/tv2"
@@ -55,6 +56,7 @@
                         android:layout_width="wrap_content"
                         android:textSize="25dp"
                         android:layout_marginTop="10dp"
+                        android:fontFamily="@font/opensanssemibold"
                         android:text="Please add your Office address &amp; Work email"
                         android:textColor="@color/DarkBlue"
                         android:id="@+id/tv3"
@@ -62,9 +64,10 @@
                         android:layout_height="wrap_content">
                     </TextView>
 
-                    <TextView
+                    <EditText
                         android:layout_width="match_parent"
                         android:hint="Office address"
+                        android:fontFamily="@font/opensansregular"
                         android:paddingTop="7dp"
                         android:textSize="15dp"
                         android:imeOptions="actionNext"
@@ -77,10 +80,11 @@
                         android:background="@color/soft_grey"
                         android:paddingBottom="7dp"
                         android:layout_height="wrap_content">
-                    </TextView>
+                    </EditText>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:fontFamily="@font/opensansregular"
                         android:text="Enter vehicle brand"
                         android:layout_below="@+id/officeAddress"
                         android:id="@+id/er_otv1"
@@ -94,6 +98,7 @@
                         android:layout_width="match_parent"
                         android:hint="Work email"
                         android:textSize="15dp"
+                        android:fontFamily="@font/opensansregular"
                         android:inputType="textEmailAddress"
                         android:imeOptions="actionDone"
                         android:id="@+id/edtofficeEmail"
@@ -110,6 +115,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_marginTop="10dp"
+                        android:fontFamily="@font/opensansregular"
                         android:text="Enter vehicle brand"
                         android:layout_below="@+id/edtofficeEmail"
                         android:id="@+id/er_otv2"
@@ -125,7 +131,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="85dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="30dp"
                 android:src="@drawable/solar_light"
                 android:layout_below="@+id/rl"
                 android:visibility="visible"></ImageView>

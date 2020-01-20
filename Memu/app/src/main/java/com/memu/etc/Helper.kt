@@ -18,6 +18,9 @@ import android.util.Patterns
 import android.text.TextUtils
 
 import java.util.regex.Pattern
+import android.util.TypedValue
+
+
 
 
 open class Helper  {
@@ -119,6 +122,13 @@ open class Helper  {
         fun dpToPx(context: Context, dp: Int): Int {
             val displayMetrics = context.resources.displayMetrics
             return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))
+        }
+
+        fun toDp(context: Context, dp: Float): Int {
+            return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources()
+                    .getDisplayMetrics()
+            ).toInt()
         }
 
         fun hideSoftKeyboard(activity: Activity) {

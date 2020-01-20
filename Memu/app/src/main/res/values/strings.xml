@@ -14,6 +14,7 @@
     <string name="geocoding_results">geocoding_results</string>
     <string name="geocode">geocoding_results</string>
     <string name="api_key">AIzaSyDxi2FhOwA_lVtNRhp6AJuqLV0nOSYvzmM</string>
+    <string name="facebook_app_id">785545178596863</string>
 
     <string-array name="Seats">
         <item>01</item>

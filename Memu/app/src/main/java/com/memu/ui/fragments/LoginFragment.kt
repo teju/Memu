@@ -37,6 +37,11 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
     private fun initUI() {
         setLoginAPIObserver()
         setOtpAPIObserver()
+        get_otp.setOnClickListener {
+            if(validateMobileNumber()) {
+                postLoginViewModel.loadData(LoginForm(mobileNo.text.toString()))
+            }
+        }
         mobileNo.setOnEditorActionListener { v, actionId, event ->
                 if(actionId == EditorInfo.IME_ACTION_NEXT){
                     if(validateMobileNumber()) {
@@ -114,7 +119,7 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostOtpViewModel.NEXT_STEP -> {
-                            home().setFragment(HomeFragment())
+                            home().setFragment(DummyFragment())
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAccountName(postOtpViewModel.obj?.name!!)
@@ -153,7 +158,12 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostLoginViewModel.NEXT_STEP -> {
-
+                            showNotifyDialog(
+                                "", postLoginViewModel.obj?.message,
+                                getString(R.string.ok),"",object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) { }
+                                }
+                            )
                         }
                     }
                 })
