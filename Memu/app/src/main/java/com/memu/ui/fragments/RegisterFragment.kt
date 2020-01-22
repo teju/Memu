@@ -5,13 +5,11 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Context
-import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.location.*
 import android.os.Bundle
 import android.view.*
-import androidx.core.animation.doOnEnd
 import com.memu.R
 import com.memu.etc.Helper
 import com.memu.ui.BaseFragment
@@ -20,7 +18,6 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import kotlinx.android.synthetic.main.onboarding_four.*
@@ -29,14 +26,9 @@ import kotlinx.android.synthetic.main.onboarding_three.*
 import kotlinx.android.synthetic.main.onboarding_two.*
 import org.json.JSONArray
 import org.json.JSONObject
-import android.widget.Toast
-import android.view.ViewTreeObserver
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
 import android.util.DisplayMetrics
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import com.iapps.gon.etc.callback.PermissionListener
 import com.mapbox.api.geocoding.v5.models.CarmenFeature
 import com.mapbox.mapboxsdk.Mapbox
@@ -46,7 +38,6 @@ import com.memu.etc.GPSTracker
 import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
 import com.memu.webservices.*
-import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.onboarding_start.*
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
 import kotlinx.android.synthetic.main.register_fragment.btnNExt
@@ -161,12 +152,27 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
         dl.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
+                if(destination != null) {
+                    destination!!.removeView(temp_image_view)
+                }
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,1000,onbording_4 )
+                    startAnimation(
+                        white_car,
+                        R.drawable.white_car,
+                        1000,
+                        onbording_4,
+                        0
+                    )
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,1000,onbording_4 )
+                    startAnimation(
+                        yellow_car,
+                        R.drawable.yellow_car,
+                        1000,
+                        onbording_4,
+                        0
+                    )
                 }
                 true
             } else {
@@ -175,13 +181,27 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
         cab_dl.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
-
+                if(destination != null) {
+                    destination!!.removeView(temp_image_view)
+                }
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,1800,onbording_4 )
+                    startAnimation(
+                        white_car,
+                        R.drawable.white_car,
+                        1800,
+                        onbording_4,
+                        0
+                    )
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,1800,onbording_4 )
+                    startAnimation(
+                        yellow_car,
+                        R.drawable.yellow_car,
+                        1800,
+                        onbording_4,
+                        0
+                    )
                 }
                 true
             } else {
@@ -189,29 +209,45 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             }
         }
         otp_number.setOnEditorActionListener { v, actionId, event ->
-            if(actionId == EditorInfo.IME_ACTION_DONE){
-
-                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
+            if(actionId == EditorInfo.IME_ACTION_NEXT){
+                if(destination != null) {
+                    destination!!.removeView(temp_image_view)
+                }
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,1800,onbording_4 )
+                    startAnimation(white_car,R.drawable.white_car,0,onbording_4,Helper.dpToPx(activity!!,500)  )
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,1800,onbording_4 )
+                    startAnimation(yellow_car,R.drawable.yellow_car,0,onbording_4,Helper.dpToPx(activity!!,500) )
                 }
                 true
             } else {
                 false
             }
         }
+
         edtEmail.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
-
+                if(destination != null) {
+                    destination!!.removeView(temp_image_view)
+                }
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
                 destination = onbording_5
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,2800,onbording_5 )
+                    startAnimation(
+                        white_car,
+                        R.drawable.white_car,
+                        0,
+                        onbording_5,
+                        0
+                    )
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,2800,onbording_5 )
+                    startAnimation(
+                        yellow_car,
+                        R.drawable.yellow_car,
+                        0,
+                        onbording_5,
+                        0
+                    )
                 }
                 true
             } else {
@@ -312,28 +348,68 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         when(v?.id) {
             R.id.home_address ->{
+                if(destination != null) {
+                    System.out.print("startAnimation destination not null")
+                    destination!!.removeView(temp_image_view)
+                }
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
-                startAnimation(white_car,R.drawable.white_car,300,onbording_1 )
+                startAnimation(
+                    white_car,
+                    R.drawable.white_car,
+                    300,
+                    onbording_1,
+                    0
+                )
             }
             R.id.mobileNo ->{
-
+                if(destination != null) {
+                    System.out.print("startAnimation destination not null")
+                    destination!!.removeView(temp_image_view)
+                }
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,600,onbording_4 )
+                    startAnimation(
+                        white_car,
+                        R.drawable.white_car,
+                        600,
+                        onbording_4,
+                        0
+                    )
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,600,onbording_4 )
+                    startAnimation(
+                        yellow_car,
+                        R.drawable.yellow_car,
+                        600,
+                        onbording_4,
+                        0
+                    )
                 }
             }
             R.id.officeAddress -> {
-
+                if(destination != null) {
+                    System.out.print("startAnimation destination not null")
+                    destination!!.removeView(temp_image_view)
+                }
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
                 destination = onbording_5
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,600,onbording_5 )
+                    startAnimation(
+                        white_car,
+                        R.drawable.white_car,
+                        600,
+                        onbording_5,
+                        0
+                    )
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,600,onbording_5 )
+                    startAnimation(
+                        yellow_car,
+                        R.drawable.yellow_car,
+                        600,
+                        onbording_5,
+                        0
+                    )
                 }
             }
         }
@@ -356,30 +432,60 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         {
 
             R.id.no_vehicle_btn ->{
+                if(destination != null) {
+                    System.out.print("startAnimation destination not null")
+                    destination!!.removeView(temp_image_view)
+                }
                 white_car.visibility = View.VISIBLE
                 yellow_car.visibility = View.GONE
                 State.role_id = "4"
                 State.type = State.NoVehicles
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
-                startAnimation(white_car,R.drawable.white_car,300,onbording_1)
+                startAnimation(
+                    white_car,
+                    R.drawable.white_car,
+                    300,
+                    onbording_1,
+                   0
+                )
             }
             R.id.private_vehicle_btn ->{
+                if(destination != null) {
+                    System.out.print("startAnimation destination not null")
+                    destination!!.removeView(temp_image_view)
+                }
                 white_car.visibility = View.VISIBLE
                 yellow_car.visibility = View.GONE
                 State.type = State.White_board
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = onbording_3
-                startAnimation(white_car,R.drawable.white_car,400,onbording_1 )
+                startAnimation(
+                    white_car,
+                    R.drawable.white_car,
+                    400,
+                    onbording_1,
+                    0
+                )
             }
             R.id.cab_vehicle_btn ->{
+                if(destination != null) {
+                    System.out.print("startAnimation destination not null")
+                    destination!!.removeView(temp_image_view)
+                }
                 white_car.visibility = View.GONE
                 yellow_car.visibility = View.VISIBLE
                 State.role_id = "6"
                 State.type = State.YELLOW_BOARD
                 ObjectAnimator.ofInt(sv, "scrollY",  cab_onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = cab_onbording_3
-                startAnimation(yellow_car,R.drawable.yellow_car,600,onbording_1 )
+                startAnimation(
+                    yellow_car,
+                    R.drawable.yellow_car,
+                    600,
+                    onbording_1,
+                    0
+                )
             }
 
              R.id.btnNExt ->{
@@ -449,11 +555,15 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     var destination: RelativeLayout? = null
     var temp_image_view:ImageView? = null
 
-    private fun startAnimation(car_image:ImageView,drawable : Int,top_margin : Int,temporigin : View) {
+    private fun startAnimation(
+        car_image: ImageView,
+        drawable: Int,
+        top_margin: Int,
+        temporigin: View,
+        dpToPx: Int
+    ) {
         Helper.hideSoftKeyboard(activity!!)
-        if(destination != null) {
-            destination!!.removeView(temp_image_view)
-        }
+
         car_image.visibility = View.GONE
         val origin = car_image?.getParent() as View
         temp_image_view = ImageView(activity)
@@ -475,9 +585,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         destination?.addView(temp_image_view)
 
         // Create animations based on origin and destination LinearLayouts
-        val outAnimator = getOutAnimator(origin, destination!!,temp_image_view!!)
+        val outAnimator = getOutAnimator(origin, destination!!,temp_image_view!!,dpToPx)
         // The in animator also requires a reference to the new TextView
-        val inAnimator = getInAnimator(temp_image_view!!, origin, destination!!,temp_image_view!!,top_margin)
+        val inAnimator = getInAnimator(temp_image_view!!, origin, destination!!,temp_image_view!!,top_margin,dpToPx)
         // All animators must be created before any are started because they are calculated
         // using values that are modified by the animation itself.
         outAnimator.start()
@@ -502,17 +612,22 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
      * This method creates an ObjectAnimator to move the existing TextView out of its parent
      * towards its destination
      */
-    private fun getOutAnimator(origin: View, destination: View,textView : ImageView): ObjectAnimator {
+    private fun getOutAnimator(
+        origin: View,
+        destination: View,
+        textView: ImageView,
+        dpToPx: Int
+    ): ObjectAnimator {
 
         // Calculate the difference between x of destination and of origin
-        val layoutDifferenceX = destination.y - origin.y + 200
+        val layoutDifferenceX = (destination.y+dpToPx) - origin.y + 200
         // initialX is simply textView.getX()
         // the distance moved == layoutDifferenceX
         val finalX = textView?.getX()!! + layoutDifferenceX
 
         val animator = ObjectAnimator.ofFloat(
             textView, "y",
-            textView?.getX()!!, finalX!!
+            textView?.getX()!!, finalX!!+dpToPx
         )
         animator.setInterpolator(AccelerateDecelerateInterpolator())
         animator.setDuration(2000)
@@ -524,11 +639,17 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
      * This method creates an ObjectAnimator to move the new TextView from the initial position
      * of textView, relative to the new TextView's parent, to its destination.
      */
-    private fun getInAnimator(newView: View, origin: View,
-                              destination: View,textView : ImageView,top_margin : Int): ObjectAnimator {
+    private fun getInAnimator(
+        newView: View,
+        origin: View,
+        destination: View,
+        textView: ImageView,
+        top_margin: Int,
+        dpToPx: Int
+    ): ObjectAnimator {
 
         // Calculate the difference between y of destination and of origin
-        val layoutDifferenceX = destination.y - (origin.y + Helper.dpToPx(activity!!,top_margin))
+        val layoutDifferenceX = (destination.y+dpToPx) - (origin.y + Helper.dpToPx(activity!!,top_margin))
         // initialX relative to destination
         val initialX = textView?.getX()!! - layoutDifferenceX
 
@@ -536,7 +657,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         val finalX = textView?.getX()
         val animator = ObjectAnimator.ofFloat(
             newView, "y",
-            initialX!!, finalX!!
+            initialX!!, finalX!!+dpToPx
         )
         animator.setInterpolator(AccelerateDecelerateInterpolator())
         animator.setDuration(2000)

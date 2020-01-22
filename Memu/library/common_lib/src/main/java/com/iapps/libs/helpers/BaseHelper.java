@@ -26,7 +26,10 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.text.format.DateFormat;
@@ -52,6 +55,12 @@ import com.iapps.logs.com.pascalabs.util.log.activity.ActivityPascaLog;
 import com.iapps.logs.com.pascalabs.util.log.helper.Helper;
 
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.joda.time.format.DateTimeFormat;
@@ -64,6 +73,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -1573,6 +1583,43 @@ public class BaseHelper {
 		}
 
 		return p1;
+	}
+	public static JSONObject getLocationInfo(String address) {
+		StringBuilder stringBuilder = new StringBuilder();
+		try {
+
+			address = address.replaceAll(" ","%20");
+
+			HttpPost httppost = new HttpPost("http://maps.google.com/maps/api/geocode/json?address=" + address + "&sensor=false");
+			HttpClient client = new DefaultHttpClient();
+			HttpResponse response;
+			stringBuilder = new StringBuilder();
+
+
+			response = client.execute(httppost);
+			HttpEntity entity = response.getEntity();
+			InputStream stream = entity.getContent();
+			int b;
+			while ((b = stream.read()) != -1) {
+				stringBuilder.append((char) b);
+			}
+			System.out.println("Exception12334 "+stringBuilder.toString());
+
+		} catch (Exception e) {
+			System.out.println("Exception12334 "+e.toString());
+		}
+
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject = new JSONObject(stringBuilder.toString());
+		} catch (Exception e) {
+			System.out.println("Exception12334 "+e.toString());
+
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return jsonObject;
 	}
 	public static double showDistance(LatLng origin, LatLng dest ) {
 
