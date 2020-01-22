@@ -25,7 +25,7 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="xxx6c41xxx6ec601xxxd4xxxa2" />
-    <activity android:name=".ui.fragments.MainActivity">
+    <activity android:name=".ui.fragments.TempMainActivity">
 
     </activity>
 

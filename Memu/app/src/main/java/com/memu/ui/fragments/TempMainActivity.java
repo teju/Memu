@@ -21,7 +21,7 @@ import com.memu.R;
 import com.memu.ui.adapters.PlacesAutoCompleteAdapter;
 
 
-public class MainActivity extends AppCompatActivity implements PlacesAutoCompleteAdapter.ClickListener{
+public class TempMainActivity extends AppCompatActivity implements PlacesAutoCompleteAdapter.ClickListener{
 
     private PlacesAutoCompleteAdapter mAutoCompleteAdapter;
     private RecyclerView recyclerView;

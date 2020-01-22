@@ -50,5 +50,11 @@
         android:background="@color/transparent"
         android:clickable="true"
         android:visibility="gone" />
+    <View
+        android:id="@+id/shuttleView"
+        android:layout_width="0dp"
+        android:layout_marginLeft="300dp"
+        android:layout_height="0dp"
+        android:background="@android:color/holo_blue_bright"/>
 
 </RelativeLayout>

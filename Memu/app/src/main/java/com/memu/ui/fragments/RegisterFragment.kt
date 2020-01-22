@@ -1,12 +1,15 @@
 package com.memu.ui.fragments
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Rect
 import android.location.*
 import android.os.Bundle
 import android.view.*
@@ -28,6 +31,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import android.util.DisplayMetrics
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
 import com.iapps.gon.etc.callback.PermissionListener
 import com.mapbox.api.geocoding.v5.models.CarmenFeature
@@ -50,7 +54,8 @@ import kotlin.collections.ArrayList
 
 class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListener {
 
-    public var fbObj: JSONObject? = null
+    var fbObj: JSONObject? = null
+    val ANIMATION_SPEED = 2000
 
     private val REQUEST_CODE_AUTOCOMPLETE: Int = 1002
     private val REQUEST_CODE_AUTOCOMPLETE_OFFICE: Int = 1003
@@ -153,26 +158,15 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         dl.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 if(destination != null) {
+                    System.out.print("startAnimation destination not null")
                     destination!!.removeView(temp_image_view)
                 }
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(
-                        white_car,
-                        R.drawable.white_car,
-                        1000,
-                        onbording_4,
-                        0
-                    )
+                    startAnimation(white_car,R.drawable.white_car,1000,onbording_4 ,0)
                 } else {
-                    startAnimation(
-                        yellow_car,
-                        R.drawable.yellow_car,
-                        1000,
-                        onbording_4,
-                        0
-                    )
+                    startAnimation(yellow_car,R.drawable.yellow_car,1000,onbording_4,0 )
                 }
                 true
             } else {
@@ -182,26 +176,15 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         cab_dl.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 if(destination != null) {
+                    System.out.print("startAnimation destination not null")
                     destination!!.removeView(temp_image_view)
                 }
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(
-                        white_car,
-                        R.drawable.white_car,
-                        1800,
-                        onbording_4,
-                        0
-                    )
+                    startAnimation(white_car,R.drawable.white_car,1800,onbording_4 ,0)
                 } else {
-                    startAnimation(
-                        yellow_car,
-                        R.drawable.yellow_car,
-                        1800,
-                        onbording_4,
-                        0
-                    )
+                    startAnimation(yellow_car,R.drawable.yellow_car,1800,onbording_4 ,0)
                 }
                 true
             } else {
@@ -211,43 +194,33 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         otp_number.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_NEXT){
                 if(destination != null) {
+                    System.out.print("startAnimation destination not null")
                     destination!!.removeView(temp_image_view)
                 }
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt() + 500).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,0,onbording_4,Helper.dpToPx(activity!!,650)  )
+                    startAnimation(white_car,R.drawable.white_car,3200,onbording_4 ,Helper.toDp(activity!!,600f))
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,0,onbording_4,Helper.dpToPx(activity!!,650) )
+                    startAnimation(yellow_car,R.drawable.yellow_car,3200,onbording_4 ,Helper.toDp(activity!!,600f))
                 }
                 true
             } else {
                 false
             }
         }
-
         edtEmail.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 if(destination != null) {
+                    System.out.print("startAnimation destination not null")
                     destination!!.removeView(temp_image_view)
                 }
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
                 destination = onbording_5
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(
-                        white_car,
-                        R.drawable.white_car,
-                        0,
-                        onbording_5,
-                        0
-                    )
+                    startAnimation(white_car,R.drawable.white_car,3200,onbording_5 ,0)
                 } else {
-                    startAnimation(
-                        yellow_car,
-                        R.drawable.yellow_car,
-                        0,
-                        onbording_5,
-                        0
-                    )
+                    startAnimation(yellow_car,R.drawable.yellow_car,3200,onbording_5,0 )
                 }
                 true
             } else {
@@ -346,6 +319,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
     }
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+/*
         when(v?.id) {
             R.id.home_address ->{
                 if(destination != null) {
@@ -413,6 +387,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 }
             }
         }
+*/
         return true
     }
 
@@ -433,7 +408,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
             R.id.no_vehicle_btn ->{
                 if(destination != null) {
-                    System.out.print("startAnimation destination not null")
                     destination!!.removeView(temp_image_view)
                 }
                 white_car.visibility = View.VISIBLE
@@ -552,8 +526,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     var destination: RelativeLayout? = null
     var temp_image_view:ImageView? = null
 
+
     private fun startAnimation(
-        car_image: ImageView,
+        car_image: View,
         drawable: Int,
         top_margin: Int,
         temporigin: View,
@@ -566,92 +541,40 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         temp_image_view = ImageView(activity)
         // Create another TextView and initialise it to match textView
         val params = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+
         params.height = Helper.toDp(activity!!,80f)
         params.width = Helper.toDp(activity!!,61f)
         val displayMetrics = DisplayMetrics();
         activity?.getWindowManager()?.getDefaultDisplay()?.getMetrics(displayMetrics);
 
-        params.setMargins(Helper.toDp(activity!!,75f), Helper.dpToPx(activity!!, top_margin), 0, 0)
+        params.setMargins(Helper.toDp(activity!!,75f), 0, 0, 0)
 
         temp_image_view!!.setImageDrawable(activity?.getDrawable(drawable))
         temp_image_view!!.layoutParams = params
-        //(car_image.parent as ViewGroup).removeView(car_image)
-        // Add the new TextView to the destination LinearLayout
+
         destination?.addView(temp_image_view)
 
-        // Create animations based on origin and destination LinearLayouts
-        val outAnimator = getOutAnimator(origin, destination!!,temp_image_view!!,dpToPx)
-        // The in animator also requires a reference to the new TextView
         val inAnimator = getInAnimator(temp_image_view!!, origin, destination!!,temp_image_view!!,top_margin,dpToPx)
-        // All animators must be created before any are started because they are calculated
-        // using values that are modified by the animation itself.
-        outAnimator.start()
         inAnimator.start()
-        // Add a listener to update textView reference to the new TextView when complete.
-        inAnimator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
 
-            }
-
-            override fun onAnimationEnd(animation: Animator) {
-
-            }
-
-            override fun onAnimationCancel(animation: Animator) {}
-
-            override fun onAnimationRepeat(animation: Animator) {}
-        })
     }
 
-    /**
-     * This method creates an ObjectAnimator to move the existing TextView out of its parent
-     * towards its destination
-     */
-    private fun getOutAnimator(
-        origin: View,
-        destination: View,
-        textView: ImageView,
-        dpToPx: Int
-    ): ObjectAnimator {
-
-        // Calculate the difference between x of destination and of origin
-        val layoutDifferenceX = (destination.y+dpToPx) - origin.y + 200
-        // initialX is simply textView.getX()
-        // the distance moved == layoutDifferenceX
-        val finalX = textView?.getX()!! + layoutDifferenceX
-
-        val animator = ObjectAnimator.ofFloat(
-            textView, "y",
-            textView?.getX()!!, finalX!!+dpToPx
-        )
-        animator.setInterpolator(AccelerateDecelerateInterpolator())
-        animator.setDuration(2000)
-
-        return animator
-    }
-
-    /**
-     * This method creates an ObjectAnimator to move the new TextView from the initial position
-     * of textView, relative to the new TextView's parent, to its destination.
-     */
     private fun getInAnimator(
         newView: View,
         origin: View,
         destination: View,
         textView: ImageView,
         top_margin: Int,
-        dpToPx: Int
-    ): ObjectAnimator {
+        dpToPx: Int): ObjectAnimator {
 
         // Calculate the difference between y of destination and of origin
-        val layoutDifferenceX = (destination.y+dpToPx) - (origin.y + Helper.dpToPx(activity!!,top_margin))
+        val layoutDifferenceX = (destination.y+dpToPx) - (origin.y + Helper.toDp(activity!!,top_margin.toFloat()))
         // initialX relative to destination
-        val initialX = textView?.getX()!! - layoutDifferenceX
+        val initialX = textView?.y!! - layoutDifferenceX
 
         // finalX relative to destination == initialX relative to origin
-        val finalX = textView?.getX()
+        val finalX = textView?.y
         val animator = ObjectAnimator.ofFloat(
             newView, "y",
             initialX!!, finalX!!+dpToPx

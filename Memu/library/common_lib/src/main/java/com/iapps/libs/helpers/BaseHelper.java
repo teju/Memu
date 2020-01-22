@@ -1,5 +1,8 @@
 package com.iapps.libs.helpers;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -19,6 +22,7 @@ import android.content.pm.Signature;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -36,7 +40,9 @@ import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -1681,4 +1687,62 @@ public class BaseHelper {
 		}
 		return "";
 	}
+
+	public static AnimatorSet getViewToViewScalingAnimator(final View parentView,
+														   final View viewToAnimate,
+														   final View fromViewRect,
+														   final View toViewRect,
+														   final long duration,
+														   final long startDelay) {
+		// get all coordinates at once
+
+		viewToAnimate.setScaleX(1f);
+		viewToAnimate.setScaleY(1f);
+
+		// rescaling of the object on X-axis
+		final ValueAnimator valueAnimatorWidth = ValueAnimator.ofInt(fromViewRect.getWidth(), toViewRect.getWidth());
+		valueAnimatorWidth.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				// Get animated width value update
+				int newWidth = (int) valueAnimatorWidth.getAnimatedValue();
+
+				// Get and update LayoutParams of the animated view
+				RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) viewToAnimate.getLayoutParams();
+
+				lp.width = newWidth;
+				viewToAnimate.setLayoutParams(lp);
+			}
+		});
+
+		// rescaling of the object on Y-axis
+		final ValueAnimator valueAnimatorHeight = ValueAnimator.ofInt(fromViewRect.getHeight(), toViewRect.getHeight());
+		valueAnimatorHeight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				// Get animated width value update
+				int newHeight = (int) valueAnimatorHeight.getAnimatedValue();
+
+				// Get and update LayoutParams of the animated view
+				RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) viewToAnimate.getLayoutParams();
+				lp.height = newHeight;
+				viewToAnimate.setLayoutParams(lp);
+			}
+		});
+
+		// moving of the object on X-axis
+		ObjectAnimator translateAnimatorX = ObjectAnimator.ofFloat(viewToAnimate, "X", fromViewRect.getLeft() - parentView.getLeft(), toViewRect.getLeft() - parentView.getLeft());
+
+		// moving of the object on Y-axis
+		ObjectAnimator translateAnimatorY = ObjectAnimator.ofFloat(viewToAnimate, "Y", fromViewRect.getTop() - parentView.getTop(), toViewRect.getTop() - parentView.getTop());
+
+		AnimatorSet animatorSet = new AnimatorSet();
+		animatorSet.setInterpolator(new DecelerateInterpolator(1f));
+		animatorSet.setDuration(duration); // can be decoupled for each animator separately
+		animatorSet.setStartDelay(startDelay); // can be decoupled for each animator separately
+		animatorSet.playTogether(valueAnimatorWidth, valueAnimatorHeight, translateAnimatorX, translateAnimatorY);
+
+		return animatorSet;
+	}
+
 }

@@ -11,23 +11,14 @@ import kotlinx.android.synthetic.main.home_fragment.*
 import java.util.*
 import android.widget.*
 import androidx.lifecycle.Observer
-import androidx.annotation.NonNull
-import com.mapbox.mapboxsdk.maps.Style
-import com.mapbox.mapboxsdk.location.modes.RenderMode
-import com.mapbox.mapboxsdk.location.modes.CameraMode
-import android.R.style
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Point
 import android.location.Address
 import android.location.Geocoder
-import android.location.Location
 import android.os.Build
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProviders
@@ -35,20 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
 import com.iapps.gon.etc.callback.NotifyListener
-import com.iapps.gon.etc.callback.PermissionListener
 import com.iapps.libs.helpers.BaseHelper
-import com.mapbox.api.geocoding.v5.GeocodingCriteria
-import com.mapbox.api.geocoding.v5.models.CarmenFeature
-import com.mapbox.mapboxsdk.Mapbox
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
-import com.mapbox.mapboxsdk.location.LocationComponent
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
-import com.mapbox.turf.TurfConstants
-import com.mapbox.turf.TurfMeasurement
 import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.GPSTracker
 import com.memu.etc.Helper
@@ -366,7 +344,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
                 )
                 .build(activity)
             startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)*/
-            startActivityForResult(Intent(activity,MainActivity::class.java),REQUEST_CODE_AUTOCOMPLETE);
+            startActivityForResult(Intent(activity, TempMainActivity::class.java),REQUEST_CODE_AUTOCOMPLETE);
 
         }
     }
@@ -395,7 +373,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 //                )
 //                .build(activity)
 //            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETEDEST)
-            startActivityForResult(Intent(activity,MainActivity::class.java),REQUEST_CODE_AUTOCOMPLETEDEST);
+            startActivityForResult(Intent(activity, TempMainActivity::class.java),REQUEST_CODE_AUTOCOMPLETEDEST);
 
         }
 
