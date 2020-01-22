@@ -1568,7 +1568,7 @@ public class BaseHelper {
 			p1 = new LatLng(location.getLatitude(), location.getLongitude() );
 
 		} catch (Exception ex) {
-
+			System.out.println("getLocationFromAddress Exception "+ex.toString());
 			ex.printStackTrace();
 		}
 

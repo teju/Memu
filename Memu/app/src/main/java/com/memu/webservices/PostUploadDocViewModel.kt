@@ -78,6 +78,9 @@ class PostUploadDocViewModel(application: Application) : BaseViewModel(applicati
         } else if(doc_type == VEHICLE_DL_PHOTO) {
             genericHttpAsyncTask.setUrl(APIs.postUploadDlPhoto)
             genericHttpAsyncTask.setFileParams(Keys.DRIVING_LICENCE,path,"multipart/form-data; boundar")
+        }else if(doc_type == PROFILE_PHOTO) {
+            genericHttpAsyncTask.setUrl(APIs.postUploadProfilePhoto)
+            genericHttpAsyncTask.setFileParams(Keys.PROFILE,path,"multipart/form-data; boundar")
         }
 
         genericHttpAsyncTask.setCache(false)
@@ -91,6 +94,7 @@ class PostUploadDocViewModel(application: Application) : BaseViewModel(applicati
         var VEHICLE_PHOTO = 2
         var VEHICLE_REG_CERT_PHOTO = 3
         var VEHICLE_DL_PHOTO =  4
+        var PROFILE_PHOTO =  5
     }
 
 }

@@ -59,6 +59,7 @@ class Keys : BaseKeys() {
         val ID = "id"
         val TRIP_ID = "trip_id"
         val TRIP_RIDER_ID_ = "trip_rider_id"
+        val PROFILE = "profile"
         val STATUS = "status"
 
         @kotlin.jvm.JvmField

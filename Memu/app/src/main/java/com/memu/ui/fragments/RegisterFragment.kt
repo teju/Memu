@@ -81,6 +81,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     var vehicleID_name = ""
     val PICK_PHOTO_DOC = 10001
     var gpsTracker : GPSTracker? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.register_fragment, container, false)
         return v
@@ -111,6 +112,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         home_address.setOnClickListener(this)
         officeAddress.setOnClickListener(this)
         mobileNo.setOnClickListener(this)
+        profile_pic_upload.setOnClickListener(this)
 
 
         setVehicleTypeAPIObserver()
@@ -172,6 +174,21 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             }
         }
         cab_dl.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
+                destination = onbording_4
+                if(State.type == State.White_board || State.type == State.NoVehicles) {
+                    startAnimation(white_car,R.drawable.white_car,1800,onbording_4 )
+                } else {
+                    startAnimation(yellow_car,R.drawable.yellow_car,1800,onbording_4 )
+                }
+                true
+            } else {
+                false
+            }
+        }
+        otp_number.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
 
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
@@ -409,6 +426,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             }
             R.id.upload_dl ->{
                 State.upload_type = PostUploadDocViewModel.VEHICLE_DL_PHOTO
+                pickImage()
+            }
+            R.id.profile_pic_upload ->{
+                State.upload_type = PostUploadDocViewModel.PROFILE_PHOTO
                 pickImage()
             }
             R.id.home_address ->{
@@ -741,7 +762,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             edtEmail.clearFocus()
             er_mtv4.visibility = View.GONE
         }
-        if(State.type != State.YELLOW_BOARD) {
+        /*if(State.type != State.YELLOW_BOARD) {
             if (BaseHelper.isEmpty(State.office_address_line1)) {
                 er_otv1.visibility = View.VISIBLE
                 edtofficeEmail.requestFocus()
@@ -761,7 +782,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 edtofficeEmail.clearFocus()
                 er_otv2.visibility = View.GONE
             }
-        }
+        }*/
 
         return true
     }
@@ -842,7 +863,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         when (State.type) {
             State.NoVehicles -> {
                 jsonArray.put(0,state.Address(activity!!))
-                jsonArray.put(1,state.OfficeAddress(activity!!))
+                if(!state.OfficeAddress(activity!!).isNull("lattitude") ||
+                    !state.OfficeAddress(activity!!).isNull("longitude")) {
+                    jsonArray.put(1, state.OfficeAddress(activity!!))
+                }
 
 
                 if(validateAPIForm() && validateMobileNumber()  && validateOTp() && validateaddressForm() ){
@@ -1095,6 +1119,12 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                                         tvcab_upload_dl.setTextColor(activity?.resources?.getColor(R.color.Green)!!)
                                     }
                                 }
+                                PostUploadDocViewModel.PROFILE_PHOTO -> {
+                                    driving_licenceID = postUploadDocViewModel.obj?.file_id!!
+                                    driving_licenceID_name = postUploadDocViewModel.obj?.file_name!!
+                                    tvprofile_pic.text = "Uploaded"
+                                    tvprofile_pic.setTextColor(activity?.resources?.getColor(R.color.Green)!!)
+                                }
                             }
                         }
                     }
@@ -1153,7 +1183,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
             if(!BaseHelper.isEmpty(address_line1))
                 obj.put("address_line1", address_line1)
-                val latLng = BaseHelper.getLocationFromAddress(office_address_line1,context)
+                val latLng = BaseHelper.getLocationFromAddress(address_line1,context)
                 if(latLng != null) {
                     obj.put("lattitude", latLng.latitude.toString())
                     obj.put("longitude", latLng.longitude.toString())
