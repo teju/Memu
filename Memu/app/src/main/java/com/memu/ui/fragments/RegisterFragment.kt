@@ -38,6 +38,7 @@ import com.memu.etc.GPSTracker
 import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
 import com.memu.webservices.*
+import kotlinx.android.synthetic.main.custom_notification_layout.view.*
 import kotlinx.android.synthetic.main.onboarding_start.*
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
 import kotlinx.android.synthetic.main.register_fragment.btnNExt
@@ -103,7 +104,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         home_address.setOnClickListener(this)
         officeAddress.setOnClickListener(this)
         mobileNo.setOnClickListener(this)
-        profile_pic_upload.setOnClickListener(this)
 
 
         setVehicleTypeAPIObserver()
@@ -215,9 +215,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 }
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,0,onbording_4,Helper.dpToPx(activity!!,500)  )
+                    startAnimation(white_car,R.drawable.white_car,0,onbording_4,Helper.dpToPx(activity!!,650)  )
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,0,onbording_4,Helper.dpToPx(activity!!,500) )
+                    startAnimation(yellow_car,R.drawable.yellow_car,0,onbording_4,Helper.dpToPx(activity!!,650) )
                 }
                 true
             } else {
@@ -534,10 +534,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 State.upload_type = PostUploadDocViewModel.VEHICLE_DL_PHOTO
                 pickImage()
             }
-            R.id.profile_pic_upload ->{
-                State.upload_type = PostUploadDocViewModel.PROFILE_PHOTO
-                pickImage()
-            }
+
             R.id.home_address ->{
                // initSearch(REQUEST_CODE_AUTOCOMPLETE)
             }
@@ -770,13 +767,13 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     fun validateCabVehicleForm() :Boolean{
 
         if(BaseHelper.isEmpty(State.vehicle_brand)) {
-            cab_er_tv1.visibility = View.VISIBLE
-            cab_er_tv1.text = "Enter vehicle brand"
+            caber_tvbrand.visibility = View.VISIBLE
+            caber_tvbrand.text = "Enter vehicle brand"
             cab_edtVehicleBrand.requestFocus();
             return false
         } else {
             edtVehicleBrand.clearFocus();
-            cab_edtVehicleBrand.visibility = View.GONE
+            caber_tvbrand.visibility = View.GONE
         }
         if(BaseHelper.isEmpty(State.vehicle_name)) {
             cab_er_tv1.visibility = View.VISIBLE
@@ -789,14 +786,14 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
 
         if(BaseHelper.isEmpty(State.vehicle_no)){
-            cab_er_tv1.visibility = View.VISIBLE
+            cab_er_tv2.visibility = View.VISIBLE
             cab_reg_no.requestFocus()
-            cab_er_tv1.text = "Enter vehicle number"
+            cab_er_tv2.text = "Enter vehicle number"
 
             return false
         } else {
             cab_reg_no.clearFocus()
-            cab_er_tv1.visibility = View.GONE
+            cab_er_tv2.visibility = View.GONE
         }
         if(BaseHelper.isEmpty(State.dl_number)){
             cab_er_tv3.visibility = View.VISIBLE
@@ -814,13 +811,13 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     fun validateVehicleForm() :Boolean{
 
         if(BaseHelper.isEmpty(State.vehicle_brand)) {
-            er_tv1.visibility = View.VISIBLE
-            er_tv1.text = "Enter vehicle brand"
+            er_tvbrand.visibility = View.VISIBLE
+            er_tvbrand.text = "Enter vehicle brand"
             edtVehicleBrand.requestFocus();
             return false
         } else {
             edtVehicleBrand.clearFocus();
-            er_tv1.visibility = View.GONE
+            er_tvbrand.visibility = View.GONE
         }
         if(BaseHelper.isEmpty(State.vehicle_name)) {
             er_tv1.visibility = View.VISIBLE
@@ -1243,8 +1240,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                                 PostUploadDocViewModel.PROFILE_PHOTO -> {
                                     driving_licenceID = postUploadDocViewModel.obj?.file_id!!
                                     driving_licenceID_name = postUploadDocViewModel.obj?.file_name!!
-                                    tvprofile_pic.text = "Uploaded"
-                                    tvprofile_pic.setTextColor(activity?.resources?.getColor(R.color.Green)!!)
+
                                 }
                             }
                         }

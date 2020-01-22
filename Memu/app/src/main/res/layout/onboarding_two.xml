@@ -77,9 +77,6 @@
                                 android:layout_width="match_parent"
                                 android:orientation="vertical"
                                 android:layout_marginRight="50dp"
-                                android:paddingLeft="10dp"
-                                android:paddingRight="10dp"
-                                android:background="@color/soft_grey"
                                 android:layout_height="wrap_content">
                                 <EditText
                                     android:layout_width="match_parent"
@@ -89,24 +86,37 @@
                                     android:textSize="15dp"
                                     android:imeOptions="actionNext"
                                     android:paddingTop="7dp"
+                                    android:paddingLeft="10dp"
+                                    android:paddingRight="10dp"
                                     android:id="@+id/edtVehicleBrand"
                                     android:background="@color/soft_grey"
                                     android:paddingBottom="7dp"
                                     android:layout_height="wrap_content">
                                 </EditText>
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:background="@color/Gray"
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_marginTop="5dp"
-                                    android:layout_height="0.5dp">
-                                </View>
+                                    android:text="Enter vehicle brand"
+                                    android:layout_below="@+id/radio_btn"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:id="@+id/er_tvbrand"
+                                    android:textSize="15dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:textColor="@color/Red"
+                                    android:visibility="gone"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+
                                 <EditText
                                     android:layout_width="match_parent"
                                     android:hint="Vehicle Name"
                                     android:fontFamily="@font/opensansregular"
                                     android:paddingTop="7dp"
+                                    android:paddingLeft="10dp"
+                                    android:paddingRight="10dp"
                                     android:textSize="15dp"
                                     android:inputType="text"
+                                    android:layout_marginTop="5dp"
                                     android:imeOptions="actionNext"
                                     android:id="@+id/VehicleName"
                                     android:background="@color/soft_grey"

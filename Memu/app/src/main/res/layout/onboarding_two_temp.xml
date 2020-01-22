@@ -77,16 +77,15 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:orientation="vertical"
-                                android:background="@color/soft_grey"
-                                android:paddingLeft="15dp"
                                 android:layout_marginRight="50dp"
-                                android:paddingRight="15dp"
                                 android:layout_height="wrap_content">
                                 <EditText
                                     android:layout_width="match_parent"
                                     android:hint="Vehicle Brand"
                                     android:fontFamily="@font/opensansregular"
                                     android:inputType="text"
+                                    android:paddingLeft="15dp"
+                                    android:paddingRight="15dp"
                                     android:textSize="15dp"
                                     android:imeOptions="actionNext"
                                     android:paddingTop="7dp"
@@ -95,17 +94,28 @@
                                     android:paddingBottom="7dp"
                                     android:layout_height="wrap_content">
                                 </EditText>
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:background="@color/Gray"
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_marginTop="5dp"
-                                    android:layout_height="0.5dp">
-                                </View>
+                                    android:text="Enter vehicle brand"
+                                    android:layout_below="@+id/radio_btn"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:id="@+id/caber_tvbrand"
+                                    android:textSize="15dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:textColor="@color/Red"
+                                    android:visibility="gone"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+
                                 <EditText
                                     android:layout_width="match_parent"
                                     android:hint="Vehicle Name"
+                                    android:layout_marginTop="10dp"
                                     android:fontFamily="@font/opensansregular"
                                     android:paddingTop="7dp"
+                                    android:paddingLeft="15dp"
+                                    android:paddingRight="15dp"
                                     android:inputType="text"
                                     android:textSize="15dp"
                                     android:imeOptions="actionNext"

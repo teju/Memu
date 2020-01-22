@@ -31,6 +31,10 @@ class DummyFragment : BaseFragment()  {
         return v
     }
 
+    override fun onBackTriggered() {
+        home().exitApp()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI();

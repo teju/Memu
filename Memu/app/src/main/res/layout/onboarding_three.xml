@@ -154,8 +154,8 @@
                             android:paddingTop="7dp"
                             android:textSize="15dp"
                             android:maxLength="10"
+                            android:layout_marginRight="20dp"
                             android:inputType="number"
-                            android:layout_marginRight="50dp"
                             android:imeOptions="actionNext"
                             android:layout_toRightOf="@+id/right_light_2"
                             android:id="@+id/mobileNo"
@@ -167,36 +167,6 @@
                             android:paddingBottom="7dp"
                             android:layout_height="wrap_content">
                         </EditText>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_below="@+id/tv3"
-                            android:id="@+id/profile_pic_upload"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_height="wrap_content">
-                            <ImageView
-                                android:layout_width="25dp"
-                                android:background="@drawable/upload_button"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_height="25dp">
-                            </ImageView>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:fontFamily="@font/opensansregular"
-                                android:textAlignment="center"
-                                android:textSize="8dp"
-                                android:id="@+id/tvprofile_pic"
-                                android:text="upload\nprofile\npic"
-                                android:layout_height="wrap_content">
-
-                            </TextView>
-
-                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -227,11 +197,11 @@
                             android:hint="OTP Number"
                             android:fontFamily="@font/opensansregular"
                             android:id="@+id/otp_number"
-                            android:layout_marginRight="50dp"
                             android:inputType="number"
                             android:imeOptions="actionNext"
                             android:paddingTop="7dp"
                             android:textSize="15dp"
+                            android:layout_marginRight="20dp"
                             android:layout_toRightOf="@+id/right_light_2"
                             android:layout_below="@+id/get_otp"
                             android:layout_marginTop="20dp"
