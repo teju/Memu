@@ -120,20 +120,27 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         getVehicleTypeViewModel.loadData()
         //onScrolledUp()
 
-        onbording_1.getViewTreeObserver()
-            .addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+        try {
+            onbording_1.getViewTreeObserver()
+                .addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
 
-                override fun onGlobalLayout() {
-                    // TODO Auto-generated method stub
-                    val h = onbording_1.getHeight() + Helper.dpToPx(activity!!,80)
-                    val params = FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    params.width = Helper.dpToPx(activity!!,570)
-                    params.setMargins(-200,h,0,0)
-                    flyover.layoutParams = params
-                }
-            })
+                    override fun onGlobalLayout() {
+                        if(onbording_1 != null) {
+                            // TODO Auto-generated method stub
+                            val h = onbording_1.getHeight() + Helper.dpToPx(activity!!, 80)
+                            val params = FrameLayout.LayoutParams(
+                                ViewGroup.LayoutParams.WRAP_CONTENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT
+                            )
+                            params.width = Helper.dpToPx(activity!!, 570)
+                            params.setMargins(-200, h, 0, 0)
+                            flyover.layoutParams = params
+                        }
+                    }
+                })
+        } catch (e : Exception){
+
+        }
         permissions()
 
         car_rd_btn.setOnCheckedChangeListener { buttonView, isChecked ->

@@ -58,29 +58,43 @@
                 android:text="FaceBook Login"
                 android:textColor="@color/White"
                 android:minHeight="50dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:backgroundTint="@color/DarkBlue"
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="50dp"
                 android:layout_marginRight="20dp"
                 android:layout_height="wrap_content">
             </com.facebook.login.widget.LoginButton>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/theme_rounded_rectangle"
-                android:id="@+id/btnfblogin"
-                android:fontFamily="@font/opensansregular"
-                android:text="FaceBook Login"
-                android:textColor="@color/White"
-                android:minHeight="50dp"
-                android:visibility="visible"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:backgroundTint="@color/DarkBlue"
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="50dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
+                android:minHeight="50dp"
+                android:background="@drawable/theme_rounded_rectangle"
                 android:layout_height="wrap_content">
-            </Button>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:src="@drawable/facebook"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="30dp">
+
+                </ImageView>
+                <Button
+                    android:layout_width="match_parent"
+                    android:id="@+id/btnfblogin"
+                    android:fontFamily="@font/opensansregular"
+                    android:text="FaceBook Login"
+                    android:textColor="@color/White"
+                    android:visibility="visible"
+                    android:background="@color/transparent"
+                    android:layout_height="wrap_content">
+                </Button>
+
+            </RelativeLayout>
         </LinearLayout>
 
     </ScrollView>
