@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDxi2FhOwA_lVtNRhp6AJuqLV0nOSYvzmM"/>
+            android:value="AIzaSyCGr6pxw8X2PueadLwk3OHDghab56-oKNQ"/>
         <service
             android:name=".etc.GcmService"
             android:exported="false">
