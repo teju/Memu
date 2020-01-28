@@ -93,19 +93,19 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     fun showUnknowResponseErrorMessage() {
-        errorMessage.postValue(createErrorMessageObject(
-            false,
+        /*  errorMessage.postValue(createErrorMessageObject(
+          false,
             getApplication<Application>().getString(com.iapps.common_library.R.string.iapps__network_error),
             getApplication<Application>().getString(com.iapps.common_library.R.string.iapps__unknown_response)
-        ))
+        ))*/
     }
 
     fun showUnknowResponseErrorMessage(errorStatusCode: String) {
-        errorMessage.postValue(createErrorMessageObject(
+        /*errorMessage.postValue(createErrorMessageObject(
             false,
             getApplication<Application>().getString(com.iapps.common_library.R.string.iapps__network_error),
             String.format("%s (%s)", getApplication<Application>().getString(com.iapps.common_library.R.string.iapps__unknown_response), errorStatusCode)
-        ))
+        ))*/
     }
 
     protected fun createErrorMessageObject(displayDialog: Boolean, title: String, message: String): ErrorMessageModel {

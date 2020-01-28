@@ -1567,6 +1567,7 @@ public class BaseHelper {
 		return (rad * 180.0 / Math.PI);
 	}
 
+/*
 	public static LatLng getLocationFromAddress(String strAddress, Context context){
 
 		Geocoder coder = new Geocoder(context);
@@ -1590,6 +1591,7 @@ public class BaseHelper {
 
 		return p1;
 	}
+*/
 	public static JSONObject getLocationInfo(String address) {
 		StringBuilder stringBuilder = new StringBuilder();
 		try {

@@ -48,6 +48,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_height="wrap_content">
             </Button>
+
             <com.facebook.login.widget.LoginButton
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
@@ -73,7 +74,7 @@
                 android:text="FaceBook Login"
                 android:textColor="@color/White"
                 android:minHeight="50dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:backgroundTint="@color/DarkBlue"
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="50dp"

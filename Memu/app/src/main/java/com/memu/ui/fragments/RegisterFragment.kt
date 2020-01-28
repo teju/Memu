@@ -45,8 +45,6 @@ import com.memu.webservices.*
 import kotlinx.android.synthetic.main.custom_notification_layout.view.*
 import kotlinx.android.synthetic.main.onboarding_start.*
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
-import kotlinx.android.synthetic.main.register_fragment.btnNExt
-import kotlinx.android.synthetic.main.register_fragment.ld
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -164,9 +162,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,1000,onbording_4 ,0)
+                    startAnimation(white_car,R.drawable.white_car,1000,onbording_4 ,600)
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,1000,onbording_4,0 )
+                    startAnimation(yellow_car,R.drawable.yellow_car,1000,onbording_4,600)
                 }
                 true
             } else {
@@ -182,9 +180,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,1800,onbording_4 ,0)
+                    startAnimation(white_car,R.drawable.white_car,1800,onbording_4 ,700)
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,1800,onbording_4 ,0)
+                    startAnimation(yellow_car,R.drawable.yellow_car,1800,onbording_4 ,700)
                 }
                 true
             } else {
@@ -218,9 +216,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
                 destination = onbording_5
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,3200,onbording_5 ,0)
+                    startAnimation(white_car,R.drawable.white_car,3200,onbording_5 ,700)
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,3200,onbording_5,0 )
+                    startAnimation(yellow_car,R.drawable.yellow_car,3200,onbording_5,700)
                 }
                 true
             } else {
@@ -232,8 +230,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             try {
                 val getAddress = getAddress(gpsTracker?.latitude!!, gpsTracker?.longitude!!)
                 home_address.setText(getAddress?.get(0)?.getAddressLine(0))
+                State.lattitude = gpsTracker!!.latitude
+                State.longitude = gpsTracker!!.longitude
             } catch (e : Exception){
-
+                System.out.println("Exception12223 "+e.toString())
             }
         }
 
@@ -274,7 +274,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     }
 
     fun initSearch(code : Int) {
-        val intent = PlaceAutocomplete.IntentBuilder()
+       /* val intent = PlaceAutocomplete.IntentBuilder()
             .accessToken(
                 if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken()!! else getString(
                     R.string.map_box_access_token
@@ -286,8 +286,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     .limit(10)
                     .build(PlaceOptions.MODE_CARDS)
             )
-            .build(activity)
-        startActivityForResult(intent, code)
+            .build(activity)*/
+        startActivityForResult(Intent(activity, TempMainActivity::class.java),code);
     }
 
 
@@ -301,11 +301,17 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             if(requestCode == REQUEST_CODE_AUTOCOMPLETE) {
-                State.selectedCarmenFeaturehome = PlaceAutocomplete.getPlace(data);
-                home_address.setText(State.selectedCarmenFeaturehome !!.placeName())
+                val lat = data?.getDoubleExtra("Lat",0.0)
+                val lng = data?.getDoubleExtra("Lng",0.0)
+                State.lattitude = lat!!
+                State.longitude =lng!!
+                home_address.setText(data?.getStringExtra("Address"))
             } else if(requestCode == REQUEST_CODE_AUTOCOMPLETE_OFFICE) {
-                State.selectedCarmenFeatureoffice = PlaceAutocomplete.getPlace(data);
-                officeAddress.setText(State.selectedCarmenFeatureoffice !!.placeName())
+                val lat = data?.getDoubleExtra("Lat",0.0)
+                val lng = data?.getDoubleExtra("Lng",0.0)
+                State.officelattitude = lat!!
+                State.officelongitude =lng!!
+                officeAddress.setText(data?.getStringExtra("Address"))
             } else {
                 try {
 
@@ -421,7 +427,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     R.drawable.white_car,
                     300,
                     onbording_1,
-                   0
+                   600
                 )
             }
             R.id.private_vehicle_btn ->{
@@ -439,7 +445,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     R.drawable.white_car,
                     400,
                     onbording_1,
-                    0
+                    600
                 )
             }
             R.id.cab_vehicle_btn ->{
@@ -458,7 +464,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     R.drawable.yellow_car,
                     600,
                     onbording_1,
-                    0
+                    700
                 )
             }
 
@@ -510,10 +516,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             }
 
             R.id.home_address ->{
-               // initSearch(REQUEST_CODE_AUTOCOMPLETE)
+                initSearch(REQUEST_CODE_AUTOCOMPLETE)
             }
             R.id.officeAddress ->{
-                //initSearch(REQUEST_CODE_AUTOCOMPLETE_OFFICE)
+                initSearch(REQUEST_CODE_AUTOCOMPLETE_OFFICE)
             }
             R.id.cab_upload_dl ->{
                 State.upload_type = PostUploadDocViewModel.VEHICLE_DL_PHOTO
@@ -997,7 +1003,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUserSignupViewModel.NEXT_STEP -> {
-                            home().setFragment(DummyFragment())
+                            home().setFragment(HomeFragment())
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAccountName(postUserSignupViewModel.obj?.name!!)
@@ -1190,6 +1196,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             var vehicle_no = ""
             var address_line1 = ""
             var lattitude = 0.0
+            var officelattitude = 0.0
+            var officelongitude = 0.0
             var longitude = 0.0
             var formatted_address = ""
             var otp_code = ""
@@ -1202,8 +1210,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             var White_board = 2
             var BIKE_White_board = 3
             var NoVehicles = 4
-            var selectedCarmenFeaturehome: CarmenFeature? = null
-            var selectedCarmenFeatureoffice: CarmenFeature? = null
+
 
             var type = NoVehicles
             var upload_type = PostUploadDocViewModel.VEHICLE_PHOTO
@@ -1223,12 +1230,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
             if(!BaseHelper.isEmpty(address_line1))
                 obj.put("address_line1", address_line1)
-                val latLng = BaseHelper.getLocationFromAddress(address_line1,context)
-                if(latLng != null) {
-                    obj.put("lattitude", latLng.latitude.toString())
-                    obj.put("longitude", latLng.longitude.toString())
-                }
-                obj.put("type", "home")
+            obj.put("lattitude", lattitude.toString())
+            obj.put("longitude", longitude.toString())
+            obj.put("type", "home")
 
             if(!BaseHelper.isEmpty(formatted_address))
                 obj.put("formatted_address", formatted_address)
@@ -1241,14 +1245,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
             if(!BaseHelper.isEmpty(office_address_line1))
                 obj.put("address_line1", office_address_line1)
-                val latLng = BaseHelper.getLocationFromAddress(office_address_line1,context)
-            if(latLng != null) {
-
-                obj.put("lattitude", latLng.latitude.toString())
-
-                obj.put("longitude", latLng.longitude.toString())
-            }
-
+            obj.put("lattitude", officelattitude.toString())
+            obj.put("longitude", officelongitude.toString())
             obj.put("type", "office")
 
             if(!BaseHelper.isEmpty(office_formatted_address))

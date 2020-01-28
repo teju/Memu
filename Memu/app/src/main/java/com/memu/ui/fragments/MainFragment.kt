@@ -45,6 +45,7 @@ class MainFragment : BaseFragment() , View.OnClickListener {
         login.setOnClickListener(this)
         fblogin.setOnClickListener(this)
         btnfblogin.setOnClickListener(this)
+        callbackManager = CallbackManager.Factory.create()
         fblogin.setFragment(this);
 
     }
@@ -58,8 +59,13 @@ class MainFragment : BaseFragment() , View.OnClickListener {
                 home().setFragment(LoginFragment())
             }
             R.id.fblogin -> {
+                //ld.showLoadingV2()
+                fbLogin()
+            }
+            R.id.btnfblogin -> {
                 ld.showLoadingV2()
                 fbLogin()
+                fblogin.performClick()
             }
         }
     }
@@ -68,14 +74,15 @@ class MainFragment : BaseFragment() , View.OnClickListener {
         val loggedOut = AccessToken.getCurrentAccessToken() == null
         if (!loggedOut) {
 
-            //getUserProfile(AccessToken.getCurrentAccessToken())
+            getUserProfile(AccessToken.getCurrentAccessToken())
         }
 
         fblogin.setReadPermissions(Arrays.asList("email", "public_profile"))
-        callbackManager = CallbackManager.Factory.create()
 
         fblogin.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
+                System.out.println("facebook123 onSuccess " )
+
                 // App code
                 //loginResult.getAccessToken();
                 //loginResult.getRecentlyDeniedPermissions()
@@ -87,13 +94,16 @@ class MainFragment : BaseFragment() , View.OnClickListener {
             }
 
             override fun onCancel() {
+                System.out.println("facebook123 onCancel " )
+
+                ld.hide()
                 // App code
             }
 
             override fun onError(exception: FacebookException) {
                 // App code
                 System.out.println("facebook123 onError " + exception.toString())
-
+                ld.hide()
             }
         })
 
@@ -117,7 +127,7 @@ class MainFragment : BaseFragment() , View.OnClickListener {
                 home().setFragment(RegisterFragment().apply {
                     this.fbObj = `object`
                 })
-            } catch (e: JSONException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
                 System.out.println("facebook123 getUserProfile JSONException " + `e`.toString())
 
@@ -132,6 +142,7 @@ class MainFragment : BaseFragment() , View.OnClickListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        System.out.println("facebook123 onActivityResult " )
 
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager?.onActivityResult(requestCode, resultCode, data);
