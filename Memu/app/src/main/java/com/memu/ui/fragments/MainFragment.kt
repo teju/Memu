@@ -14,11 +14,16 @@ import com.facebook.internal.ImageRequest.getProfilePictureUri
 import com.squareup.picasso.Picasso
 import android.util.Log
 import com.facebook.*
+import com.facebook.login.LoginManager
 import kotlinx.android.synthetic.main.main_fragment.ld
 import kotlinx.android.synthetic.main.register_fragment.*
 import java.util.*
 import org.json.JSONException
 import org.json.JSONObject
+import com.facebook.appevents.codeless.internal.ViewHierarchy.setOnClickListener
+import com.facebook.AccessToken
+
+
 
 
 class MainFragment : BaseFragment() , View.OnClickListener {
@@ -71,12 +76,18 @@ class MainFragment : BaseFragment() , View.OnClickListener {
     }
 
     fun fbLogin() {
-        val loggedOut = AccessToken.getCurrentAccessToken() == null
+        /*val loggedOut = AccessToken.getCurrentAccessToken() == null
         if (!loggedOut) {
 
             getUserProfile(AccessToken.getCurrentAccessToken())
         }
+*/
+        if (AccessToken.getCurrentAccessToken() != null && com.facebook.Profile.getCurrentProfile() != null) {
+            //Logged in so show the login button
+            LoginManager.getInstance().logOut()
+            getUserProfile(AccessToken.getCurrentAccessToken())
 
+        }
         fblogin.setReadPermissions(Arrays.asList("email", "public_profile"))
 
         fblogin.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
@@ -87,8 +98,8 @@ class MainFragment : BaseFragment() , View.OnClickListener {
                 //loginResult.getAccessToken();
                 //loginResult.getRecentlyDeniedPermissions()
                 //loginResult.getRecentlyGrantedPermissions()
-                val loggedIn = AccessToken.getCurrentAccessToken() == null
-                Log.d("API123", "$loggedIn ??")
+                //Log.d("API123", "$loggedIn ??")
+
                 getUserProfile(AccessToken.getCurrentAccessToken())
 
             }
