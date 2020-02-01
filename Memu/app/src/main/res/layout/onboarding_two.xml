@@ -159,33 +159,8 @@
 
                         </RelativeLayout>
 
-                        <LinearLayout
-                            android:id="@+id/radio_btn"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/llV1"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="25dp"
-                            android:orientation="horizontal">
-
-                            <RadioButton
-                                android:id="@+id/car_rd_btn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="it's a Car">
-
-                            </RadioButton>
-
-                            <RadioButton
-                                android:id="@+id/bike_rd_btn"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="it's a Bike">
-
-                            </RadioButton>
-
-                        </LinearLayout>
-
+                        <include layout="@layout/radio_button">
+                        </include>
                         <TextView
                             android:id="@+id/er_tv1"
                             android:layout_width="wrap_content"

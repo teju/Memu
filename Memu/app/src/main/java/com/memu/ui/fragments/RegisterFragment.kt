@@ -45,6 +45,7 @@ import com.memu.webservices.*
 import kotlinx.android.synthetic.main.custom_notification_layout.view.*
 import kotlinx.android.synthetic.main.onboarding_start.*
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
+import kotlinx.android.synthetic.main.radio_button.*
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -143,23 +144,34 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
         permissions()
 
-        car_rd_btn.setOnCheckedChangeListener { buttonView, isChecked ->
-            if(bike_rd_btn.isChecked) {
-                bike_rd_btn.isChecked = false
-            }
-            car_rd_btn.isChecked = isChecked
+        car_hat.setOnCheckedChangeListener { buttonView, isChecked ->
+            car_sedan.isChecked = false
+            car_suv.isChecked = false
+            motor_bike.isChecked = false
+
+            car_hat.isChecked = isChecked
             State.role_id = "3"
             State.type = State.White_board
-
         }
-        bike_rd_btn.setOnCheckedChangeListener { buttonView, isChecked ->
-            if(car_rd_btn.isChecked) {
-                car_rd_btn.isChecked = false
-            }
-            bike_rd_btn.isChecked = isChecked
+
+        car_sedan.setOnCheckedChangeListener { buttonView, isChecked ->
+            car_hat.isChecked = false
+            car_suv.isChecked = false
+            motor_bike.isChecked = false
+
+            car_sedan.isChecked = isChecked
             State.role_id = "5"
             State.type = State.BIKE_White_board
         }
+        car_suv.setOnCheckedChangeListener { buttonView, isChecked ->
+            car_hat.isChecked = false
+            car_suv.isChecked = isChecked
+            motor_bike.isChecked = false
+            car_sedan.isChecked = false
+            State.role_id = "5"
+            State.type = State.BIKE_White_board
+        }
+
         dl.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 if(destination != null) {
@@ -187,9 +199,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,1800,onbording_4 ,600)
+                    startAnimation(white_car,R.drawable.white_car,1300,onbording_4 ,600)
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,1800,onbording_4 ,600)
+                    startAnimation(yellow_car,R.drawable.yellow_car,1300,onbording_4 ,600)
                 }
                 true
             } else {
@@ -197,17 +209,30 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             }
         }
         otp_number.setOnEditorActionListener { v, actionId, event ->
+
             if(actionId == EditorInfo.IME_ACTION_NEXT){
+                System.out.println("startAnimation destination not null "+
+                        onbording_1.height.toInt())
+
                 if(destination != null) {
-                    System.out.print("startAnimation destination not null")
                     destination!!.removeView(temp_image_view)
                 }
-                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt() + 500).setDuration(2000).start();
+                var top_margin = onbording_1.height - 300
+                var view = white_car
+                var drawable = R.drawable.white_car
+                if(State.type == State.White_board) {
+                    top_margin = onbording_1.height + 600
+                } else if(State.type == State.YELLOW_BOARD) {
+                    top_margin = onbording_1.height + 600
+                    drawable = R.drawable.yellow_car
+                    view = yellow_car
+                }
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt() + 700).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,3300,onbording_4 ,Helper.toDp(activity!!,600f))
+                    startAnimation(view,drawable,top_margin,onbording_4 ,Helper.toDp(activity!!,600f))
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,3300,onbording_4 ,Helper.toDp(activity!!,600f))
+                    startAnimation(view,drawable,top_margin,onbording_4 ,Helper.toDp(activity!!,600f))
                 }
                 true
             } else {
@@ -220,13 +245,20 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     System.out.print("startAnimation destination not null")
                     destination!!.removeView(temp_image_view)
                 }
+                var top_margin = onbording_1.height - 200
+                var view = white_car
+                var drawable = R.drawable.white_car
+                if(State.type == State.White_board) {
+                    top_margin = onbording_1.height + 600
+                } else if(State.type == State.YELLOW_BOARD) {
+                    top_margin = onbording_1.height + 600
+                    drawable = R.drawable.yellow_car
+                    view = yellow_car
+                }
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
                 destination = onbording_5
-                if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,3400,onbording_5 ,700)
-                } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,3400,onbording_5,700)
-                }
+                startAnimation(view,drawable,top_margin,onbording_5 ,500)
+
                 true
             } else {
                 false
