@@ -169,9 +169,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,1000,onbording_4 ,600)
+                    startAnimation(white_car,R.drawable.white_car,1000,onbording_4 ,500)
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,1000,onbording_4,600)
+                    startAnimation(yellow_car,R.drawable.yellow_car,1000,onbording_4,500)
                 }
                 true
             } else {
@@ -187,9 +187,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,1800,onbording_4 ,700)
+                    startAnimation(white_car,R.drawable.white_car,1800,onbording_4 ,600)
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,1800,onbording_4 ,700)
+                    startAnimation(yellow_car,R.drawable.yellow_car,1800,onbording_4 ,600)
                 }
                 true
             } else {
@@ -205,9 +205,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt() + 500).setDuration(2000).start();
                 destination = onbording_4
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,3200,onbording_4 ,Helper.toDp(activity!!,600f))
+                    startAnimation(white_car,R.drawable.white_car,3300,onbording_4 ,Helper.toDp(activity!!,600f))
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,3200,onbording_4 ,Helper.toDp(activity!!,600f))
+                    startAnimation(yellow_car,R.drawable.yellow_car,3300,onbording_4 ,Helper.toDp(activity!!,600f))
                 }
                 true
             } else {
@@ -223,9 +223,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
                 destination = onbording_5
                 if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(white_car,R.drawable.white_car,3200,onbording_5 ,700)
+                    startAnimation(white_car,R.drawable.white_car,3400,onbording_5 ,700)
                 } else {
-                    startAnimation(yellow_car,R.drawable.yellow_car,3200,onbording_5,700)
+                    startAnimation(yellow_car,R.drawable.yellow_car,3400,onbording_5,700)
                 }
                 true
             } else {
@@ -420,6 +420,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         {
 
             R.id.no_vehicle_btn ->{
+                onbording_3.visibility = View.GONE
+                cab_onbording_3.visibility = View.GONE
                 if(destination != null) {
                     destination!!.removeView(temp_image_view)
                 }
@@ -427,17 +429,20 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 yellow_car.visibility = View.GONE
                 State.role_id = "4"
                 State.type = State.NoVehicles
-                ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt()).setDuration(2000).start();
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 startAnimation(
                     white_car,
                     R.drawable.white_car,
-                    300,
+                    450,
                     onbording_1,
-                   600
+                   500
                 )
+
             }
             R.id.private_vehicle_btn ->{
+                onbording_3.visibility = View.VISIBLE
+                cab_onbording_3.visibility = View.GONE
                 if(destination != null) {
                     System.out.print("startAnimation destination not null")
                     destination!!.removeView(temp_image_view)
@@ -450,12 +455,14 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 startAnimation(
                     white_car,
                     R.drawable.white_car,
-                    400,
+                    600,
                     onbording_1,
                     600
                 )
             }
             R.id.cab_vehicle_btn ->{
+                onbording_3.visibility = View.GONE
+                cab_onbording_3.visibility = View.VISIBLE
                 if(destination != null) {
                     System.out.print("startAnimation destination not null")
                     destination!!.removeView(temp_image_view)
@@ -464,12 +471,12 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 yellow_car.visibility = View.VISIBLE
                 State.role_id = "6"
                 State.type = State.YELLOW_BOARD
-                ObjectAnimator.ofInt(sv, "scrollY",  cab_onbording_3.getY().toInt()).setDuration(2000).start();
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = cab_onbording_3
                 startAnimation(
                     yellow_car,
                     R.drawable.yellow_car,
-                    600,
+                    700,
                     onbording_1,
                     700
                 )
@@ -560,8 +567,12 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         params.width = Helper.toDp(activity!!,61f)
         val displayMetrics = DisplayMetrics();
         activity?.getWindowManager()?.getDefaultDisplay()?.getMetrics(displayMetrics);
+        if(State.type == State.White_board || State.type == State.NoVehicles) {
+            params.setMargins(Helper.toDp(activity!!, 70f), 0, 0, 0)
+        } else {
+            params.setMargins(Helper.toDp(activity!!, 66f), 0, 0, 0)
 
-        params.setMargins(Helper.toDp(activity!!,75f), 0, 0, 0)
+        }
 
         temp_image_view!!.setImageDrawable(activity?.getDrawable(drawable))
         temp_image_view!!.layoutParams = params
@@ -816,7 +827,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             edtEmail.clearFocus()
             er_mtv4.visibility = View.GONE
         }
-        /*if(State.type != State.YELLOW_BOARD) {
+        if(State.type != State.YELLOW_BOARD) {
             if (BaseHelper.isEmpty(State.office_address_line1)) {
                 er_otv1.visibility = View.VISIBLE
                 edtofficeEmail.requestFocus()
@@ -836,7 +847,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 edtofficeEmail.clearFocus()
                 er_otv2.visibility = View.GONE
             }
-        }*/
+        }
 
         return true
     }
@@ -872,24 +883,24 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
     fun validateAPIForm() :Boolean{
         if(BaseHelper.isEmpty(State.first_name)) {
-            er_start.visibility = View.VISIBLE
+            erfname_start.visibility = View.VISIBLE
             first_name.requestFocus()
-            er_start.text = "Enter your first name"
+            erfname_start.text = "Enter your first name"
             return false
         } else {
             first_name.clearFocus()
-            er_start.visibility = View.GONE
+            erfname_start.visibility = View.GONE
         }
 
         if(BaseHelper.isEmpty(State.last_name))
         {
-            er_start.visibility = View.VISIBLE
+            erlname_start.visibility = View.VISIBLE
             last_name.requestFocus()
-            er_start.text = "Enter your last name"
+            erlname_start.text = "Enter your last name"
             return false
         } else {
             last_name.clearFocus()
-            er_start.visibility = View.GONE
+            erlname_start.visibility = View.GONE
         }
 
         if(BaseHelper.isEmpty(State.gender))

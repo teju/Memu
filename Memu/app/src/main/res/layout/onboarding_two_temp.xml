@@ -31,7 +31,7 @@
                     android:adjustViewBounds="true"
                     android:id="@+id/cab_rl"
                     android:background="@color/transparent"
-                    android:layout_marginLeft="140dp"
+                    android:layout_marginLeft="130dp"
                     android:layout_marginRight="15dp"
                     android:layout_height="wrap_content">
                     <RelativeLayout
@@ -130,8 +130,6 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:orientation="vertical"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
                                 android:id="@+id/cab_upload_vehicle_pic"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
@@ -201,7 +199,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
                                 android:orientation="vertical">
 
                                 <ImageView
@@ -266,7 +263,6 @@
                                 android:orientation="vertical"
                                 android:layout_marginLeft="10dp"
                                 android:id="@+id/cab_upload_dl"
-                                android:layout_marginRight="10dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:layout_height="wrap_content">
@@ -313,7 +309,7 @@
         </RelativeLayout>
 
         <ImageView
-            android:layout_width="80dp"
+            android:layout_width="70dp"
             android:layout_marginLeft="60dp"
             android:background="@drawable/themegray_rounded_rectangle_top"
             android:layout_height="match_parent">
@@ -321,7 +317,7 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="95dp"
             android:background="@drawable/dottedlines" />
         <LinearLayout
             android:layout_width="wrap_content"
@@ -366,7 +362,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="130dp"
+            android:layout_marginLeft="120dp"
             android:layout_height="wrap_content">
             <ImageView
                 android:layout_width="wrap_content"

@@ -68,9 +68,13 @@ class MainFragment : BaseFragment() , View.OnClickListener {
                 fbLogin()
             }
             R.id.btnfblogin -> {
-                ld.showLoadingV2()
-                fbLogin()
-                fblogin.performClick()
+                try {
+                    ld.showLoadingV2()
+                    fbLogin()
+                    fblogin.performClick()
+                }  catch (e : java.lang.Exception){
+
+                }
             }
         }
     }

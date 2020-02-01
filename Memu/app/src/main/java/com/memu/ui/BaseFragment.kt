@@ -30,6 +30,7 @@ import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.gon.etc.callback.PermissionListener
 import com.iapps.gon.etc.callback.RequestListener
 import com.iapps.libs.generics.GenericFragment
+import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.helpers.BaseUIHelper
 import com.iapps.libs.views.LoadingCompound
 import com.memu.ActivityMain
@@ -389,7 +390,10 @@ open class BaseFragment : GenericFragment() {
         f.button_positive = button_positive
         f.button_negative = button_negative
         f.isCancelable = false
-        f.show(activity!!.supportFragmentManager, NotifyDialogFragment.TAG)
+        if(!BaseHelper.isEmpty(tittle) || !BaseHelper.isEmpty(messsage)) {
+            f.show(activity!!.supportFragmentManager, NotifyDialogFragment.TAG)
+        }
+
     }
 
     open fun showMatchingRiders(

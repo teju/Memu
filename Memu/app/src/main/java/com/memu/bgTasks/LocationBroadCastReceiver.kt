@@ -19,6 +19,7 @@ import com.memu.etc.GPSTracker
 import com.memu.ui.BaseFragment
 import org.json.JSONObject
 import java.io.IOException
+import java.lang.Exception
 import java.util.*
 
 
@@ -54,20 +55,26 @@ class LocationBroadCastReceiver : BroadcastReceiver() {
     }
 
     fun Location() : JSONObject {
-        val gpsTracker = GPSTracker(context!!)
         val obj = JSONObject()
 
-        obj.put("country", getAddress()?.get(0)?.countryName)
+        try {
+            val gpsTracker = GPSTracker(context!!)
 
-        obj.put("state", getAddress()?.get(0)?.getAdminArea())
+            obj.put("country", getAddress()?.get(0)?.countryName)
 
-        obj.put("city", getAddress()?.get(0)?.locality)
-        obj.put("location",getAddress()?.get(0)?.subLocality)
-        obj.put("pincode", getAddress()?.get(0)?.postalCode)
-        obj.put("lattitude",gpsTracker.latitude.toString())
-        obj.put("longitude", gpsTracker.longitude.toString())
-        obj.put("formatted_address", getAddress()?.get(0)?.getAddressLine(0))
+            obj.put("state", getAddress()?.get(0)?.getAdminArea())
 
+            obj.put("city", getAddress()?.get(0)?.locality)
+            obj.put("location", getAddress()?.get(0)?.subLocality)
+            obj.put("pincode", getAddress()?.get(0)?.postalCode)
+            obj.put("lattitude", gpsTracker.latitude.toString())
+            obj.put("longitude", gpsTracker.longitude.toString())
+            obj.put("formatted_address", getAddress()?.get(0)?.getAddressLine(0))
+
+
+        } catch (e : Exception){
+
+        }
         return obj
     }
 

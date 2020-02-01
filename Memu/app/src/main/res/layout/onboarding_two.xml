@@ -30,308 +30,317 @@
                     android:adjustViewBounds="true"
                     android:id="@+id/rl"
                     android:background="@color/transparent"
-                    android:layout_marginLeft="140dp"
+                    android:layout_marginLeft="130dp"
                     android:layout_height="wrap_content">
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <ImageView
-                            android:layout_width="150dp"
-                            android:layout_alignParentRight="true"
-                            android:src="@drawable/memu_logo"
                             android:id="@+id/memu_logo"
-                            android:layout_height="50dp">
-                        </ImageView>
+                            android:layout_width="150dp"
+                            android:layout_height="50dp"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/thumb_up_memu_logo"></ImageView>
+
                         <TextView
+                            android:id="@+id/tv2"
                             android:layout_width="wrap_content"
-                            android:textSize="30dp"
-                            android:fontFamily="@font/opensanssemibold"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/memu_logo"
                             android:layout_marginLeft="20dp"
+                            android:fontFamily="@font/opensanssemibold"
                             android:text="Fantastic!"
                             android:textColor="@color/DarkBlue"
-                            android:id="@+id/tv2"
-                            android:layout_below="@+id/memu_logo"
-                            android:layout_height="wrap_content">
-                        </TextView>
+                            android:textSize="30dp"></TextView>
+
                         <TextView
+                            android:id="@+id/tv3"
                             android:layout_width="wrap_content"
-                            android:textSize="25dp"
-                            android:fontFamily="@font/opensanssemibold"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv2"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/opensanssemibold"
                             android:text="Can you add following details of your vehicle?"
                             android:textColor="@color/DarkBlue"
-                            android:id="@+id/tv3"
-                            android:layout_below="@+id/tv2"
-                            android:layout_height="wrap_content">
-                        </TextView>
+                            android:textSize="25dp"></TextView>
+
                         <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_below="@+id/tv3"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="20dp"
                             android:id="@+id/llV1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tv3"
                             android:layout_marginLeft="25dp"
-                            android:layout_height="wrap_content">
+                            android:layout_marginTop="20dp"
+                            android:orientation="horizontal">
+
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:orientation="vertical"
+                                android:layout_height="wrap_content"
                                 android:layout_marginRight="50dp"
-                                android:layout_height="wrap_content">
-                                <EditText
-                                    android:layout_width="match_parent"
-                                    android:hint="Vehicle Brand"
-                                    android:fontFamily="@font/opensansregular"
-                                    android:inputType="text"
-                                    android:textSize="15dp"
-                                    android:imeOptions="actionNext"
-                                    android:paddingTop="7dp"
-                                    android:paddingLeft="10dp"
-                                    android:paddingRight="10dp"
-                                    android:id="@+id/edtVehicleBrand"
-                                    android:background="@color/soft_grey"
-                                    android:paddingBottom="7dp"
-                                    android:layout_height="wrap_content">
-                                </EditText>
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_marginTop="5dp"
-                                    android:text="Enter vehicle brand"
-                                    android:layout_below="@+id/radio_btn"
-                                    android:fontFamily="@font/opensansregular"
-                                    android:id="@+id/er_tvbrand"
-                                    android:textSize="15dp"
-                                    android:layout_marginLeft="5dp"
-                                    android:textColor="@color/Red"
-                                    android:visibility="gone"
-                                    android:layout_height="wrap_content">
-                                </TextView>
+                                android:orientation="vertical">
 
                                 <EditText
+                                    android:id="@+id/edtVehicleBrand"
                                     android:layout_width="match_parent"
-                                    android:hint="Vehicle Name"
-                                    android:fontFamily="@font/opensansregular"
-                                    android:paddingTop="7dp"
-                                    android:paddingLeft="10dp"
-                                    android:paddingRight="10dp"
-                                    android:textSize="15dp"
-                                    android:inputType="text"
-                                    android:layout_marginTop="5dp"
-                                    android:imeOptions="actionNext"
-                                    android:id="@+id/VehicleName"
+                                    android:layout_height="wrap_content"
                                     android:background="@color/soft_grey"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:hint="Vehicle Brand"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="text"
+                                    android:paddingLeft="10dp"
+                                    android:paddingTop="7dp"
+                                    android:paddingRight="10dp"
                                     android:paddingBottom="7dp"
-                                    android:layout_height="wrap_content">
-                                </EditText>
+                                    android:textSize="15dp"></EditText>
+
+                                <TextView
+                                    android:id="@+id/er_tvbrand"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/radio_btn"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="5dp"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:text="Enter vehicle brand"
+                                    android:textColor="@color/Red"
+                                    android:textSize="15dp"
+                                    android:visibility="gone"></TextView>
+
+                                <EditText
+                                    android:id="@+id/VehicleName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:background="@color/soft_grey"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:hint="Vehicle Name"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="text"
+                                    android:paddingLeft="10dp"
+                                    android:paddingTop="7dp"
+                                    android:paddingRight="10dp"
+                                    android:paddingBottom="7dp"
+                                    android:textSize="15dp"></EditText>
                             </LinearLayout>
 
                             <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
                                 android:id="@+id/vehicle_pic"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_height="wrap_content">
+                                android:layout_marginRight="5dp"
+                                android:orientation="vertical">
+
                                 <ImageView
                                     android:layout_width="25dp"
-                                    android:background="@drawable/upload_button"
+                                    android:layout_height="25dp"
                                     android:layout_gravity="center_horizontal"
-                                    android:layout_height="25dp">
-                                </ImageView>
+                                    android:background="@drawable/upload_button"></ImageView>
+
                                 <TextView
+                                    android:id="@+id/tvuploadvehicle_pic"
                                     android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
-                                    android:textAlignment="center"
                                     android:fontFamily="@font/opensansregular"
-                                    android:id="@+id/tvuploadvehicle_pic"
-                                    android:textSize="8dp"
                                     android:text="upload pic\n(show your\ncar to\nothers)"
-                                    android:layout_height="wrap_content">
+                                    android:textAlignment="center"
+                                    android:textSize="8dp">
 
                                 </TextView>
 
                             </LinearLayout>
 
                         </RelativeLayout>
+
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:orientation="horizontal"
                             android:id="@+id/radio_btn"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/llV1"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="25dp"
-                            android:layout_below="@+id/llV1"
-                            android:layout_height="wrap_content">
+                            android:orientation="horizontal">
+
                             <RadioButton
-                                android:layout_width="wrap_content"
-                                android:text="it's a Car"
                                 android:id="@+id/car_rd_btn"
-                                android:layout_height="wrap_content">
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="it's a Car">
 
                             </RadioButton>
+
                             <RadioButton
-                                android:layout_width="wrap_content"
-                                android:text="it's a Bike"
                                 android:id="@+id/bike_rd_btn"
-                                android:layout_height="wrap_content">
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="it's a Bike">
 
                             </RadioButton>
 
                         </LinearLayout>
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="Enter vehicle brand"
-                            android:layout_below="@+id/radio_btn"
-                            android:fontFamily="@font/opensansregular"
                             android:id="@+id/er_tv1"
-                            android:textSize="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/radio_btn"
                             android:layout_marginLeft="35dp"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/opensansregular"
+                            android:text="Enter vehicle brand"
                             android:textColor="@color/Red"
-                            android:visibility="gone"
-                            android:layout_height="wrap_content">
-                        </TextView>
+                            android:textSize="15dp"
+                            android:visibility="gone"></TextView>
 
                         <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_toRightOf="@+id/right_light_2"
-                            android:layout_below="@+id/er_tv1"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginLeft="25dp"
                             android:id="@+id/rlreg_no"
-                            android:layout_height="wrap_content">
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/er_tv1"
+                            android:layout_marginLeft="25dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_toRightOf="@+id/right_light_2">
+
                             <EditText
-                                android:layout_width="match_parent"
-                                android:hint="Registration No"
                                 android:id="@+id/reg_no"
-                                android:fontFamily="@font/opensansregular"
-                                android:inputType="text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_marginRight="50dp"
-                                android:textSize="15dp"
-                                android:paddingTop="7dp"
-                                android:imeOptions="actionNext"
-                                android:paddingLeft="10dp"
-                                android:paddingRight="5dp"
                                 android:background="@color/soft_grey"
+                                android:fontFamily="@font/opensansregular"
+                                android:hint="Registration No"
+                                android:imeOptions="actionNext"
+                                android:inputType="text"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="7dp"
+                                android:paddingRight="5dp"
                                 android:paddingBottom="7dp"
-                                android:layout_height="wrap_content">
-                            </EditText>
+                                android:textSize="15dp"></EditText>
+
                             <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
                                 android:id="@+id/uploadreg_no"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_height="wrap_content">
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:orientation="vertical">
+
                                 <ImageView
                                     android:layout_width="25dp"
-                                    android:background="@drawable/upload_button"
+                                    android:layout_height="25dp"
                                     android:layout_gravity="center_horizontal"
-                                    android:layout_height="25dp">
-                                </ImageView>
+                                    android:background="@drawable/upload_button"></ImageView>
+
                                 <TextView
+                                    android:id="@+id/tvuploadreg_no"
                                     android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
-                                    android:textAlignment="center"
                                     android:fontFamily="@font/opensansregular"
-                                    android:textSize="8dp"
-                                    android:id="@+id/tvuploadreg_no"
                                     android:text="upload ID"
-                                    android:layout_height="wrap_content">
+                                    android:textAlignment="center"
+                                    android:textSize="8dp">
 
                                 </TextView>
 
                             </LinearLayout>
 
                         </RelativeLayout>
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="Enter vehicle brand"
-                            android:layout_below="@+id/rlreg_no"
                             android:id="@+id/er_tv2"
-                            android:fontFamily="@font/opensansregular"
-                            android:textSize="15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/rlreg_no"
                             android:layout_marginLeft="35dp"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/opensansregular"
+                            android:text="Enter vehicle brand"
                             android:textColor="@color/Red"
-                            android:visibility="gone"
-                            android:layout_height="wrap_content">
-                        </TextView>
+                            android:textSize="15dp"
+                            android:visibility="gone"></TextView>
+
                         <RelativeLayout
+                            android:id="@+id/rldl"
                             android:layout_width="match_parent"
-                            android:layout_toRightOf="@+id/right_light_2"
+                            android:layout_height="wrap_content"
                             android:layout_below="@+id/er_tv2"
-                            android:layout_marginTop="20dp"
                             android:layout_marginLeft="25dp"
 
-                            android:id="@+id/rldl"
-                            android:layout_height="wrap_content">
+                            android:layout_marginTop="20dp"
+                            android:layout_toRightOf="@+id/right_light_2">
+
                             <EditText
-                                android:layout_width="match_parent"
-                                android:hint="Driving License No"
-                                android:paddingTop="7dp"
                                 android:id="@+id/dl"
-                                android:fontFamily="@font/opensansregular"
-                                android:singleLine="true"
-                                android:textSize="15dp"
-                                android:inputType="text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_marginRight="50dp"
-                                android:imeOptions="actionDone"
-                                android:paddingLeft="10dp"
-                                android:paddingRight="5dp"
                                 android:background="@color/soft_grey"
+                                android:fontFamily="@font/opensansregular"
+                                android:hint="Driving License No"
+                                android:imeOptions="actionDone"
+                                android:inputType="text"
+                                android:paddingLeft="10dp"
+                                android:paddingTop="7dp"
+                                android:paddingRight="5dp"
                                 android:paddingBottom="7dp"
-                                android:layout_height="wrap_content">
-                            </EditText>
+                                android:singleLine="true"
+                                android:textSize="15dp"></EditText>
+
                             <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
                                 android:id="@+id/upload_dl"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_height="wrap_content">
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:orientation="vertical">
+
                                 <ImageView
                                     android:layout_width="25dp"
-                                    android:background="@drawable/upload_button"
+                                    android:layout_height="25dp"
                                     android:layout_gravity="center_horizontal"
-                                    android:layout_height="25dp">
-                                </ImageView>
+                                    android:background="@drawable/upload_button"></ImageView>
+
                                 <TextView
+                                    android:id="@+id/tvupload_dl"
                                     android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
-                                    android:textAlignment="center"
                                     android:fontFamily="@font/opensansregular"
-                                    android:textSize="8dp"
-                                    android:id="@+id/tvupload_dl"
                                     android:text="upload ID"
-                                    android:layout_height="wrap_content">
+                                    android:textAlignment="center"
+                                    android:textSize="8dp">
 
                                 </TextView>
 
                             </LinearLayout>
 
                         </RelativeLayout>
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="Enter vehicle brand"
-                            android:fontFamily="@font/opensansregular"
-                            android:layout_below="@+id/rldl"
                             android:id="@+id/er_tv3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/rldl"
                             android:layout_marginLeft="35dp"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/opensansregular"
+                            android:text="Enter vehicle brand"
                             android:textColor="@color/Red"
-                            android:visibility="gone"
-                            android:layout_height="wrap_content">
-                        </TextView>
+                            android:visibility="gone"></TextView>
 
                     </RelativeLayout>
 
@@ -342,7 +351,7 @@
         </RelativeLayout>
 
         <ImageView
-            android:layout_width="80dp"
+            android:layout_width="70dp"
             android:id="@+id/road"
             android:layout_marginLeft="60dp"
             android:background="@drawable/themegray_rounded_rectangle_top"
@@ -351,7 +360,7 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="95dp"
             android:background="@drawable/dottedlines" />
         <LinearLayout
             android:layout_width="wrap_content"
@@ -396,7 +405,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="130dp"
+            android:layout_marginLeft="120dp"
             android:layout_height="wrap_content">
             <ImageView
                 android:layout_width="wrap_content"

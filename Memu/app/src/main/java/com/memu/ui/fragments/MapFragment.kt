@@ -129,9 +129,8 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
         find_riders.setOnClickListener(this)
         arrow_left.setOnClickListener(this)
         gpsTracker = GPSTracker(activity)
-        if(gpsTracker?.canGetLocation()!!) {
-            mapView!!.getMapAsync(this)
-        }
+        mapView!!.getMapAsync(this)
+
         startButton.isEnabled = false
         when(Keys.MAPTYPE) {
             Keys.SHORTESTROUTE -> {

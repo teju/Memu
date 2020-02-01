@@ -176,8 +176,19 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 
         val distance = BaseHelper.showDistance(latng1,latng2)
         val To = FromJSon(destLatitide, destLongitude)
-        postFindRideViewModel.loadData(strdate,strtime, strseat,"no","",
-            from,To,distance.toInt().toString(),strType)
+        if(srcLatitude != 0.0 && srcLongitude != 0.0) {
+            postFindRideViewModel.loadData(
+                strdate, strtime, strseat, "no", "",
+                from, To, distance.toInt().toString(), strType
+            )
+        } else {
+            showNotifyDialog(
+                "", "Select your source location",
+                getString(R.string.ok),"",object : NotifyListener {
+                    override fun onButtonClicked(which: Int) { }
+                }
+            )
+        }
 
     }
 
@@ -205,13 +216,23 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
             R.id.btnNExt -> {
                 if(!BaseHelper.isEmpty(edtdestLoc.text.toString())) {
                     edtdestLocerror.visibility = View.GONE
-                    if(Keys.MAPTYPE == Keys.SHORTESTROUTE) {
-                        home().setFragment(MapFragment().apply {
-                            srcLat = srcLatitude
-                            srcLng = srcLongitude
-                            destLng = destLongitude
-                            destLat = destLatitide
-                        })
+                    if(Keys.MAPTYPE == Keys.SHORTESTROUTE ) {
+                        if((srcLatitude != 0.0 && srcLongitude != 0.0)) {
+                            home().setFragment(MapFragment().apply {
+                                srcLat = srcLatitude
+                                srcLng = srcLongitude
+                                destLng = destLongitude
+                                destLat = destLatitide
+                            })
+                        } else {
+                            showNotifyDialog(
+                                "", "Select your source location",
+                                getString(R.string.ok),"",object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) { }
+                                }
+                            )
+                        }
+
                     } else {
 
                         CallApi()

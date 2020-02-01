@@ -124,11 +124,11 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
             errorMessageModel.message = response!!.content.getString(Keys.MESSAGE)
             return errorMessageModel
         } catch (e: Exception) {
-            return createErrorMessageObject(
-                false,
-                getApplication<Application>().getString(com.iapps.common_library.R.string.iapps__network_error),
-                getApplication<Application>().getString(com.iapps.common_library.R.string.iapps__unknown_response)
-            )
+            val errorMessageModel = ErrorMessageModel()
+            errorMessageModel.isShouldDisplayDialog = false
+            errorMessageModel.title = ""
+            errorMessageModel.message = ""
+            return errorMessageModel
         }
     }
 

@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:adjustViewBounds="true"
             android:background="@color/transparent"
-            android:layout_marginLeft="150dp"
+            android:layout_marginLeft="130dp"
             android:layout_marginRight="15dp"
             android:id="@+id/onbording_1"
             android:layout_height="wrap_content">
@@ -29,7 +29,7 @@
             <ImageView
                 android:layout_width="150dp"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/memu_logo"
+                android:src="@drawable/thumb_up_memu_logo"
                 android:id="@+id/memu_logo"
                 android:layout_height="50dp">
             </ImageView>
@@ -41,6 +41,7 @@
                 android:text="Do you drive a vehicle?"
                 android:textColor="@color/DarkBlue"
                 android:id="@+id/tv1"
+                android:layout_marginLeft="10dp"
                 android:layout_below="@+id/memu_logo"
                 android:layout_height="wrap_content">
             </TextView>
@@ -211,7 +212,7 @@
 
     </RelativeLayout>
     <ImageView
-        android:layout_width="80dp"
+        android:layout_width="70dp"
         android:layout_marginLeft="60dp"
         android:layout_marginTop="-10dp"
         android:background="@drawable/themegray_rounded_rectangle"
@@ -220,7 +221,7 @@
     <View
         android:layout_width="4dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="100dp"
+        android:layout_marginLeft="95dp"
         android:background="@drawable/dottedlines" />
     <LinearLayout
         android:layout_width="wrap_content"
@@ -251,7 +252,7 @@
     </LinearLayout>
     <ImageView
         android:id="@+id/white_car"
-        android:layout_width="61dp"
+        android:layout_width="52dp"
         android:layout_height="80dp"
         android:layout_marginLeft="75dp"
         android:layout_marginTop="300dp"
@@ -270,7 +271,7 @@
     <ImageView
         android:layout_width="61dp"
         android:src="@drawable/yellow_car"
-        android:layout_marginLeft="72dp"
+        android:layout_marginLeft="68dp"
         android:id="@+id/yellow_car"
         android:visibility="visible"
         android:layout_marginTop="500dp"

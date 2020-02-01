@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.iapps.gon.etc.callback.NotifyListener
@@ -37,6 +38,9 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
     private fun initUI() {
         setLoginAPIObserver()
         setOtpAPIObserver()
+        login.text = "Get OTP"
+        get_otp.visibility = View.GONE
+        otp_number.visibility = View.GONE
         get_otp.setOnClickListener {
             if(validateMobileNumber()) {
                 postLoginViewModel.loadData(LoginForm(mobileNo.text.toString()))
@@ -59,10 +63,16 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.login -> {
-                if(validateMobileNumber() && validateOTp()) {
-                    val jsonObject = JSONObject()
-                    jsonObject.put("otp_code",otp_number.text.toString())
-                    postOtpViewModel.loadData(LoginForm(mobileNo.text.toString()),jsonObject)
+                if(otp_number.isVisible) {
+                    if (validateMobileNumber() && validateOTp()) {
+                        val jsonObject = JSONObject()
+                        jsonObject.put("otp_code", otp_number.text.toString())
+                        postOtpViewModel.loadData(LoginForm(mobileNo.text.toString()), jsonObject)
+                    }
+                } else {
+                    if(validateMobileNumber()) {
+                        postLoginViewModel.loadData(LoginForm(mobileNo.text.toString()))
+                    }
                 }
             }
         }
@@ -119,7 +129,7 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostOtpViewModel.NEXT_STEP -> {
-                            home().setFragment(DummyFragment())
+                            home().setFragment(HomeFragment())
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAccountName(postOtpViewModel.obj?.name!!)
@@ -158,6 +168,9 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostLoginViewModel.NEXT_STEP -> {
+                            login.text = "Sign-in"
+                            get_otp.visibility = View.VISIBLE
+                            otp_number.visibility = View.VISIBLE
                             showNotifyDialog(
                                 "", postLoginViewModel.obj?.message,
                                 getString(R.string.ok),"",object : NotifyListener {
