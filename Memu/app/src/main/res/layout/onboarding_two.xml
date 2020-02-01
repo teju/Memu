@@ -133,7 +133,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginRight="15dp"
                                 android:orientation="vertical">
 
                                 <ImageView
@@ -149,7 +149,7 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
                                     android:fontFamily="@font/opensansregular"
-                                    android:text="upload pic\n(show your\ncar to\nothers)"
+                                    android:text="upload\npic"
                                     android:textAlignment="center"
                                     android:textSize="8dp">
 
@@ -231,7 +231,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="15dp"
                                 android:orientation="vertical">
 
                                 <ImageView
@@ -247,7 +247,7 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
                                     android:fontFamily="@font/opensansregular"
-                                    android:text="upload ID"
+                                    android:text="upload\nID"
                                     android:textAlignment="center"
                                     android:textSize="8dp">
 
@@ -304,7 +304,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginRight="15dp"
                                 android:orientation="vertical">
 
                                 <ImageView
@@ -320,7 +320,7 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
                                     android:fontFamily="@font/opensansregular"
-                                    android:text="upload ID"
+                                    android:text="upload\nID"
                                     android:textAlignment="center"
                                     android:textSize="8dp">
 
