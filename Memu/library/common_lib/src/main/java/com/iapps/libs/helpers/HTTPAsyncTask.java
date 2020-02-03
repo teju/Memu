@@ -78,6 +78,7 @@ public abstract class HTTPAsyncTask
 	private JSONObject params = new JSONObject();
 	private ArrayList<LinkedHashMap<String, String>> fileParams = new ArrayList<LinkedHashMap<String, String>>();
 	private LinkedHashMap<String, byte[]> bytesParams = new LinkedHashMap<String, byte[]>();
+	private LinkedHashMap<String, String> filetxtParams = new LinkedHashMap<String, String>();
 	private HashMap<String, String> mHeaderParams = new HashMap<String, String>();
 
 	public void setParams(JSONObject params) {
@@ -305,10 +306,25 @@ public abstract class HTTPAsyncTask
 		int idx = q.length - 1;
 		LinkedHashMap<String, String> file = new LinkedHashMap<String, String>();
 		file.put(BaseKeys.KEY, key);
-		file.put(BaseKeys.NAME, q[idx]);
-		file.put(BaseKeys.FILEPATH, path);
+		if(!BaseHelper.isEmpty(mime)) {
+			file.put(BaseKeys.NAME, q[idx]);
+			file.put(BaseKeys.FILEPATH, path);
+		} else {
+			file.put(BaseKeys.NAME,path);
+			file.put(BaseKeys.FILEPATH,"");
+		}
 		file.put(BaseKeys.MIME, mime);
 		this.fileParams.add(file);
+	}
+
+	public void settxtFileParams(String key, String path) {
+		this.isMultipart = true;
+
+		LinkedHashMap<String, String> file = new LinkedHashMap<String, String>();
+		file.put(BaseKeys.KEY, key);
+		file.put(BaseKeys.NAME, path);
+
+		this.filetxtParams.put(key,path);
 	}
 
 	public void setByteParams(String key, byte[] bytes) {
@@ -597,31 +613,35 @@ public abstract class HTTPAsyncTask
 									+ map.get(BaseKeys.KEY) + "\"; filename=\""
 									+ map.get(BaseKeys.NAME) + "\"");
 							outputStream.writeBytes(lineEnd);
-							outputStream
-									.writeBytes("Content-Type: " + map.get(BaseKeys.MIME) + lineEnd);
-							outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
-							outputStream.writeBytes(lineEnd);
+							Log.d("Content Disposition KEY", map.get(BaseKeys.KEY)
+									+": NAME "+map.get(BaseKeys.NAME)+": FILEPATH "+map.get(BaseKeys.FILEPATH));
+							if(!BaseHelper.isEmpty(BaseKeys.MIME)) {
+								outputStream
+										.writeBytes("Content-Type: " + map.get(BaseKeys.MIME) + lineEnd);
+								outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
+								outputStream.writeBytes(lineEnd);
 
-							// Log.d("value", map.get(Keys.KEY)
-							// +":"+map.get(Keys.NAME)+":"+map.get(Keys.FILEPATH));
-							File file = new File(map.get(BaseKeys.FILEPATH));
-							FileInputStream fileInputStream = new FileInputStream(file);
-							bytesAvailable = fileInputStream.available();
-							bufferSize = Math.min(bytesAvailable, maxBufferSize);
-							byte[] buffer = new byte[bufferSize];
 
-							bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-							while (bytesRead > 0) {
-								outputStream.write(buffer, 0, bufferSize);
+								File file = new File(map.get(BaseKeys.FILEPATH));
+								FileInputStream fileInputStream = new FileInputStream(file);
 								bytesAvailable = fileInputStream.available();
 								bufferSize = Math.min(bytesAvailable, maxBufferSize);
-								bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-							}
+								byte[] buffer = new byte[bufferSize];
 
+								bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+								while (bytesRead > 0) {
+									outputStream.write(buffer, 0, bufferSize);
+									bytesAvailable = fileInputStream.available();
+									bufferSize = Math.min(bytesAvailable, maxBufferSize);
+									bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+								}
+								fileInputStream.close();
+
+							}
 							outputStream.writeBytes(lineEnd);
 
-							fileInputStream.close();
 						}
+
 
 						for (String key : this.bytesParams.keySet()) {
 							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
@@ -633,27 +653,30 @@ public abstract class HTTPAsyncTask
 							outputStream.writeBytes(lineEnd);
 
 							outputStream.write(bytesParams.get(key));
-							Log.d("value", key + ":" + params.get(key));
+							Log.d("Content value", key + ":" + params.get(key));
 							outputStream.writeBytes(lineEnd);
 
 						}
 
-//						for (String key : params.keySet()) {
-//							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-//							outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
-//									+ "\"");
-//							outputStream.writeBytes(lineEnd);
-//							outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
-//							outputStream.writeBytes(lineEnd);
-//							outputStream.writeBytes(params.get(key));
-//							Log.d("value", key + ":" + params.get(key));
-//							outputStream.writeBytes(lineEnd);
-//
-//						}
+						for (String key : filetxtParams.keySet()) {
+							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+							outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
+									+ "\"");
+							outputStream.writeBytes(lineEnd);
+							outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
+							outputStream.writeBytes(lineEnd);
+							outputStream.writeBytes(filetxtParams.get(key));
+							System.out.println("filetxtParams key  " + filetxtParams.get(key));
+							Log.d("filetxtParams value", key + ":" + filetxtParams.get(key));
+							outputStream.writeBytes(lineEnd);
+
+						}
 
 						outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 						outputStream.flush();
 						outputStream.close();
+						PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream));
+
 					}
 
 				}
@@ -750,8 +773,8 @@ public abstract class HTTPAsyncTask
 							outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
 							outputStream.writeBytes(lineEnd);
 
-							// Log.d("value", map.get(Keys.KEY)
-							// +":"+map.get(Keys.NAME)+":"+map.get(Keys.FILEPATH));
+							 Log.d("value", map.get(BaseKeys.KEY)
+									 +":"+map.get(BaseKeys.NAME)+":"+map.get(BaseKeys.FILEPATH));
 							File file = new File(map.get(BaseKeys.FILEPATH));
 							FileInputStream fileInputStream = new FileInputStream(file);
 							bytesAvailable = fileInputStream.available();
@@ -786,18 +809,20 @@ public abstract class HTTPAsyncTask
 
 						}
 
-//						for (String key : params.keySet()) {
-//							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-//							outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
-//									+ "\"");
-//							outputStream.writeBytes(lineEnd);
-//							outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
-//							outputStream.writeBytes(lineEnd);
-//							outputStream.writeBytes(params.get(key));
-//							Log.d("value", key + ":" + params.get(key));
-//							outputStream.writeBytes(lineEnd);
-//
-//						}
+						for (String key : filetxtParams.keySet()) {
+							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+							outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
+									+ "\"");
+							outputStream.writeBytes(lineEnd);
+							outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
+							outputStream.writeBytes(lineEnd);
+							outputStream.writeBytes(filetxtParams.get(key));
+							System.out.println("filetxtParams key  " + filetxtParams.get(key));
+							Log.d("filetxtParams value", key + ":" + filetxtParams.get(key));
+							outputStream.writeBytes(lineEnd);
+
+						}
+
 
 						outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 						outputStream.flush();

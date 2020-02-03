@@ -859,6 +859,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             edtEmail.clearFocus()
             er_mtv4.visibility = View.GONE
         }
+/*
         if(State.type != State.YELLOW_BOARD) {
             if (BaseHelper.isEmpty(State.office_address_line1)) {
                 er_otv1.visibility = View.VISIBLE
@@ -880,6 +881,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 er_otv2.visibility = View.GONE
             }
         }
+*/
 
         return true
     }
@@ -1294,11 +1296,12 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         fun OfficeAddress(context : Context) :JSONObject {
             val obj = JSONObject()
 
-            if(!BaseHelper.isEmpty(office_address_line1))
+            if(!BaseHelper.isEmpty(office_address_line1)) {
                 obj.put("address_line1", office_address_line1)
-            obj.put("lattitude", officelattitude.toString())
-            obj.put("longitude", officelongitude.toString())
-            obj.put("type", "office")
+                obj.put("lattitude", officelattitude.toString())
+                obj.put("longitude", officelongitude.toString())
+                obj.put("type", "office")
+            }
 
             if(!BaseHelper.isEmpty(office_formatted_address))
                 obj.put("formatted_address", office_formatted_address)

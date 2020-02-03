@@ -81,9 +81,8 @@ class PostUploadDocViewModel(application: Application) : BaseViewModel(applicati
 
             genericHttpAsyncTask.setUrl(APIs.postUploadProfilePhoto)
             Helper.applyHeader(apl,genericHttpAsyncTask)
-            genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
             genericHttpAsyncTask.setFileParams(Keys.PROFILE,path,"multipart/form-data; boundar")
-            System.out.println("onActivityResult12 postUploadProfilePhoto "+APIs.postUploadProfilePhoto)
+            genericHttpAsyncTask.settxtFileParams(Keys.USER_ID,UserInfoManager.getInstance(apl).getAccountId())
 
         }
 
