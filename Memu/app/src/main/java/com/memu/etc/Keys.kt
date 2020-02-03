@@ -61,6 +61,7 @@ class Keys : BaseKeys() {
         val TRIP_RIDER_ID_ = "trip_rider_id"
         val PROFILE = "profile"
         val STATUS = "status"
+        val ACCESS_TOKEN = "access_token"
 
         @kotlin.jvm.JvmField
         var GCM_DT : String = "dt"

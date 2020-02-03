@@ -35,6 +35,7 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Handler
 import android.view.View
 import com.memu.ui.fragments.DummyFragment
+import com.memu.ui.fragments.ProfilePicUploadFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.home_fragment.ld
 

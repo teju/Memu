@@ -5,10 +5,7 @@ import com.google.gson.GsonBuilder
 
 import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
-import com.memu.etc.APIs
-import com.memu.etc.Helper
-import com.memu.etc.Keys
-import com.memu.etc.SingleLiveEvent
+import com.memu.etc.*
 import com.memu.modules.DocUpload.DocUpload
 import com.memu.modules.VehicleType.VehicleType
 import org.json.JSONArray
@@ -33,6 +30,7 @@ class PostUploadDocViewModel(application: Application) : BaseViewModel(applicati
     }
 
     fun loadData(doc_type : Int,path : String) {
+
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -66,6 +64,7 @@ class PostUploadDocViewModel(application: Application) : BaseViewModel(applicati
 
             }
         })
+        System.out.println("onActivityResult12 loadData "+doc_type)
 
         genericHttpAsyncTask.method = BaseConstants.POST
         genericHttpAsyncTask.context = apl.applicationContext
@@ -79,8 +78,13 @@ class PostUploadDocViewModel(application: Application) : BaseViewModel(applicati
             genericHttpAsyncTask.setUrl(APIs.postUploadDlPhoto)
             genericHttpAsyncTask.setFileParams(Keys.DRIVING_LICENCE,path,"multipart/form-data; boundar")
         }else if(doc_type == PROFILE_PHOTO) {
+
             genericHttpAsyncTask.setUrl(APIs.postUploadProfilePhoto)
+            Helper.applyHeader(apl,genericHttpAsyncTask)
+            genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
             genericHttpAsyncTask.setFileParams(Keys.PROFILE,path,"multipart/form-data; boundar")
+            System.out.println("onActivityResult12 postUploadProfilePhoto "+APIs.postUploadProfilePhoto)
+
         }
 
         genericHttpAsyncTask.setCache(false)

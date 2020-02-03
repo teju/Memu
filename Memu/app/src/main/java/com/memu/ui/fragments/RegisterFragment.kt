@@ -1053,12 +1053,13 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUserSignupViewModel.NEXT_STEP -> {
-                            home().setFragment(HomeFragment())
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAccountName(postUserSignupViewModel.obj?.name!!)
                             UserInfoManager.getInstance(activity!!).saveAccountId(
                                 postUserSignupViewModel.obj?.user_id.toString()!!)
+                            home().setFragment(ProfilePicUploadFragment())
+
                         }
                     }
                 })
