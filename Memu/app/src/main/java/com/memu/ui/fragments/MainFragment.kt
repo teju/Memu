@@ -73,7 +73,7 @@ class MainFragment : BaseFragment() , View.OnClickListener {
                     fbLogin()
                     fblogin.performClick()
                 }  catch (e : java.lang.Exception){
-
+                        System.out.println("Exception1234 "+e.toString())
                 }
             }
         }
@@ -86,9 +86,8 @@ class MainFragment : BaseFragment() , View.OnClickListener {
             getUserProfile(AccessToken.getCurrentAccessToken())
         }
 */
-        if (AccessToken.getCurrentAccessToken() != null && com.facebook.Profile.getCurrentProfile() != null) {
+        if (AccessToken.getCurrentAccessToken() != null && getCurrentProfile() != null) {
             //Logged in so show the login button
-            LoginManager.getInstance().logOut()
             getUserProfile(AccessToken.getCurrentAccessToken())
 
         }
@@ -105,6 +104,7 @@ class MainFragment : BaseFragment() , View.OnClickListener {
                 //Log.d("API123", "$loggedIn ??")
 
                 getUserProfile(AccessToken.getCurrentAccessToken())
+                LoginManager.getInstance().logOut()
 
             }
 

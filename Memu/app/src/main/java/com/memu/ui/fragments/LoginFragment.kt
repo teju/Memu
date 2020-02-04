@@ -129,7 +129,7 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostOtpViewModel.NEXT_STEP -> {
-                            home().setFragment(HomeFragment())
+                            home().setFragment(DummyFragment())
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAccountName(postOtpViewModel.obj?.name!!)

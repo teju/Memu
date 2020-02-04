@@ -43,7 +43,7 @@ class ProfilePicUploadFragment : BaseFragment()  {
         }
         btnNExt.setOnClickListener {
             if(uploadSuccess) {
-                home().setFragment(HomeFragment())
+                home().setFragment(DummyFragment())
             }
         }
     }
