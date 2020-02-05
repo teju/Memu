@@ -43,17 +43,35 @@
         </RadioButton>
 
     </LinearLayout>
-    <RadioButton
-        android:id="@+id/motor_bike"
-        android:button="@drawable/radiobuttonstyle"
-        android:layout_width="wrap_content"
-        android:textSize="10dp"
-        android:layout_marginTop="10dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
         android:layout_centerVertical="true"
-        android:layout_below="@+id/radio_btn"
-        android:layout_height="wrap_content"
-        android:text="  Motor Bike">
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/motor_bike"
+            android:button="@drawable/radiobuttonstyle"
+            android:layout_width="wrap_content"
+            android:textSize="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/radio_btn"
+            android:layout_height="wrap_content"
+            android:text="  Motor Bike">
 
-    </RadioButton>
+        </RadioButton>
+        <RadioButton
+            android:id="@+id/tt_mini_bus"
+            android:button="@drawable/radiobuttonstyle"
+            android:layout_width="wrap_content"
+            android:textSize="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/radio_btn"
+            android:layout_height="wrap_content"
+            android:text="  TT/mini bus">
+
+        </RadioButton>
+
+    </LinearLayout>
 
 </LinearLayout>
