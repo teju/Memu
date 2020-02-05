@@ -79,6 +79,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     var vehicleID_name = ""
     val PICK_PHOTO_DOC = 10001
     var isFirst = true
+    var isFirst_P_Y = false
     var isCabFisrst = true
     var gpsTracker : GPSTracker? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -444,11 +445,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         {
 
             R.id.no_vehicle_btn ->{
-                var top_mar = 450
-                if(isFirst) {
-                    top_mar = 2100
-                    isFirst = false
-                }
+
                 onbording_3.visibility = View.GONE
                 cab_onbording_3.visibility = View.GONE
                 tt_mini_bus.visibility = View.GONE
@@ -462,15 +459,38 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 State.type = State.NoVehicles
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
-                startAnimation(
-                    white_car,
-                    R.drawable.white_car,
-                    top_mar,
-                    onbording_1,
-                    500)
+                if(isFirst) {
+                    startAnimation(
+                        white_car,
+                        R.drawable.white_car,
+                        2100,
+                        onbording_1,
+                        500
+                    )
+                    isFirst = false
+
+                } else if(isFirst_P_Y) {
+                    startAnimation(
+                        white_car,
+                        R.drawable.white_car,
+                        1300,
+                        onbording_1,
+                        500
+                    )
+                    isFirst_P_Y = false
+
+                } else {
+                    startAnimation(
+                        white_car,
+                        R.drawable.white_car,
+                        450,
+                        onbording_1,
+                        500
+                    )
+                }
             }
             R.id.private_vehicle_btn ->{
-                isFirst = true
+                isFirst_P_Y = true
                 tt_mini_bus.visibility = View.GONE
                 onbording_3.visibility = View.VISIBLE
                 cab_onbording_3.visibility = View.GONE
@@ -492,7 +512,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 )
             }
             R.id.cab_vehicle_btn ->{
-                isFirst = true
+                isFirst_P_Y = true
 
                 var top_mar = 800
                 if(isCabFisrst) {
