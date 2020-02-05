@@ -218,23 +218,17 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 if(destination != null) {
                     destination!!.removeView(temp_image_view)
                 }
-                var top_margin = onbording_1.height - 400
-                var view = white_car
-                var drawable = R.drawable.white_car
-                if(State.type == State.White_board) {
-                    top_margin = onbording_1.height
-                } else if(State.type == State.YELLOW_BOARD) {
-                    top_margin = onbording_1.height
-                    drawable = R.drawable.yellow_car
-                    view = yellow_car
-                }
+
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_4.getY().toInt() + 700).setDuration(2000).start();
                 destination = onbording_4
-                if(State.type == State.White_board || State.type == State.NoVehicles) {
-                    startAnimation(view,drawable,Helper.toDp(activity!!,top_margin.toFloat()),onbording_4 ,Helper.toDp(activity!!,600f))
+                if(State.type == State.White_board ) {
+                    startAnimation(white_car, R.drawable.white_car, 2500, onbording_4, Helper.toDp(activity!!, 600f))
+                } else if(State.type == State.YELLOW_BOARD ) {
+                    startAnimation(yellow_car,  R.drawable.yellow_car, 2500, onbording_4, Helper.toDp(activity!!, 600f))
                 } else {
-                    startAnimation(view,drawable,Helper.toDp(activity!!,top_margin.toFloat()),onbording_4 ,Helper.toDp(activity!!,600f))
+                    startAnimation(white_car,  R.drawable.white_car, 1800, onbording_4, Helper.toDp(activity!!, 600f))
                 }
+
                 true
             } else {
                 false
@@ -245,20 +239,17 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 if(destination != null) {
                     destination!!.removeView(temp_image_view)
                 }
-                var top_margin = onbording_1.height - 400
-                var view = white_car
-                var drawable = R.drawable.white_car
-                if(State.type == State.White_board) {
-                    top_margin = onbording_1.height
-                } else if(State.type == State.YELLOW_BOARD) {
-                    top_margin = onbording_1.height
-                    drawable = R.drawable.yellow_car
-                    view = yellow_car
-                }
+
                 ObjectAnimator.ofInt(sv, "scrollY",  onbording_5.getY().toInt()).setDuration(2000).start();
                 destination = onbording_5
-                startAnimation(view,drawable,Helper.toDp(activity!!,top_margin.toFloat()),onbording_5 ,400)
-
+                //startAnimation(view,drawable,top_margin,onbording_5 ,400)
+                if(State.type == State.White_board ) {
+                    startAnimation(white_car, R.drawable.white_car, 2600, onbording_4, 400)
+                } else if(State.type == State.YELLOW_BOARD ) {
+                    startAnimation(yellow_car,  R.drawable.yellow_car, 2600, onbording_4, 400)
+                } else {
+                    startAnimation(white_car,  R.drawable.white_car, 1800, onbording_4,400)
+                }
                 true
             } else {
                 false
@@ -469,17 +460,14 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 yellow_car.visibility = View.GONE
                 State.role_id = "4"
                 State.type = State.NoVehicles
-               // ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = onbording_4
                 startAnimation(
                     white_car,
                     R.drawable.white_car,
                     top_mar,
                     onbording_1,
-                    500
-                )
-
-
+                    500)
             }
             R.id.private_vehicle_btn ->{
                 tt_mini_bus.visibility = View.GONE
@@ -492,20 +480,20 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 white_car.visibility = View.VISIBLE
                 yellow_car.visibility = View.GONE
                 State.type = State.White_board
-               // ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = onbording_3
                 startAnimation(
                     white_car,
                     R.drawable.white_car,
-                    600,
+                    650,
                     onbording_1,
                     600
                 )
             }
             R.id.cab_vehicle_btn ->{
-                var top_mar = 700
+                var top_mar = 800
                 if(isCabFisrst) {
-                    top_mar = 1500
+                    top_mar = 1600
                     isCabFisrst = false
                 }
                 tt_mini_bus.visibility = View.VISIBLE
@@ -518,7 +506,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 yellow_car.visibility = View.VISIBLE
                 State.role_id = "6"
                 State.type = State.YELLOW_BOARD
-              //  ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
+                ObjectAnimator.ofInt(sv, "scrollY",  onbording_3.getY().toInt()).setDuration(2000).start();
                 destination = cab_onbording_3
                 startAnimation(
                     yellow_car,
