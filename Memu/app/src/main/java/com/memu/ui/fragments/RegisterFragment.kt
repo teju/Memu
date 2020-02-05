@@ -470,6 +470,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     500)
             }
             R.id.private_vehicle_btn ->{
+                isFirst = true
                 tt_mini_bus.visibility = View.GONE
                 onbording_3.visibility = View.VISIBLE
                 cab_onbording_3.visibility = View.GONE
@@ -491,6 +492,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 )
             }
             R.id.cab_vehicle_btn ->{
+                isFirst = true
+
                 var top_mar = 800
                 if(isCabFisrst) {
                     top_mar = 1600

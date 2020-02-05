@@ -40,7 +40,7 @@
                         <ImageView
                             android:layout_width="150dp"
                             android:layout_alignParentRight="true"
-                            android:src="@drawable/memu_logo"
+                            android:src="@drawable/thumb_up_memu_logo"
                             android:id="@+id/cab_memu_logo"
                             android:layout_height="50dp">
                         </ImageView>
