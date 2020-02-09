@@ -49,7 +49,6 @@ import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.*
 import com.memu.ui.adapters.WeekAdapter
 import com.memu.webservices.*
-import kotlinx.android.synthetic.main.home_fragment.ld
 import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -248,6 +247,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                     edtdestLocerror.visibility = View.GONE
                     if(Keys.MAPTYPE == Keys.SHORTESTROUTE ) {
                         if((srcLatitude != 0.0 && srcLongitude != 0.0)) {
+                            reset()
                             home().setFragment(MapFragment().apply {
                                 srcLat = srcLatitude
                                 srcLng = srcLongitude
@@ -620,6 +620,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostFindRideViewModel.NEXT_STEP -> {
+                            reset()
                             home().setFragment(MapFragment().apply {
                                 srcLat = srcLatitude
                                 srcLng = srcLongitude
