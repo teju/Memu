@@ -80,6 +80,7 @@ import com.memu.webservices.*
 import kotlinx.android.synthetic.main.map_fragment.*
 import kotlinx.android.synthetic.main.map_fragment.ld
 import kotlinx.android.synthetic.main.map_fragment.time
+import kotlinx.android.synthetic.main.map_view.*
 
 import org.json.JSONObject
 import retrofit2.Call
@@ -94,6 +95,7 @@ import java.util.concurrent.TimeUnit
 class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, MapboxMap.OnMapClickListener,
     PermissionsListener {
 
+    private var myView: LinearLayout? = null
     var srcLat = 0.0
     var srcLng = 0.0
     var destLat = 0.0
@@ -123,19 +125,27 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
         initUI();
     }
 
+
     private fun initUI() {
         setInviteRideGiversAPIObserver()
         setRequestRideAPIObserver()
         find_riders.setOnClickListener(this)
         arrow_left.setOnClickListener(this)
         gpsTracker = GPSTracker(activity)
-        mapView!!.getMapAsync(this)
+        try {
+            val  inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
+            myView = inflater.inflate(R.layout.map_view, null) as LinearLayout
+            frame_layout.addView(myView);
+            mapView!!.getMapAsync(this)
+        } catch (e : Exception){
+
+        }
 
         startButton.isEnabled = false
         when(Keys.MAPTYPE) {
             Keys.SHORTESTROUTE -> {
                 shortes_route_result.visibility = View.VISIBLE
-                find_riders.visibility = View.GONE
+                find_riders.visibility = View.VISIBLE
                 sos.visibility = View.GONE
             }
             Keys.POOLING -> {
@@ -153,13 +163,21 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.find_riders -> {
-                postnviteRideGiversViewModel.loadData(trip_rider_id!!,type!!)
+                showAlertsDialog()
+                //postnviteRideGiversViewModel.loadData(trip_rider_id!!,type!!)
             }
             R.id.arrow_left -> {
+                frame_layout.removeView(myView)
                 home().proceedDoOnBackPressed()
             }
 
         }
+    }
+
+    fun showAlertsDialog() {
+        showAlertsDialog(object : NotifyListener {
+            override fun onButtonClicked(which: Int) { } }
+        )
     }
 
     override fun onMapReady(@io.reactivex.annotations.NonNull mapboxMap: MapboxMap) {
@@ -282,16 +300,17 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
                     ld.hide()
                     navigationMapRoute!!.addRoute(currentRoute)
                     val position = CameraPosition.Builder()
-                    .target(LatLng(origin.latitude(), origin.longitude()))
-                    .zoom(10.0)
+                    .target(LatLng(destination.latitude(), destination.longitude()))
+                    .zoom(14.0)
                     .tilt(20.0)
                     .build();
-                    mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
+                   // mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
                     ;
 
                 }
 
                 override fun onFailure(call: Call<DirectionsResponse>, throwable: Throwable) {
+                    ld.hide()
                     Log.e(TAG, "Error: " + throwable.message)
                 }
             })
@@ -339,7 +358,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
 
             }
         } catch (e : Exception){
-
+            ld.hide()
         }
         val drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.map_marker, null);
         val mBitmap = com.mapbox.mapboxsdk.utils.BitmapUtils.getBitmapFromDrawable(drawable);

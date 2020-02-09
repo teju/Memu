@@ -562,10 +562,9 @@
                             android:padding="4dp"
                             android:background="@drawable/themepurple_rounded_rectangle"
                             android:layout_height="match_parent">
-                            <com.mapbox.mapboxsdk.maps.MapView
-                                android:id="@+id/mapView"
-                                mapbox:mapbox_cameraTargetLat="42.149683"
-                                mapbox:mapbox_cameraTargetLng="-119.155770"
+                            <FrameLayout
+                                android:id="@+id/home_mapView"
+                                android:visibility="visible"
                                 android:background="@color/transparent"
                                 android:layout_width="match_parent"
                                 android:layout_height="600dp" />

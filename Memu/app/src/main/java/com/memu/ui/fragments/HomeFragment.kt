@@ -20,7 +20,9 @@ import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
+import android.os.Handler
 import android.view.MenuItem
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -49,6 +51,7 @@ import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.*
 import com.memu.ui.adapters.WeekAdapter
 import com.memu.webservices.*
+import kotlinx.android.synthetic.main.map_view.*
 import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -56,6 +59,7 @@ import java.text.SimpleDateFormat
 
 class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, PermissionsListener {
 
+    private var myView: LinearLayout? = null
     private var pendingIntent: PendingIntent? = null
     private var alarmManager: AlarmManager? = null
     private var gpsTracker: GPSTracker? = null
@@ -90,10 +94,54 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         initUI();
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if(!hidden) {
+            try {
+                home_mapView.addView(myView);
+                mapView!!.getMapAsync(this)
+
+            } catch (e : Exception){
+                System.out.println("initUIException "+e.toString())
+            }
+        }
+    }
     override fun onBackTriggered() {
         super.onBackTriggered()
         home().exitApp()
     }
+
+    override fun onStart() {
+        super.onStart()
+        mapView!!.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView!!.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView!!.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView!!.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView!!.onSaveInstanceState(outState)
+    }
+
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView!!.onLowMemory()
+    }
+
     private fun initUI() {
         setUpdateNotiTokenAPIObserver()
         setFindTripAPIObserver()
@@ -104,7 +152,15 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
             srcLatitude = gpsTracker?.latitude!!
             srcLongitude = gpsTracker?.longitude!!
         }
-        mapView!!.getMapAsync(this)
+
+        try {
+            val  inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
+            myView = inflater.inflate(R.layout.map_view, null) as LinearLayout
+            home_mapView.addView(myView);
+            mapView!!.getMapAsync(this)
+        } catch (e : Exception){
+            System.out.println("initUIException "+e.toString())
+        }
         alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as  AlarmManager;
 
         val alarmIntent =  Intent(activity, LocationBroadCastReceiver::class.java);
@@ -526,36 +582,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        mapView!!.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapView!!.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mapView!!.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mapView!!.onStop()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        mapView!!.onSaveInstanceState(outState)
-    }
-
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView!!.onLowMemory()
-    }
 
     private fun initSearchFab() {
         edtScrLoc.setOnClickListener {
@@ -620,7 +646,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostFindRideViewModel.NEXT_STEP -> {
-                            reset()
+                            home_mapView.removeAllViews()
                             home().setFragment(MapFragment().apply {
                                 srcLat = srcLatitude
                                 srcLng = srcLongitude
@@ -633,6 +659,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                                 }
                                 this.type = strType
                             })
+
                         }
                     }
                 })
