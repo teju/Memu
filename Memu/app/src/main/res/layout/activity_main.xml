@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:src="@drawable/memu_splash"
             android:adjustViewBounds="true"
-            android:background="@color/White"
+            android:background="@color/soft_transparent_grey"
             android:id="@+id/memo_logo_icon"
             android:layout_centerInParent="true"
             android:layout_height="match_parent">

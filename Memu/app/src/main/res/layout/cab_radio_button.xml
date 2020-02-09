@@ -1,0 +1,77 @@
+<LinearLayout android:id="@+id/radio_btn"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/llV1"
+    android:layout_marginTop="10dp"
+    android:gravity="center_horizontal"
+    android:layout_centerVertical="true"
+    android:layout_marginLeft="20dp"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/cab_car_hat"
+            android:button="@drawable/radiobuttonstyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="10dp"
+            android:layout_height="wrap_content"
+            android:text="  Hatcback">
+
+        </RadioButton>
+
+        <RadioButton
+            android:id="@+id/cab_car_sedan"
+            android:layout_width="0dp"
+            android:layout_weight="1"                                    android:textSize="10dp"
+            android:layout_height="wrap_content"
+            android:button="@drawable/radiobuttonstyle"
+            android:text="  Sedan">
+
+        </RadioButton>
+        <RadioButton
+            android:id="@+id/cab_car_suv"
+            android:layout_width="0dp"
+            android:layout_weight="1"                                    android:textSize="10dp"
+            android:layout_height="wrap_content"
+            android:button="@drawable/radiobuttonstyle"
+            android:text="  SUV">
+
+        </RadioButton>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/cab_motor_bike"
+            android:button="@drawable/radiobuttonstyle"
+            android:layout_width="wrap_content"
+            android:textSize="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/radio_btn"
+            android:layout_height="wrap_content"
+            android:text="  Motor Bike">
+
+        </RadioButton>
+        <RadioButton
+            android:id="@+id/cab_tt_mini_bus"
+            android:button="@drawable/radiobuttonstyle"
+            android:layout_width="wrap_content"
+            android:textSize="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/radio_btn"
+            android:layout_height="wrap_content"
+            android:text="  TT/mini bus">
+
+        </RadioButton>
+
+    </LinearLayout>
+
+</LinearLayout>

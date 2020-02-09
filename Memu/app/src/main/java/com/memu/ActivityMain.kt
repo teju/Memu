@@ -65,7 +65,7 @@ class ActivityMain : AppCompatActivity(){
                 memo_logo_icon.visibility = View.GONE
                 triggerMainProcess()
 
-            }, 2 * 1000
+            }, 2 * 2000
         ) // wait for 5 s
        // BaseHelper.triggerNotifLog(this);
         setAcceptRejectAPIObserver()
@@ -217,7 +217,7 @@ class ActivityMain : AppCompatActivity(){
     fun triggerMainProcess(){
 
         if(!BaseHelper.isEmpty(UserInfoManager.getInstance(this).authToken))
-            setFragment(DummyFragment())
+            setFragment(HomeFragment())
         else
             setFragment(MainFragment())
     }

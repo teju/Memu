@@ -44,6 +44,7 @@ import com.memu.etc.GPSTracker
 import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
 import com.memu.webservices.*
+import kotlinx.android.synthetic.main.cab_radio_button.*
 import kotlinx.android.synthetic.main.custom_notification_layout.view.*
 import kotlinx.android.synthetic.main.onboarding_start.*
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
@@ -54,6 +55,7 @@ import kotlin.collections.ArrayList
 
 
 class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListener {
+
 
     var fbObj: JSONObject? = null
     val ANIMATION_SPEED = 2000
@@ -122,7 +124,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
         initFb()
 
-       // getVehicleTypeViewModel.loadData()
+        getVehicleTypeViewModel.loadData()
         //onScrolledUp()
 
         try {
@@ -149,31 +151,103 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         permissions()
 
         car_hat.setOnCheckedChangeListener { buttonView, isChecked ->
-            car_sedan.isChecked = false
+            car_hat.isChecked = isChecked
             car_suv.isChecked = false
             motor_bike.isChecked = false
+            tt_mini_bus.isChecked = false
+            State.vehicle_model_type = "Sedan"
 
-            car_hat.isChecked = isChecked
-            State.role_id = "3"
-            State.type = State.White_board
+            car_sedan.isChecked = false
+            State.role_id = "5"
+        }
+        cab_car_hat.setOnCheckedChangeListener { buttonView, isChecked ->
+            cab_car_hat.isChecked = isChecked
+            cab_car_suv.isChecked = false
+            cab_motor_bike.isChecked = false
+            cab_tt_mini_bus.isChecked = false
+                    State.vehicle_model_type = "Sedan"
+
+            cab_car_sedan.isChecked = false
+                    State.role_id = "5"
         }
 
         car_sedan.setOnCheckedChangeListener { buttonView, isChecked ->
             car_hat.isChecked = false
             car_suv.isChecked = false
             motor_bike.isChecked = false
+            tt_mini_bus.isChecked = false
+            State.vehicle_model_type = "Sedan"
 
             car_sedan.isChecked = isChecked
             State.role_id = "5"
-            State.type = State.BIKE_White_board
+        }
+        cab_car_sedan.setOnCheckedChangeListener { buttonView, isChecked ->
+            cab_car_hat.isChecked = false
+            cab_car_suv.isChecked = false
+            cab_motor_bike.isChecked = false
+            cab_tt_mini_bus.isChecked = false
+            State.vehicle_model_type = "Sedan"
+
+            cab_car_sedan.isChecked = isChecked
+            State.role_id = "5"
         }
         car_suv.setOnCheckedChangeListener { buttonView, isChecked ->
             car_hat.isChecked = false
             car_suv.isChecked = isChecked
             motor_bike.isChecked = false
             car_sedan.isChecked = false
+            tt_mini_bus.isChecked = false
             State.role_id = "5"
-            State.type = State.BIKE_White_board
+            State.vehicle_model_type = "SUV"
+
+        }
+        cab_car_suv.setOnCheckedChangeListener { buttonView, isChecked ->
+            cab_car_hat.isChecked = false
+            cab_car_suv.isChecked = isChecked
+            cab_motor_bike.isChecked = false
+            cab_car_sedan.isChecked = false
+            cab_tt_mini_bus.isChecked = false
+            State.role_id = "5"
+            State.vehicle_model_type = "SUV"
+
+        }
+        tt_mini_bus.setOnCheckedChangeListener { buttonView, isChecked ->
+            car_hat.isChecked = false
+            tt_mini_bus.isChecked = isChecked
+            car_suv.isChecked = false
+            motor_bike.isChecked = false
+            car_sedan.isChecked = false
+            State.role_id = "5"
+            State.vehicle_model_type = "minibus"
+
+        }
+        cab_tt_mini_bus.setOnCheckedChangeListener { buttonView, isChecked ->
+            cab_car_hat.isChecked = false
+            cab_tt_mini_bus.isChecked = isChecked
+            cab_car_suv.isChecked = false
+            cab_motor_bike.isChecked = false
+            cab_car_sedan.isChecked = false
+            State.role_id = "5"
+            State.vehicle_model_type = "minibus"
+
+        }
+        motor_bike.setOnCheckedChangeListener { buttonView, isChecked ->
+            car_hat.isChecked = false
+            motor_bike.isChecked = isChecked
+            car_suv.isChecked = false
+            car_sedan.isChecked = false
+            tt_mini_bus.isChecked = false
+            State.role_id = "5"
+            State.vehicle_model_type = "MotorBike"
+        }
+        cab_motor_bike.setOnCheckedChangeListener { buttonView, isChecked ->
+            cab_car_hat.isChecked = false
+            cab_motor_bike.isChecked = isChecked
+            cab_car_suv.isChecked = false
+            cab_car_sedan.isChecked = false
+            cab_tt_mini_bus.isChecked = false
+            State.role_id = "5"
+            State.vehicle_model_type = "MotorBike"
         }
 
         dl.setOnEditorActionListener { v, actionId, event ->
@@ -743,7 +817,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         }
     }
     fun validateUploadForm() : Boolean {
-        if(BaseHelper.isEmpty(vehicleID)) {
+        /*if(BaseHelper.isEmpty(vehicleID)) {
             er_tv1.visibility = View.VISIBLE
             er_tv1.text = "Upload Vehicle Photo"
             edtVehicleBrand.requestFocus();
@@ -770,7 +844,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         } else {
             dl.clearFocus()
             er_tv3.visibility = View.GONE
-        }
+        }*/
 
         return true
     }
@@ -862,7 +936,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
         if(BaseHelper.isEmpty(State.role_id)) {
             er_tv1.visibility = View.VISIBLE
-            er_tv1.text = "Select Car or Bike"
+            er_tv1.text = "Select a Vehicle"
             VehicleName.requestFocus();
             return false
         }
@@ -1007,6 +1081,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
             State.YELLOW_BOARD -> {
                 jsonArray.put(0,state.Address(activity!!))
+                if(!state.OfficeAddress(activity!!).isNull("lattitude") ||
+                    !state.OfficeAddress(activity!!).isNull("longitude")) {
+                    jsonArray.put(1, state.OfficeAddress(activity!!))
+                }
                 if(validateAPIForm() && validateCabVehicleForm() && validateOTp()
                     && validateaddressForm() && validateUploadForm() ){
                     val vehicle_photo = JSONObject()
@@ -1034,7 +1112,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             }
             State.White_board,State.BIKE_White_board -> {
                 jsonArray.put(0,state.Address(activity!!))
-                jsonArray.put(1,state.OfficeAddress(activity!!))
+                if(!state.OfficeAddress(activity!!).isNull("lattitude") ||
+                    !state.OfficeAddress(activity!!).isNull("longitude")) {
+                    jsonArray.put(1, state.OfficeAddress(activity!!))
+                }
                 System.out.println("validateAPIForm() Address " +
                         ""+state.Address(activity!!) +" OfficeAddress "+state.OfficeAddress(activity!!))
                 if(validateAPIForm() && validateVehicleForm() && validateOTp()
@@ -1287,6 +1368,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             var formatted_address = ""
             var otp_code = ""
             var role_id = ""
+            var vehicle_model_type = ""
             var dl_number = ""
             var office_address_line1 = ""
             var office_formatted_address = ""
@@ -1352,6 +1434,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
             if(!BaseHelper.isEmpty(vehicle_no))
                 obj.put("vehicle_no", vehicle_no)
+
+            if(!BaseHelper.isEmpty(vehicle_model_type))
+                obj.put("vehicle_model_type", vehicle_model_type)
 
             return obj
         }

@@ -21,17 +21,35 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Build
 import android.view.MenuItem
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
+import com.mapbox.android.core.permissions.PermissionsListener
+import com.mapbox.android.core.permissions.PermissionsManager
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection
+import com.mapbox.geojson.Point
+import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.location.LocationComponent
+import com.mapbox.mapboxsdk.location.modes.CameraMode
+import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
+import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import com.mapbox.services.android.navigation.ui.v5.NavigationLauncher
+import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions
 import com.memu.bgTasks.LocationBroadCastReceiver
-import com.memu.etc.GPSTracker
-import com.memu.etc.Helper
-import com.memu.etc.Keys
-import com.memu.etc.UserInfoManager
+import com.memu.etc.*
+import com.memu.ui.adapters.ProductAdapter
 import com.memu.webservices.*
 import kotlinx.android.synthetic.main.home_fragment.ld
 import org.json.JSONObject
@@ -39,7 +57,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 
 
-class HomeFragment : BaseFragment() , View.OnClickListener {
+class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, PermissionsListener {
 
     private var pendingIntent: PendingIntent? = null
     private var alarmManager: AlarmManager? = null
@@ -51,9 +69,12 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
     var destLongitude:Double = 0.0
     var srcLongitude:Double = 0.0
     var srcLatitude:Double = 0.0
+    private var mapboxMap: MapboxMap? = null
 
     private val REQUEST_CODE_AUTOCOMPLETE = 1
     private val REQUEST_CODE_AUTOCOMPLETEDEST = 2
+    private var permissionsManager: PermissionsManager? = null
+    private var locationComponent: LocationComponent? = null
 
     var type = 1
     var FINDRIDER = 1
@@ -79,12 +100,14 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
     private fun initUI() {
         setUpdateNotiTokenAPIObserver()
         setFindTripAPIObserver()
+        cv.setCardBackgroundColor(activity!!.resources.getColor(R.color.Purple));
 
         gpsTracker = GPSTracker(activity)
         if(gpsTracker?.canGetLocation()!!) {
             srcLatitude = gpsTracker?.latitude!!
             srcLongitude = gpsTracker?.longitude!!
         }
+        mapView!!.getMapAsync(this)
         alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as  AlarmManager;
 
         val alarmIntent =  Intent(activity, LocationBroadCastReceiver::class.java);
@@ -333,6 +356,23 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 
     }
 
+    fun weekRecyclerView() {
+        val sglm2 = GridLayoutManager(context, 2)
+        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing_grid1)
+        weeksList.setLayoutManager(sglm2)
+        weeksList.setNestedScrollingEnabled(false)
+        weeksList.addItemDecoration(SpacesItemDecoration(2, spacingInPixels, true))
+        val adapter = ProductAdapter(context!!)
+        weeksList.adapter = adapter
+        (weeksList.adapter as ProductAdapter).productAdapterListener =
+            object : ProductAdapter.ProductAdapterListener {
+                override fun onClick(position: Int) {
+
+                }
+            }
+
+
+    }
     fun bestRouteUI() {
         popUpView.visibility = View.VISIBLE
         cancel.visibility = View.GONE
@@ -347,6 +387,138 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
         rlBestRoute.alpha = 1f
         scrollView.fullScroll(View.FOCUS_UP);
 
+    }
+    override fun onMapReady(@io.reactivex.annotations.NonNull mapboxMap: MapboxMap) {
+        this.mapboxMap = mapboxMap
+        mapboxMap.setStyle(getString(R.string.navigation_guidance_day)) { style ->
+            enableLocationComponent(style)
+
+            //mapboxMap.addOnMapClickListener(this@MapFragment)
+            addMarkers()
+            val position = CameraPosition.Builder()
+                .target(LatLng(gpsTracker?.latitude!!, gpsTracker?.longitude!!))
+                .zoom(10.0)
+                .tilt(20.0)
+                .build();
+            mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
+
+            ;
+        }
+
+
+    }
+
+    fun addMarkers() {
+        val symbolLayerIconFeatureList = ArrayList<Feature>()
+        symbolLayerIconFeatureList.add(
+            Feature.fromGeometry(
+                Point.fromLngLat(
+                    gpsTracker?.longitude!!,
+                    gpsTracker?.latitude!!))
+        )
+        val drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.map_marker, null);
+        val mBitmap = com.mapbox.mapboxsdk.utils.BitmapUtils.getBitmapFromDrawable(drawable);
+        mapboxMap?.setStyle(
+            Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
+
+                // Add the SymbolLayer icon image to the map style
+                .withImage(
+                    ICON_ID, mBitmap!!)
+
+
+                // Adding a GeoJson source for the SymbolLayer icons.
+                .withSource(
+                    GeoJsonSource(
+                        SOURCE_ID,
+                        FeatureCollection.fromFeatures(symbolLayerIconFeatureList)
+                    )
+                )
+
+                // Adding the actual SymbolLayer to the map style. An offset is added that the bottom of the red
+                // marker icon gets fixed to the coordinate, rather than the middle of the icon being fixed to
+                // the coordinate point. This is offset is not always needed and is dependent on the image
+                // that you use for the SymbolLayer icon.
+                .withLayer(
+                    SymbolLayer(
+                        LAYER_ID,
+                        SOURCE_ID
+                    )
+                        .withProperties(
+                            PropertyFactory.iconImage(ICON_ID),
+                            PropertyFactory.iconAllowOverlap(true),
+                            PropertyFactory.iconIgnorePlacement(true),
+                            PropertyFactory.iconOffset(arrayOf(0f, -9f))
+                        )
+                )
+
+        ) {
+            enableLocationComponent(it)
+        }
+    }
+
+    private fun enableLocationComponent(@io.reactivex.annotations.NonNull loadedMapStyle: Style?) {
+        // Check if permissions are enabled and if not request
+        if (PermissionsManager.areLocationPermissionsGranted(activity)) {
+            // Activate the MapboxMap LocationComponent to show user location
+            // Adding in LocationComponentOptions is also an optional parameter
+            locationComponent = mapboxMap!!.locationComponent
+            locationComponent!!.activateLocationComponent(activity!!, loadedMapStyle!!)
+            locationComponent!!.isLocationComponentEnabled = true
+            // Set the component's camera mode
+            locationComponent!!.cameraMode = CameraMode.TRACKING
+            locationComponent!!.zoomWhileTracking(12.0);
+        } else {
+            permissionsManager = PermissionsManager(this)
+            permissionsManager!!.requestLocationPermissions(activity)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, @io.reactivex.annotations.NonNull permissions: Array<String>, @io.reactivex.annotations.NonNull grantResults: IntArray) {
+        permissionsManager!!.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onExplanationNeeded(permissionsToExplain: List<String>) {
+        Toast.makeText(activity, R.string.app_name, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onPermissionResult(granted: Boolean) {
+        if (granted) {
+            enableLocationComponent(mapboxMap!!.style)
+        } else {
+            Toast.makeText(activity, R.string.app_name, Toast.LENGTH_LONG).show()
+
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView!!.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView!!.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView!!.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView!!.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView!!.onSaveInstanceState(outState)
+    }
+
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView!!.onLowMemory()
     }
 
     private fun initSearchFab() {
@@ -521,5 +693,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener {
 
 
     }
-
+    companion object {
+        private val TAG = "DirectionsActivity"
+        val SOURCE_ID = "SOURCE_ID"
+        private val ICON_ID = "ICON_ID"
+        val LAYER_ID = "LAYER_ID"
+    }
 }

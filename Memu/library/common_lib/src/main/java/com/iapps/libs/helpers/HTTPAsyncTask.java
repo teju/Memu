@@ -809,17 +809,22 @@ public abstract class HTTPAsyncTask
 
 						}
 
-						for (String key : filetxtParams.keySet()) {
-							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-							outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
-									+ "\"");
-							outputStream.writeBytes(lineEnd);
-							outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
-							outputStream.writeBytes(lineEnd);
-							outputStream.writeBytes(filetxtParams.get(key));
-							System.out.println("filetxtParams key  " + filetxtParams.get(key));
-							Log.d("filetxtParams value", key + ":" + filetxtParams.get(key));
-							outputStream.writeBytes(lineEnd);
+						try {
+							for (String key : filetxtParams.keySet()) {
+								outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+								outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
+										+ "\"");
+								outputStream.writeBytes(lineEnd);
+								outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
+								outputStream.writeBytes(lineEnd);
+								outputStream.writeBytes(filetxtParams.get(key));
+								System.out.println("filetxtParams key  " + filetxtParams.get(key));
+								Log.d("filetxtParams value", key + ":" + filetxtParams.get(key));
+								outputStream.writeBytes(lineEnd);
+
+
+							}
+						} catch (Exception e){
 
 						}
 

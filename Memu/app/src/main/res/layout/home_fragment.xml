@@ -218,7 +218,7 @@
                 android:layout_width="match_parent"
                 android:id="@+id/popUpView"
                 android:visibility="gone"
-                android:layout_marginTop="290dp"
+                android:layout_marginTop="180dp"
                 android:layout_height="match_parent">
 
                 <LinearLayout
@@ -229,9 +229,47 @@
                         android:layout_width="match_parent"
                         android:orientation="vertical"
                         android:id="@+id/llPooling"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:layout_height="wrap_content">
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginLeft="100dp"
+                            android:background="@drawable/dotted_bg"
+                            android:layout_height="match_parent">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_height="match_parent">
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginLeft="25dp"
+                                    android:layout_height="wrap_content">
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:src="@drawable/calendar_brown"
+                                        android:layout_height="wrap_content">
 
+                                    </ImageView>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:textColor="@color/Black"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_alignParentBottom="true"
+                                        android:text="Set-up\nRecurring\nRides"
+                                        android:layout_height="wrap_content">
+                                    </TextView>
+                                </LinearLayout>
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:layout_width="match_parent"
+                                    android:id="@+id/weeksList"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_height="wrap_content">
+                                </androidx.recyclerview.widget.RecyclerView>
+                            </LinearLayout>
+                        </FrameLayout>
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:orientation="horizontal"
@@ -243,7 +281,7 @@
                                 android:id="@+id/date"
                                 android:fontFamily="@font/opensansregular"
                                 android:gravity="center_vertical"
-                                android:background="@drawable/theme_rounded_rectangle"
+                                android:background="@drawable/themeorange_rounded_rectangle"
                                 android:textAlignment="center"
                                 android:layout_height="60dp">
 
@@ -254,7 +292,7 @@
                                 android:fontFamily="@font/opensansregular"
                                 android:layout_marginLeft="5dp"
                                 android:gravity="center_vertical"
-                                android:background="@drawable/theme_rounded_rectangle"
+                                android:background="@drawable/themeblue_rounded_rectangle"
                                 android:textAlignment="center"
                                 android:layout_height="60dp">
 
@@ -266,7 +304,7 @@
                                 android:id="@+id/seatstv"
                                 android:visibility="visible"
                                 android:gravity="center_vertical"
-                                android:background="@drawable/theme_rounded_rectangle"
+                                android:background="@drawable/themeyellow_rounded_rectangle"
                                 android:textAlignment="center"
                                 android:layout_height="60dp">
                             </TextView>
@@ -275,16 +313,14 @@
 
                         <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:layout_marginBottom="10dp"
                             android:layout_gravity="end"
                             android:layout_marginRight="20dp"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/theme_rounded_rectangle"
+                            android:layout_marginTop="15dp"
+                            android:paddingBottom="10dp"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:background="@drawable/small_dotted_bg"
                             android:textAlignment="center"
-                            android:paddingLeft="20dp"
-                            android:paddingRight="20dp"
-                            android:layout_height="30dp">
+                            android:layout_height="wrap_content">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:text="Recurring"
@@ -334,6 +370,22 @@
                                     android:textSize="12dp"
                                     android:layout_height="wrap_content">
                                 </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Sat"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Sun"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
 
                             </LinearLayout>
                         </LinearLayout>
@@ -344,48 +396,102 @@
                         android:layout_height="wrap_content">
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_marginLeft="30dp"
-                            android:layout_marginRight="20dp"
-                            android:orientation="vertical"
+                            android:orientation="horizontal"
                             android:layout_height="wrap_content">
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:hint="Your current location"
-                                android:paddingLeft="40dp"
-                                android:fontFamily="@font/opensansregular"
-                                android:gravity="center_vertical"
-                                android:id="@+id/edtScrLoc"
-                                android:background="@drawable/theme_rounded_rectangle"
-                                android:layout_height="60dp">
-                            </TextView>
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_marginTop="10dp"
-                                android:paddingLeft="40dp"
-                                android:fontFamily="@font/opensansregular"
-                                android:hint="Destination"
-                                android:id="@+id/edtdestLoc"
-                                android:gravity="center_vertical"
-                                android:background="@drawable/theme_rounded_rectangle"
-                                android:layout_height="60dp">
-
-                            </TextView>
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_marginTop="10dp"
-                                android:paddingLeft="40dp"
-                                android:fontFamily="@font/opensansregular"
-                                android:hint="Destination"
-                                android:textSize="12dp"
-                                android:visibility="gone"
-                                android:text="Select Destination location"
-                                android:textColor="@color/Red"
-                                android:id="@+id/edtdestLocerror"
-                                android:gravity="center_vertical"
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
                                 android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:hint="Your current location"
+                                    android:paddingLeft="40dp"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:gravity="center_vertical"
+                                    android:id="@+id/edtScrLoc"
+                                    android:background="@drawable/theme_rounded_rectangle"
+                                    android:layout_height="60dp">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_marginTop="10dp"
+                                    android:paddingLeft="40dp"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:hint="Destination"
+                                    android:id="@+id/edtdestLoc"
+                                    android:gravity="center_vertical"
+                                    android:background="@drawable/theme_rounded_rectangle"
+                                    android:layout_height="60dp">
 
-                            </TextView>
+                                </TextView>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_marginTop="10dp"
+                                    android:paddingLeft="40dp"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:hint="Destination"
+                                    android:textSize="12dp"
+                                    android:visibility="gone"
+                                    android:text="Select Destination location"
+                                    android:textColor="@color/Red"
+                                    android:id="@+id/edtdestLocerror"
+                                    android:gravity="center_vertical"
+                                    android:layout_height="wrap_content">
 
+                                </TextView>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="70dp"
+                                android:layout_marginRight="20dp"
+                                android:orientation="vertical"
+                                android:background="@drawable/themepurple_rounded_rectangle"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="ABC-123"
+                                    android:padding="5dp"
+                                    android:textColor="@color/Black"
+                                    android:layout_gravity="center_horizontal"
+                                    android:textSize="7dp"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@drawable/themeblack_rectangle"
+                                    android:layout_height="wrap_content">
+
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:textColor="@color/Black"
+                                    android:text="KA 05 A"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:fontFamily="@font/opensansbold"
+                                    android:layout_height="wrap_content">
+
+                                </TextView>
+                                <ImageView
+                                    android:layout_width="30dp"
+                                    android:layout_marginTop="5dp"
+                                    android:src="@drawable/car_wallet"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_height="30dp">
+
+                                </ImageView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:textColor="@color/Black"
+                                    android:text="5/Km"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:fontFamily="@font/opensansbold"
+                                    android:layout_height="wrap_content">
+
+                                </TextView>
+
+                            </LinearLayout>
                         </LinearLayout>
 
                         <ImageView
@@ -397,74 +503,160 @@
                         </ImageView>
 
                     </FrameLayout>
-                    <LinearLayout
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:orientation="horizontal"
-                        android:gravity="end"
-                        android:id="@+id/offer_take_ride"
-                        android:visibility="gone"
-                        android:layout_marginRight="40dp"
+                        mapbox:cardCornerRadius="15dp"
+                        android:background="@color/transparent"
+                        android:backgroundTint="@color/transparent"
+                        android:layout_marginRight="20dp"
+                        android:id="@+id/cv"
+                        mapbox:cardUseCompatPadding="true"
+                        android:layout_marginTop="10dp"
+                        mapbox:cardPreventCornerOverlap="false"
+                        android:layout_marginLeft="20dp"
                         android:layout_height="wrap_content">
-                        <RelativeLayout
-                            android:layout_width="80dp"
-                            android:id="@+id/find_ride"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/theme_rounded_rectangle"
-                            android:textAlignment="center"
-                            android:layout_height="60dp">
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_marginLeft="10dp"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/white_car"
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:id="@+id/bike_offer_take_ride"
+                            android:padding="2dp"
+                            android:background="@drawable/themepurple_rounded_rectangle"
+                            android:layout_height="match_parent">
+                            <com.mapbox.mapboxsdk.maps.MapView
+                                android:id="@+id/mapView"
+                                mapbox:mapbox_cameraTargetLat="42.149683"
+                                mapbox:mapbox_cameraTargetLng="-119.155770"
+                                android:background="@color/transparent"
+                                android:layout_width="match_parent"
+                                android:layout_height="600dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:orientation="vertical"
+                                android:background="@color/transparent"
+                                android:layout_gravity="bottom"
                                 android:layout_height="wrap_content">
 
-                            </ImageView>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:text="Find\nRide"
-                                android:fontFamily="@font/opensansregular"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
-                                android:layout_alignParentRight="true"
-                                android:textAlignment="center"
-                                android:layout_height="wrap_content">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:orientation="horizontal"
+                                    android:gravity="end"
+                                    android:visibility="visible"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="20dp"
+                                    android:layout_height="wrap_content">
+                                    <RelativeLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:id="@+id/bike_find_ride"
+                                        android:orientation="horizontal"
+                                        android:gravity="center_vertical"
+                                        android:background="@drawable/bike_find_ride"
+                                        android:textAlignment="center"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:text="Find Ride"
+                                            android:fontFamily="@font/opensanssemibold"
+                                            android:layout_marginLeft="60dp"
+                                            android:textSize="12dp"
+                                            android:textColor="@color/Black"
+                                            android:layout_marginBottom="15dp"
+                                            android:textAlignment="center"
+                                            android:layout_height="wrap_content">
 
-                            </TextView>
-                        </RelativeLayout>
+                                        </TextView>
+                                    </RelativeLayout>
 
-                        <RelativeLayout
-                            android:layout_width="80dp"
-                            android:id="@+id/offer_ride"
-                            android:layout_marginLeft="10dp"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:background="@drawable/theme_rounded_rectangle"
-                            android:textAlignment="center"
-                            android:layout_height="60dp">
-                            <ImageView
-                                android:layout_width="30dp"
-                                android:layout_marginLeft="10dp"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/white_car"
-                                android:layout_height="wrap_content">
+                                    <RelativeLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:id="@+id/bike_offer_ride"
+                                        android:layout_marginLeft="10dp"
+                                        android:orientation="horizontal"
+                                        android:gravity="center_vertical"
+                                        android:background="@drawable/bike_offer_ride"
+                                        android:textAlignment="center"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:text="Offer Ride"
+                                            android:textColor="@color/Black"
+                                            android:layout_marginLeft="60dp"
+                                            android:fontFamily="@font/opensanssemibold"
+                                            android:layout_marginBottom="15dp"
+                                            android:textSize="12dp"
+                                            android:textAlignment="center"
+                                            android:layout_height="wrap_content">
 
-                            </ImageView>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:text="Offer\nRide"
-                                android:fontFamily="@font/opensansregular"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="10dp"
-                                android:layout_alignParentRight="true"
-                                android:textAlignment="center"
-                                android:layout_height="wrap_content">
+                                        </TextView>
+                                    </RelativeLayout>
 
-                            </TextView>
-                        </RelativeLayout>
+                                </LinearLayout>
 
-                    </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:orientation="horizontal"
+                                    android:gravity="end"
+                                    android:id="@+id/offer_take_ride"
+                                    android:visibility="visible"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_height="wrap_content">
+                                    <RelativeLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:id="@+id/find_ride"
+                                        android:orientation="horizontal"
+                                        android:gravity="center_vertical"
+                                        android:background="@drawable/find_ride_car"
+                                        android:textAlignment="center"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:text="Find Ride"
+                                            android:fontFamily="@font/opensanssemibold"
+                                            android:layout_marginLeft="63dp"
+                                            android:textSize="12dp"
+                                            android:textColor="@color/Black"
+                                            android:layout_marginBottom="15dp"
+                                            android:textAlignment="center"
+                                            android:layout_height="wrap_content">
+
+                                        </TextView>
+                                    </RelativeLayout>
+
+                                    <RelativeLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:id="@+id/offer_ride"
+                                        android:layout_marginLeft="10dp"
+                                        android:orientation="horizontal"
+                                        android:gravity="center_vertical"
+                                        android:background="@drawable/offer_ride_car"
+                                        android:textAlignment="center"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:text="Offer Ride"
+                                            android:textSize="12dp"
+                                            android:textColor="@color/Black"
+                                            android:layout_marginLeft="63dp"
+                                            android:fontFamily="@font/opensanssemibold"
+                                            android:layout_marginBottom="15dp"
+                                            android:textAlignment="center"
+                                            android:layout_height="wrap_content">
+
+                                        </TextView>
+                                    </RelativeLayout>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </FrameLayout>
+
+                    </androidx.cardview.widget.CardView>
+
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:layout_width="wrap_content"
