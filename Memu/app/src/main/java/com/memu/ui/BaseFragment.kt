@@ -42,6 +42,7 @@ import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
 import com.memu.modules.TripGivers.Pooler
 import com.memu.modules.riderList.Rider
+import com.memu.ui.dialog.FindRideDialogFragment
 import com.memu.ui.dialog.MatchingRidersFragment
 import com.memu.ui.dialog.NotifyDialogFragment
 import com.memu.webservices.GetVehicleTypeViewModel
@@ -394,6 +395,14 @@ open class BaseFragment : GenericFragment() {
             f.show(activity!!.supportFragmentManager, NotifyDialogFragment.TAG)
         }
 
+    }
+    open fun showFindRideDialog(
+        n: NotifyListener){
+        val f = FindRideDialogFragment().apply {
+            this.listener = n
+        }
+        f.isCancelable = false
+        f.show(activity!!.supportFragmentManager, FindRideDialogFragment.TAG)
     }
 
     open fun showMatchingRiders(

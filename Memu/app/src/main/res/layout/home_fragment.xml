@@ -229,7 +229,7 @@
                         android:layout_width="match_parent"
                         android:orientation="vertical"
                         android:id="@+id/llPooling"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:layout_height="wrap_content">
                         <FrameLayout
                             android:layout_width="wrap_content"
@@ -258,6 +258,7 @@
                                         android:textColor="@color/Black"
                                         android:layout_marginTop="5dp"
                                         android:layout_alignParentBottom="true"
+                                        android:fontFamily="@font/opensansregular"
                                         android:text="Set-up\nRecurring\nRides"
                                         android:layout_height="wrap_content">
                                     </TextView>
@@ -265,7 +266,6 @@
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:layout_width="match_parent"
                                     android:id="@+id/weeksList"
-                                    android:layout_marginLeft="10dp"
                                     android:layout_height="wrap_content">
                                 </androidx.recyclerview.widget.RecyclerView>
                             </LinearLayout>
@@ -274,40 +274,76 @@
                             android:layout_width="wrap_content"
                             android:orientation="horizontal"
                             android:layout_gravity="end"
-                            android:layout_marginRight="20dp"
+                            android:layout_marginTop="-20dp"
                             android:layout_height="wrap_content">
-                            <TextView
-                                android:layout_width="70dp"
-                                android:id="@+id/date"
+                            <RelativeLayout
+                                android:layout_width="90dp"
+                                android:fontFamily="@font/opensansregular"
+                                android:textAlignment="center"
+                                android:layout_marginRight="-10dp"
+                                android:layout_height="80dp">
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:scaleType="fitXY"
+                                    android:layout_margin="-20dp"
+                                    android:src="@drawable/themeorange_bg"
+                                    android:layout_height="match_parent">
+                                </ImageView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/date"
+                                    android:textAlignment="center"
+                                    android:layout_centerInParent="true"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+
+                            </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_width="90dp"
                                 android:fontFamily="@font/opensansregular"
                                 android:gravity="center_vertical"
-                                android:background="@drawable/themeorange_rounded_rectangle"
+                                android:layout_marginLeft="-10dp"
                                 android:textAlignment="center"
-                                android:layout_height="60dp">
+                                android:layout_height="80dp">
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:scaleType="fitXY"
+                                    android:layout_margin="-20dp"
+                                    android:src="@drawable/themeskyblue_bg"
+                                    android:layout_height="match_parent">
+                                </ImageView>
 
-                            </TextView>
-                            <TextView
-                                android:layout_width="70dp"
-                                android:id="@+id/time"
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/time"
+                                    android:textAlignment="center"
+                                    android:layout_centerInParent="true"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                            </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_width="90dp"
                                 android:fontFamily="@font/opensansregular"
-                                android:layout_marginLeft="5dp"
-                                android:gravity="center_vertical"
-                                android:background="@drawable/themeblue_rounded_rectangle"
-                                android:textAlignment="center"
-                                android:layout_height="60dp">
-
-                            </TextView>
-                            <TextView
-                                android:layout_width="70dp"
-                                android:layout_marginLeft="5dp"
-                                android:fontFamily="@font/opensansregular"
-                                android:id="@+id/seatstv"
                                 android:visibility="visible"
+                                android:layout_marginLeft="-10dp"
                                 android:gravity="center_vertical"
-                                android:background="@drawable/themeyellow_rounded_rectangle"
-                                android:textAlignment="center"
-                                android:layout_height="60dp">
-                            </TextView>
+                                android:layout_height="80dp">
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:scaleType="fitXY"
+                                    android:layout_margin="-20dp"
+                                    android:src="@drawable/themeyellow_bg"
+                                    android:layout_height="match_parent">
+                                </ImageView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/seatstv"
+                                    android:layout_centerInParent="true"
+                                    android:textAlignment="center"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+
+                            </RelativeLayout>
 
                         </LinearLayout>
 
@@ -317,6 +353,7 @@
                             android:layout_marginRight="20dp"
                             android:layout_marginTop="15dp"
                             android:paddingBottom="10dp"
+                            android:visibility="gone"
                             android:gravity="center_vertical|center_horizontal"
                             android:background="@drawable/small_dotted_bg"
                             android:textAlignment="center"
@@ -324,6 +361,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:text="Recurring"
+                                android:textColor="@color/Black"
                                 android:fontFamily="@font/opensansregular"
                                 android:layout_height="wrap_content">
                             </TextView>
@@ -333,7 +371,7 @@
                                 android:layout_height="wrap_content">
                                 <TextView
                                     android:layout_width="wrap_content"
-                                    android:text="No"
+                                    android:text="Mo"
                                     android:fontFamily="@font/opensansregular"
                                     android:textSize="12dp"
                                     android:layout_height="wrap_content">
@@ -393,6 +431,7 @@
                     </LinearLayout>
                     <FrameLayout
                         android:layout_width="match_parent"
+                        android:layout_marginTop="50dp"
                         android:layout_height="wrap_content">
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -445,14 +484,16 @@
 
                             </LinearLayout>
                             <LinearLayout
-                                android:layout_width="70dp"
+                                android:layout_width="60dp"
                                 android:layout_marginRight="20dp"
                                 android:orientation="vertical"
+                                android:id="@+id/vehicle_detail"
                                 android:background="@drawable/themepurple_rounded_rectangle"
                                 android:layout_height="match_parent">
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:text="ABC-123"
+                                    android:fontFamily="@font/opensansregular"
                                     android:padding="5dp"
                                     android:textColor="@color/Black"
                                     android:layout_gravity="center_horizontal"
@@ -518,7 +559,7 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:id="@+id/bike_offer_take_ride"
-                            android:padding="2dp"
+                            android:padding="4dp"
                             android:background="@drawable/themepurple_rounded_rectangle"
                             android:layout_height="match_parent">
                             <com.mapbox.mapboxsdk.maps.MapView
@@ -597,7 +638,6 @@
                                     android:layout_width="match_parent"
                                     android:orientation="horizontal"
                                     android:gravity="end"
-                                    android:id="@+id/offer_take_ride"
                                     android:visibility="visible"
                                     android:layout_marginLeft="10dp"
                                     android:layout_marginRight="10dp"

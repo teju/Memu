@@ -45,11 +45,9 @@ import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import com.mapbox.services.android.navigation.ui.v5.NavigationLauncher
-import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions
 import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.*
-import com.memu.ui.adapters.ProductAdapter
+import com.memu.ui.adapters.WeekAdapter
 import com.memu.webservices.*
 import kotlinx.android.synthetic.main.home_fragment.ld
 import org.json.JSONObject
@@ -133,6 +131,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         seatstv.setOnClickListener(this)
         find_ride.setOnClickListener(this)
         arrow_left.setOnClickListener(this)
+        bike_offer_ride.setOnClickListener(this)
+        bike_find_ride.setOnClickListener(this)
 
         initSearchFab()
         initSearchFabDest()
@@ -148,7 +148,14 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         strdate =  SimpleDateFormat("yyyy-MM-dd").format(System.currentTimeMillis())
         strtime =  SimpleDateFormat("hh:mm a").format(System.currentTimeMillis())
         strseat = "01"
+        weekRecyclerView()
+        try {
+            val getAddress = getAddress(gpsTracker?.latitude!!, gpsTracker?.longitude!!)
+            edtScrLoc.setText(getAddress?.get(0)?.getAddressLine(0))
 
+        } catch (e : Exception){
+            System.out.println("Exception12223 "+e.toString())
+        }
     }
 
     fun spinner() {
@@ -299,18 +306,36 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                 TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
             }
             R.id.find_ride -> {
-                strType = "find_ride"
-                seatstv.text = "01\nSeats"
+                showFindRideDialog()
+               /* strType = "find_ride_bike"
+               // seatstv.text = "01\nSeats"
                 type = FINDRIDER
-                find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
-                offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)
+                *//*find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
+                offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)*/
+            }
+            R.id.bike_find_ride -> {
+                showFindRideDialog()
+               /* strType = "find_ride_bike"
+               // seatstv.text = "01\nSeats"
+                type = FINDRIDER
+                *//*find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
+                offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)*/
+            }
+            R.id.bike_offer_ride -> {
+                showFindRideDialog()
+               /* strType = "find_ride_bike"
+               // seatstv.text = "01\nSeats"
+                type = FINDRIDER
+                *//*find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
+                offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)*/
             }
             R.id.offer_ride -> {
-                seatstv.text = "01\nSeats"
+                showFindRideDialog()
+               /* seatstv.text = "01\nSeats"
                 strType = "offer_ride"
                 type = OFFERRIDE
                 find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)
-                offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
+                offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)*/
             }
         }
     }
@@ -325,6 +350,13 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         strtime = SimpleDateFormat("hh:mm a").format(cal.time)
     }
 
+    fun showFindRideDialog() {
+        showFindRideDialog(object : NotifyListener {
+                override fun onButtonClicked(which: Int) { }
+            }
+        )
+    }
+
     fun reset() {
         popUpView.visibility = View.GONE
         arrow_left.visibility = View.GONE
@@ -337,7 +369,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         rlprofile.alpha = 1f
         rlBestRoute.alpha = 1f
         scrollView.fullScroll(View.FOCUS_UP);
-
+        rlBestRoute.isEnabled = true
     }
 
     fun poolingUI() {
@@ -345,40 +377,50 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         arrow_left.visibility = View.VISIBLE
         llPooling.visibility = View.VISIBLE
         cancel.visibility = View.GONE
-        offer_take_ride.visibility = View.VISIBLE
         rlTopBar.visibility = View.GONE
+        vehicle_detail.visibility = View.VISIBLE
+        cv.visibility = View.VISIBLE
         home_map_bg.alpha = 0.5f
         rlpooling.alpha = 1f
         rlcab.alpha = 0.5f
         rlprofile.alpha = 0.5f
         rlBestRoute.alpha = 0.5f
         scrollView.scrollTo(0,Helper.dpToPx(activity!!,200))
+        rlBestRoute.isEnabled = false
 
     }
 
     fun weekRecyclerView() {
+        var obj : ArrayList<String> =  ArrayList<String>()
+        obj.add("Mon")
+        obj.add("Tues")
+        obj.add("Wed")
+        obj.add("Thur")
+        obj.add("Fri")
+        obj.add("Sat")
+        obj.add("Sun")
         val sglm2 = GridLayoutManager(context, 2)
         val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing_grid1)
         weeksList.setLayoutManager(sglm2)
         weeksList.setNestedScrollingEnabled(false)
-        weeksList.addItemDecoration(SpacesItemDecoration(2, spacingInPixels, true))
-        val adapter = ProductAdapter(context!!)
+        //weeksList.addItemDecoration(SpacesItemDecoration(2, spacingInPixels, true))
+        val adapter = WeekAdapter(context!!)
+        adapter.obj = obj
         weeksList.adapter = adapter
-        (weeksList.adapter as ProductAdapter).productAdapterListener =
-            object : ProductAdapter.ProductAdapterListener {
+        (weeksList.adapter as WeekAdapter).productAdapterListener =
+            object : WeekAdapter.ProductAdapterListener {
                 override fun onClick(position: Int) {
 
                 }
             }
-
-
     }
     fun bestRouteUI() {
         popUpView.visibility = View.VISIBLE
         cancel.visibility = View.GONE
         rlTopBar.visibility = View.GONE
-        offer_take_ride.visibility = View.GONE
         llPooling.visibility = View.GONE
+        vehicle_detail.visibility = View.GONE
+        cv.visibility = View.GONE
         arrow_left.visibility = View.VISIBLE
         home_map_bg.alpha = 0.5f
         rlpooling.alpha = 0.5f
@@ -386,6 +428,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         rlprofile.alpha = 0.5f
         rlBestRoute.alpha = 1f
         scrollView.fullScroll(View.FOCUS_UP);
+        rlBestRoute.isEnabled = false
 
     }
     override fun onMapReady(@io.reactivex.annotations.NonNull mapboxMap: MapboxMap) {
@@ -434,10 +477,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                     )
                 )
 
-                // Adding the actual SymbolLayer to the map style. An offset is added that the bottom of the red
-                // marker icon gets fixed to the coordinate, rather than the middle of the icon being fixed to
-                // the coordinate point. This is offset is not always needed and is dependent on the image
-                // that you use for the SymbolLayer icon.
                 .withLayer(
                     SymbolLayer(
                         LAYER_ID,
@@ -457,10 +496,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
     }
 
     private fun enableLocationComponent(@io.reactivex.annotations.NonNull loadedMapStyle: Style?) {
-        // Check if permissions are enabled and if not request
         if (PermissionsManager.areLocationPermissionsGranted(activity)) {
-            // Activate the MapboxMap LocationComponent to show user location
-            // Adding in LocationComponentOptions is also an optional parameter
             locationComponent = mapboxMap!!.locationComponent
             locationComponent!!.activateLocationComponent(activity!!, loadedMapStyle!!)
             locationComponent!!.isLocationComponentEnabled = true
@@ -522,54 +558,15 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
     }
 
     private fun initSearchFab() {
-        val destinationPoint = com.mapbox.geojson.Point.fromLngLat(gpsTracker!!.longitude, gpsTracker!!.latitude)
         edtScrLoc.setOnClickListener {
-            /*val intent = PlaceAutocomplete.IntentBuilder()
-                .accessToken(
-                    if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken()!! else getString(
-                        R.string.map_box_access_token))
-                .placeOptions(
-                    PlaceOptions.builder()
-                        .backgroundColor(Color.parseColor("#EEEEEE"))
-                        .country("IN")
-                        .proximity(destinationPoint)
-                        .build(PlaceOptions.MODE_CARDS)
-                )
-                .build(activity)
-            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE)*/
             startActivityForResult(Intent(activity, TempMainActivity::class.java),REQUEST_CODE_AUTOCOMPLETE);
-
         }
     }
 
     private fun initSearchFabDest() {
-//        edtdestLoc.setOnClickListener {
-//            val intent = Intent(activity,SearchActivity::class.java)
-//            startActivityForResult(intent,REQUEST_CODE_AUTOCOMPLETEDEST);
-//        }
-        val destinationPoint = com.mapbox.geojson.Point.fromLngLat(gpsTracker!!.longitude, gpsTracker!!.latitude)
-
         edtdestLoc.setOnClickListener {
-//            val intent = PlaceAutocomplete.IntentBuilder()
-//                .accessToken(
-//                    if (Mapbox.getAccessToken() != null) Mapbox.getAccessToken()!! else getString(
-//                        R.string.map_box_access_token))
-//                .placeOptions(
-//                    PlaceOptions.builder()
-//                        .backgroundColor(Color.parseColor("#EEEEEE"))
-//                        .country("IN")
-//                        .geocodingTypes(GeocodingCriteria.TYPE_POI,
-//                            GeocodingCriteria.TYPE_LOCALITY,
-//                            GeocodingCriteria.TYPE_ADDRESS)
-//                        .proximity(destinationPoint)
-//                        .build(PlaceOptions.PARCELABLE_WRITE_RETURN_VALUE)
-//                )
-//                .build(activity)
-//            startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETEDEST)
             startActivityForResult(Intent(activity, TempMainActivity::class.java),REQUEST_CODE_AUTOCOMPLETEDEST);
-
         }
-
 
     }
 
