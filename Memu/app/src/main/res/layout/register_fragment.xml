@@ -32,17 +32,17 @@
             <include layout="@layout/onboarding_four"></include>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
+    <Button
+        android:layout_width="70dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:text="next"
+        android:background="@drawable/submit_btn"
         android:layout_margin="15dp"
         android:src="@drawable/chevron_right"
         android:id="@+id/btnNExt"
-        android:layout_height="wrap_content">
+        android:layout_height="60dp">
 
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+    </Button>
     <com.iapps.libs.views.LoadingCompound
         android:id="@+id/ld"
         android:layout_width="match_parent"

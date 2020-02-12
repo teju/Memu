@@ -98,7 +98,7 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
         if(BaseHelper.isEmpty(otp_number.text.toString())) {
             er_mtv3.visibility = View.VISIBLE
             otp_number.requestFocus()
-            er_mtv3.text = "Enter valid otp number"
+            er_mtv3.text = "Enter valid OTP number"
             return false
         } else {
             otp_number.clearFocus()

@@ -184,7 +184,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:id="@+id/get_otp"
-                            android:text="Get Otp"
+                            android:text="Get OTP"
                             android:fontFamily="@font/opensansregular"
                             android:paddingTop="3dp"
                             android:paddingLeft="15dp"

@@ -80,7 +80,7 @@ class PostUserSignupViewModel(application: Application) : BaseViewModel(applicat
         if(vehicle != null) {
             genericHttpAsyncTask.setPostParams(Keys.Vehicle,vehicle!!)
         }
-        if(documents != null) {
+        if(documents != null && documents.length() != 0) {
             genericHttpAsyncTask.setPostParams(Keys.Documents,documents!!)
         }
         genericHttpAsyncTask.setPostParams(Keys.ApiSignupForm,apisignupform!!)
