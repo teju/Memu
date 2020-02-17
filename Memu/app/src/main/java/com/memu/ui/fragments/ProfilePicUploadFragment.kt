@@ -23,6 +23,7 @@ import com.bumptech.glide.request.target.ImageViewTarget
 
 import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.request.target.DrawableImageViewTarget
+import com.memu.etc.UserInfoManager
 
 
 class ProfilePicUploadFragment : BaseFragment()  {
@@ -99,6 +100,8 @@ class ProfilePicUploadFragment : BaseFragment()  {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUploadDocViewModel.NEXT_STEP -> {
+                            UserInfoManager.getInstance(activity!!).saveProfilePic(
+                                postUploadDocViewModel.obj?.original_path!!)
                             rlCreating_profile.visibility = View.VISIBLE
                             llUpload.visibility = View.GONE
                             Handler().postDelayed(

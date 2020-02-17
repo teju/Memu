@@ -19,8 +19,8 @@ import android.text.TextUtils
 
 import java.util.regex.Pattern
 import android.util.TypedValue
-
-
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 
 
 open class Helper  {
@@ -148,7 +148,11 @@ open class Helper  {
                 phone.length == 10
             } else false
         }
-
+        fun loadImage(context: Context, url : String, v : ImageView){
+            Glide.with(context)
+                .load(url)
+                .into(v)
+        }
         fun isNetworkAvailable(ctx: Context): Boolean {
             try {
                 val manager = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

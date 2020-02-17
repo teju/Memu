@@ -9,10 +9,12 @@ class UserInfoManager private constructor() {
     private val KEY_ACCOUNT_ID = "V8D85H"
     private val KEY_ACCOUNT_NAME = "key_account_name"
     private val KEY_DEVICE_TOKEN = "key_device_token"
+    private val KEY_PROFILE_PIC = "key_profile_pic"
 
     private var accessToken: String? = null
     private var accountName: String? = ""
     private var accountId: String? = null
+    private var profilePic: String? = null
     private var deviceToken: String? = ""
 
     private var prefs: SharedPreferences? = null
@@ -55,13 +57,25 @@ class UserInfoManager private constructor() {
         editor.putString(KEY_ACCOUNT_ID, accountId)
         editor.commit()
     }
-
+    fun saveProfilePic(profilePic: String) {
+        this.profilePic = accountId
+        val editor = this.prefs!!.edit()
+        editor.putString(KEY_PROFILE_PIC, profilePic)
+        editor.commit()
+    }
+    fun getProfilePic(): String {
+        if (profilePic == null) {
+            this.profilePic = this.prefs!!.getString(KEY_PROFILE_PIC, null)
+        }
+        return profilePic!!
+    }
     fun getAccountId(): String {
         if (accountId == null) {
             this.accountId = this.prefs!!.getString(KEY_ACCOUNT_ID, null)
         }
         return accountId!!
     }
+
     fun saveAccountName(accountName: String) {
         this.accountName = accountName
         val editor = this.prefs!!.edit()
