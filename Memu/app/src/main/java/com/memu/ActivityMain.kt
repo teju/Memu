@@ -217,7 +217,7 @@ class ActivityMain : AppCompatActivity(){
     fun triggerMainProcess(){
 
         if(!BaseHelper.isEmpty(UserInfoManager.getInstance(this).authToken))
-            setFragment(HomeFragment())
+            setFragment(DummyFragment())
         else
             setFragment(MainFragment())
     }

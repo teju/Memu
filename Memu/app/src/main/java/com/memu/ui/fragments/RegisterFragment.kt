@@ -1012,7 +1012,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         if(BaseHelper.isEmpty(State.otp_code)) {
             er_mtv3.visibility = View.VISIBLE
             otp_number.requestFocus()
-            er_mtv3.text = "Enter valid otp number"
+            er_mtv3.text = "Enter valid OTP number"
             return false
         } else {
             otp_number.clearFocus()
@@ -1103,9 +1103,15 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     vehicle_dl_photo.put("file_name",driving_licenceID_name)
 
 
-                    docjsonArray.put(0,vehicle_photo)
-                    docjsonArray.put(1,vehicle_reg_photo)
-                    docjsonArray.put(2,vehicle_dl_photo)
+                    if(!BaseHelper.isEmpty(vehicleID)) {
+                        docjsonArray.put(0,vehicle_photo)
+                    }
+                    if(!BaseHelper.isEmpty(registration_certificateID)) {
+                        docjsonArray.put(1,vehicle_reg_photo)
+                    }
+                    if(!BaseHelper.isEmpty(driving_licenceID)) {
+                        docjsonArray.put(2,vehicle_dl_photo)
+                    }
 
                     callRegister()
                 }
@@ -1120,6 +1126,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                         ""+state.Address(activity!!) +" OfficeAddress "+state.OfficeAddress(activity!!))
                 if(validateAPIForm() && validateVehicleForm() && validateOTp()
                     && validateaddressForm() && validateUploadForm()){
+
                     val vehicle_photo = JSONObject()
                     vehicle_photo.put("type",Keys.VEHICLE)
                     vehicle_photo.put("file_id",vehicleID)
@@ -1136,9 +1143,15 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     vehicle_dl_photo.put("file_name",driving_licenceID_name)
 
 
-                    docjsonArray.put(0,vehicle_photo)
-                    docjsonArray.put(1,vehicle_reg_photo)
-                    docjsonArray.put(2,vehicle_dl_photo)
+                    if(!BaseHelper.isEmpty(vehicleID)) {
+                        docjsonArray.put(0,vehicle_photo)
+                    }
+                    if(!BaseHelper.isEmpty(registration_certificateID)) {
+                        docjsonArray.put(1,vehicle_reg_photo)
+                    }
+                    if(!BaseHelper.isEmpty(driving_licenceID)) {
+                        docjsonArray.put(2,vehicle_dl_photo)
+                    }
 
                     callRegister()
                 }
@@ -1205,7 +1218,12 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostRequestOtpViewModel.NEXT_STEP -> {
-
+                            showNotifyDialog(
+                                "", postRequestOtpViewModel.obj?.message!!,
+                                getString(R.string.ok),"",object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) { }
+                                }
+                            )
                         }
                     }
                 })
@@ -1236,7 +1254,12 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostVerifyOtpViewModel.NEXT_STEP -> {
-
+                            showNotifyDialog(
+                                "", postVerifyOtpViewModel.obj?.message!!,
+                                getString(R.string.ok),"",object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) { }
+                                }
+                            )
                         }
                     }
                 })

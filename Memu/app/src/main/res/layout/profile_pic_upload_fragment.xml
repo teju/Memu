@@ -12,37 +12,85 @@
         android:src="@drawable/thumb_up_memu_logo"
         android:layout_height="wrap_content">
     </ImageView>
-    <TextView
-        android:layout_width="wrap_content"
-        android:text="Creating your profile.."
-        android:textColor="@color/DarkBlue"
-        android:fontFamily="@font/opensansregular"
-        android:textSize="20dp"
-        android:id="@+id/tvText"
-        android:layout_below="@+id/thumb_up_memu_logo"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content">
-    </TextView>
-    <ImageView
-        android:layout_width="200dp"
-        android:id="@+id/profilePic"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/onboarding_account"
-        android:layout_height="200dp">
-    </ImageView>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:text="next"
-        android:layout_margin="15dp"
-        android:src="@drawable/chevron_right"
-        android:id="@+id/btnNExt"
-        android:layout_height="wrap_content">
 
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:id="@+id/rlCreating_profile"
+        android:layout_below="@+id/thumb_up_memu_logo"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Creating your profile.."
+            android:textColor="@color/DarkBlue"
+            android:fontFamily="@font/opensansregular"
+            android:textSize="20dp"
+            android:id="@+id/tvText"
+            android:layout_height="wrap_content">
+        </TextView>
+        <ImageView
+            android:layout_width="300dp"
+            android:id="@+id/creating_profile_gif"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="300dp">
+        </ImageView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/llUpload"
+        android:visibility="visible"
+        android:gravity="center_vertical"
+        android:background="@color/soft_transparent_grey"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="300dp"
+            android:id="@+id/profilePic"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/upload_pic_img"
+            android:layout_height="300dp">
+        </ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Smile Please ..."
+            android:textColor="@color/DarkBlue"
+            android:layout_marginLeft="50dp"
+            android:fontFamily="@font/opensansregular"
+            android:textSize="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Lets upload your profile picture"
+            android:textColor="@color/DarkBlue"
+            android:fontFamily="@font/opensanssemibold"
+            android:textSize="18dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content">
+        </TextView>
+        <Button
+            android:layout_width="150dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Upload"
+            android:background="@drawable/orange_button"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/White"
+            android:src="@drawable/chevron_right"
+            android:id="@+id/btnNExt"
+            android:layout_height="wrap_content">
+
+        </Button>
+
+    </LinearLayout>
     <com.iapps.libs.views.LoadingCompound
         android:id="@+id/ld"
         android:layout_width="match_parent"

@@ -265,9 +265,11 @@ class MapFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, M
     }
 
     private fun getRoute(origin: Point, destination: Point) {
+   
         NavigationRoute.builder(activity)
             .accessToken(Mapbox.getAccessToken()!!)
             .origin(origin)
+
             .destination(destination)
             .build()
             .getRoute(object : Callback<DirectionsResponse> {
