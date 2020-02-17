@@ -38,10 +38,12 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url "https://jitpack.io" }
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://mapbox.bintray.com/mapbox' }
+        maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
 
     }
 
-    project.ext.applicationId = "com.iapps.gon"
+    project.ext.applicationId = "com.memu"
 
     project.ext.myCompileSdkVersion = 28
     project.ext.myBuildToolsVersion = "28.0.3"

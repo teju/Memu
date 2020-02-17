@@ -7,9 +7,11 @@ class UserInfoManager private constructor() {
 
     private val KEY_ACCESS_TOKEN = "F3ZT7"
     private val KEY_ACCOUNT_ID = "V8D85H"
+    private val KEY_ACCOUNT_NAME = "key_account_name"
     private val KEY_DEVICE_TOKEN = "key_device_token"
 
     private var accessToken: String? = null
+    private var accountName: String? = ""
     private var accountId: String? = null
     private var deviceToken: String? = ""
 
@@ -45,11 +47,31 @@ class UserInfoManager private constructor() {
         editor.commit()
     }
 
+
+
+    fun saveAccountId(accountId: String) {
+        this.accountId = accountId
+        val editor = this.prefs!!.edit()
+        editor.putString(KEY_ACCOUNT_ID, accountId)
+        editor.commit()
+    }
+
     fun getAccountId(): String {
         if (accountId == null) {
             this.accountId = this.prefs!!.getString(KEY_ACCOUNT_ID, null)
         }
         return accountId!!
+    }
+    fun saveAccountName(accountName: String) {
+        this.accountName = accountName
+        val editor = this.prefs!!.edit()
+        editor.putString(KEY_ACCOUNT_NAME, accountName)
+        editor.commit()
+    }
+
+    fun getAccountName(): String {
+        this.accountName = this.prefs!!.getString(KEY_ACCOUNT_NAME, null)
+        return accountName!!
     }
 
     fun saveNotiToken(deviceToken: String?) {
@@ -59,20 +81,9 @@ class UserInfoManager private constructor() {
         editor.commit()
 
     }
-
     fun getNotiToken(): String {
         return this.prefs!!.getString(KEY_DEVICE_TOKEN, "")
     }
-
-
-    fun saveAccountId(accountId: String) {
-        this.accountId = accountId
-        val editor = this.prefs!!.edit()
-        editor.putString(KEY_ACCOUNT_ID, accountId)
-        editor.commit()
-    }
-    
-
     fun logout() {
         saveAuthToken(null)
         prefs!!.edit().clear().commit()

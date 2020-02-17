@@ -62,6 +62,8 @@
                 android:text="@string/ok"
                 android:id="@+id/btn_positive"
                 android:textSize="16dp"
+                android:textColor="@color/themeBlue"
+                android:background="@drawable/themewhite_rounded_rectangle"
                 android:layout_gravity="center_horizontal"
                 android:layout_height="wrap_content">
             </androidx.appcompat.widget.AppCompatButton>

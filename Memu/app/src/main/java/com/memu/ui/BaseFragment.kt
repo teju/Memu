@@ -3,6 +3,8 @@ package com.memu.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Typeface
+import android.location.Address
+import android.location.Geocoder
 import android.os.AsyncTask
 import android.os.Bundle
 import android.security.keystore.KeyProperties
@@ -26,16 +28,27 @@ import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.request.DataReadRequest
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.gon.etc.callback.PermissionListener
+import com.iapps.gon.etc.callback.RequestListener
 import com.iapps.libs.generics.GenericFragment
+import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.helpers.BaseUIHelper
 import com.iapps.libs.views.LoadingCompound
 import com.memu.ActivityMain
 import com.memu.BuildConfig
 import com.memu.R
 import com.memu.etc.Constants
+import com.memu.etc.GPSTracker
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
+import com.memu.modules.TripGivers.Pooler
+import com.memu.modules.riderList.Rider
+import com.memu.ui.dialog.AlertsDialogFragment
+import com.memu.ui.dialog.FindRideDialogFragment
+import com.memu.ui.dialog.MatchingRidersFragment
 import com.memu.ui.dialog.NotifyDialogFragment
+import com.memu.webservices.GetVehicleTypeViewModel
+import com.memu.webservices.PostUpdateLocationViewModel
+import kotlinx.android.synthetic.main.home_fragment.*
 
 import kotlinx.coroutines.*
 import org.json.JSONArray
@@ -68,7 +81,10 @@ open class BaseFragment : GenericFragment() {
         private set
 
     var v: View? = null
+    companion object {
+        var postUpdateLocationViewModel: PostUpdateLocationViewModel? = null
 
+    }
 
     var obsNoInternet: Observer<Boolean> = Observer { isHaveInternet ->
         try {
@@ -102,7 +118,12 @@ open class BaseFragment : GenericFragment() {
         v?.let {
             setBackButtonToolbarStyleOne(v!!)
         }
+        try {
+            postUpdateLocationViewModel =
+                ViewModelProviders.of(this).get(PostUpdateLocationViewModel::class.java!!)
+        } catch (e :Exception){
 
+        }
         v?.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
                 BaseUIHelper.hideKeyboard(activity)
@@ -371,6 +392,36 @@ open class BaseFragment : GenericFragment() {
         f.button_positive = button_positive
         f.button_negative = button_negative
         f.isCancelable = false
+        if(!BaseHelper.isEmpty(tittle) || !BaseHelper.isEmpty(messsage)) {
+            f.show(activity!!.supportFragmentManager, NotifyDialogFragment.TAG)
+        }
+
+    }
+    open fun showFindRideDialog(
+        n: NotifyListener){
+        val f = FindRideDialogFragment().apply {
+            this.listener = n
+        }
+        f.isCancelable = false
+        f.show(activity!!.supportFragmentManager, FindRideDialogFragment.TAG)
+    }
+
+    open fun showAlertsDialog(n: NotifyListener){
+        val f = AlertsDialogFragment().apply {
+            this.listener = n
+        }
+        f.isCancelable = true
+        f.show(activity!!.supportFragmentManager, AlertsDialogFragment.TAG)
+    }
+
+    open fun showMatchingRiders(
+        rider_list: List<Rider>,
+        n: RequestListener){
+        val f = MatchingRidersFragment().apply {
+            this.listener = n
+        }
+        f.rider_list = rider_list
+        f.isCancelable = true
         f.show(activity!!.supportFragmentManager, NotifyDialogFragment.TAG)
     }
 
@@ -448,5 +499,6 @@ open class BaseFragment : GenericFragment() {
             .setName("steps")
             .build()
     }
+
 
 }

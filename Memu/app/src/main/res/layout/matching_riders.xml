@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:backgroundTint="@color/transparent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/themeblue_rounded_rectangle"
+        android:layout_marginRight="0dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="50dp"
+            android:src="@drawable/memu_logo"
+            android:layout_marginLeft="10dp"
+            android:layout_height="50dp">
+
+        </ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Matching Buddy List"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="-10dp"
+            android:textColor="@color/Black"
+            android:paddingRight="10dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/themeblue_rounded_rectangle"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="50dp">
+
+        </TextView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_marginTop="60dp"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="15dp"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:scrollbars="vertical"/>
+    </FrameLayout>
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="-10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/car_sharingmain"
+        android:layout_height="50dp">
+    </ImageView>
+
+</FrameLayout>

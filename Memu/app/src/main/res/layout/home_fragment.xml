@@ -1,59 +1,726 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/frame"
+<FrameLayout android:id="@+id/frame"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    xmlns:mapbox="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/layout1"
-        android:layout_width="0dp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/soft_transparent_grey"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:src="@drawable/home_map_bg"
+                android:id="@+id/home_map_bg"
+                android:scaleType="fitXY"
+                android:layout_marginTop="30dp"
+                android:layout_height="match_parent">
+            </ImageView>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/theme_fullrounded_rectangle"
+                android:backgroundTint="@color/Orange"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:visibility="visible"
+                android:id="@+id/rlTopBar"
+
+                android:layout_height="70dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/name"
+                    android:layout_centerVertical="true"
+                    android:textSize="20dp"
+                    android:fontFamily="@font/opensanssemibold"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="100dp"
+                    android:textColor="@color/White"
+                    android:layout_gravity="center_horizontal"
+                    android:text="sdsdfsdfsdf"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+            </RelativeLayout>
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_marginTop="18dp"
+                android:layout_marginLeft="35dp"
+                android:layout_marginRight="30dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/dummy_profile_pic"
+                android:layout_height="80dp">
+            </ImageView>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_marginTop="95dp"
+                android:layout_marginLeft="85dp"
+                android:visibility="gone"
+                android:id="@+id/arrow_left"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/arrow_left"
+                android:layout_height="40dp">
+            </ImageView>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_marginTop="180dp"
+                android:id="@+id/rlBestRoute"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="140dp"
+                    android:src="@drawable/poolimg"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="-20dp"
+                    android:layout_below="@+id/bestRoute"
+                    android:scaleType="fitXY"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="120dp">
+
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:fontFamily="@font/opensansregular"
+                    android:textAlignment="center"
+                    android:id="@+id/bestRoute"
+                    android:padding="8dp"
+                    android:backgroundTint="@color/unable_myhealth_red"
+                    android:background="@drawable/theme_rounded_rectangle"
+                    android:layout_marginRight="40dp"
+                    android:text="Tap to find\nBest Routes"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_marginTop="300dp"
+                android:id="@+id/rlpooling"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textAlignment="center"
+                    android:id="@+id/findPool"
+                    android:fontFamily="@font/opensansregular"
+                    android:padding="8dp"
+                    android:layout_marginTop="-10dp"
+                    android:layout_below="@+id/carpoolcar"
+                    android:backgroundTint="@color/LightSkyBlue"
+                    android:background="@drawable/theme_rounded_rectangle"
+                    android:layout_marginLeft="40dp"
+                    android:text="Tap to find\nCab/bike Pool"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/carpoolcar"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/carpoolcar"
+                    android:layout_height="wrap_content">
+
+                </ImageView>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_marginTop="450dp"
+                android:id="@+id/rlcab"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textAlignment="center"
+                    android:id="@+id/findcab"
+                    android:fontFamily="@font/opensansregular"
+                    android:padding="8dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_alignParentRight="true"
+                    android:backgroundTint="@color/YellowGreen"
+                    android:background="@drawable/theme_rounded_rectangle"
+                    android:layout_marginRight="75dp"
+                    android:text="Tap to find\nCab/Taxi"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <ImageView
+                    android:layout_width="100dp"
+                    android:src="@drawable/taxi"
+                    android:scaleType="fitXY"
+                    android:layout_marginRight="20dp"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/taxi"
+                    android:layout_height="80dp">
+
+                </ImageView>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_marginTop="580dp"
+                android:id="@+id/rlprofile"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/profileimg"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/profileimg"
+                    android:layout_height="wrap_content">
+
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textAlignment="center"
+                    android:id="@+id/my_profile"
+                    android:fontFamily="@font/opensansregular"
+                    android:padding="8dp"
+                    android:layout_marginTop="-25dp"
+                    android:layout_below="@+id/profileimg"
+                    android:backgroundTint="@color/PeachPuff"
+                    android:background="@drawable/theme_rounded_rectangle"
+                    android:layout_marginLeft="20dp"
+                    android:text="Tap to go to\nyour profile"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+            </RelativeLayout>
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:id="@+id/cancel"
+                android:visibility="gone"
+                android:layout_height="60dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:tint="@color/Black"
+                    android:scaleType="fitXY"
+                    android:layout_gravity="end"
+                    android:src="@drawable/ic_cross_dark"
+                    android:layout_height="20dp">
+
+                </ImageView>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:id="@+id/popUpView"
+                android:visibility="gone"
+                android:layout_marginTop="180dp"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:id="@+id/llPooling"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content">
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginLeft="100dp"
+                            android:background="@drawable/dotted_bg"
+                            android:layout_height="match_parent">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_height="match_parent">
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginLeft="25dp"
+                                    android:layout_height="wrap_content">
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:src="@drawable/calendar_brown"
+                                        android:layout_height="wrap_content">
+
+                                    </ImageView>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:textColor="@color/Black"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_alignParentBottom="true"
+                                        android:fontFamily="@font/opensansregular"
+                                        android:text="Set-up\nRecurring\nRides"
+                                        android:layout_height="wrap_content">
+                                    </TextView>
+                                </LinearLayout>
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:layout_width="match_parent"
+                                    android:id="@+id/weeksList"
+                                    android:layout_height="wrap_content">
+                                </androidx.recyclerview.widget.RecyclerView>
+                            </LinearLayout>
+                        </FrameLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="-20dp"
+                            android:layout_height="wrap_content">
+                            <RelativeLayout
+                                android:layout_width="90dp"
+                                android:fontFamily="@font/opensansregular"
+                                android:textAlignment="center"
+                                android:layout_marginRight="-10dp"
+                                android:layout_height="80dp">
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:scaleType="fitXY"
+                                    android:layout_margin="-20dp"
+                                    android:src="@drawable/themeorange_bg"
+                                    android:layout_height="match_parent">
+                                </ImageView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/date"
+                                    android:textAlignment="center"
+                                    android:layout_centerInParent="true"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+
+                            </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_width="90dp"
+                                android:fontFamily="@font/opensansregular"
+                                android:gravity="center_vertical"
+                                android:layout_marginLeft="-10dp"
+                                android:textAlignment="center"
+                                android:layout_height="80dp">
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:scaleType="fitXY"
+                                    android:layout_margin="-20dp"
+                                    android:src="@drawable/themeskyblue_bg"
+                                    android:layout_height="match_parent">
+                                </ImageView>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/time"
+                                    android:textAlignment="center"
+                                    android:layout_centerInParent="true"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                            </RelativeLayout>
+                            <RelativeLayout
+                                android:layout_width="90dp"
+                                android:fontFamily="@font/opensansregular"
+                                android:visibility="visible"
+                                android:layout_marginLeft="-10dp"
+                                android:gravity="center_vertical"
+                                android:layout_height="80dp">
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:scaleType="fitXY"
+                                    android:layout_margin="-20dp"
+                                    android:src="@drawable/themeyellow_bg"
+                                    android:layout_height="match_parent">
+                                </ImageView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:id="@+id/seatstv"
+                                    android:layout_centerInParent="true"
+                                    android:textAlignment="center"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginTop="15dp"
+                            android:paddingBottom="10dp"
+                            android:visibility="gone"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:background="@drawable/small_dotted_bg"
+                            android:textAlignment="center"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:text="Recurring"
+                                android:textColor="@color/Black"
+                                android:fontFamily="@font/opensansregular"
+                                android:layout_height="wrap_content">
+                            </TextView>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Mo"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Tu"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="We"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Th"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="match_parent">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Fr"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Sat"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="Sun"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:layout_marginLeft="3dp"
+                                    android:textSize="12dp"
+                                    android:layout_height="wrap_content">
+                                </TextView>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="50dp"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:hint="Your current location"
+                                    android:paddingLeft="40dp"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:gravity="center_vertical"
+                                    android:id="@+id/edtScrLoc"
+                                    android:background="@drawable/theme_rounded_rectangle"
+                                    android:layout_height="60dp">
+                                </TextView>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_marginTop="10dp"
+                                    android:paddingLeft="40dp"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:hint="Destination"
+                                    android:id="@+id/edtdestLoc"
+                                    android:gravity="center_vertical"
+                                    android:background="@drawable/theme_rounded_rectangle"
+                                    android:layout_height="60dp">
+
+                                </TextView>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_marginTop="10dp"
+                                    android:paddingLeft="40dp"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:hint="Destination"
+                                    android:textSize="12dp"
+                                    android:visibility="gone"
+                                    android:text="Select Destination location"
+                                    android:textColor="@color/Red"
+                                    android:id="@+id/edtdestLocerror"
+                                    android:gravity="center_vertical"
+                                    android:layout_height="wrap_content">
+
+                                </TextView>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="60dp"
+                                android:layout_marginRight="20dp"
+                                android:orientation="vertical"
+                                android:id="@+id/vehicle_detail"
+                                android:background="@drawable/themepurple_rounded_rectangle"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:text="ABC-123"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:padding="5dp"
+                                    android:textColor="@color/Black"
+                                    android:layout_gravity="center_horizontal"
+                                    android:textSize="7dp"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@drawable/themeblack_rectangle"
+                                    android:layout_height="wrap_content">
+
+                                </TextView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:textColor="@color/Black"
+                                    android:text="KA 05 A"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:fontFamily="@font/opensansbold"
+                                    android:layout_height="wrap_content">
+
+                                </TextView>
+                                <ImageView
+                                    android:layout_width="30dp"
+                                    android:layout_marginTop="5dp"
+                                    android:src="@drawable/car_wallet"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_height="30dp">
+
+                                </ImageView>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:textColor="@color/Black"
+                                    android:text="5/Km"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:fontFamily="@font/opensansbold"
+                                    android:layout_height="wrap_content">
+
+                                </TextView>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:src="@drawable/scr_dest_path"
+                            android:layout_marginLeft="20dp"
+                            android:layout_height="wrap_content">
+
+                        </ImageView>
+
+                    </FrameLayout>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        mapbox:cardCornerRadius="15dp"
+                        android:background="@color/transparent"
+                        android:backgroundTint="@color/transparent"
+                        android:layout_marginRight="20dp"
+                        android:id="@+id/cv"
+                        mapbox:cardUseCompatPadding="true"
+                        android:layout_marginTop="10dp"
+                        mapbox:cardPreventCornerOverlap="false"
+                        android:layout_marginLeft="20dp"
+                        android:layout_height="wrap_content">
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:id="@+id/bike_offer_take_ride"
+                            android:padding="4dp"
+                            android:background="@drawable/themepurple_rounded_rectangle"
+                            android:layout_height="match_parent">
+                            <FrameLayout
+                                android:id="@+id/home_mapView"
+                                android:visibility="visible"
+                                android:background="@color/transparent"
+                                android:layout_width="match_parent"
+                                android:layout_height="600dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:orientation="vertical"
+                                android:background="@color/transparent"
+                                android:layout_gravity="bottom"
+                                android:layout_height="wrap_content">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:orientation="horizontal"
+                                    android:gravity="end"
+                                    android:visibility="visible"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="20dp"
+                                    android:layout_height="wrap_content">
+                                    <RelativeLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:id="@+id/bike_find_ride"
+                                        android:orientation="horizontal"
+                                        android:gravity="center_vertical"
+                                        android:background="@drawable/bike_find_ride"
+                                        android:textAlignment="center"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:text="Find Ride"
+                                            android:fontFamily="@font/opensanssemibold"
+                                            android:layout_marginLeft="60dp"
+                                            android:textSize="12dp"
+                                            android:textColor="@color/Black"
+                                            android:layout_marginBottom="15dp"
+                                            android:textAlignment="center"
+                                            android:layout_height="wrap_content">
+
+                                        </TextView>
+                                    </RelativeLayout>
+
+                                    <RelativeLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:id="@+id/bike_offer_ride"
+                                        android:layout_marginLeft="10dp"
+                                        android:orientation="horizontal"
+                                        android:gravity="center_vertical"
+                                        android:background="@drawable/bike_offer_ride"
+                                        android:textAlignment="center"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:text="Offer Ride"
+                                            android:textColor="@color/Black"
+                                            android:layout_marginLeft="60dp"
+                                            android:fontFamily="@font/opensanssemibold"
+                                            android:layout_marginBottom="15dp"
+                                            android:textSize="12dp"
+                                            android:textAlignment="center"
+                                            android:layout_height="wrap_content">
+
+                                        </TextView>
+                                    </RelativeLayout>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:orientation="horizontal"
+                                    android:gravity="end"
+                                    android:visibility="visible"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_height="wrap_content">
+                                    <RelativeLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:id="@+id/find_ride"
+                                        android:orientation="horizontal"
+                                        android:gravity="center_vertical"
+                                        android:background="@drawable/find_ride_car"
+                                        android:textAlignment="center"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:text="Find Ride"
+                                            android:fontFamily="@font/opensanssemibold"
+                                            android:layout_marginLeft="63dp"
+                                            android:textSize="12dp"
+                                            android:textColor="@color/Black"
+                                            android:layout_marginBottom="15dp"
+                                            android:textAlignment="center"
+                                            android:layout_height="wrap_content">
+
+                                        </TextView>
+                                    </RelativeLayout>
+
+                                    <RelativeLayout
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:id="@+id/offer_ride"
+                                        android:layout_marginLeft="10dp"
+                                        android:orientation="horizontal"
+                                        android:gravity="center_vertical"
+                                        android:background="@drawable/offer_ride_car"
+                                        android:textAlignment="center"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:text="Offer Ride"
+                                            android:textSize="12dp"
+                                            android:textColor="@color/Black"
+                                            android:layout_marginLeft="63dp"
+                                            android:fontFamily="@font/opensanssemibold"
+                                            android:layout_marginBottom="15dp"
+                                            android:textAlignment="center"
+                                            android:layout_height="wrap_content">
+
+                                        </TextView>
+                                    </RelativeLayout>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </FrameLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:layout_width="wrap_content"
+                        android:text="next"
+                        android:layout_margin="15dp"
+
+                        android:layout_gravity="end"
+                        android:src="@drawable/chevron_right"
+                        android:id="@+id/btnNExt"
+                        android:layout_height="wrap_content">
+
+                    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+    <com.iapps.libs.views.LoadingCompound
+        android:id="@+id/ld"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:clipChildren="false"
-        android:background="#FFAABBCC"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="I'm some text"/>
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:visibility="gone" />
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="#FFBBCCAA"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout3"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="#FFCCAABB"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout4"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="#FFBBAACC"
-        android:orientation="vertical">
-
-    </LinearLayout>
-
-</LinearLayout>
+</FrameLayout>

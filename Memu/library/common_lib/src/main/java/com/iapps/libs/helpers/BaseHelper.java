@@ -1,8 +1,15 @@
 package com.iapps.libs.helpers;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,26 +18,55 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.text.format.DateFormat;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.iapps.common_library.R;
 import com.iapps.libs.objects.BottomSheetMediaSelectionListener;
 import com.iapps.libs.objects.Response;
 import com.iapps.libs.views.LoadingCompound;
+import com.iapps.logs.com.pascalabs.util.log.activity.ActivityPascaLog;
+import com.iapps.logs.com.pascalabs.util.log.helper.Helper;
+
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.joda.time.format.DateTimeFormat;
@@ -43,6 +79,9 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -50,8 +89,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
+import io.paperdb.Paper;
 
 
 public class BaseHelper {
@@ -1434,4 +1476,275 @@ public class BaseHelper {
 			return temp;
 		}
 	}
+
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	public static void triggerNotifLog(Activity act){
+		try {
+			Paper.init(act);
+			Intent intent = new Intent(act, ActivityPascaLog.class);
+			PendingIntent pendingIntent = PendingIntent.getActivity(act, 01, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			Notification.Builder builder = new Notification.Builder(act);
+			Helper.setAppPackage(act, act.getPackageName());
+			builder.setContentTitle("Memu User Log is running");
+			builder.setContentText("Click to launch screen");
+			builder.setNumber(101);
+			builder.setContentIntent(pendingIntent);
+			builder.setTicker("Memu Log");
+			builder.setSmallIcon(R.drawable.memu_logo);
+			builder.setAutoCancel(false);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				builder.setPriority(Notification.PRIORITY_HIGH);
+			}
+			builder.setOngoing(true);
+			Notification notification = null;
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				notification = builder.build();
+			}
+
+			NotificationManager notificationManger =
+					(NotificationManager) act.getSystemService(Context.NOTIFICATION_SERVICE);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+			{
+				String channelId = "Your_channel_id";
+				int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+				NotificationChannel channel = new NotificationChannel(
+						channelId,
+						"Channel human readable title",
+						importance);
+				notificationManger.createNotificationChannel(channel);
+				builder.setChannelId(channelId);
+			}
+			notificationManger.notify(223456, notification);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static String getRealPathFromUri(Context context, Uri contentUri) {
+		Cursor cursor = null;
+		try {
+			String[] proj = { MediaStore.Images.Media.DATA };
+			cursor = context.getContentResolver().query(contentUri, proj, null,
+					null, null);
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			return cursor.getString(column_index);
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+	}
+	public static Bitmap drawableToBitmap (Drawable drawable) {
+		Bitmap bitmap = null;
+
+		if (drawable instanceof BitmapDrawable) {
+			BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+			if(bitmapDrawable.getBitmap() != null) {
+				return bitmapDrawable.getBitmap();
+			}
+		}
+
+		if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+			bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+		} else {
+			bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+		}
+
+		Canvas canvas = new Canvas(bitmap);
+		drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+		drawable.draw(canvas);
+		return bitmap;
+	}
+
+	private static double deg2rad(double deg) {
+		return (deg * Math.PI / 180.0);
+	}
+
+	private static double rad2deg(double rad) {
+		return (rad * 180.0 / Math.PI);
+	}
+
+/*
+	public static LatLng getLocationFromAddress(String strAddress, Context context){
+
+		Geocoder coder = new Geocoder(context);
+		List<Address> address;
+		LatLng p1 = null;
+
+		try {
+			// May throw an IOException
+			address = coder.getFromLocationName(strAddress, 5);
+			if (address == null) {
+				return null;
+			}
+
+			Address location = address.get(0);
+			p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+		} catch (Exception ex) {
+			System.out.println("getLocationFromAddress Exception "+ex.toString());
+			ex.printStackTrace();
+		}
+
+		return p1;
+	}
+*/
+	public static JSONObject getLocationInfo(String address) {
+		StringBuilder stringBuilder = new StringBuilder();
+		try {
+
+			address = address.replaceAll(" ","%20");
+
+			HttpPost httppost = new HttpPost("http://maps.google.com/maps/api/geocode/json?address=" + address + "&sensor=false");
+			HttpClient client = new DefaultHttpClient();
+			HttpResponse response;
+			stringBuilder = new StringBuilder();
+
+
+			response = client.execute(httppost);
+			HttpEntity entity = response.getEntity();
+			InputStream stream = entity.getContent();
+			int b;
+			while ((b = stream.read()) != -1) {
+				stringBuilder.append((char) b);
+			}
+			System.out.println("Exception12334 "+stringBuilder.toString());
+
+		} catch (Exception e) {
+			System.out.println("Exception12334 "+e.toString());
+		}
+
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject = new JSONObject(stringBuilder.toString());
+		} catch (Exception e) {
+			System.out.println("Exception12334 "+e.toString());
+
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return jsonObject;
+	}
+	public static double showDistance(LatLng origin, LatLng dest ) {
+
+		Location locationA = new Location("Location A");
+
+		locationA.setLatitude(origin.latitude);
+
+		locationA.setLongitude(origin.longitude);
+
+		Location locationB = new Location("Location B");
+
+		locationB.setLatitude(dest.latitude);
+
+		locationB.setLongitude(dest.longitude);
+		locationA.getTime();
+		return locationA.distanceTo(locationB) * 0.001;
+
+
+	}
+
+	public static double showTime(LatLng origin, LatLng dest ) {
+
+		Location locationA = new Location("Location A");
+
+		locationA.setLatitude(origin.latitude);
+
+		locationA.setLongitude(origin.longitude);
+
+		Location locationB = new Location("Location B");
+
+		locationB.setLatitude(dest.latitude);
+
+		locationB.setLongitude(dest.longitude);
+		double dist = locationA.distanceTo(locationB) * 0.001 ;
+		int speedIs1KmMinute = 100;
+		double estimatedDriveTimeInMinutes = dist / speedIs1KmMinute;
+		return estimatedDriveTimeInMinutes;
+
+	}
+	public static String getHAshKey(Context context){
+		PackageInfo info;
+		try {
+			info = context.getPackageManager().getPackageInfo("com.memu", PackageManager.GET_SIGNATURES);
+			for (Signature signature : info.signatures) {
+				MessageDigest md;
+				md = MessageDigest.getInstance("SHA");
+				md.update(signature.toByteArray());
+				String something = new String(Base64.encodeBase64(md.digest(), false));
+				//String something = new String(Base64.encodeBytes(md.digest()));
+				Log.e("hash key", something);
+				return something;
+			}
+		} catch (NameNotFoundException e1) {
+			Log.e("name not found", e1.toString());
+		} catch (NoSuchAlgorithmException e) {
+			Log.e("no such an algorithm", e.toString());
+		} catch (Exception e) {
+			Log.e("exception", e.toString());
+		}
+		return "";
+	}
+
+	public static AnimatorSet getViewToViewScalingAnimator(final View parentView,
+														   final View viewToAnimate,
+														   final View fromViewRect,
+														   final View toViewRect,
+														   final long duration,
+														   final long startDelay) {
+		// get all coordinates at once
+
+		viewToAnimate.setScaleX(1f);
+		viewToAnimate.setScaleY(1f);
+
+		// rescaling of the object on X-axis
+		final ValueAnimator valueAnimatorWidth = ValueAnimator.ofInt(fromViewRect.getWidth(), toViewRect.getWidth());
+		valueAnimatorWidth.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				// Get animated width value update
+				int newWidth = (int) valueAnimatorWidth.getAnimatedValue();
+
+				// Get and update LayoutParams of the animated view
+				RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) viewToAnimate.getLayoutParams();
+
+				lp.width = newWidth;
+				viewToAnimate.setLayoutParams(lp);
+			}
+		});
+
+		// rescaling of the object on Y-axis
+		final ValueAnimator valueAnimatorHeight = ValueAnimator.ofInt(fromViewRect.getHeight(), toViewRect.getHeight());
+		valueAnimatorHeight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+			@Override
+			public void onAnimationUpdate(ValueAnimator animation) {
+				// Get animated width value update
+				int newHeight = (int) valueAnimatorHeight.getAnimatedValue();
+
+				// Get and update LayoutParams of the animated view
+				RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) viewToAnimate.getLayoutParams();
+				lp.height = newHeight;
+				viewToAnimate.setLayoutParams(lp);
+			}
+		});
+
+		// moving of the object on X-axis
+		ObjectAnimator translateAnimatorX = ObjectAnimator.ofFloat(viewToAnimate, "X", fromViewRect.getLeft() - parentView.getLeft(), toViewRect.getLeft() - parentView.getLeft());
+
+		// moving of the object on Y-axis
+		ObjectAnimator translateAnimatorY = ObjectAnimator.ofFloat(viewToAnimate, "Y", fromViewRect.getTop() - parentView.getTop(), toViewRect.getTop() - parentView.getTop());
+
+		AnimatorSet animatorSet = new AnimatorSet();
+		animatorSet.setInterpolator(new DecelerateInterpolator(1f));
+		animatorSet.setDuration(duration); // can be decoupled for each animator separately
+		animatorSet.setStartDelay(startDelay); // can be decoupled for each animator separately
+		animatorSet.playTogether(valueAnimatorWidth, valueAnimatorHeight, translateAnimatorX, translateAnimatorY);
+
+		return animatorSet;
+	}
+
 }

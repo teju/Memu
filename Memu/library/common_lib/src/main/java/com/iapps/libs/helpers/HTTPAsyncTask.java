@@ -1,12 +1,30 @@
 package com.iapps.libs.helpers;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.net.http.X509TrustManagerExtensions;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import com.iapps.libs.objects.Response;
 
+import androidx.core.app.NotificationCompat;
+
+import com.google.gson.JsonObject;
+import com.iapps.common_library.R;
+import com.iapps.libs.objects.Response;
+import com.iapps.logs.com.pascalabs.util.log.helper.Helper;
+import com.iapps.logs.com.pascalabs.util.log.model.BeanLogAPI;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.*;
@@ -57,12 +75,13 @@ public abstract class HTTPAsyncTask
 	private boolean isEnableSSLCheck = true;
 	private URL url;
 	private String method = BaseConstants.GET;
-	private LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+	private JSONObject params = new JSONObject();
 	private ArrayList<LinkedHashMap<String, String>> fileParams = new ArrayList<LinkedHashMap<String, String>>();
 	private LinkedHashMap<String, byte[]> bytesParams = new LinkedHashMap<String, byte[]>();
+	private LinkedHashMap<String, String> filetxtParams = new LinkedHashMap<String, String>();
 	private HashMap<String, String> mHeaderParams = new HashMap<String, String>();
 
-	public void setParams(LinkedHashMap<String, String> params) {
+	public void setParams(JSONObject params) {
 		this.params = params;
 	}
 
@@ -74,7 +93,7 @@ public abstract class HTTPAsyncTask
 		this.bytesParams = bytesParams;
 	}
 
-	public LinkedHashMap<String, String> getParams() {
+	public JSONObject getParams() {
 		return params;
 	}
 
@@ -207,33 +226,66 @@ public abstract class HTTPAsyncTask
 		this.isEnableSSLCheck = isDisableSSLCheck;
 	}
 
+	public void setPostParams(String key, JSONObject value) {
+		if (key == null || key.trim().length() <= 0 || value == null ) { return; }
+		try {
+			this.params.put(key, value);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		this.setMethod(BaseConstants.POST);
+	}
+	public void setPostParams(String key, JSONArray value) {
+		if (key == null || key.trim().length() <= 0 || value == null ) { return; }
+		try {
+			this.params.put(key, value);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		this.setMethod(BaseConstants.POST);
+	}
+
 	public void setPostParams(String key, String value) {
-		if (key == null || key.trim().length() <= 0 || value == null || value.trim().length() <= 0) { return; }
-		this.params.put(key, value);
+		if (key == null || key.trim().length() <= 0 || value == null ) { return; }
+		try {
+			this.params.put(key, value);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		this.setMethod(BaseConstants.POST);
 	}
 
 	public void setPostParams(String key, String value, boolean allowWhiteSpace) {
 		if (key == null || key.trim().length() <= 0) { return; }
 
-		if(BaseHelper.isEmpty(value))
-			this.params.put(key, "null");
-		else
-			this.params.put(key, value);
+		if(BaseHelper.isEmpty(value)) {
+			try {
+				this.params.put(key, "null");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			try {
+				this.params.put(key, value);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 
 		this.setMethod(BaseConstants.POST);
 	}
 
 
-	public void setPostParams(String key, double value) {
-		String d = String.valueOf(value);
-		this.setPostParams(key, d);
-	}
-
-	public void setPostParams(String key, int value) {
-		String d = String.valueOf(value);
-		this.setPostParams(key, d);
-	}
+//	public void setPostParams(String key, double value) {
+//		String d = String.valueOf(value);
+//		this.setPostParams(key, d);
+//	}
+//
+//	public void setPostParams(String key, int value) {
+//		String d = String.valueOf(value);
+//		this.setPostParams(key, d);
+//	}
 
 	public void setImageParams(String key, String absPath) {
 		this.setFileParams(key, absPath, BaseConstants.MIME_PNG);
@@ -254,10 +306,25 @@ public abstract class HTTPAsyncTask
 		int idx = q.length - 1;
 		LinkedHashMap<String, String> file = new LinkedHashMap<String, String>();
 		file.put(BaseKeys.KEY, key);
-		file.put(BaseKeys.NAME, q[idx]);
-		file.put(BaseKeys.FILEPATH, path);
+		if(!BaseHelper.isEmpty(mime)) {
+			file.put(BaseKeys.NAME, q[idx]);
+			file.put(BaseKeys.FILEPATH, path);
+		} else {
+			file.put(BaseKeys.NAME,path);
+			file.put(BaseKeys.FILEPATH,"");
+		}
 		file.put(BaseKeys.MIME, mime);
 		this.fileParams.add(file);
+	}
+
+	public void settxtFileParams(String key, String path) {
+		this.isMultipart = true;
+
+		LinkedHashMap<String, String> file = new LinkedHashMap<String, String>();
+		file.put(BaseKeys.KEY, key);
+		file.put(BaseKeys.NAME, path);
+
+		this.filetxtParams.put(key,path);
 	}
 
 	public void setByteParams(String key, byte[] bytes) {
@@ -508,11 +575,11 @@ public abstract class HTTPAsyncTask
 
 					if (!isMultipart) {
 						try {
-							String paramsStr = "";
-							for (String key : params.keySet()) {
-								paramsStr += key + "=" + URLEncoder.encode(params.get(key), "utf-8") + "&";
-							}
-							paramsStr = paramsStr.substring(0, paramsStr.length() - 1);
+							String paramsStr = params.toString();
+//							for (String key : params.keySet()) {
+//								paramsStr += key + ":" + URLEncoder.encode(params.get(key), "utf-8") + "&";
+//							}
+//							paramsStr = paramsStr.substring(0, paramsStr.length() - 1);
 							connHttps.setFixedLengthStreamingMode(paramsStr.getBytes().length);
 							connHttps.setRequestProperty("Connection", "Keep-Alive");
 							connHttps.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -546,31 +613,35 @@ public abstract class HTTPAsyncTask
 									+ map.get(BaseKeys.KEY) + "\"; filename=\""
 									+ map.get(BaseKeys.NAME) + "\"");
 							outputStream.writeBytes(lineEnd);
-							outputStream
-									.writeBytes("Content-Type: " + map.get(BaseKeys.MIME) + lineEnd);
-							outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
-							outputStream.writeBytes(lineEnd);
+							Log.d("Content Disposition KEY", map.get(BaseKeys.KEY)
+									+": NAME "+map.get(BaseKeys.NAME)+": FILEPATH "+map.get(BaseKeys.FILEPATH));
+							if(!BaseHelper.isEmpty(BaseKeys.MIME)) {
+								outputStream
+										.writeBytes("Content-Type: " + map.get(BaseKeys.MIME) + lineEnd);
+								outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
+								outputStream.writeBytes(lineEnd);
 
-							// Log.d("value", map.get(Keys.KEY)
-							// +":"+map.get(Keys.NAME)+":"+map.get(Keys.FILEPATH));
-							File file = new File(map.get(BaseKeys.FILEPATH));
-							FileInputStream fileInputStream = new FileInputStream(file);
-							bytesAvailable = fileInputStream.available();
-							bufferSize = Math.min(bytesAvailable, maxBufferSize);
-							byte[] buffer = new byte[bufferSize];
 
-							bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-							while (bytesRead > 0) {
-								outputStream.write(buffer, 0, bufferSize);
+								File file = new File(map.get(BaseKeys.FILEPATH));
+								FileInputStream fileInputStream = new FileInputStream(file);
 								bytesAvailable = fileInputStream.available();
 								bufferSize = Math.min(bytesAvailable, maxBufferSize);
-								bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-							}
+								byte[] buffer = new byte[bufferSize];
 
+								bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+								while (bytesRead > 0) {
+									outputStream.write(buffer, 0, bufferSize);
+									bytesAvailable = fileInputStream.available();
+									bufferSize = Math.min(bytesAvailable, maxBufferSize);
+									bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+								}
+								fileInputStream.close();
+
+							}
 							outputStream.writeBytes(lineEnd);
 
-							fileInputStream.close();
 						}
+
 
 						for (String key : this.bytesParams.keySet()) {
 							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
@@ -582,20 +653,21 @@ public abstract class HTTPAsyncTask
 							outputStream.writeBytes(lineEnd);
 
 							outputStream.write(bytesParams.get(key));
-							Log.d("value", key + ":" + params.get(key));
+							Log.d("Content value", key + ":" + params.get(key));
 							outputStream.writeBytes(lineEnd);
 
 						}
 
-						for (String key : params.keySet()) {
+						for (String key : filetxtParams.keySet()) {
 							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
 							outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
 									+ "\"");
 							outputStream.writeBytes(lineEnd);
 							outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
 							outputStream.writeBytes(lineEnd);
-							outputStream.writeBytes(params.get(key));
-							Log.d("value", key + ":" + params.get(key));
+							outputStream.writeBytes(filetxtParams.get(key));
+							System.out.println("filetxtParams key  " + filetxtParams.get(key));
+							Log.d("filetxtParams value", key + ":" + filetxtParams.get(key));
 							outputStream.writeBytes(lineEnd);
 
 						}
@@ -603,6 +675,8 @@ public abstract class HTTPAsyncTask
 						outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 						outputStream.flush();
 						outputStream.close();
+						PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream));
+
 					}
 
 				}
@@ -660,11 +734,11 @@ public abstract class HTTPAsyncTask
 
 					if (!isMultipart) {
 						try {
-							String paramsStr = "";
-							for (String key : params.keySet()) {
-								paramsStr += key + "=" + URLEncoder.encode(params.get(key), "utf-8") + "&";
-							}
-							paramsStr = paramsStr.substring(0, paramsStr.length() - 1);
+							String paramsStr = params.toString();
+//							for (String key : params.keySet()) {
+//								paramsStr += key + "=" + URLEncoder.encode(params.get(key), "utf-8") + "&";
+//							}
+//							paramsStr = paramsStr.substring(0, paramsStr.length() - 1);
 							connHttp.setFixedLengthStreamingMode(paramsStr.getBytes().length);
 							connHttp.setRequestProperty("Connection", "Keep-Alive");
 							connHttp.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -699,8 +773,8 @@ public abstract class HTTPAsyncTask
 							outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
 							outputStream.writeBytes(lineEnd);
 
-							// Log.d("value", map.get(Keys.KEY)
-							// +":"+map.get(Keys.NAME)+":"+map.get(Keys.FILEPATH));
+							 Log.d("value", map.get(BaseKeys.KEY)
+									 +":"+map.get(BaseKeys.NAME)+":"+map.get(BaseKeys.FILEPATH));
 							File file = new File(map.get(BaseKeys.FILEPATH));
 							FileInputStream fileInputStream = new FileInputStream(file);
 							bytesAvailable = fileInputStream.available();
@@ -735,18 +809,25 @@ public abstract class HTTPAsyncTask
 
 						}
 
-						for (String key : params.keySet()) {
-							outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-							outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
-									+ "\"");
-							outputStream.writeBytes(lineEnd);
-							outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
-							outputStream.writeBytes(lineEnd);
-							outputStream.writeBytes(params.get(key));
-							Log.d("value", key + ":" + params.get(key));
-							outputStream.writeBytes(lineEnd);
+						try {
+							for (String key : filetxtParams.keySet()) {
+								outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+								outputStream.writeBytes("Content-Disposition: form-data; name=\"" + key
+										+ "\"");
+								outputStream.writeBytes(lineEnd);
+								outputStream.writeBytes("Content-Type: text/plain" + lineEnd);
+								outputStream.writeBytes(lineEnd);
+								outputStream.writeBytes(filetxtParams.get(key));
+								System.out.println("filetxtParams key  " + filetxtParams.get(key));
+								Log.d("filetxtParams value", key + ":" + filetxtParams.get(key));
+								outputStream.writeBytes(lineEnd);
+
+
+							}
+						} catch (Exception e){
 
 						}
+
 
 						outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 						outputStream.flush();
@@ -791,10 +872,12 @@ public abstract class HTTPAsyncTask
 //				else{
 //
 					Log.v("Log ",  this.getUrl().toString()+"\nhttp status : " + http_status + "\nheader : " + mHeaderParams.toString() + "\nparams : " + params.toString() + "\n" +responseString);
-//				}
+				logThisApi(responseString,String.valueOf(http_status),mHeaderParams.toString());
 
+//				}
 				rawResponseString = responseString;
 				rawResponse = responseString;
+
 				response = new Response(http_status, responseString);
 
 				if (httpsEnabled) {
@@ -908,6 +991,114 @@ public abstract class HTTPAsyncTask
 	public void executeSynchronous(){
 		synchronousResponse = doInBackground();
 		thisResponse = synchronousResponse;
+	}
+
+	public void logThisApi(String content, String statuscode, String headers){
+		String exception = "No Exception";
+
+		try {
+				System.out.println("logThisApi "+content);
+
+
+				BeanLogAPI beanApi = new BeanLogAPI();
+
+				String Title = "";
+
+				try {
+					if(!BaseHelper.isEmpty(this.url.toString()))
+						beanApi.setUrl(this.url.toString());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					if(!BaseHelper.isEmpty(this.getClass().toString()))
+						beanApi.setShortenClassName(this.getClass());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+				Title = "API ";
+
+
+				try {
+					String cacheDesc = "";
+
+
+					try {
+						if(headers != null) {
+							beanApi.setHeader(headers.toString());
+							cacheDesc = "";
+							cacheDesc += "Loaded From: API\n";
+							Title = "API";
+						}else{
+							cacheDesc = "";
+							cacheDesc += "Loaded From: Cache\n";
+							Title = "Cache";
+
+						}
+					} catch (Exception e) {
+						exception = e.toString() ;
+					}
+
+					if(!BaseHelper.isEmpty(this.getMethod()))
+						beanApi.setMethod(this.getMethod() + "\n" + cacheDesc);
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+
+				try {
+					if(content!=null)
+						beanApi.setContent(content);
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					if(!BaseHelper.isEmpty(getParams().toString()))
+						beanApi.setParams(getParams().toString());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					if(!BaseHelper.isEmpty(statuscode))
+						beanApi.setStatuscode(statuscode);
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					if(!BaseHelper.isEmpty(getFileParams().toString()))
+						beanApi.setFileparam(getFileParams().toString());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					if(!BaseHelper.isEmpty(getBytesParams().toString()))
+						beanApi.setByteparam(getBytesParams().toString());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+
+				try {
+					beanApi.setmHeaderParams(Helper.headerList);
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+				try {
+					beanApi.setParameters(this.getParams().toString());
+				} catch (Exception e) {
+					exception = e.toString() ;
+				}
+				beanApi.setException(exception);
+				Helper.logThisAPI(getContext(), beanApi, Title);
+
+		} catch (Exception e) {
+			System.out.println("logThisApi Exception "+e.toString());
+			exception = e.toString() ;
+		}
 	}
 
 

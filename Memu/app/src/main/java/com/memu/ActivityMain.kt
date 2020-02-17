@@ -1,19 +1,44 @@
 package com.memu
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.franmontiel.localechanger.LocaleChanger
+import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.helpers.BaseUIHelper
+import com.mapbox.mapboxsdk.Mapbox
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
 import com.memu.ui.BaseFragment
+import com.memu.ui.dialog.NotifyDialogFragment
 import com.memu.ui.fragments.HomeFragment
 import com.memu.ui.fragments.MainFragment
+import com.memu.webservices.PostacceptRejectViewModel
+import io.paperdb.Paper
+import kotlinx.android.synthetic.main.home_fragment.*
 import java.util.ArrayList
+import android.content.Intent
+import android.content.IntentFilter
+import com.google.gson.GsonBuilder
+import com.memu.modules.notification.NotificationResponse
+import androidx.core.os.HandlerCompat.postDelayed
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.os.Handler
+import android.view.View
+import com.memu.ui.fragments.DummyFragment
+import com.memu.ui.fragments.ProfilePicUploadFragment
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.home_fragment.ld
+
 
 class ActivityMain : AppCompatActivity(){
 
@@ -22,14 +47,113 @@ class ActivityMain : AppCompatActivity(){
         private val MAIN_FLOW_TAG = "MainFlowFragment"
 
     }
+    var submitPressed = true;
 
+    private var mReceiver: BroadcastReceiver? = null
+    private var mIntentFilter: IntentFilter? = null
+    lateinit var postacceptRejectViewModel: PostacceptRejectViewModel
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        triggerMainProcess()
+        Paper.init(this);
+        Handler().postDelayed(
+            Runnable // Using handler with postDelayed called runnable run method
+
+            {
+                memo_logo_icon.visibility = View.GONE
+                triggerMainProcess()
+
+            }, 2 * 2000
+        ) // wait for 5 s
+       // BaseHelper.triggerNotifLog(this);
+        setAcceptRejectAPIObserver()
+        Mapbox.getInstance(this, getString(R.string.map_box_access_token));
+
+        showDialog(getIntent())
+        mReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                showDialog(intent)
+            }
+        }
+
+        mIntentFilter = IntentFilter("OPEN_NEW_ACTIVITY")
+        BaseHelper.getHAshKey(this)
+    }
+
+    fun showDialog(intent : Intent){
+        if(intent.getExtras()?.getString("title") != null) {
+            println("Notification_received showDialog " )
+
+            try {
+                val gson = GsonBuilder().create()
+                val obj = gson.fromJson(
+                    intent.getExtras()?.getString("body"),
+                    NotificationResponse::class.java
+                )
+
+                showNotifyDialog(
+                    intent.getExtras()?.getString("title"),
+                    intent.getExtras()?.getString("message"),
+                    "Reject", "Accept", object : NotifyListener {
+                        override fun onButtonClicked(which: Int) {
+                            var trip_id = obj.trip_id
+                            var trip_rider_id = obj.trip_rider_id
+                            var status = ""
+                            var type = obj.type
+                            status = "accept"
+
+                            if (which == NotifyDialogFragment.BUTTON_NEGATIVE) {
+                                status = "accept"
+                            }
+                            if (which == NotifyDialogFragment.BUTTON_POSITIVE) {
+                                status = "reject"
+                            }
+                            System.out.println(
+                                "Notification_received key mNotificationReceiver trip_id " +
+                                        trip_id + " status " + status + " trip_rider_id "
+                                        + trip_rider_id + " type " + type + " postacceptRejectViewModel " + postacceptRejectViewModel
+                            )
+                            if(trip_id != null && status != null && trip_rider_id != null
+                                && obj.type != null) {
+                                postacceptRejectViewModel?.loadData(
+                                    trip_id,
+                                    status,
+                                    trip_rider_id,
+                                    obj.type
+                                )
+                            }
+                        }
+                    }
+                )
+            } catch (e : Exception){
+
+            }
+        }
 
     }
 
+    open fun showNotifyDialog(
+        tittle: String?,
+        messsage: String?,
+        button_positive:String?,
+        button_negative: String?,
+        n: NotifyListener){
+        try {
+            val f = NotifyDialogFragment().apply {
+                this.listener = n
+            }
+            f.notify_tittle = tittle
+            f.notify_messsage = messsage
+            f.button_positive = button_positive
+            f.button_negative = button_negative
+            f.isCancelable = false
+            f.show(supportFragmentManager, NotifyDialogFragment.TAG)
+        } catch (e : Exception){
+            System.out.println("Notification_received Exception " +e.toString())
+        }
+    }
 
     override fun attachBaseContext(newBase: Context) {
         var newBase = newBase
@@ -37,6 +161,9 @@ class ActivityMain : AppCompatActivity(){
         super.attachBaseContext(newBase)
     }
 
+    fun exitApp() {
+        finish()
+    }
     override fun onBackPressed() {
         val f = getSupportFragmentManager().beginTransaction()
         val list = getSupportFragmentManager().getFragments()
@@ -53,6 +180,7 @@ class ActivityMain : AppCompatActivity(){
         if(!foundVisible)
             proceedDoOnBackPressed()
     }
+
 
     fun proceedDoOnBackPressed(){
         Helper.hideSoftKeyboard(this@ActivityMain)
@@ -77,13 +205,19 @@ class ActivityMain : AppCompatActivity(){
 
     override fun onResume() {
         super.onResume()
+        registerReceiver(mReceiver, mIntentFilter);
+
     }
 
+    override fun onPause() {
+        super.onPause()
+
+    }
 
     fun triggerMainProcess(){
 
         if(!BaseHelper.isEmpty(UserInfoManager.getInstance(this).authToken))
-            setFragment(HomeFragment())
+            setFragment(DummyFragment())
         else
             setFragment(MainFragment())
     }
@@ -102,13 +236,14 @@ class ActivityMain : AppCompatActivity(){
             MAIN_FLOW_INDEX = MAIN_FLOW_INDEX + 1
             f.add(R.id.layoutFragment, frag, MAIN_FLOW_TAG + MAIN_FLOW_INDEX).addToBackStack(
                 MAIN_FLOW_TAG
-            ).commit()
+            ).commitAllowingStateLoss()
             BaseUIHelper.hideKeyboard(this)
         } catch (e: Exception) {
             Helper.logException(this@ActivityMain, e)
         }
 
     }
+
 
     fun jumpToPreviousFlowThenGoTo(fullFragPackageNameThatStillExistInStack: String, targetFrag: Fragment){
         jumpToPreviousFragment(fullFragPackageNameThatStillExistInStack)
@@ -234,7 +369,7 @@ class ActivityMain : AppCompatActivity(){
             MAIN_FLOW_INDEX = MAIN_FLOW_INDEX + 1
             f.replace(R.id.layoutFragment, frag, MAIN_FLOW_TAG + MAIN_FLOW_INDEX).addToBackStack(
                 MAIN_FLOW_TAG
-            ).commit()
+            ).commitAllowingStateLoss()
             BaseUIHelper.hideKeyboard(this)
         } catch (e: Exception) {
             Helper.logException(this@ActivityMain, e)
@@ -243,8 +378,15 @@ class ActivityMain : AppCompatActivity(){
     }
 
     fun getCurrentFragmentByTag(): Fragment?{
-        val fragment = getSupportFragmentManager().findFragmentByTag(MAIN_FLOW_TAG + MAIN_FLOW_INDEX)
-        return fragment
+        val fragmentManager = this@ActivityMain.getSupportFragmentManager()
+        val fragments = fragmentManager.getFragments()
+        if (fragments != null) {
+            for (fragment in fragments) {
+                if (fragment != null && fragment!!.isVisible())
+                    return fragment
+            }
+        }
+        return null
     }
 
     fun clearFragment() {
@@ -265,6 +407,41 @@ class ActivityMain : AppCompatActivity(){
         getSupportFragmentManager().popBackStack("MAIN_TAB", FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         MAIN_FLOW_INDEX = 0
+    }
+
+    fun setAcceptRejectAPIObserver() {
+        postacceptRejectViewModel = ViewModelProviders.of(this).get(PostacceptRejectViewModel::class.java).apply {
+            this@ActivityMain.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostacceptRejectViewModel.NEXT_STEP -> {
+                            showNotifyDialog(
+                                "Request Status", postacceptRejectViewModel.obj?.message,
+                                getString(R.string.ok),"",object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) { }
+                                }
+                            )
+                        }
+
+                    }
+                })
+            }
+        }
     }
 
     fun removeFragments(fragList: ArrayList<Fragment>) {
@@ -334,7 +511,7 @@ class ActivityMain : AppCompatActivity(){
             }
 
             try {
-                transaction.show(fragment).commit()
+                transaction.show(fragment).commitAllowingStateLoss()
             } catch (e: Exception) {
                 try {
                     transaction.show(fragment).commitAllowingStateLoss()
@@ -357,7 +534,7 @@ class ActivityMain : AppCompatActivity(){
     fun setFragmentInFragment(fragmentLayout: Int, frag: Fragment, tag: String, backstackTag: String) {
         try {
             supportFragmentManager.beginTransaction().add(fragmentLayout, frag, tag).addToBackStack(backstackTag)
-                .commit()
+                .commitAllowingStateLoss()
             BaseUIHelper.hideKeyboard(this)
         } catch (e: Exception) {
             try {
@@ -396,7 +573,11 @@ class ActivityMain : AppCompatActivity(){
             } else null
         }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        MainFragment().onActivityResult(requestCode, resultCode, data);
 
+    }
     /******************************************
      * COMMON FUNCTIONS
      */
@@ -405,5 +586,7 @@ class ActivityMain : AppCompatActivity(){
     /******************************************
      * LOGOUT FUNCTIONS
      */
+
+
 
 }

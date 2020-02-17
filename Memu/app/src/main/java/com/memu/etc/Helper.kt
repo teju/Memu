@@ -3,6 +3,7 @@ package com.memu.etc
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.ConnectivityManager
 import android.os.Environment
 import android.util.DisplayMetrics
 import android.util.Log
@@ -13,6 +14,14 @@ import com.iapps.libs.helpers.HTTPAsyncTask
 import com.iapps.libs.objects.Response
 import com.memu.R
 import java.io.*
+import android.util.Patterns
+import android.text.TextUtils
+
+import java.util.regex.Pattern
+import android.util.TypedValue
+
+
+
 
 open class Helper  {
     open class GenericHttpAsyncTask(internal var taskListener: TaskListener?) : HTTPAsyncTask() {
@@ -77,14 +86,19 @@ open class Helper  {
 
     }
 
-    fun getVersionCode(context: Context) : String {
-        val manager = context?.packageManager
-        val info = manager?.getPackageInfo(
-            context?.packageName, 0)
-        val versionName = info?.versionName
-        return versionName!!
-    }
     companion object {
+        fun applyHeader(context : Context, async: HTTPAsyncTask?) {
+            if (async == null)
+                return
+
+            async.setCache(false)
+            async.setHeader(Keys.ContentType, "application/json")
+
+            UserInfoManager.getInstance(context).authToken?.let {
+                async.setHeader(Keys.Authorization, "Bearer "+it)
+            }
+        }
+
         fun logException(ctx: Context?, e: Exception?) {
             try {
                 if (Constants.IS_DEBUGGING) {
@@ -110,6 +124,13 @@ open class Helper  {
             return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))
         }
 
+        fun toDp(context: Context, dp: Float): Int {
+            return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources()
+                    .getDisplayMetrics()
+            ).toInt()
+        }
+
         fun hideSoftKeyboard(activity: Activity) {
             try {
                 val inputMethodManager = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -118,6 +139,35 @@ open class Helper  {
             }
 
         }
+        fun isValidEmail(target: CharSequence): Boolean {
+            return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
+        }
+
+        fun isValidMobile(phone: String): Boolean {
+            return if (!Pattern.matches("[a-zA-Z]+", phone)) {
+                phone.length == 10
+            } else false
+        }
+
+        fun isNetworkAvailable(ctx: Context): Boolean {
+            try {
+                val manager = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val networkInfo = manager.activeNetworkInfo
+
+                var isAvailable = false
+                if (networkInfo != null && networkInfo.isConnected) {
+                    isAvailable = true
+                }
+                if (!isAvailable) {
+                    logException(null, null)
+                }
+                return isAvailable
+            } catch (e: Exception) {
+                return true
+            }
+
+        }
+
     }
 
 }

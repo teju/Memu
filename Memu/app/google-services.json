@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "573727236548",
-    "firebase_url": "https://gameon-nila-nus.firebaseio.com",
-    "project_id": "gameon-nila-nus",
-    "storage_bucket": "gameon-nila-nus.appspot.com"
+    "project_number": "69727982471",
+    "firebase_url": "https://memu-28a99.firebaseio.com",
+    "project_id": "memu-28a99",
+    "storage_bucket": "memu-28a99.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:573727236548:android:19ccdd7d6e15efb7ac0491",
+        "mobilesdk_app_id": "1:69727982471:android:3dc98058ebc73a4d67f922",
         "android_client_info": {
-          "package_name": "com.iapps.gon"
+          "package_name": "com.memu"
         }
       },
       "oauth_client": [
         {
-          "client_id": "573727236548-9ltnii6o5vlq1q674dh1lq7gbbqf8fqd.apps.googleusercontent.com",
+          "client_id": "69727982471-9cjilh0erkfe231e7vaer4fkg2nnhqfk.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAv06Tnt9-iEiKc0uueinnKiRCAEW6o3sE"
+          "current_key": "AIzaSyCJmkG3ThWAGyIiP8eSwPK18n1Ttv8UHt8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "573727236548-9ltnii6o5vlq1q674dh1lq7gbbqf8fqd.apps.googleusercontent.com",
+              "client_id": "69727982471-9cjilh0erkfe231e7vaer4fkg2nnhqfk.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
