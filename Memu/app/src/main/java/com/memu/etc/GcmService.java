@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import androidx.core.app.NotificationCompat;
 
@@ -17,7 +16,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.iapps.libs.helpers.BaseHelper;
-import com.memu.ActivityMain;
+import com.memu.ui.activity.ActivityMain;
 import com.memu.R;
 import com.memu.modules.BeanGCM;
 

@@ -3,11 +3,7 @@ package com.memu.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Typeface
-import android.location.Address
-import android.location.Geocoder
-import android.os.AsyncTask
 import android.os.Bundle
-import android.security.keystore.KeyProperties
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
@@ -21,11 +17,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.gms.fitness.Fitness
-import com.google.android.gms.fitness.data.DataSet
 import com.google.android.gms.fitness.data.DataSource
 import com.google.android.gms.fitness.data.DataType
-import com.google.android.gms.fitness.request.DataReadRequest
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.gon.etc.callback.PermissionListener
 import com.iapps.gon.etc.callback.RequestListener
@@ -33,41 +26,21 @@ import com.iapps.libs.generics.GenericFragment
 import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.helpers.BaseUIHelper
 import com.iapps.libs.views.LoadingCompound
-import com.memu.ActivityMain
+import com.memu.ui.activity.ActivityMain
 import com.memu.BuildConfig
 import com.memu.R
 import com.memu.etc.Constants
-import com.memu.etc.GPSTracker
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
-import com.memu.modules.TripGivers.Pooler
 import com.memu.modules.riderList.Rider
 import com.memu.ui.dialog.AlertsDialogFragment
 import com.memu.ui.dialog.FindRideDialogFragment
 import com.memu.ui.dialog.MatchingRidersFragment
 import com.memu.ui.dialog.NotifyDialogFragment
-import com.memu.webservices.GetVehicleTypeViewModel
 import com.memu.webservices.PostUpdateLocationViewModel
-import kotlinx.android.synthetic.main.home_fragment.*
 
 import kotlinx.coroutines.*
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.IOException
-import java.security.InvalidKeyException
-import java.security.NoSuchAlgorithmException
-import java.security.SecureRandom
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
-import javax.crypto.BadPaddingException
-import javax.crypto.Cipher
-import javax.crypto.IllegalBlockSizeException
-import javax.crypto.NoSuchPaddingException
-import javax.crypto.spec.IvParameterSpec
-import javax.crypto.spec.SecretKeySpec
 
 open class BaseFragment : GenericFragment() {
 

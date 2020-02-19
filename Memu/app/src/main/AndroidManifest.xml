@@ -25,12 +25,12 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="xxx6c41xxx6ec601xxxd4xxxa2" />
-    <activity android:name=".ui.fragments.TempMainActivity">
+    <activity android:name=".ui.activity.SearchActivity">
 
     </activity>
 
         <activity
-            android:name=".ActivityMain"
+            android:name=".ui.activity.ActivityMain"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
