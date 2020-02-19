@@ -20,9 +20,7 @@ import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
-import android.os.Handler
 import android.view.MenuItem
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -49,6 +47,7 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.*
+import com.memu.ui.activity.SearchActivity
 import com.memu.ui.adapters.WeekAdapter
 import com.memu.webservices.*
 import kotlinx.android.synthetic.main.map_view.*
@@ -585,13 +584,13 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
 
     private fun initSearchFab() {
         edtScrLoc.setOnClickListener {
-            startActivityForResult(Intent(activity, TempMainActivity::class.java),REQUEST_CODE_AUTOCOMPLETE);
+            startActivityForResult(Intent(activity, SearchActivity::class.java),REQUEST_CODE_AUTOCOMPLETE);
         }
     }
 
     private fun initSearchFabDest() {
         edtdestLoc.setOnClickListener {
-            startActivityForResult(Intent(activity, TempMainActivity::class.java),REQUEST_CODE_AUTOCOMPLETEDEST);
+            startActivityForResult(Intent(activity, SearchActivity::class.java),REQUEST_CODE_AUTOCOMPLETEDEST);
         }
 
     }

@@ -1,4 +1,4 @@
-package com.memu.ui.fragments;
+package com.memu.ui.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,7 +21,7 @@ import com.memu.R;
 import com.memu.ui.adapters.PlacesAutoCompleteAdapter;
 
 
-public class TempMainActivity extends AppCompatActivity implements PlacesAutoCompleteAdapter.ClickListener{
+public class SearchActivity extends AppCompatActivity implements PlacesAutoCompleteAdapter.ClickListener{
 
     private PlacesAutoCompleteAdapter mAutoCompleteAdapter;
     private RecyclerView recyclerView;

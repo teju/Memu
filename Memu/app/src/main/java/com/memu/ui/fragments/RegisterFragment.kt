@@ -1,18 +1,12 @@
 package com.memu.ui.fragments
 
-import android.animation.Animator
-import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Rect
 import android.location.*
 import android.os.Bundle
-import android.os.Handler
 import android.view.*
 import com.memu.R
 import com.memu.etc.Helper
@@ -32,20 +26,14 @@ import org.json.JSONArray
 import org.json.JSONObject
 import android.util.DisplayMetrics
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import android.view.animation.DecelerateInterpolator
 import android.view.inputmethod.EditorInfo
-import androidx.core.animation.doOnEnd
 import com.iapps.gon.etc.callback.PermissionListener
-import com.mapbox.api.geocoding.v5.models.CarmenFeature
-import com.mapbox.mapboxsdk.Mapbox
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete
-import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions
 import com.memu.etc.GPSTracker
 import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
+import com.memu.ui.activity.SearchActivity
 import com.memu.webservices.*
 import kotlinx.android.synthetic.main.cab_radio_button.*
-import kotlinx.android.synthetic.main.custom_notification_layout.view.*
 import kotlinx.android.synthetic.main.onboarding_start.*
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
 import kotlinx.android.synthetic.main.radio_button.*
@@ -84,6 +72,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     var isFirst_P_Y = false
     var isCabFisrst = true
     var gpsTracker : GPSTracker? = null
+    var isOtpVerified = false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.register_fragment, container, false)
         return v
@@ -393,7 +382,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                     .build(PlaceOptions.MODE_CARDS)
             )
             .build(activity)*/
-        startActivityForResult(Intent(activity, TempMainActivity::class.java),code);
+        startActivityForResult(Intent(activity, SearchActivity::class.java),code);
     }
 
 
@@ -798,21 +787,30 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     }
 
     fun callRegister() {
-        if(State.type == State.NoVehicles) {
-            postUserSignupViewModel.loadData(
-                state.ApiSignupForm(),
-                JSONObject(),
-                jsonArray,
-                docjsonArray,
-                state.OtpForm()
-            )
-        } else  {
-            postUserSignupViewModel.loadData(
-                state.ApiSignupForm(),
-                state.Vehicle(),
-                jsonArray,
-                docjsonArray,
-                state.OtpForm()
+        if(isOtpVerified) {
+            if (State.type == State.NoVehicles) {
+                postUserSignupViewModel.loadData(
+                    state.ApiSignupForm(),
+                    JSONObject(),
+                    jsonArray,
+                    docjsonArray,
+                    state.OtpForm()
+                )
+            } else {
+                postUserSignupViewModel.loadData(
+                    state.ApiSignupForm(),
+                    state.Vehicle(),
+                    jsonArray,
+                    docjsonArray,
+                    state.OtpForm()
+                )
+            }
+        }  else {
+            showNotifyDialog(
+                "", "Please verify OTP",
+                getString(R.string.ok),"",object : NotifyListener {
+                    override fun onButtonClicked(which: Int) { }
+                }
             )
         }
     }
@@ -1254,6 +1252,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostVerifyOtpViewModel.NEXT_STEP -> {
+                            isOtpVerified = true
                             showNotifyDialog(
                                 "", postVerifyOtpViewModel.obj?.message!!,
                                 getString(R.string.ok),"",object : NotifyListener {

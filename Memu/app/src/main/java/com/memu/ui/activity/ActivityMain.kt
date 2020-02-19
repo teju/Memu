@@ -1,4 +1,4 @@
-package com.memu
+package com.memu.ui.activity
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -19,23 +19,18 @@ import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
 import com.memu.ui.BaseFragment
 import com.memu.ui.dialog.NotifyDialogFragment
-import com.memu.ui.fragments.HomeFragment
 import com.memu.ui.fragments.MainFragment
 import com.memu.webservices.PostacceptRejectViewModel
 import io.paperdb.Paper
-import kotlinx.android.synthetic.main.home_fragment.*
 import java.util.ArrayList
 import android.content.Intent
 import android.content.IntentFilter
 import com.google.gson.GsonBuilder
 import com.memu.modules.notification.NotificationResponse
-import androidx.core.os.HandlerCompat.postDelayed
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Handler
 import android.view.View
+import com.memu.R
 import com.memu.ui.fragments.DummyFragment
-import com.memu.ui.fragments.ProfilePicUploadFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.home_fragment.ld
 

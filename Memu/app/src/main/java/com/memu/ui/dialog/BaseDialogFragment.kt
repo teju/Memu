@@ -13,7 +13,7 @@ import com.bumptech.glide.BuildConfig
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.BitmapImageViewTarget
-import com.memu.ActivityMain
+import com.memu.ui.activity.ActivityMain
 import com.memu.R
 import com.memu.etc.UserInfoManager
 
