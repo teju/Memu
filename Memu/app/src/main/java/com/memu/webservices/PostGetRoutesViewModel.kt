@@ -11,6 +11,7 @@ import com.memu.etc.Keys
 import com.memu.etc.SingleLiveEvent
 import com.memu.modules.GenericResponse
 import com.memu.modules.UserSignup.UserSignUp
+import com.memu.modules.googleMaps.GoogleMAps
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -22,7 +23,7 @@ class PostGetRoutesViewModel(application: Application) : BaseViewModel(applicati
 
     var apl: Application
 
-    var obj: GenericResponse? = null
+    var obj: GoogleMAps? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -33,7 +34,7 @@ class PostGetRoutesViewModel(application: Application) : BaseViewModel(applicati
         this.apl = application
     }
 
-    fun loadData(OtpForm: JSONObject) {
+    fun loadData(url: String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -53,13 +54,9 @@ class PostGetRoutesViewModel(application: Application) : BaseViewModel(applicati
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), GenericResponse::class.java)
-                        if (obj!!.status.equals(Keys.STATUS_CODE)) {
-                            trigger.postValue(GetVehicleTypeViewModel.NEXT_STEP)
-                        }else{
-                            errorMessage.value = createErrorMessageObject(response)
+                        obj = gson.fromJson(response!!.content.toString(), GoogleMAps::class.java)
+                        trigger.postValue(GetVehicleTypeViewModel.NEXT_STEP)
 
-                        }
                     } catch (e: Exception) {
                         showUnknowResponseErrorMessage()
                     }
@@ -68,9 +65,8 @@ class PostGetRoutesViewModel(application: Application) : BaseViewModel(applicati
             }
         })
 
-        genericHttpAsyncTask.method = BaseConstants.POST
-        genericHttpAsyncTask.setUrl(APIs.postVerifyOtp)
-        genericHttpAsyncTask.setPostParams(Keys.OtpForm,OtpForm)
+        genericHttpAsyncTask.method = BaseConstants.GET
+        genericHttpAsyncTask.setUrl(url)
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.context = apl.applicationContext
         genericHttpAsyncTask.execute()

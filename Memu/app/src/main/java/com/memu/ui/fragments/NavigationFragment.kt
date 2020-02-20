@@ -39,6 +39,7 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
     private var navigationView: NavigationView? = null
     var currentRoute: DirectionsRoute? = null
     var alert: LinearLayout? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -106,9 +107,7 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
     }
 
     override fun onNavigationReady(isRunning: Boolean) {
-        val origin = Point.fromLngLat(ORIGIN_LONGITUDE, ORIGIN_LATITUDE)
-        val destination = Point.fromLngLat(DESTINATION_LONGITUDE, DESTINATION_LATITUDE)
-        fetchRoute(origin, destination)
+        startNavigation()
     }
 
     override fun onCancelNavigation() {
@@ -148,22 +147,6 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
         }
     }
 
-    private fun fetchRoute(origin: Point, destination: Point) {
-        NavigationRoute.builder(context)
-            .accessToken(Mapbox.getAccessToken()!!)
-            .origin(origin)
-            .destination(destination)
-            .build()
-            .getRoute(object : SimplifiedCallback() {
-                override fun onResponse(
-                    call: Call<DirectionsResponse>,
-                    response: Response<DirectionsResponse>
-                ) {
-                    currentRoute = response.body()!!.routes()[0]
-                    startNavigation()
-                }
-            })
-    }
 
     private fun startNavigation() {
         if (currentRoute == null) {
@@ -171,7 +154,7 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
         }
         val options = NavigationViewOptions.builder()
             .directionsRoute(currentRoute)
-            .shouldSimulateRoute(false)
+            .shouldSimulateRoute(true)
             .build()
         navigationView!!.findViewById<View>(R.id.feedbackFab).visibility = View.GONE
         navigationView!!.startNavigation(options)
@@ -221,11 +204,5 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
         editor.apply()
     }
 
-    companion object {
 
-        private val ORIGIN_LONGITUDE = -3.714873
-        private val ORIGIN_LATITUDE = 40.397389
-        private val DESTINATION_LONGITUDE = -3.712331
-        private val DESTINATION_LATITUDE = 40.401686
-    }
 }

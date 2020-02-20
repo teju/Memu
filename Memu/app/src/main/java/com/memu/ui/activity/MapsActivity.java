@@ -1,6 +1,7 @@
 package com.memu.ui.activity;
 
 import android.graphics.Color;
+import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +15,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.memu.R;
+
 
 import org.json.JSONObject;
 
@@ -28,6 +31,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Observable;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -160,7 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 DirectionsJSONParser parser = new DirectionsJSONParser();
 
                 routes = parser.parse(jObject);
-                System.out.println("ParserTaskException routes "+routes.size());
+                System.out.println("ParserTaskException routes "+routes);
 
             } catch (Exception e) {
                 System.out.println("ParserTaskException doInBackground "+e.toString());
