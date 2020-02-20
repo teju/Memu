@@ -575,7 +575,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         }
         val position = CameraPosition.Builder()
             .target(LatLng(srcLatitude, srcLongitude))
-            .zoom(10.0)
+            .zoom(15.0)
             .tilt(20.0)
             .build();
         mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);

@@ -1,6 +1,7 @@
 package com.memu.ui.fragments
 
 import android.content.res.ColorStateList
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +9,8 @@ import android.view.ViewGroup
 import com.memu.R
 import com.memu.ui.BaseFragment
 
-import java.util.*
 import android.widget.*
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 
 import androidx.lifecycle.ViewModelProviders
@@ -28,10 +29,21 @@ import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 
 import com.mapbox.mapboxsdk.location.LocationComponent
+import com.mapbox.mapboxsdk.location.modes.CameraMode
+import com.mapbox.mapboxsdk.location.modes.RenderMode
+import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 
 
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
@@ -49,11 +61,14 @@ import retrofit2.Response
 
 
 import java.lang.Exception
+import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.util.*
 import kotlin.collections.ArrayList
 
 
 class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
-    OnMapReadyCallback ,Callback<DirectionsResponse>{
+    OnMapReadyCallback ,Callback<DirectionsResponse>,com.mapbox.mapboxsdk.maps.OnMapReadyCallback{
 
 
     private var routes: List<DirectionsRoute> = listOf<DirectionsRoute>()
@@ -80,6 +95,8 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     internal var markerPoints = ArrayList<com.google.android.gms.maps.model.LatLng>()
     var mapView :MapView? = null
     var mapcurrentRoute: DirectionsRoute? = null
+    private var mapboxMap: MapboxMap? = null
+    private val styleCycle = StyleCycle()
 
 
     override fun onCreateView(
@@ -97,9 +114,72 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         mapView?.onCreate(savedInstanceState);
         mapView?.onResume();
         mapView?.getMapAsync(this)
+
+        mapboxView.onCreate(savedInstanceState)
+        mapboxView.getMapAsync(this)
         initUI();
     }
 
+    override fun onMapReady(mapboxMap: MapboxMap) {
+        this.mapboxMap = mapboxMap
+        mapboxMap.setStyle(styleCycle.style) { style ->
+            initializeLocationComponent(mapboxMap)
+            navigationMapRoute = NavigationMapRoute(null, mapboxView, mapboxMap)
+            navigationMapRoute?.setOnRouteSelectionChangeListener {
+                val bm = BitmapFactory.decodeResource(getResources(), R.drawable.map_marker);
+                mapboxMap.getStyle()?.addImage("my-marker",bm);
+
+                 mapboxMap.addMarker(
+                    com.mapbox.mapboxsdk.annotations.MarkerOptions().position(com.mapbox.mapboxsdk.geometry.LatLng(srcLat,srcLng))
+                )
+                mapboxMap.addMarker(
+                    com.mapbox.mapboxsdk.annotations.MarkerOptions().position(com.mapbox.mapboxsdk.geometry.LatLng(destLat,destLng))
+                )
+                val position = CameraPosition.Builder()
+                    .target(com.mapbox.mapboxsdk.geometry.LatLng(srcLat, srcLng))
+                    .zoom(15.0)
+                    .tilt(20.0)
+                    .build();
+                mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
+            }
+            GetRoutes()
+        }
+    }
+
+    private fun initializeLocationComponent(mapboxMap: MapboxMap) {
+        val locationComponent = mapboxMap.locationComponent
+        locationComponent.activateLocationComponent(activity!!, mapboxMap.style!!)
+        locationComponent.isLocationComponentEnabled = true
+        locationComponent.renderMode = RenderMode.COMPASS
+        locationComponent.cameraMode = CameraMode.TRACKING
+        locationComponent.zoomWhileTracking(15.0)
+    }
+    class StyleCycle {
+
+        private var index: Int = 0
+
+        val nextStyle: String
+            get() {
+                index++
+                if (index == STYLES.size) {
+                    index = 0
+                }
+                return style
+            }
+
+        val style: String
+            get() = STYLES[index]
+
+        companion object {
+            val STYLES = arrayOf(
+                Style.MAPBOX_STREETS,
+                Style.OUTDOORS,
+                Style.LIGHT,
+                Style.DARK,
+                Style.SATELLITE_STREETS
+            )
+        }
+    }
 
     private fun initUI() {
         setInviteRideGiversAPIObserver()
@@ -148,7 +228,16 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             && !response.body()!!.routes().isEmpty()
         ) {
             routes = response.body()!!.routes()
+            Collections.sort(routes,object  : Comparator<DirectionsRoute>{
+                override fun compare(o1: DirectionsRoute?, o2: DirectionsRoute?): Int {
+                    return o1?.duration()?.compareTo(o2?.duration()!!)!!; // To compare string values
+
+                }
+            })
+
+
             navigationMapRoute?.addRoutes(routes)
+            addButtons(response.body()!!.routes())
             System.out.println("onResponse DirectionsResponse "+response.body()!!.routes().size)
 
         }
@@ -190,6 +279,53 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 })
             }
         }
+    }
+
+    fun addButtons(routes: List<DirectionsRoute>) {
+        for(i in  0..(routes.size - 1)) {
+            if (i == 0) {
+                rloption_a.visibility = View.VISIBLE
+                var duration = splitToComponentTimes(BigDecimal(routes.get(i).duration()!!))
+                option_a_time.text = duration
+                option_a_date.text = FormatDistance(routes.get(i).distance()!!,"km")
+            } else if (i == 1) {
+                rloption_b.visibility = View.VISIBLE
+                var duration = splitToComponentTimes(BigDecimal(routes.get(i).duration()!!))
+
+                option_b_time.text = duration
+                option_b_dist.text = FormatDistance(routes.get(i).distance()!!,"km")
+            } else {
+                var duration = splitToComponentTimes(BigDecimal(routes.get(i).duration()!!))
+                option_c_time.text = duration
+                option_c_dist.text = FormatDistance(routes.get(i).distance()!!,"km")
+                rloption_c.visibility = View.VISIBLE
+
+            }
+        }
+
+    }
+    fun FormatDistance(meters:Double, unitString:String):String {
+        val df = DecimalFormat("#.##");
+        return ""+df.format(meters/1000 )+unitString
+    }
+
+    fun splitToComponentTimes(biggy: BigDecimal):String {
+        val longVal = biggy.toLong()
+        val hours = longVal.toInt() / 3600
+        var remainder = longVal.toInt() - hours * 3600
+        val mins = remainder / 60
+        remainder = remainder - mins * 60
+        val secs = remainder
+        val ints = intArrayOf(hours, mins, secs)
+        var duration = ""
+        if(ints.get(0) > 0) {
+            duration = ""+ints.get(0)+"hr"
+        }
+        if(ints.get(1) > 0) {
+            duration = duration+" "+ints.get(1)+"min"
+        }
+
+        return duration
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -301,6 +437,88 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
 
         return "https://maps.googleapis.com/maps/api/directions/$output?$parameters"
+    }
+
+    fun addMarkers() {
+
+        val symbolLayerIconFeatureList = ArrayList<Feature>()
+        try {
+            for (x in 0 until postnviteRideGiversViewModel.obj?.pooler_list?.size!!) {
+                symbolLayerIconFeatureList.add(
+                    Feature.fromGeometry(
+                        Point.fromLngLat(
+                            postnviteRideGiversViewModel.obj?.pooler_list?.get(x)?.from_address?.longitude!!.toDouble(),
+                            postnviteRideGiversViewModel.obj?.pooler_list?.get(x)?.from_address?.lattitude!!.toDouble()
+                        )
+                    )
+                )
+                System.out.println(
+                    "addMarkers " + postnviteRideGiversViewModel.obj?.pooler_list?.get(
+                        x
+                    )?.from_address?.longitude!!
+                )
+
+            }
+        } catch (e : Exception){
+
+        }
+        try {
+            for (x in 0 until postnviteRideGiversViewModel.obj?.rider_list?.size!!) {
+                symbolLayerIconFeatureList.add(
+                    Feature.fromGeometry(
+                        Point.fromLngLat(
+                            postnviteRideGiversViewModel.obj?.rider_list?.get(x)?.from_address?.longitude!!.toDouble(),
+                            postnviteRideGiversViewModel.obj?.rider_list?.get(x)?.from_address?.lattitude!!.toDouble()
+                        )
+                    )
+                )
+                System.out.println(
+                    "addMarkers " + postnviteRideGiversViewModel.obj?.rider_list?.get(
+                        x
+                    )?.from_address?.longitude!!
+                )
+
+            }
+        } catch (e : Exception){
+            ld.hide()
+        }
+        val drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.map_marker, null);
+        val mBitmap = com.mapbox.mapboxsdk.utils.BitmapUtils.getBitmapFromDrawable(drawable);
+        mapboxMap?.setStyle(
+            Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
+
+                // Add the SymbolLayer icon image to the map style
+                .withImage(
+                    ICON_ID, mBitmap!!)
+
+
+                // Adding a GeoJson source for the SymbolLayer icons.
+                .withSource(
+                    GeoJsonSource(
+                        SOURCE_ID,
+                        FeatureCollection.fromFeatures(symbolLayerIconFeatureList)
+                    )
+                )
+
+                // Adding the actual SymbolLayer to the map style. An offset is added that the bottom of the red
+                // marker icon gets fixed to the coordinate, rather than the middle of the icon being fixed to
+                // the coordinate point. This is offset is not always needed and is dependent on the image
+                // that you use for the SymbolLayer icon.
+                .withLayer(
+                    SymbolLayer(
+                        LAYER_ID,
+                        SOURCE_ID
+                    )
+                        .withProperties(
+                            PropertyFactory.iconImage(ICON_ID),
+                            PropertyFactory.iconAllowOverlap(true),
+                            PropertyFactory.iconIgnorePlacement(true),
+                            PropertyFactory.iconOffset(arrayOf(0f, -9f))
+                        )
+                )
+        ) {
+            initializeLocationComponent(mapboxMap!!)
+        }
     }
 
     /* override fun onMapReady(@io.reactivex.annotations.NonNull mapboxMap: MapboxMap) {
@@ -692,7 +910,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostGetRoutesViewModel.NEXT_STEP -> {
-                            displayMap(postGetRoutesViewModel.obj?.routes!!)
+                           // displayMap(postGetRoutesViewModel.obj?.routes!!)
                         }
                     }
                 })
@@ -717,37 +935,36 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         }
     }
 
-    /*override fun onStart() {
+    override fun onStart() {
         super.onStart()
-        mapView!!.onStart()
+        mapboxView!!.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView!!.onResume()
+        mapboxView!!.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView!!.onPause()
+        mapboxView!!.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView!!.onStop()
+        mapboxView!!.onStop()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView!!.onSaveInstanceState(outState)
+        mapboxView!!.onSaveInstanceState(outState)
     }
 
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView!!.onLowMemory()
+        mapboxView!!.onLowMemory()
     }
-*/
     companion object {
         private val TAG = "DirectionsActivity"
         val SOURCE_ID = "SOURCE_ID"
