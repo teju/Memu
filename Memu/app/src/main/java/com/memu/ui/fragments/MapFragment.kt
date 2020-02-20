@@ -149,7 +149,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         ) {
             routes = response.body()!!.routes()
             navigationMapRoute?.addRoutes(routes)
-            System.out.println("onResponse DirectionsResponse "+routes.size)
+            System.out.println("onResponse DirectionsResponse "+response.body()!!.routes().size)
 
         }
     }
@@ -176,13 +176,15 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             R.id.rloption_c -> {
                 startButton.isEnabled = true
                 rloption_a.setBackgroundTintList(null)
-                rloption_c.setBackgroundTintList(null)
+                rloption_b.setBackgroundTintList(null)
                 rloption_c.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.polylinePink)));
                 mapcurrentRoute = routes.get(2)
 
             }
             R.id.startButton -> {
                 home().setFragment(NavigationFragment().apply {
+                    System.out.println("onMapReady mapcurrentRoute "+mapcurrentRoute?.legs())
+
                     this.currentRoute = mapcurrentRoute
 
                 })
@@ -217,6 +219,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             postGetRoutesViewModel.loadData(url)
 
         }
+        GetRoutes()
     }
     fun  getPoints(points: String): List<LatLng>? {
         return PolyUtil.decode(points);
