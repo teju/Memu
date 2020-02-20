@@ -22,6 +22,7 @@
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="xxx6c41xxx6ec601xxxd4xxxa2" />
@@ -30,7 +31,7 @@
     </activity>
 
         <activity
-            android:name=".ui.activity.ActivityMain"
+            android:name=".ui.activity.MapsActivity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
