@@ -508,7 +508,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         {
 
             R.id.no_vehicle_btn ->{
-
+                no_vehicle_btn.background = resources.getDrawable(R.drawable.selected_radio_btn)
+                private_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
+                cab_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
                 onbording_3.visibility = View.GONE
                 cab_onbording_3.visibility = View.GONE
                 tt_mini_bus.visibility = View.GONE
@@ -553,6 +555,11 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 }
             }
             R.id.private_vehicle_btn ->{
+
+                no_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
+                private_vehicle_btn.background = resources.getDrawable(R.drawable.selected_radio_btn)
+                cab_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
+
                 isFirst_P_Y = true
                 tt_mini_bus.visibility = View.GONE
                 onbording_3.visibility = View.VISIBLE
@@ -575,6 +582,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 )
             }
             R.id.cab_vehicle_btn ->{
+                no_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
+                private_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
+                cab_vehicle_btn.background = resources.getDrawable(R.drawable.selected_radio_btn)
+
                 isFirst_P_Y = true
 
                 var top_mar = 800

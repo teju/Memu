@@ -383,6 +383,7 @@ open class BaseFragment : GenericFragment() {
     open fun showAlertsDialog(mapfeed : List<MapFeed>, n: NotifyListener){
         val f = AlertsDialogFragment().apply {
             this.listener = n
+            this.mapfeed = mapfeed
         }
         f.isCancelable = true
         f.show(activity!!.supportFragmentManager, AlertsDialogFragment.TAG)

@@ -95,7 +95,7 @@ class AlertsDialogFragment : BaseDialogFragment() {
             object : AlertsAdapter.ProductAdapterListener {
                 override fun onClick(position: Int) {
                     listener.let {
-                        listener.onButtonClicked(BUTTON_POSITIVE)
+                        listener.onButtonClicked(position)
                     }
                     dismiss()
                 }

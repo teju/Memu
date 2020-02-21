@@ -13,28 +13,38 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import com.iapps.gon.etc.callback.NotifyListener
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineCallback
 import com.mapbox.android.core.location.LocationEngineResult
+import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
+import com.mapbox.geojson.Feature
+import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.location.LocationComponent
+import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
 import com.mapbox.services.android.navigation.v5.instruction.Instruction
@@ -57,11 +67,13 @@ import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress
 import com.mapbox.turf.TurfConstants
 import com.mapbox.turf.TurfMeasurement
 import com.memu.R
+import com.memu.etc.GPSTracker
 
 import java.lang.ref.WeakReference
 import java.util.Random
 
 import com.memu.ui.BaseFragment
+import com.memu.ui.fragments.MapFragment
 import com.memu.webservices.PostGetAlertListViewModel
 import com.memu.webservices.PostMApFeedAddViewModel
 import com.memu.webservices.PostMApFeedDataViewModel
@@ -76,6 +88,8 @@ class MockNavigationFragment(
     var originpoint: Point) : BaseFragment(), OnMapReadyCallback, ProgressChangeListener, NavigationEventListener,
     MilestoneEventListener, OffRouteListener, RefreshCallback {
     var currentRoute: DirectionsRoute? = null
+    private var locationComponent: LocationComponent? = null
+    private var permissionsManager: PermissionsManager? = null
 
     var startRouteButton: Button? = null
 
@@ -137,7 +151,8 @@ class MockNavigationFragment(
         mapView = v?.findViewById(R.id.mapView)
         mapView!!.onCreate(savedInstanceState)
         mapView!!.getMapAsync(this)
-
+        postGetAlertListViewModel.loadData()
+        postMApFeedDataViewModel.loadData()
         val context = activity!!
         val customNotification = CustomNavigationNotification(context)
         val options = MapboxNavigationOptions.builder()
@@ -160,7 +175,9 @@ class MockNavigationFragment(
         )
         customNotification.register(MyBroadcastReceiver(navigation!!), context)
         startRouteButton!!.setOnClickListener { onStartRouteClick() }
-
+        alert.setOnClickListener {
+            showAlertsDialog()
+        }
     }
 
     fun onStartRouteClick() {
@@ -189,14 +206,17 @@ class MockNavigationFragment(
     }
 
     private fun newOrigin() {
+        val gpsTracker = GPSTracker(activity!!)
         if (mapboxMap != null) {
             val latLng = LatLng(originpoint.latitude(),originpoint.longitude())
             (locationEngine as ReplayRouteLocationEngine).assignLastLocation(
                 Point.fromLngLat(latLng.longitude, latLng.latitude)
             )
             mapboxMap!!.addMarker(MarkerOptions().position(latLng))
-
-            mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17.0))
+            if(gpsTracker.canGetLocation()) {
+                val currentLoc = LatLng(gpsTracker.latitude,gpsTracker.longitude)
+                mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 17.0))
+            }
         }
     }
 
@@ -209,13 +229,39 @@ class MockNavigationFragment(
             locationComponent.renderMode = RenderMode.GPS
             locationComponent.isLocationComponentEnabled = false
             navigationMapRoute = NavigationMapRoute(navigation, mapView!!, mapboxMap)
-            Snackbar.make(
-                v?.findViewById(R.id.container)!!, "Tap map to place waypoint",
-                BaseTransientBottomBar.LENGTH_LONG
-            ).show()
             locationEngine = ReplayRouteLocationEngine()
             newOrigin()
             onMapClick()
+        }
+    }
+
+    fun addMarkers() {
+
+        try {
+            for (x in 0 until postMApFeedDataViewModel.obj?.list?.size!!) {
+                val latLng = LatLng(
+                    postMApFeedDataViewModel.obj?.list?.get(x)?.lattitude?.toDouble()!!,
+                    postMApFeedDataViewModel.obj?.list?.get(x)?.longitude?.toDouble()!!
+                )
+                mapboxMap!!.addMarker(MarkerOptions().position(latLng))
+
+            }
+        } catch (e : java.lang.Exception){
+
+        }
+
+    }
+    private fun enableLocationComponent(@io.reactivex.annotations.NonNull loadedMapStyle: Style?) {
+        // Check if permissions are enabled and if not request
+        if (PermissionsManager.areLocationPermissionsGranted(activity)) {
+            // Activate the MapboxMap LocationComponent to show user location
+            // Adding in LocationComponentOptions is also an optional parameter
+            locationComponent = mapboxMap!!.locationComponent
+            locationComponent!!.activateLocationComponent(activity!!, loadedMapStyle!!)
+            locationComponent!!.isLocationComponentEnabled = true
+            // Set the component's camera mode
+            locationComponent!!.cameraMode = CameraMode.TRACKING
+            locationComponent!!.zoomWhileTracking(12.0);
         }
     }
 
@@ -433,7 +479,11 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostMApFeedDataViewModel.NEXT_STEP -> {
+                            try {
+                                addMarkers()
+                            } catch (e  :java.lang.Exception) {
 
+                            }
                         }
                     }
                 })
@@ -462,6 +512,12 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostMApFeedAddViewModel.NEXT_STEP -> {
+                            Snackbar.make(
+                                v?.findViewById(R.id.container)!!,
+                                postMApFeedAddViewModel.obj?.message!!,
+                                LENGTH_LONG
+                            ).show()
+                            postMApFeedDataViewModel.loadData()
 
                         }
                     }
@@ -474,7 +530,10 @@ class MockNavigationFragment(
 
         private val BEGIN_ROUTE_MILESTONE = 1001
         private val TWENTY_FIVE_METERS = 25.0
-
+        private val TAG = "DirectionsActivity"
+        val SOURCE_ID = "SOURCE_ID"
+        private val ICON_ID = "ICON_ID"
+        val LAYER_ID = "LAYER_ID"
         fun getRandomLatLng(bbox: DoubleArray): LatLng {
             val random = Random()
 

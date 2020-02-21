@@ -101,6 +101,8 @@ dependencies {
     implementation("com.google.android.libraries.places:places:1.0.0") {
         exclude module: 'support-v4'
     }
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
     compile 'com.google.maps.android:android-maps-utils:0.5+'
 
     implementation 'com.google.guava:guava:27.0.1-android'

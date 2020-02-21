@@ -188,6 +188,9 @@ public class GPSTracker extends Service implements LocationListener {
      * @return boolean
      * */
     public boolean canGetLocation() {
+        if(!canGetLocation) {
+            showSettingsAlert();
+        }
         return this.canGetLocation;
     }
 

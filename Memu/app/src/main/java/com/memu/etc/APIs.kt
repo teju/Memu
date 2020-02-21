@@ -65,8 +65,11 @@ class APIs : BaseKeys() {
         val feedsData: String
             get() = BASE_URL!!  + "map-feeds"
 
-        val addfeedsData: String
+        val getteedsData: String
             get() = BASE_URL!!  + MAP_FEEDS + "data"
+
+        val addfeedsData: String
+            get() = BASE_URL!!  + MAP_FEEDS + "add"
 
         val postAcceptRejectReq : String
             get() = BASE_URL!!  + BOOKING+ "ride-approve-reject"

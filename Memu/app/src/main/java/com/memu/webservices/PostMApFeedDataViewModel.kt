@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder
 import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
 import com.memu.etc.*
+import com.memu.modules.mapFeeds.MapFeedData
 import com.memu.modules.mapFeeds.MapFeeds
 import org.json.JSONObject
 
@@ -17,7 +18,7 @@ class PostMApFeedDataViewModel(application: Application) : BaseViewModel(applica
 
     var apl: Application
 
-    var obj: MapFeeds? = null
+    var obj: MapFeedData? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -48,7 +49,7 @@ class PostMApFeedDataViewModel(application: Application) : BaseViewModel(applica
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), MapFeeds::class.java)
+                        obj = gson.fromJson(response!!.content.toString(), MapFeedData::class.java)
                         if (obj!!.status.equals(Keys.STATUS_CODE)) {
                             trigger.postValue(GetVehicleTypeViewModel.NEXT_STEP)
                         }else{
@@ -64,7 +65,7 @@ class PostMApFeedDataViewModel(application: Application) : BaseViewModel(applica
         })
 
         genericHttpAsyncTask.method = BaseConstants.POST
-        genericHttpAsyncTask.setUrl(APIs.addfeedsData)
+        genericHttpAsyncTask.setUrl(APIs.getteedsData)
         genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
         genericHttpAsyncTask.setPostParams(Keys.LOCATION_DETAILS, Helper().Location(apl))
         genericHttpAsyncTask.setCache(false)
