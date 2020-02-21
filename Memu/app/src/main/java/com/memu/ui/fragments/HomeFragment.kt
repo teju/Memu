@@ -84,7 +84,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
     var strseat =""
     var strType = "find_ride"
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        v = inflater.inflate(com.memu.R.layout.home_fragment, container, false)
+        v = inflater.inflate(R.layout.home_fragment, container, false)
         return v
     }
 

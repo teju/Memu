@@ -23,6 +23,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
+                    android:visibility="gone"
                     android:gravity="center_horizontal"
                     android:layout_marginTop="20dp"
                     android:layout_height="wrap_content">
@@ -75,9 +76,10 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:id="@+id/alertList"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_height="wrap_content">
                 </androidx.recyclerview.widget.RecyclerView>
 

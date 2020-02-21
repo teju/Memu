@@ -5,6 +5,9 @@ import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Bundle
 
@@ -16,12 +19,15 @@ import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import com.iapps.gon.etc.callback.NotifyListener
+import com.iapps.libs.helpers.BaseHelper
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineCallback
 import com.mapbox.android.core.location.LocationEngineResult
@@ -32,6 +38,7 @@ import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -77,11 +84,13 @@ import com.memu.ui.fragments.MapFragment
 import com.memu.webservices.PostGetAlertListViewModel
 import com.memu.webservices.PostMApFeedAddViewModel
 import com.memu.webservices.PostMApFeedDataViewModel
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_mock_navigation.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import java.net.URL
 
 class MockNavigationFragment(
     var desrpoint: Point,
@@ -241,9 +250,27 @@ class MockNavigationFragment(
             for (x in 0 until postMApFeedDataViewModel.obj?.list?.size!!) {
                 val latLng = LatLng(
                     postMApFeedDataViewModel.obj?.list?.get(x)?.lattitude?.toDouble()!!,
-                    postMApFeedDataViewModel.obj?.list?.get(x)?.longitude?.toDouble()!!
-                )
-                mapboxMap!!.addMarker(MarkerOptions().position(latLng))
+                    postMApFeedDataViewModel.obj?.list?.get(x)?.longitude?.toDouble()!!)
+                val title =  postMApFeedDataViewModel.obj?.list?.get(x)?.feed_name
+                Picasso.get().load(postMApFeedDataViewModel.obj?.list?.get(x)?.logo).into(object : com.squareup.picasso.Target {
+                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                        val bmp = BaseHelper.ScaleBitmap(bitmap,120)
+                        // loaded bitmap is here (bitmap)
+                        val iconFactory = IconFactory.getInstance(activity!!);
+                        val icon = iconFactory.fromBitmap(bmp!!);
+
+                        mapboxMap!!.addMarker(MarkerOptions()
+                            .position(latLng)
+                            .title(title)
+                            .icon(icon))
+                    }
+
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+
+                    }
+
+                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
+                })
 
             }
         } catch (e : java.lang.Exception){

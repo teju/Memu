@@ -109,7 +109,7 @@ class ProfilePicUploadFragment : BaseFragment()  {
 
                                 {
 
-                                    home().setFragment(DummyFragment())
+                                    home().setFragment(HomeFragment())
 
                                 }, 5000)
                         }
