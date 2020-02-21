@@ -6,14 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.memu.R
-import com.memu.modules.AlertsModule
+import com.memu.etc.Helper
+import com.memu.modules.mapFeeds.MapFeed
 import kotlinx.android.synthetic.main.alerts_item.view.*
 
 
 class AlertsAdapter(val context: Context) : RecyclerView.Adapter<AlertsAdapter.ViewHolder>()  {
 
     var productAdapterListener : ProductAdapterListener? = null
-    var obj : ArrayList<AlertsModule> =  ArrayList<AlertsModule>()
+    var obj : ArrayList<MapFeed> =  ArrayList<MapFeed>()
     interface ProductAdapterListener {
         fun onClick(position:Int)
     }
@@ -37,8 +38,8 @@ class AlertsAdapter(val context: Context) : RecyclerView.Adapter<AlertsAdapter.V
                 }
             }
         })
-        holder.img.setImageResource(obj.get(holder.pos).image)
-        holder.tittle.setText(obj.get(holder.pos).tittle)
+        Helper.loadImage(context!!,obj.get(holder.pos).logo,holder.img)
+        holder.tittle.setText(obj.get(holder.pos).name)
 
     }
 

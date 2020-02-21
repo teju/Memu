@@ -18,6 +18,16 @@
     <string name="current_night_mode">current_night_mode</string>
     <string name="was_in_tunnel" translatable="false">was_in_tunnel</string>
     <string name="was_navigation_stopped" translatable="false">was_navigation_stopped</string>
+    <string name="explanation_long_press_waypoint">explanation_long_press_waypoint</string>
+    <string name="error_select_longer_route">error_select_longer_route</string>
+    <string name="default_unit_type">error_select_longer_route</string>
+    <string name="unit_type_key">unit_type_key</string>
+    <string name="route_profile_key">unit_type_key</string>
+    <string name="simulate_route_key">unit_type_key</string>
+    <string name="error_route_not_available">unit_type_key</string>
+    <string name="error_valid_route_not_found">error_valid_route_not_found</string>
+    <string name="language_key">language_key</string>
+    <string name="default_locale">language_key</string>
     <string-array name="Seats">
         <item>01</item>
         <item>02</item>

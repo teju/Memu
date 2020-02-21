@@ -9,6 +9,7 @@ class APIs : BaseKeys() {
         val BOOKING = "booking/"
         val USER = "user/"
         val PROFILE = "profile/"
+        val MAP_FEEDS = "map-feeds/"
 
         val getVehicleType: String
             get() = BASE_URL!!  + VEHICLE+ "vehicle-type"
@@ -60,6 +61,12 @@ class APIs : BaseKeys() {
 
         val postOtp: String
             get() = BASE_URL!!  + USER+ "otp"
+
+        val feedsData: String
+            get() = BASE_URL!!  + "map-feeds"
+
+        val addfeedsData: String
+            get() = BASE_URL!!  + MAP_FEEDS + "data"
 
         val postAcceptRejectReq : String
             get() = BASE_URL!!  + BOOKING+ "ride-approve-reject"

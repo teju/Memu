@@ -1,7 +1,7 @@
 package com.memu.ui.fragments
 
+import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +15,6 @@ import androidx.lifecycle.Observer
 
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -44,6 +43,7 @@ import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import com.mapbox.mapboxsdk.utils.BitmapUtils
 
 
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
@@ -52,9 +52,11 @@ import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute
 import com.memu.etc.GPSTracker
 import com.memu.etc.Keys
 import com.memu.modules.googleMaps.Route
+import com.memu.ui.activity.MockNavigationFragment
 import com.memu.webservices.*
 import kotlinx.android.synthetic.main.map_fragment.*
 import kotlinx.android.synthetic.main.map_fragment.ld
+import kotlinx.android.synthetic.main.map_view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -71,6 +73,8 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     OnMapReadyCallback ,Callback<DirectionsResponse>,com.mapbox.mapboxsdk.maps.OnMapReadyCallback{
 
 
+    private var destinationPoint: Point? = null
+    private var maporiginPoint: Point? = null
     private var routes: List<DirectionsRoute> = listOf<DirectionsRoute>()
     private var myView: LinearLayout? = null
     var srcLat = 0.0
@@ -93,7 +97,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     lateinit var postGetRoutesViewModel: PostGetRoutesViewModel
     private var mMap: GoogleMap? = null
     internal var markerPoints = ArrayList<com.google.android.gms.maps.model.LatLng>()
-    var mapView :MapView? = null
     var mapcurrentRoute: DirectionsRoute? = null
     private var mapboxMap: MapboxMap? = null
     private val styleCycle = StyleCycle()
@@ -110,40 +113,83 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mapView = v?.findViewById(R.id.mapView) as MapView
-        mapView?.onCreate(savedInstanceState);
-        mapView?.onResume();
-        mapView?.getMapAsync(this)
-
-        mapboxView.onCreate(savedInstanceState)
-        mapboxView.getMapAsync(this)
+        googlemapView?.onCreate(savedInstanceState);
+        googlemapView?.onResume();
+       // mapView?.getMapAsync(this)
+        try {
+            val  inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
+            myView = inflater.inflate(R.layout.map_view, null) as LinearLayout
+            frame_layout.addView(myView);
+            mapView.onCreate(savedInstanceState)
+            mapView!!.getMapAsync(this)
+        } catch (e : Exception){
+            System.out.println("initUIException "+e.toString())
+        }
         initUI();
     }
 
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        this.mapboxMap = mapboxMap
-        mapboxMap.setStyle(styleCycle.style) { style ->
-            initializeLocationComponent(mapboxMap)
-            navigationMapRoute = NavigationMapRoute(null, mapboxView, mapboxMap)
-            navigationMapRoute?.setOnRouteSelectionChangeListener {
-                val bm = BitmapFactory.decodeResource(getResources(), R.drawable.map_marker);
-                mapboxMap.getStyle()?.addImage("my-marker",bm);
+    override fun onHiddenChanged(hidden: Boolean) {
+        if(!hidden) {
+            try {
+                frame_layout.addView(myView);
+               // mapView!!.getMapAsync(this)
 
-                 mapboxMap.addMarker(
-                    com.mapbox.mapboxsdk.annotations.MarkerOptions().position(com.mapbox.mapboxsdk.geometry.LatLng(srcLat,srcLng))
+            } catch (e : Exception){
+                System.out.println("initUIException "+e.toString())
+            }
+        } else {
+            frame_layout.removeAllViews()
+        }
+    }
+    override fun onMapReady(mapboxMap: MapboxMap) {
+        try {
+            this.mapboxMap = mapboxMap
+            mapboxMap.setStyle(getString(R.string.navigation_guidance_day)) { style ->
+                enableLocationComponent(style)
+                addDestinationIconSymbolLayer(style)
+                navigationMapRoute = NavigationMapRoute(null, mapView, mapboxMap)
+                mapboxMap.addMarker(
+                    com.mapbox.mapboxsdk.annotations.MarkerOptions().position(
+                        com.mapbox.mapboxsdk.geometry.LatLng(
+                            srcLat,
+                            srcLng
+                        )
+                    )
                 )
                 mapboxMap.addMarker(
-                    com.mapbox.mapboxsdk.annotations.MarkerOptions().position(com.mapbox.mapboxsdk.geometry.LatLng(destLat,destLng))
+                    com.mapbox.mapboxsdk.annotations.MarkerOptions().position(
+                        com.mapbox.mapboxsdk.geometry.LatLng(
+                            destLat,
+                            destLng
+                        )
+                    )
                 )
-                val position = CameraPosition.Builder()
-                    .target(com.mapbox.mapboxsdk.geometry.LatLng(srcLat, srcLng))
-                    .zoom(15.0)
-                    .tilt(20.0)
-                    .build();
-                mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
+
+                navigationMapRoute?.setOnRouteSelectionChangeListener {
+                    startButton.isEnabled = true
+                    mapcurrentRoute = it
+                }
+                GetRoutes()
             }
-            GetRoutes()
+        } catch (e : Exception){
+
         }
+    }
+    private fun addDestinationIconSymbolLayer(@io.reactivex.annotations.NonNull loadedMapStyle: Style) {
+        val drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.map_marker, null);
+        val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable);
+        loadedMapStyle.addImage(
+            "destination-icon-id", mBitmap!!)
+        val geoJsonSource = GeoJsonSource("destination-source-id")
+        loadedMapStyle.addSource(geoJsonSource)
+        val destinationSymbolLayer =
+            SymbolLayer("destination-symbol-layer-id", "destination-source-id")
+        destinationSymbolLayer.withProperties(
+            PropertyFactory.iconImage("destination-icon-id"),
+            PropertyFactory.iconAllowOverlap(true),
+            PropertyFactory.iconIgnorePlacement(true)
+        )
+        loadedMapStyle.addLayer(destinationSymbolLayer)
     }
 
     private fun initializeLocationComponent(mapboxMap: MapboxMap) {
@@ -191,14 +237,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         rloption_b.setOnClickListener(this)
         startButton.setOnClickListener(this)
         gpsTracker = GPSTracker(activity)
-        /*try {
-            val  inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
-            myView = inflater.inflate(R.layout.map_view, null) as LinearLayout
-            frame_layout.addView(myView);
-            mapView!!.getMapAsync(this)
-        } catch (e : Exception){
-
-        }*/
 
         startButton.isEnabled = false
         when (Keys.MAPTYPE) {
@@ -237,7 +275,15 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
 
             navigationMapRoute?.addRoutes(routes)
+            mapcurrentRoute = routes.get(0)
+            startButton.isEnabled = true
             addButtons(response.body()!!.routes())
+            val position = CameraPosition.Builder()
+                .target(com.mapbox.mapboxsdk.geometry.LatLng(srcLat, srcLng))
+                .zoom(15.0)
+                .tilt(20.0)
+                .build();
+            mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
             System.out.println("onResponse DirectionsResponse "+response.body()!!.routes().size)
 
         }
@@ -271,9 +317,8 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
             }
             R.id.startButton -> {
-                home().setFragment(NavigationFragment().apply {
+                home().setFragment(MockNavigationFragment(this!!.destinationPoint!!, this@MapFragment.maporiginPoint!!).apply {
                     System.out.println("onMapReady mapcurrentRoute "+mapcurrentRoute?.legs())
-
                     this.currentRoute = mapcurrentRoute
 
                 })
@@ -362,15 +407,15 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     }
 
     fun GetRoutes() {
-        val originPoint = Point.fromLngLat(
+        maporiginPoint = Point.fromLngLat(
             srcLng, srcLat
         )
-        val destinationPoint = Point.fromLngLat(
+        destinationPoint = Point.fromLngLat(
             destLng,
             destLat
         )
 
-        findRoute(originPoint, destinationPoint)
+        findRoute(maporiginPoint!!, destinationPoint!!)
     }
 
     fun findRoute(origin: Point, destination: Point) {
@@ -545,22 +590,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
 
     }
-    private fun addDestinationIconSymbolLayer(@io.reactivex.annotations.NonNull loadedMapStyle: Style) {
-        val drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.map_marker, null);
-        val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable);
-        loadedMapStyle.addImage(
-            "destination-icon-id", mBitmap!!)
-        val geoJsonSource = GeoJsonSource("destination-source-id")
-        loadedMapStyle.addSource(geoJsonSource)
-        val destinationSymbolLayer =
-            SymbolLayer("destination-symbol-layer-id", "destination-source-id")
-        destinationSymbolLayer.withProperties(
-            PropertyFactory.iconImage("destination-icon-id"),
-            PropertyFactory.iconAllowOverlap(true),
-            PropertyFactory.iconIgnorePlacement(true)
-        )
-        loadedMapStyle.addLayer(destinationSymbolLayer)
-    }
+
 
     override fun onMapClick(@io.reactivex.annotations.NonNull point: LatLng): Boolean {
 
@@ -576,89 +606,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         getRoute(originPoint, destinationPoint)
         startButton!!.isEnabled = true
         return true
-    }
-
-    fun showRoute() {
-
-        val destinationPoint = Point.fromLngLat(destLng,destLat)
-        if(srcLat == null) {
-            originPoint = Point.fromLngLat(
-                gpsTracker?.longitude!!,
-                gpsTracker?.latitude!!
-            )
-        } else {
-            originPoint = Point.fromLngLat(srcLng,srcLat)
-        }
-
-
-        val source = mapboxMap!!.style!!.getSourceAs<GeoJsonSource>("destination-source-id")
-        source?.setGeoJson(Feature.fromGeometry(destinationPoint))
-        val latng1 = com.google.android.gms.maps.model.LatLng(originPoint?.latitude()!!,originPoint?.longitude()!!)
-        val latng2 = com.google.android.gms.maps.model.LatLng(destLat,destLng)
-        val distance = BaseHelper.showDistance(latng1!!,latng2!!)
-        val findtime = BaseHelper.showTime(latng1!!,latng2!!)
-        dist.text = String.format("%.2f", distance)  +" Kms"
-        //time.text = String.format("%.2f", findtime)  +" Kms"
-        getRoute(originPoint!!, destinationPoint)
-        startButton!!.isEnabled = true
-
-
-        GoogleMapsPath().getDirectionsUrl(LatLng(originPoint!!.latitude(), originPoint!!.longitude())
-            , LatLng(destinationPoint.latitude(),destinationPoint.longitude()),activity)
-    }
-
-    private fun getRoute(origin: Point, destination: Point) {
-   
-        NavigationRoute.builder(activity)
-            .accessToken(Mapbox.getAccessToken()!!)
-            .origin(origin)
-
-            .destination(destination)
-            .build()
-            .getRoute(object : Callback<DirectionsResponse> {
-                override fun onResponse(
-                    call: Call<DirectionsResponse>,
-                    response: Response<DirectionsResponse>
-                ) {
-                    // You can get the generic HTTP info about the response
-                    Log.d(TAG, "Response code: " + response.code())
-                    if (response.body() == null) {
-                        Log.e(
-                            TAG,
-                            "No routes found, make sure you set the right user and access token."
-                        )
-                        return
-                    } else if (response.body()!!.routes().size < 1) {
-                        Log.e(TAG, "No routes found")
-                        return
-                    }
-
-                    currentRoute = response.body()!!.routes()[0]
-
-                    // Draw the route on the map
-                    if (navigationMapRoute != null) {
-                        navigationMapRoute!!.removeRoute()
-                    } else {
-                        navigationMapRoute =
-                            NavigationMapRoute(null, mapView, mapboxMap!!, R.style.NavigationMapRoute)
-                    }
-                    ld.hide()
-                    navigationMapRoute!!.addRoute(currentRoute)
-                    val position = CameraPosition.Builder()
-                    .target(LatLng(destination.latitude(), destination.longitude()))
-                    .zoom(14.0)
-                    .tilt(20.0)
-                    .build();
-                   // mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
-                    ;
-
-                }
-
-                override fun onFailure(call: Call<DirectionsResponse>, throwable: Throwable) {
-                    ld.hide()
-                    Log.e(TAG, "Error: " + throwable.message)
-                }
-            })
     }
 
 
@@ -742,7 +689,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         ) {
             enableLocationComponent(it)
         }
-    }
+    }*/
 
     private fun enableLocationComponent(@io.reactivex.annotations.NonNull loadedMapStyle: Style?) {
         // Check if permissions are enabled and if not request
@@ -760,45 +707,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             permissionsManager!!.requestLocationPermissions(activity)
         }
     }
-*/
-   /* fun drawPolyLine(result : ArrayList<Route>) {
-        try {
-            var points: ArrayList<*>? = null
-            var lineOptions: PolylineOptions? = null
-            val markerOptions = MarkerOptions()
-            println("ParserTaskException result " + result.toString())
-
-            for (i in result.indices) {
-                points = ArrayList()
-                lineOptions = PolylineOptions()
-
-                val path = result.get(i)
-
-                for (j in path.indices) {
-                    val point = path.get(j)
-
-                    val lat = java.lang.Double.parseDouble(point.get("lat"))
-                    val lng = java.lang.Double.parseDouble(point.get("lng"))
-                    val position = LatLng(lat, lng)
-
-                    points!!.add(position)
-                }
-
-                lineOptions!!.addAll(points!!)
-                lineOptions!!.width(12f)
-                lineOptions!!.color(Color.RED)
-                lineOptions!!.geodesic(true)
-
-            }
-
-// Drawing polyline in the Google Map for the i-th route
-            mMap?.addPolyline(lineOptions)
-        } catch (e : Exception )
-        {
-            System.out.println("ParserTaskException onPostExecute Exception " + e.toString());
-
-        }
-    }*/
 
 
     fun setInviteRideGiversAPIObserver() {
@@ -937,33 +845,33 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
     override fun onStart() {
         super.onStart()
-        mapboxView!!.onStart()
+        mapView!!.onStart()
     }
 
     override fun onResume() {
         super.onResume()
-        mapboxView!!.onResume()
+        mapView!!.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapboxView!!.onPause()
+        mapView!!.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        mapboxView!!.onStop()
+        mapView!!.onStop()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapboxView!!.onSaveInstanceState(outState)
+        mapView!!.onSaveInstanceState(outState)
     }
 
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapboxView!!.onLowMemory()
+        mapView!!.onLowMemory()
     }
     companion object {
         private val TAG = "DirectionsActivity"

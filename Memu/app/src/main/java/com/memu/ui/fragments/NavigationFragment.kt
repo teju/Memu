@@ -1,7 +1,5 @@
 package com.memu.ui.fragments
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -11,27 +9,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.iapps.gon.etc.callback.NotifyListener
 
-import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
-import com.mapbox.geojson.Point
-import com.mapbox.mapboxsdk.Mapbox
 
 import com.mapbox.services.android.navigation.ui.v5.NavigationView
 import com.mapbox.services.android.navigation.ui.v5.NavigationViewOptions
 import com.mapbox.services.android.navigation.ui.v5.OnNavigationReadyCallback
 import com.mapbox.services.android.navigation.ui.v5.listeners.NavigationListener
-import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress
 import com.memu.R
-import com.memu.callback.SimplifiedCallback
 import com.memu.ui.BaseFragment
-
-import retrofit2.Call
-import retrofit2.Response
+import com.memu.webservices.PostMApFeedDataViewModel
+import com.memu.webservices.PostGetAlertListViewModel
+import com.memu.webservices.PostMApFeedAddViewModel
+import kotlinx.android.synthetic.main.activity_embedded_navigation.*
 
 class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, NavigationListener,
     ProgressChangeListener {
@@ -39,6 +34,9 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
     private var navigationView: NavigationView? = null
     var currentRoute: DirectionsRoute? = null
     var alert: LinearLayout? = null
+    lateinit var postGetAlertListViewModel: PostGetAlertListViewModel
+    lateinit var postMApFeedDataViewModel: PostMApFeedDataViewModel
+    lateinit var postMApFeedAddViewModel: PostMApFeedAddViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,20 +48,36 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateNightMode()
+        setGetAlertsAPIObserver()
+        setMapFeedsDataAPIObserver()
+        setAddAlertAPIObserver()
         navigationView = view.findViewById(R.id.navigation_view_fragment)
         alert = view.findViewById(R.id.alert)
         navigationView!!.onCreate(savedInstanceState)
         navigationView!!.initialize(this)
+        postGetAlertListViewModel.loadData()
+        postMApFeedDataViewModel.loadData()
         alert?.setOnClickListener {
             showAlertsDialog()
         }
     }
+    private fun updateNightMode() {
+        if (wasNavigationStopped()) {
+            updateWasNavigationStopped(false)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
+            activity!!.recreate()
+        }
+    }
 
     fun showAlertsDialog() {
-        showAlertsDialog(object : NotifyListener {
-            override fun onButtonClicked(which: Int) { } }
+        System.out.println("showAlertsDialog map_feeds "+postGetAlertListViewModel.obj?.map_feeds!!)
+        showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!!,object : NotifyListener {
+            override fun onButtonClicked(which: Int) {
+                postMApFeedAddViewModel.loadData(postGetAlertListViewModel.obj?.map_feeds!!.get(which).id)
+            } }
         )
     }
+
     override fun onStart() {
         super.onStart()
         navigationView!!.onStart()
@@ -107,7 +121,7 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
     }
 
     override fun onNavigationReady(isRunning: Boolean) {
-        startNavigation()
+        startNavigation(currentRoute!!)
     }
 
     override fun onCancelNavigation() {
@@ -139,25 +153,17 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
         }
     }
 
-    private fun updateNightMode() {
-        if (wasNavigationStopped()) {
-            updateWasNavigationStopped(false)
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
-            activity!!.recreate()
-        }
-    }
 
-
-    private fun startNavigation() {
-        if (currentRoute == null) {
-            return
-        }
+    private fun startNavigation(directionsRoute: DirectionsRoute) {
         val options = NavigationViewOptions.builder()
-            .directionsRoute(currentRoute)
-            .shouldSimulateRoute(true)
-            .build()
-        navigationView!!.findViewById<View>(R.id.feedbackFab).visibility = View.GONE
-        navigationView!!.startNavigation(options)
+            .navigationListener(this)
+            .directionsRoute(directionsRoute)
+
+            .shouldSimulateRoute(false)
+
+
+        navigationView?.findViewById<View>(R.id.feedbackFab)?.visibility = View.GONE
+        navigationView?.startNavigation(options.build())
     }
 
     private fun stopNavigation() {
@@ -169,6 +175,94 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
             updateWasNavigationStopped(true);
             updateWasInTunnel(false);
         }*/
+    }
+
+    fun setGetAlertsAPIObserver() {
+        postGetAlertListViewModel = ViewModelProviders.of(this).get(PostGetAlertListViewModel::class.java).apply {
+            this@NavigationFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostGetAlertListViewModel.NEXT_STEP -> {
+
+                        }
+                    }
+                })
+            }
+        }
+    }
+    fun setMapFeedsDataAPIObserver() {
+        postMApFeedDataViewModel = ViewModelProviders.of(this).get(PostMApFeedDataViewModel::class.java).apply {
+            this@NavigationFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostMApFeedDataViewModel.NEXT_STEP -> {
+
+                        }
+                    }
+                })
+            }
+        }
+    }
+    fun setAddAlertAPIObserver() {
+        postMApFeedAddViewModel = ViewModelProviders.of(this).get(PostMApFeedAddViewModel::class.java).apply {
+            this@NavigationFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostMApFeedAddViewModel.NEXT_STEP -> {
+
+                        }
+                    }
+                })
+            }
+        }
     }
 
     private fun wasInTunnel(): Boolean {

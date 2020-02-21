@@ -38,7 +38,7 @@
             android:layout_marginLeft="35dp"
             android:layout_marginRight="30dp"
             android:scaleType="fitXY"
-            android:src="@drawable/navi_alert"
+            android:src="@drawable/alert_bottom_img"
             android:layout_height="60dp">
         </ImageView>
     </LinearLayout>
@@ -58,6 +58,13 @@
         android:visibility="gone"
         app:layout_anchor="@id/spacer"
         app:layout_anchorGravity="top"/>
+    <com.iapps.libs.views.LoadingCompound
+        android:id="@+id/ld"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:visibility="gone" />
 
     <View
         android:id="@+id/spacer"

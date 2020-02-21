@@ -6,22 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:ignore="NamespaceTypo">
-<!--
     <FrameLayout
         android:layout_width="match_parent"
         android:id="@+id/frame_layout"
         android:layout_height="match_parent">
 
     </FrameLayout>
--->
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapboxView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:mapbox_cameraZoom="12"/>
 
     <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
+        android:id="@+id/googlemapView"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
