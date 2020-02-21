@@ -75,9 +75,9 @@ class MockNavigationFragment(
     var desrpoint: Point,
     var originpoint: Point) : BaseFragment(), OnMapReadyCallback, ProgressChangeListener, NavigationEventListener,
     MilestoneEventListener, OffRouteListener, RefreshCallback {
+    var currentRoute: DirectionsRoute? = null
 
     var startRouteButton: Button? = null
-    var currentRoute: DirectionsRoute? = null
 
     private var mapboxMap: MapboxMap? = null
     lateinit var postGetAlertListViewModel: PostGetAlertListViewModel
@@ -178,9 +178,9 @@ class MockNavigationFragment(
             navigation!!.addOffRouteListener(this)
 
             (locationEngine as ReplayRouteLocationEngine).assign(route)
-            navigation!!.locationEngine = locationEngine!!
+
             mapboxMap!!.locationComponent.isLocationComponentEnabled = true
-            navigation!!.startNavigation(cu)
+            navigation!!.startNavigation(route!!)
         }
     }
 
@@ -196,7 +196,7 @@ class MockNavigationFragment(
             )
             mapboxMap!!.addMarker(MarkerOptions().position(latLng))
 
-            mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0))
+            mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17.0))
         }
     }
 
@@ -275,9 +275,9 @@ class MockNavigationFragment(
                 Timber.d("Url: %s", call.request().url().toString())
                 if (response.body() != null) {
                     if (!response.body()!!.routes().isEmpty()) {
-                        this@MockNavigationFragment.route = response.body()!!.routes()[0]
-                        navigationMapRoute!!.addRoutes(response.body()!!.routes())
-                        startRouteButton?.visibility = View.VISIBLE
+                        this@MockNavigationFragment.route = currentRoute
+                        navigationMapRoute!!.addRoute(this@MockNavigationFragment.route)
+                        onStartRouteClick()
                     }
                 }
             }
@@ -310,7 +310,7 @@ class MockNavigationFragment(
     }
 
     override fun userOffRoute(location: Location) {
-        Toast.makeText(activity!!, "off-route called", Toast.LENGTH_LONG).show()
+      //  Toast.makeText(activity!!, "off-route called", Toast.LENGTH_LONG).show()
     }
 
     override fun onProgressChange(location: Location, routeProgress: RouteProgress) {

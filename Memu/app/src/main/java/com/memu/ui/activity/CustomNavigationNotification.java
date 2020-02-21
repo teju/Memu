@@ -67,8 +67,12 @@ public class CustomNavigationNotification implements NavigationNotification {
 
     @Override
     public void onNavigationStopped(Context context) {
-        context.unregisterReceiver(stopNavigationReceiver);
-        notificationManager.cancel(CUSTOM_NOTIFICATION_ID);
+        try {
+            context.unregisterReceiver(stopNavigationReceiver);
+            notificationManager.cancel(CUSTOM_NOTIFICATION_ID);
+        } catch (Exception e){
+
+        }
     }
 
     public void register(BroadcastReceiver stopNavigationReceiver, Context applicationContext) {
