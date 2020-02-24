@@ -211,7 +211,7 @@ class ActivityMain : AppCompatActivity(){
     fun triggerMainProcess(){
 
         if(!BaseHelper.isEmpty(UserInfoManager.getInstance(this).authToken))
-            setFragment(ProfilePicUploadFragment())
+            setFragment(HomeFragment())
         else
             setFragment(MainFragment())
     }

@@ -138,7 +138,7 @@ class MockNavigationActivity : AppCompatActivity(), OnMapReadyCallback,
         )
         customNotification.register(MyBroadcastReceiver(navigation!!), context)
         startRouteButton!!.setOnClickListener { onStartRouteClick() }
-        newLocationFab!!.setOnClickListener { onNewLocationClick() }
+//        newLocationFab!!.setOnClickListener { onNewLocationClick() }
     }
 
 
@@ -155,7 +155,6 @@ class MockNavigationActivity : AppCompatActivity(), OnMapReadyCallback,
             navigation!!.addProgressChangeListener(this)
             navigation!!.addMilestoneEventListener(this)
             navigation!!.addOffRouteListener(this)
-
             (locationEngine as ReplayRouteLocationEngine).assign(route)
             navigation!!.locationEngine = locationEngine!!
             mapboxMap!!.locationComponent.isLocationComponentEnabled = true

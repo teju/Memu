@@ -347,7 +347,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
             }
         }
-
     }
     fun FormatDistance(meters:Double, unitString:String):String {
         val df = DecimalFormat("#.##");
