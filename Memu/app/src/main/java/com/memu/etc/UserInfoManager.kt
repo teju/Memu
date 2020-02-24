@@ -16,6 +16,11 @@ class UserInfoManager private constructor() {
     private var accountId: String? = null
     private var profilePic: String? = null
     private var deviceToken: String? = ""
+    private var otpresendduration: Long? = 0
+    private var otpexpirtytimestam: Long? = 0
+
+    private val OTPRESENDDURATIONSAVED = "otp_resend_period_saved"
+    private val OTPEXPIRTYTIMESTAMP = "otp_expiry_timestamp"
 
     private var prefs: SharedPreferences? = null
     private var prefsnoclear: SharedPreferences? = null
@@ -104,7 +109,53 @@ class UserInfoManager private constructor() {
         _userInfo = null
     }
 
+    fun setOTPExpiryTimeStamp(timeStamp: Long) {
+        try {
+            this.otpexpirtytimestam = timeStamp
+            val editor = this.prefs!!.edit()
+            editor.putLong(OTPEXPIRTYTIMESTAMP, otpexpirtytimestam!!)
+            editor.commit()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
+    }
+
+    fun getOTPExpiryTimeStamp(): Long {
+        try {
+            this.otpexpirtytimestam = this.prefs!!.getLong(OTPEXPIRTYTIMESTAMP, 0)
+            return otpexpirtytimestam!!
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return 0
+        }
+
+    }
+
+    fun setOtpDuration(duration: Long) {
+        try {
+            if (duration != 0L) {
+                this.otpresendduration = duration
+                val editor = this.prefs!!.edit()
+                editor.putLong(OTPRESENDDURATIONSAVED, otpresendduration!!)
+                editor.commit()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    fun getOtpDuration(): Long {
+        try {
+            this.otpresendduration = this.prefs!!.getLong(OTPRESENDDURATIONSAVED, 0)
+            return otpresendduration!!
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return 0
+        }
+
+    }
     companion object {
 
         private var _userInfo: UserInfoManager? = null

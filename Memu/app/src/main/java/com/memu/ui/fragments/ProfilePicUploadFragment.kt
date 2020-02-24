@@ -23,6 +23,7 @@ import com.bumptech.glide.request.target.ImageViewTarget
 
 import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.request.target.DrawableImageViewTarget
+import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
 
 
@@ -70,7 +71,7 @@ class ProfilePicUploadFragment : BaseFragment()  {
                 // Get real path and show over text view
                 val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
                 val bitmap = MediaStore.Images.Media.getBitmap(activity?.getContentResolver(), imageuri);
-                profilePic.setImageBitmap(bitmap);
+              //  profilePic.setImageBitmap(bitmap);
                 System.out.println("onActivityResult12 onActivityResult")
 
                 postUploadDocViewModel.loadData(PostUploadDocViewModel.PROFILE_PHOTO, real_Path)
@@ -100,10 +101,19 @@ class ProfilePicUploadFragment : BaseFragment()  {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUploadDocViewModel.NEXT_STEP -> {
-                            UserInfoManager.getInstance(activity!!).saveProfilePic(
-                                postUploadDocViewModel.obj?.original_path!!)
-                            rlCreating_profile.visibility = View.VISIBLE
-                            llUpload.visibility = View.GONE
+                            Helper.loadImage(activity!!,postUploadDocViewModel.obj?.original_path!!,profilePic)
+                            Handler().postDelayed(
+                                Runnable // Using handler with postDelayed called runnable run method
+
+                                {
+
+                                    UserInfoManager.getInstance(activity!!).saveProfilePic(
+                                        postUploadDocViewModel.obj?.original_path!!)
+                                    rlCreating_profile.visibility = View.VISIBLE
+                                    llUpload.visibility = View.GONE
+
+                                }, 1000)
+
                             Handler().postDelayed(
                                 Runnable // Using handler with postDelayed called runnable run method
 
@@ -111,7 +121,7 @@ class ProfilePicUploadFragment : BaseFragment()  {
 
                                     home().setFragment(HomeFragment())
 
-                                }, 5000)
+                                }, 6000)
                         }
                     }
                 })

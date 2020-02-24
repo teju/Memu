@@ -28,6 +28,8 @@
     <string name="error_valid_route_not_found">error_valid_route_not_found</string>
     <string name="language_key">language_key</string>
     <string name="default_locale">language_key</string>
+    <string name="resend_OTP_available"> %02d:%02d </string>
+
     <string-array name="Seats">
         <item>01</item>
         <item>02</item>
