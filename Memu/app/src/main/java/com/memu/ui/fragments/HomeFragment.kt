@@ -84,7 +84,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
     var strseat =""
     var strType = "find_ride"
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        v = inflater.inflate(com.memu.R.layout.home_fragment, container, false)
+        v = inflater.inflate(R.layout.home_fragment, container, false)
         return v
     }
 
@@ -145,13 +145,18 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         setUpdateNotiTokenAPIObserver()
         setFindTripAPIObserver()
         cv.setCardBackgroundColor(activity!!.resources.getColor(R.color.Purple));
-
         gpsTracker = GPSTracker(activity)
         if(gpsTracker?.canGetLocation()!!) {
             srcLatitude = gpsTracker?.latitude!!
             srcLongitude = gpsTracker?.longitude!!
         }
 
+        try {
+            Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic)
+
+        } catch (e : java.lang.Exception){
+
+        }
         try {
             val  inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
             myView = inflater.inflate(R.layout.map_view, null) as LinearLayout
@@ -361,7 +366,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                 TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
             }
             R.id.find_ride -> {
-                showFindRideDialog()
+                findRide()
                /* strType = "find_ride_bike"
                // seatstv.text = "01\nSeats"
                 type = FINDRIDER
@@ -369,7 +374,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                 offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)*/
             }
             R.id.bike_find_ride -> {
-                showFindRideDialog()
+                findRide()
                /* strType = "find_ride_bike"
                // seatstv.text = "01\nSeats"
                 type = FINDRIDER
@@ -395,6 +400,33 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         }
     }
 
+    fun  findRide() {
+        if(!BaseHelper.isEmpty(edtdestLoc.text.toString())) {
+            edtdestLocerror.visibility = View.GONE
+            if (Keys.MAPTYPE == Keys.SHORTESTROUTE) {
+                if ((srcLatitude != 0.0 && srcLongitude != 0.0)) {
+                    reset()
+                    home().setFragment(MapFragment().apply {
+                        srcLat = srcLatitude
+                        srcLng = srcLongitude
+                        destLng = destLongitude
+                        destLat = destLatitide
+                    })
+                } else {
+                    showNotifyDialog(
+                        "", "Select your source location",
+                        getString(R.string.ok), "", object : NotifyListener {
+                            override fun onButtonClicked(which: Int) {}
+                        }
+                    )
+                }
+
+            } else {
+
+                CallApi()
+            }
+        }
+    }
     val cal = Calendar.getInstance()
 
     val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
@@ -493,14 +525,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
 
             //mapboxMap.addOnMapClickListener(this@MapFragment)
             addMarkers()
-            val position = CameraPosition.Builder()
-                .target(LatLng(gpsTracker?.latitude!!, gpsTracker?.longitude!!))
-                .zoom(10.0)
-                .tilt(20.0)
-                .build();
-            mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
 
-            ;
         }
 
 
@@ -511,8 +536,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         symbolLayerIconFeatureList.add(
             Feature.fromGeometry(
                 Point.fromLngLat(
-                    gpsTracker?.longitude!!,
-                    gpsTracker?.latitude!!))
+                    srcLongitude,
+                    srcLatitude))
         )
         val drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.map_marker, null);
         val mBitmap = com.mapbox.mapboxsdk.utils.BitmapUtils.getBitmapFromDrawable(drawable);
@@ -548,7 +573,14 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         ) {
             enableLocationComponent(it)
         }
+        val position = CameraPosition.Builder()
+            .target(LatLng(srcLatitude, srcLongitude))
+            .zoom(15.0)
+            .tilt(20.0)
+            .build();
+        mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
     }
+
 
     private fun enableLocationComponent(@io.reactivex.annotations.NonNull loadedMapStyle: Style?) {
         if (PermissionsManager.areLocationPermissionsGranted(activity)) {
@@ -699,8 +731,16 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                 edtScrLoc.setText(data?.getStringExtra("Address"))
                 srcLatitude = lat!!
                 srcLongitude = lng!!
-                //selectedCarmenFeatureSrc = PlaceAutocomplete.getPlace(data);
-                ///edtScrLoc.setText(selectedCarmenFeatureSrc!!.placeName())
+                try {
+                    home_mapView.removeView(myView)
+                    home_mapView.addView(myView);
+                    mapView!!.getMapAsync(this)
+
+                } catch (e : Exception){
+                    System.out.println("initUIException "+e.toString())
+                }
+
+
             }
             if (requestCode == REQUEST_CODE_AUTOCOMPLETEDEST) {
                 val lat = data?.getDoubleExtra("Lat",0.0)
@@ -712,7 +752,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                 //edtdestLoc.setText(selectedCarmenFeatureDest!!.placeName())
             }
         } catch (e : Exception){
-
+            System.out.println("Exception123 "+e.toString())
         }
 
 

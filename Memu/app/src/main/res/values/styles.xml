@@ -29,4 +29,10 @@
         <item name="navigationViewSecondary">@color/mapboxBlue</item>
         <item name="navigationViewAccent">@color/mapboxPink</item>
     </style>
+    <style name="CustomNavigationView" parent="NavigationViewLight">
+        <item name="navigationViewRouteStyle">@style/CustomNavigationMapRoute</item>
+    </style>
+    <style name="CustomNavigationMapRoute" parent="NavigationMapRoute">
+        <item name="upcomingManeuverArrowBorderColor">@color/Red</item>
+    </style>
 </resources>

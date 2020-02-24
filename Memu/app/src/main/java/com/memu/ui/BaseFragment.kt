@@ -32,6 +32,7 @@ import com.memu.R
 import com.memu.etc.Constants
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
+import com.memu.modules.mapFeeds.MapFeed
 import com.memu.modules.riderList.Rider
 import com.memu.ui.dialog.AlertsDialogFragment
 import com.memu.ui.dialog.FindRideDialogFragment
@@ -379,9 +380,10 @@ open class BaseFragment : GenericFragment() {
         f.show(activity!!.supportFragmentManager, FindRideDialogFragment.TAG)
     }
 
-    open fun showAlertsDialog(n: NotifyListener){
+    open fun showAlertsDialog(mapfeed : List<MapFeed>, n: NotifyListener){
         val f = AlertsDialogFragment().apply {
             this.listener = n
+            this.mapfeed = mapfeed
         }
         f.isCancelable = true
         f.show(activity!!.supportFragmentManager, AlertsDialogFragment.TAG)

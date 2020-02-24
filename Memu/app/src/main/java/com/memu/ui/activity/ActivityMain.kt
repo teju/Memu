@@ -19,7 +19,6 @@ import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
 import com.memu.ui.BaseFragment
 import com.memu.ui.dialog.NotifyDialogFragment
-import com.memu.ui.fragments.MainFragment
 import com.memu.webservices.PostacceptRejectViewModel
 import io.paperdb.Paper
 import java.util.ArrayList
@@ -30,7 +29,7 @@ import com.memu.modules.notification.NotificationResponse
 import android.os.Handler
 import android.view.View
 import com.memu.R
-import com.memu.ui.fragments.DummyFragment
+import com.memu.ui.fragments.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.home_fragment.ld
 

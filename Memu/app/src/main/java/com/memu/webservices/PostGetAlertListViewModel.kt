@@ -9,13 +9,9 @@ import com.memu.etc.APIs
 import com.memu.etc.Helper
 import com.memu.etc.Keys
 import com.memu.etc.SingleLiveEvent
-import com.memu.modules.GenericResponse
-import com.memu.modules.UserSignup.UserSignUp
-import com.memu.modules.googleMaps.GoogleMAps
-import org.json.JSONArray
-import org.json.JSONObject
+import com.memu.modules.mapFeeds.MapFeeds
 
-class PostGetRoutesViewModel(application: Application) : BaseViewModel(application) {
+class PostGetAlertListViewModel(application: Application) : BaseViewModel(application) {
 
     private val trigger = SingleLiveEvent<Integer>()
 
@@ -23,7 +19,7 @@ class PostGetRoutesViewModel(application: Application) : BaseViewModel(applicati
 
     var apl: Application
 
-    var obj: GoogleMAps? = null
+    var obj: MapFeeds? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -34,7 +30,7 @@ class PostGetRoutesViewModel(application: Application) : BaseViewModel(applicati
         this.apl = application
     }
 
-    fun loadData(url: String) {
+    fun loadData() {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -54,9 +50,13 @@ class PostGetRoutesViewModel(application: Application) : BaseViewModel(applicati
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), GoogleMAps::class.java)
-                        trigger.postValue(GetVehicleTypeViewModel.NEXT_STEP)
+                        obj = gson.fromJson(response!!.content.toString(), MapFeeds::class.java)
+                        if (obj!!.status.equals(Keys.STATUS_CODE)) {
+                            trigger.postValue(GetVehicleTypeViewModel.NEXT_STEP)
+                        }else{
+                            errorMessage.value = createErrorMessageObject(response)
 
+                        }
                     } catch (e: Exception) {
                         showUnknowResponseErrorMessage()
                     }
@@ -66,9 +66,10 @@ class PostGetRoutesViewModel(application: Application) : BaseViewModel(applicati
         })
 
         genericHttpAsyncTask.method = BaseConstants.GET
-        genericHttpAsyncTask.setUrl(url)
+        genericHttpAsyncTask.setUrl(APIs.feedsData)
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.context = apl.applicationContext
+        Helper.applyHeader(apl,genericHttpAsyncTask)
         genericHttpAsyncTask.execute()
 
     }

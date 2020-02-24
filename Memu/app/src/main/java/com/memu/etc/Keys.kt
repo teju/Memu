@@ -32,6 +32,7 @@ class Keys : BaseKeys() {
         val Documents = "Documents"
         val Address = "Address"
         val OtpForm = "OtpForm"
+        val FEED_ID = "feed_id"
         val LoginForm = "LoginForm"
         val MOBILE = "mobile"
         val PUSHNOTIFICATION = "PushNotification"

@@ -3,6 +3,8 @@ package com.memu.etc
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import android.location.Address
+import android.location.Geocoder
 import android.net.ConnectivityManager
 import android.os.Environment
 import android.util.DisplayMetrics
@@ -19,8 +21,10 @@ import android.text.TextUtils
 
 import java.util.regex.Pattern
 import android.util.TypedValue
-
-
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import org.json.JSONObject
+import java.util.*
 
 
 open class Helper  {
@@ -148,7 +152,11 @@ open class Helper  {
                 phone.length == 10
             } else false
         }
-
+        fun loadImage(context: Context, url : String, v : ImageView){
+            Glide.with(context)
+                .load(url)
+                .into(v)
+        }
         fun isNetworkAvailable(ctx: Context): Boolean {
             try {
                 val manager = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -168,6 +176,50 @@ open class Helper  {
 
         }
 
+    }
+    fun getAddress(context : Context): List<Address>? {
+        val gpsTracker = GPSTracker(context)
+        var addresses: List<Address>? = null
+        if(gpsTracker.canGetLocation) {
+            val geocoder: Geocoder
+            geocoder = Geocoder(context, Locale.getDefault())
+
+            try {
+                addresses = geocoder.getFromLocation(gpsTracker?.latitude!!, gpsTracker?.longitude!!, 1)
+
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+
+
+        return addresses
+
+    }
+
+    fun Location(context : Context) : JSONObject {
+        val obj = JSONObject()
+
+        try {
+            val gpsTracker = GPSTracker(context!!)
+
+            obj.put("country", getAddress(context)?.get(0)?.countryName)
+
+            obj.put("state", getAddress(context)?.get(0)?.getAdminArea())
+
+            obj.put("city", getAddress(context)?.get(0)?.locality)
+            obj.put("location", getAddress(context)?.get(0)?.subLocality)
+            obj.put("pincode", getAddress(context)?.get(0)?.postalCode)
+            obj.put("lattitude", gpsTracker.latitude.toString())
+            obj.put("longitude", gpsTracker.longitude.toString())
+            obj.put("formatted_address", getAddress(context)?.get(0)?.getAddressLine(0))
+            obj.put("address_line1", getAddress(context)?.get(0)?.getAddressLine(0))
+
+
+        } catch (e : java.lang.Exception){
+
+        }
+        return obj
     }
 
 }

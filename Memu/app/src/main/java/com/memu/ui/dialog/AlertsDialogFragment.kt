@@ -1,33 +1,16 @@
 package com.memu.ui.dialog
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.iapps.gon.etc.callback.NotifyListener
-import com.iapps.gon.etc.callback.RequestListener
-import com.iapps.libs.helpers.BaseHelper
 import com.memu.R
-import com.memu.etc.Keys
 import com.memu.etc.SpacesItemDecoration
-import com.memu.modules.AlertsModule
-import com.memu.modules.TripGivers.Pooler
-import com.memu.modules.riderList.Rider
+import com.memu.modules.mapFeeds.MapFeed
 import com.memu.ui.adapters.AlertsAdapter
-import com.memu.ui.adapters.MatchingRidersAdapter
-import com.memu.webservices.PostRequestRideViewModel
-import com.memu.webservices.PostnviteRideGiversViewModel
 import kotlinx.android.synthetic.main.alerts_dialog_fragment.*
-import kotlinx.android.synthetic.main.map_fragment.*
 
 class AlertsDialogFragment : BaseDialogFragment() {
 
@@ -40,7 +23,7 @@ class AlertsDialogFragment : BaseDialogFragment() {
     }
 
     lateinit var listener: NotifyListener
-
+    var  mapfeed : List<MapFeed> = listOf()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(DATEPICKERFRAGMENT_LAYOUT, container, false)
         return v
@@ -52,7 +35,7 @@ class AlertsDialogFragment : BaseDialogFragment() {
 
     }
     fun alertsRecyclerView() {
-        var obj : ArrayList<AlertsModule> =  ArrayList<AlertsModule>()
+       /* var obj : ArrayList<AlertsModule> =  ArrayList<AlertsModule>()
 
         var alertsmodule = AlertsModule()
         alertsmodule.tittle = "Signal Camera"
@@ -99,20 +82,20 @@ class AlertsDialogFragment : BaseDialogFragment() {
         alertsmodule.image = R.drawable.police
 
         obj.add(alertsmodule)
-
+*/
         val sglm2 = GridLayoutManager(context, 3)
         val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing_grid1)
         alertList.setLayoutManager(sglm2)
         alertList.setNestedScrollingEnabled(false)
         alertList.addItemDecoration(SpacesItemDecoration(3, spacingInPixels, true))
         val adapter = AlertsAdapter(context!!)
-        adapter.obj = obj
+        adapter.obj = mapfeed as ArrayList<MapFeed>
         alertList.adapter = adapter
         (alertList.adapter as AlertsAdapter).productAdapterListener =
             object : AlertsAdapter.ProductAdapterListener {
                 override fun onClick(position: Int) {
                     listener.let {
-                        listener.onButtonClicked(BUTTON_POSITIVE)
+                        listener.onButtonClicked(position)
                     }
                     dismiss()
                 }

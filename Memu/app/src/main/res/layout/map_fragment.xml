@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:ignore="NamespaceTypo">
     <FrameLayout
         android:layout_width="match_parent"
         android:id="@+id/frame_layout"
         android:layout_height="match_parent">
 
     </FrameLayout>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/googlemapView"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <com.iapps.libs.views.LoadingCompound
         android:id="@+id/ld"
         android:layout_width="match_parent"
@@ -77,26 +85,6 @@
         </ImageView>
     </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_marginTop="80dp"
-        android:visibility="visible"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="100dp"
-        android:orientation="vertical"
-        android:id="@+id/find_riders"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_marginTop="18dp"
-            android:layout_marginLeft="35dp"
-            android:layout_marginRight="30dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/navi_alert"
-            android:layout_height="60dp">
-        </ImageView>
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
@@ -105,41 +93,47 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:id="@+id/shortes_route_result"
             android:gravity="center_horizontal"
             android:layout_height="wrap_content">
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="140dp"
+                android:visibility="gone"
+                android:id="@+id/rloption_c"
                 android:background="@drawable/pink_button"
                 android:layout_height="wrap_content">
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:src="@drawable/option_a"
+                    android:src="@drawable/option_c"
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="14dp"
-                    android:id="@+id/option_a"
+                    android:id="@+id/option_c"
                     android:layout_height="wrap_content">
                 </ImageView>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:orientation="vertical"
                     android:paddingRight="30dp"
-                    android:layout_toRightOf="@+id/option_a"
+                    android:layout_toRightOf="@+id/option_c"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="5dp"
                     android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:id="@+id/time"
-                        android:fontFamily="@font/opensansregular"
+                        android:id="@+id/option_c_time"
+                        android:fontFamily="@font/opensanssemibold"
                         android:textStyle="bold"
+                        android:textSize="13dp"
                         android:textColor="@color/Black"
                         android:layout_height="wrap_content">
 
                     </TextView>
                     <TextView
                         android:layout_width="wrap_content"
-                        android:id="@+id/dist"
+                        android:id="@+id/option_c_dist"
+                        android:textSize="11dp"
                         android:fontFamily="@font/opensansregular"
                         android:textColor="@color/Black"
                         android:layout_height="wrap_content">
@@ -149,7 +143,9 @@
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="140dp"
+                android:layout_marginLeft="-30dp"
+                android:id="@+id/rloption_b"
                 android:background="@drawable/yellow_btn"
                 android:visibility="gone"
                 android:layout_height="wrap_content">
@@ -170,12 +166,18 @@
                     android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="wrap_content"
-                        android:fontFamily="@font/opensansregular"
+                        android:id="@+id/option_b_time"
+                        android:textSize="13dp"
+                        android:textColor="@color/Black"
+                        android:fontFamily="@font/opensanssemibold"
                         android:layout_height="wrap_content">
 
                     </TextView>
                     <TextView
                         android:layout_width="wrap_content"
+                        android:id="@+id/option_b_dist"
+                        android:textSize="11dp"
+                        android:textColor="@color/Black"
                         android:fontFamily="@font/opensansregular"
                         android:layout_height="wrap_content">
 
@@ -184,11 +186,45 @@
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="140dp"
+                android:layout_marginLeft="-30dp"
+                android:id="@+id/rloption_a"
                 android:visibility="gone"
                 android:background="@drawable/blue_btn"
                 android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/option_a"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="14dp"
+                    android:id="@+id/option_a"
+                    android:layout_height="wrap_content">
+                </ImageView>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_toRightOf="@+id/option_a"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/option_a_time"
+                        android:textSize="13dp"
+                        android:textColor="@color/Black"
+                        android:fontFamily="@font/opensanssemibold"
+                        android:layout_height="wrap_content">
 
+                    </TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/option_a_date"
+                        android:textSize="11dp"
+                        android:textColor="@color/Black"
+                        android:fontFamily="@font/opensansregular"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                </LinearLayout>
             </RelativeLayout>
 
         </LinearLayout>

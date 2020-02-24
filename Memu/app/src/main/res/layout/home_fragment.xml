@@ -50,15 +50,15 @@
 
                 </TextView>
             </RelativeLayout>
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="80dp"
                 android:layout_marginTop="18dp"
                 android:layout_marginLeft="35dp"
                 android:layout_marginRight="30dp"
-                android:scaleType="fitXY"
+                android:id="@+id/profile_pic"
                 android:src="@drawable/dummy_profile_pic"
                 android:layout_height="80dp">
-            </ImageView>
+            </de.hdodenhof.circleimageview.CircleImageView>
             <ImageView
                 android:layout_width="40dp"
                 android:layout_marginTop="95dp"

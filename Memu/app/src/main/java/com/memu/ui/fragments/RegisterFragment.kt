@@ -9,7 +9,6 @@ import android.location.*
 import android.os.Bundle
 import android.view.*
 import com.memu.R
-import com.memu.etc.Helper
 import com.memu.ui.BaseFragment
 import kotlinx.android.synthetic.main.register_fragment.*
 import android.view.animation.AccelerateDecelerateInterpolator
@@ -27,10 +26,9 @@ import org.json.JSONObject
 import android.util.DisplayMetrics
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
+import com.iapps.deera.etc.OTPExpiryListener
 import com.iapps.gon.etc.callback.PermissionListener
-import com.memu.etc.GPSTracker
-import com.memu.etc.Keys
-import com.memu.etc.UserInfoManager
+import com.memu.etc.*
 import com.memu.ui.activity.SearchActivity
 import com.memu.webservices.*
 import kotlinx.android.synthetic.main.cab_radio_button.*
@@ -39,6 +37,7 @@ import kotlinx.android.synthetic.main.onboarding_two_temp.*
 import kotlinx.android.synthetic.main.radio_button.*
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
@@ -47,6 +46,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
 
     var fbObj: JSONObject? = null
     val ANIMATION_SPEED = 2000
+    val counter = CountDownTimerHelper()
 
     private val REQUEST_CODE_AUTOCOMPLETE: Int = 1002
     private val REQUEST_CODE_AUTOCOMPLETE_OFFICE: Int = 1003
@@ -508,7 +508,9 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         {
 
             R.id.no_vehicle_btn ->{
-
+                no_vehicle_btn.background = resources.getDrawable(R.drawable.selected_radio_btn)
+                private_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
+                cab_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
                 onbording_3.visibility = View.GONE
                 cab_onbording_3.visibility = View.GONE
                 tt_mini_bus.visibility = View.GONE
@@ -553,6 +555,11 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 }
             }
             R.id.private_vehicle_btn ->{
+
+                no_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
+                private_vehicle_btn.background = resources.getDrawable(R.drawable.selected_radio_btn)
+                cab_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
+
                 isFirst_P_Y = true
                 tt_mini_bus.visibility = View.GONE
                 onbording_3.visibility = View.VISIBLE
@@ -575,6 +582,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                 )
             }
             R.id.cab_vehicle_btn ->{
+                no_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
+                private_vehicle_btn.background = resources.getDrawable(R.drawable.radio_btn)
+                cab_vehicle_btn.background = resources.getDrawable(R.drawable.selected_radio_btn)
+
                 isFirst_P_Y = true
 
                 var top_mar = 800
@@ -1222,6 +1233,37 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                                     override fun onButtonClicked(which: Int) { }
                                 }
                             )
+                            val duration = (30000).toLong()
+                            UserInfoManager.getInstance(activity!!.applicationContext).setOtpDuration(duration)
+                            val nowCal = Calendar.getInstance()
+                            nowCal.add(Calendar.MINUTE, TimeUnit.MILLISECONDS.toMinutes(duration).toInt())
+                            nowCal.add(Calendar.SECOND, TimeUnit.MILLISECONDS.toSeconds(duration).toInt())
+                            val otpExpirty = nowCal.getTimeInMillis()
+                            UserInfoManager.getInstance(activity!!.applicationContext).setOTPExpiryTimeStamp(otpExpirty)
+                            val str = context!!.getString(R.string.resend_OTP_available)
+                            var start = 0
+                            var end = 0
+                            if (str.length > 20) {
+                                start = str.length - 2
+                                end = str.length + 2
+                            } else {
+                                start = 0
+                                end = 5
+                            }
+                            counter.showCountDownTimer(object : OTPExpiryListener {
+                                override fun onExpiry() {
+                                    try {
+                                        val string  = "Resend OTP"
+                                        get_otp.setText(string)
+                                    } catch (e: Exception) {
+                                    }
+                                }
+
+                                override fun onStillValid() {}
+
+                                override fun onFail() {}
+                            }, context!!.applicationContext, get_otp, str, start, end)
+
                         }
                     }
                 })
