@@ -78,7 +78,6 @@ class ActivityMain : AppCompatActivity(){
 
     fun showDialog(intent : Intent){
         if(intent.getExtras()?.getString("title") != null) {
-            println("Notification_received showDialog " )
 
             try {
                 val gson = GsonBuilder().create()
@@ -86,11 +85,17 @@ class ActivityMain : AppCompatActivity(){
                     intent.getExtras()?.getString("body"),
                     NotificationResponse::class.java
                 )
-
+                println("Notification_received showDialog " +obj.type)
+                var btn_positive = "Reject"
+                var btn_negative = ""
+                if(obj.type.equals("alerts")) {
+                    btn_positive = "OK"
+                    btn_negative = ""
+                }
                 showNotifyDialog(
                     intent.getExtras()?.getString("title"),
                     intent.getExtras()?.getString("message"),
-                    "Reject", "Accept", object : NotifyListener {
+                    btn_positive, btn_negative, object : NotifyListener {
                         override fun onButtonClicked(which: Int) {
                             var trip_id = obj.trip_id
                             var trip_rider_id = obj.trip_rider_id

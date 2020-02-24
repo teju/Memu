@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import com.memu.R
 import kotlinx.android.synthetic.main.week_item_adapter.view.*
@@ -14,7 +15,7 @@ class WeekAdapter(val context: Context) : RecyclerView.Adapter<WeekAdapter.ViewH
     var productAdapterListener : ProductAdapterListener? = null
     var obj : ArrayList<String> =  ArrayList<String>()
     interface ProductAdapterListener {
-        fun onClick(position:Int)
+        fun onClick(position: String, checked: Boolean)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,16 +30,16 @@ class WeekAdapter(val context: Context) : RecyclerView.Adapter<WeekAdapter.ViewH
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.pos = position
-        holder.clRoot!!.setOnClickListener(object : View.OnClickListener{
-            override fun onClick(v: View?) {
+
+        holder.checkBox.setText(obj.get(holder.pos))
+        holder.checkBox.setOnCheckedChangeListener(object  : CompoundButton.OnCheckedChangeListener {
+            override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
                 productAdapterListener?.let {
-                    it.onClick(holder.pos)
+                    it.onClick(obj.get(holder.pos),isChecked)
+
                 }
             }
         })
-        holder.checkBox.setText(obj.get(holder.pos))
-
-
     }
 
 

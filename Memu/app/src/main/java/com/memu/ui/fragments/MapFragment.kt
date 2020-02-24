@@ -198,7 +198,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         locationComponent.isLocationComponentEnabled = true
         locationComponent.renderMode = RenderMode.COMPASS
         locationComponent.cameraMode = CameraMode.TRACKING
-        locationComponent.zoomWhileTracking(15.0)
+        locationComponent.zoomWhileTracking(12.0)
     }
     class StyleCycle {
 
@@ -280,7 +280,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             addButtons(response.body()!!.routes())
             val position = CameraPosition.Builder()
                 .target(com.mapbox.mapboxsdk.geometry.LatLng(srcLat, srcLng))
-                .zoom(15.0)
+                .zoom(12.0)
                 .tilt(20.0)
                 .build();
             mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);

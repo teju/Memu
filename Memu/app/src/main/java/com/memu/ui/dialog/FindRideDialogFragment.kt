@@ -42,7 +42,6 @@ class FindRideDialogFragment : BaseDialogFragment() {
             }
         })
         showVehicleSpinner()
-        showRateSpinner()
     }
 
     fun showVehicleSpinner() {
@@ -57,17 +56,4 @@ class FindRideDialogFragment : BaseDialogFragment() {
         select_vehicle.setAdapter(dataAdapter)
     }
 
-    fun showRateSpinner() {
-        val list = ArrayList<String>()
-        list.add("01")
-        list.add("02")
-        list.add("03")
-
-        val dataAdapter = ArrayAdapter<String>(
-            activity,
-            android.R.layout.simple_spinner_item, list
-        )
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        select_rate.setAdapter(dataAdapter)
-    }
 }

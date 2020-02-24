@@ -31,6 +31,7 @@ import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
+import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
@@ -45,6 +46,7 @@ import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
 import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.*
 import com.memu.ui.activity.SearchActivity
@@ -56,7 +58,8 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 
 
-class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, PermissionsListener {
+class HomeFragment : BaseFragment() , View.OnClickListener,
+    OnMapReadyCallback, PermissionsListener{
 
     private var myView: LinearLayout? = null
     private var pendingIntent: PendingIntent? = null
@@ -70,11 +73,14 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
     var srcLongitude:Double = 0.0
     var srcLatitude:Double = 0.0
     private var mapboxMap: MapboxMap? = null
+    private var navigationMapRoute: NavigationMapRoute? = null
+    private var routes: List<DirectionsRoute> = listOf<DirectionsRoute>()
 
     private val REQUEST_CODE_AUTOCOMPLETE = 1
     private val REQUEST_CODE_AUTOCOMPLETEDEST = 2
     private var permissionsManager: PermissionsManager? = null
     private var locationComponent: LocationComponent? = null
+    var weekdays : ArrayList<String> =  ArrayList<String>()
 
     var type = 1
     var FINDRIDER = 1
@@ -83,6 +89,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
     var strtime =""
     var strseat =""
     var strType = "find_ride"
+    var days = ""
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.home_fragment, container, false)
         return v
@@ -201,8 +208,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         date.text = SimpleDateFormat("EEE,\nMMM dd").format(System.currentTimeMillis())
         time.text = SimpleDateFormat("hh:mm\na").format(System.currentTimeMillis())
         seatstv.text = "01\nSeats"
-        find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
-        offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)
 
         strdate =  SimpleDateFormat("yyyy-MM-dd").format(System.currentTimeMillis())
         strtime =  SimpleDateFormat("hh:mm a").format(System.currentTimeMillis())
@@ -265,9 +270,13 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
 
         val distance = BaseHelper.showDistance(latng1,latng2)
         val To = FromJSon(destLatitide, destLongitude)
+        var is_recuring = "no"
+        if(!BaseHelper.isEmpty(days)) {
+            is_recuring = "yes"
+        }
         if(srcLatitude != 0.0 && srcLongitude != 0.0) {
             postFindRideViewModel.loadData(
-                strdate, strtime, strseat, "no", "",
+                strdate, strtime, strseat, is_recuring, days,
                 from, To, distance.toInt().toString(), strType
             )
         } else {
@@ -390,6 +399,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                 offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)*/
             }
             R.id.offer_ride -> {
+
+                days = weekdays.joinToString(separator = ",")
+                System.out.println("WeekAdapter days "+days)
+
                 showFindRideDialog()
                /* seatstv.text = "01\nSeats"
                 strType = "offer_ride"
@@ -400,9 +413,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         }
     }
 
+
     fun  findRide() {
-        if(!BaseHelper.isEmpty(edtdestLoc.text.toString())) {
-            edtdestLocerror.visibility = View.GONE
+        if(validate()) {
             if (Keys.MAPTYPE == Keys.SHORTESTROUTE) {
                 if ((srcLatitude != 0.0 && srcLongitude != 0.0)) {
                     reset()
@@ -412,20 +425,37 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                         destLng = destLongitude
                         destLat = destLatitide
                     })
-                } else {
-                    showNotifyDialog(
-                        "", "Select your source location",
-                        getString(R.string.ok), "", object : NotifyListener {
-                            override fun onButtonClicked(which: Int) {}
-                        }
-                    )
                 }
 
             } else {
-
                 CallApi()
             }
         }
+    }
+    fun validate():Boolean {
+        if (BaseHelper.isEmpty(edtdestLoc.text.toString())) {
+            edtdestLocerror.visibility = View.GONE
+            edtdestLoc.requestFocus()
+            showNotifyDialog(
+                "", "Select your source location",
+                getString(R.string.ok), "", object : NotifyListener {
+                    override fun onButtonClicked(which: Int) {}
+                }
+            )
+            return false
+        }
+        /*if (BaseHelper.isEmpty(days)) {
+            edtdestLoc.requestFocus()
+            showNotifyDialog(
+                "", "Select  days",
+                getString(R.string.ok), "", object : NotifyListener {
+                    override fun onButtonClicked(which: Int) {}
+                }
+            )
+            return false
+        }*/
+
+        return true
     }
     val cal = Calendar.getInstance()
 
@@ -439,7 +469,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
 
     fun showFindRideDialog() {
         showFindRideDialog(object : NotifyListener {
-                override fun onButtonClicked(which: Int) { }
+                override fun onButtonClicked(which: Int) {
+
+                }
             }
         )
     }
@@ -492,11 +524,19 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         weeksList.setNestedScrollingEnabled(false)
         //weeksList.addItemDecoration(SpacesItemDecoration(2, spacingInPixels, true))
         val adapter = WeekAdapter(context!!)
+
         adapter.obj = obj
         weeksList.adapter = adapter
+
         (weeksList.adapter as WeekAdapter).productAdapterListener =
             object : WeekAdapter.ProductAdapterListener {
-                override fun onClick(position: Int) {
+                override fun onClick(position: String, checked: Boolean) {
+                    if(checked &&  !weekdays.contains(position)) {
+                        weekdays.add(position)
+                    } else {
+                        weekdays.remove(position)
+                    }
+                    System.out.println("WeekAdapter days "+weekdays.toString())
 
                 }
             }
@@ -523,9 +563,11 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
         mapboxMap.setStyle(getString(R.string.navigation_guidance_day)) { style ->
             enableLocationComponent(style)
 
-            //mapboxMap.addOnMapClickListener(this@MapFragment)
-            addMarkers()
+            //   navigationMapRoute = NavigationMapRoute(null, mapView, mapboxMap)
 
+            //mapboxMap.addOnMapClickListener(this@MapFragment)
+
+            addMarkers()
         }
 
 
@@ -538,6 +580,12 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                 Point.fromLngLat(
                     srcLongitude,
                     srcLatitude))
+        )
+        symbolLayerIconFeatureList.add(
+            Feature.fromGeometry(
+                Point.fromLngLat(
+                    destLongitude,
+                    destLatitide))
         )
         val drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.map_marker, null);
         val mBitmap = com.mapbox.mapboxsdk.utils.BitmapUtils.getBitmapFromDrawable(drawable);
@@ -748,6 +796,14 @@ class HomeFragment : BaseFragment() , View.OnClickListener, OnMapReadyCallback, 
                 edtdestLoc.setText(data?.getStringExtra("Address"))
                 destLatitide = lat!!
                 destLongitude = lng!!
+                try {
+                    home_mapView.removeView(myView)
+                    home_mapView.addView(myView);
+                    mapView!!.getMapAsync(this)
+
+                } catch (e : Exception){
+                    System.out.println("initUIException "+e.toString())
+                }
                 //selectedCarmenFeatureDest = PlaceAutocomplete.getPlace(data);
                 //edtdestLoc.setText(selectedCarmenFeatureDest!!.placeName())
             }
