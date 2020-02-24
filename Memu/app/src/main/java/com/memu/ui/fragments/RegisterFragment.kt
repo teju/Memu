@@ -137,7 +137,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         } catch (e : Exception){
 
         }
-        permissions()
+      
 
         car_hat.setOnCheckedChangeListener { buttonView, isChecked ->
             car_hat.isChecked = isChecked
@@ -340,32 +340,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             last_name.setText(fbObj!!.getString("last_name"))
             edtEmail.setText(fbObj!!.getString("email"))
         }
-    }
-    fun permissions() {
-        val permissionListener: PermissionListener = object : PermissionListener {
-            override fun onUserNotGrantedThePermission() {
-            }
-
-            override fun onCheckPermission(permission: String, isGranted: Boolean) {
-                if (isGranted) {
-                    onPermissionAlreadyGranted()
-                } else {
-                    onUserNotGrantedThePermission()
-                }
-            }
-
-            @SuppressLint("MissingPermission")
-            override fun onPermissionAlreadyGranted() {
-
-            }
-        }
-        val permissions = ArrayList<String>()
-        permissions.add(android.Manifest.permission.CAMERA)
-        permissions.add(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-        permissions.add(android.Manifest.permission.ACCESS_FINE_LOCATION)
-        permissions.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-        checkPermissions(permissions, permissionListener)
-
     }
 
     fun initSearch(code : Int) {

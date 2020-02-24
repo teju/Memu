@@ -169,7 +169,6 @@ class MockNavigationFragment(
             .build()
 
         navigation = MapboxNavigation(activity!!, Mapbox.getAccessToken()!!, options)
-
         navigation!!.addMilestone(
             RouteMilestone.Builder()
                 .setIdentifier(BEGIN_ROUTE_MILESTONE)
@@ -204,15 +203,19 @@ class MockNavigationFragment(
             navigation!!.addOffRouteListener(this)
 
             (locationEngine as ReplayRouteLocationEngine).assign(route)
+            (locationEngine as ReplayRouteLocationEngine).updateSpeed(40)
 
+            (locationEngine as ReplayRouteLocationEngine).moveTo(Point.fromLngLat(
+                originpoint.latitude(),
+                originpoint.longitude()
+            ))
+
+           // navigation!!.locationEngine = locationEngine!!
             mapboxMap!!.locationComponent.isLocationComponentEnabled = true
             navigation!!.startNavigation(route!!)
         }
     }
 
-    fun onNewLocationClick() {
-        newOrigin()
-    }
 
     private fun newOrigin() {
         val gpsTracker = GPSTracker(activity!!)
@@ -388,6 +391,7 @@ class MockNavigationFragment(
 
     override fun onProgressChange(location: Location, routeProgress: RouteProgress) {
         mapboxMap!!.locationComponent.forceLocationUpdate(location)
+
         if (!isRefreshing) {
             isRefreshing = true
             routeRefresh!!.refresh(routeProgress)
@@ -539,11 +543,13 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostMApFeedAddViewModel.NEXT_STEP -> {
-                            Snackbar.make(
-                                v?.findViewById(R.id.container)!!,
-                                postMApFeedAddViewModel.obj?.message!!,
-                                LENGTH_LONG
-                            ).show()
+                            showNotifyDialog(
+                                "Thank you", postMApFeedAddViewModel.obj?.message!!,
+                                getString(R.string.ok),"",object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) { }
+                                }
+                            )
+
                             postMApFeedDataViewModel.loadData()
 
                         }

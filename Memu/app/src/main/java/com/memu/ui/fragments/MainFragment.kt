@@ -1,5 +1,6 @@
 package com.memu.ui.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,8 +23,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import com.facebook.appevents.codeless.internal.ViewHierarchy.setOnClickListener
 import com.facebook.AccessToken
-
-
+import com.iapps.gon.etc.callback.PermissionListener
 
 
 class MainFragment : BaseFragment() , View.OnClickListener {
@@ -42,6 +42,33 @@ class MainFragment : BaseFragment() , View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI();
+        permissions()
+    }
+    fun permissions() {
+        val permissionListener: PermissionListener = object : PermissionListener {
+            override fun onUserNotGrantedThePermission() {
+            }
+
+            override fun onCheckPermission(permission: String, isGranted: Boolean) {
+                if (isGranted) {
+                    onPermissionAlreadyGranted()
+                } else {
+                    onUserNotGrantedThePermission()
+                }
+            }
+
+            @SuppressLint("MissingPermission")
+            override fun onPermissionAlreadyGranted() {
+
+            }
+        }
+        val permissions = ArrayList<String>()
+        permissions.add(android.Manifest.permission.CAMERA)
+        permissions.add(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        permissions.add(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        permissions.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        checkPermissions(permissions, permissionListener)
+
     }
 
     private fun initUI() {
