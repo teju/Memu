@@ -202,6 +202,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         arrow_left.setOnClickListener(this)
         bike_offer_ride.setOnClickListener(this)
         bike_find_ride.setOnClickListener(this)
+        history_icon.setOnClickListener(this)
 
         initSearchFab()
         initSearchFabDest()
@@ -349,7 +350,16 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 reset()
 
             }
-
+            R.id.history_icon -> {
+                Keys.MAPTYPE = Keys.HISTORY
+                reset()
+                home().setFragment(MapFragment().apply {
+                    srcLat = srcLatitude
+                    srcLng = srcLongitude
+                    destLng = destLongitude
+                    destLat = destLatitide
+                })
+            }
             R.id.date -> {
 
                 var cal = Calendar.getInstance()

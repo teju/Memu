@@ -249,7 +249,13 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 shortes_route_result.visibility = View.GONE
                 startButton.visibility = View.VISIBLE
                 sos.visibility = View.VISIBLE
+            }
+            Keys.HISTORY -> {
+                showHistory(object : RequestListener {
+                        override fun onButtonClicked(user_id: String, id: String) {
 
+                        }
+                    })
             }
         }
 

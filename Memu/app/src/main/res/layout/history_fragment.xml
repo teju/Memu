@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:backgroundTint="@color/transparent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/themeblue_rounded_rectangle"
+        android:layout_marginRight="0dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="50dp"
+            android:src="@drawable/memu_logo"
+            android:layout_marginLeft="10dp"
+            android:layout_height="50dp">
+
+        </ImageView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Time Machine"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="-10dp"
+            android:textColor="@color/Black"
+            android:paddingRight="10dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/themeblue_rounded_rectangle"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="50dp">
+
+        </TextView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="15dp"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/schedule_completed_tabs"
+                    android:layout_height="wrap_content">
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:id="@+id/upcoming"
+                    android:fontFamily="@font/opensansregular"
+                    android:textColor="@color/DarkBlue"
+                    android:text="Scheduled &amp;\nUpcoming"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="60dp"
+                    android:id="@+id/completed"
+                    android:layout_alignParentRight="true"
+                    android:fontFamily="@font/opensansregular"
+                    android:textColor="@color/DarkBlue"
+                    android:text="Completed &amp;\nCancelled"
+                    android:layout_height="wrap_content">
+                </TextView>
+
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/blue_plus"
+                    android:layout_height="wrap_content">
+
+                </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Create new ride"
+                    android:layout_marginLeft="15dp"
+                    android:fontFamily="@font/opensanssemibold"
+                    android:textColor="@color/Black"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:scrollbars="vertical"/>
+        </LinearLayout>
+
+    </FrameLayout>
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="-10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/car_sharingmain"
+        android:layout_height="50dp">
+    </ImageView>
+
+</FrameLayout>

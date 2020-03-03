@@ -34,10 +34,7 @@ import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
 import com.memu.modules.mapFeeds.MapFeed
 import com.memu.modules.riderList.Rider
-import com.memu.ui.dialog.AlertsDialogFragment
-import com.memu.ui.dialog.FindRideDialogFragment
-import com.memu.ui.dialog.MatchingRidersFragment
-import com.memu.ui.dialog.NotifyDialogFragment
+import com.memu.ui.dialog.*
 import com.memu.webservices.PostUpdateLocationViewModel
 
 import kotlinx.coroutines.*
@@ -397,7 +394,14 @@ open class BaseFragment : GenericFragment() {
         }
         f.rider_list = rider_list
         f.isCancelable = true
-        f.show(activity!!.supportFragmentManager, NotifyDialogFragment.TAG)
+        f.show(activity!!.supportFragmentManager, MatchingRidersFragment.TAG)
+    }
+    open fun showHistory(n: RequestListener){
+        val f = HistoryFragment().apply {
+            this.listener = n
+        }
+        f.isCancelable = true
+        f.show(activity!!.supportFragmentManager, HistoryFragment.TAG)
     }
 
     open fun showHTMLNotifyDialog(
