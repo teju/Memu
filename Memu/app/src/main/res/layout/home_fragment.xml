@@ -51,13 +51,13 @@
                 </TextView>
             </RelativeLayout>
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="80dp"
+                android:layout_width="70dp"
                 android:layout_marginTop="18dp"
                 android:layout_marginLeft="35dp"
                 android:layout_marginRight="30dp"
                 android:id="@+id/profile_pic"
                 android:src="@drawable/dummy_profile_pic"
-                android:layout_height="80dp">
+                android:layout_height="70dp">
             </de.hdodenhof.circleimageview.CircleImageView>
             <ImageView
                 android:layout_width="40dp"
@@ -218,7 +218,7 @@
                 android:layout_width="match_parent"
                 android:id="@+id/popUpView"
                 android:visibility="gone"
-                android:layout_marginTop="180dp"
+                android:layout_marginTop="200dp"
                 android:layout_height="match_parent">
 
                 <LinearLayout
@@ -231,45 +231,28 @@
                         android:id="@+id/llPooling"
                         android:visibility="gone"
                         android:layout_height="wrap_content">
-                        <FrameLayout
+                        <LinearLayout
                             android:layout_width="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginBottom="10dp"
                             android:layout_gravity="end"
-                            android:layout_marginLeft="100dp"
-                            android:background="@drawable/dotted_bg"
-                            android:layout_height="match_parent">
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:orientation="horizontal"
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/history_icon"
                                 android:layout_height="match_parent">
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_marginLeft="25dp"
-                                    android:layout_height="wrap_content">
-                                    <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_marginTop="5dp"
-                                        android:src="@drawable/calendar_brown"
-                                        android:layout_height="wrap_content">
+                            </ImageView>
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:scaleType="fitXY"
+                                android:layout_marginLeft="-10dp"
+                                android:src="@drawable/wallet_icon"
+                                android:layout_height="match_parent">
+                            </ImageView>
 
-                                    </ImageView>
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:textColor="@color/Black"
-                                        android:layout_marginTop="5dp"
-                                        android:layout_alignParentBottom="true"
-                                        android:fontFamily="@font/opensansregular"
-                                        android:text="Set-up\nRecurring\nRides"
-                                        android:layout_height="wrap_content">
-                                    </TextView>
-                                </LinearLayout>
-                                <androidx.recyclerview.widget.RecyclerView
-                                    android:layout_width="match_parent"
-                                    android:id="@+id/weeksList"
-                                    android:layout_height="wrap_content">
-                                </androidx.recyclerview.widget.RecyclerView>
-                            </LinearLayout>
-                        </FrameLayout>
+                        </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:orientation="horizontal"
@@ -285,7 +268,6 @@
                                 <ImageView
                                     android:layout_width="match_parent"
                                     android:scaleType="fitXY"
-                                    android:layout_margin="-20dp"
                                     android:src="@drawable/themeorange_bg"
                                     android:layout_height="match_parent">
                                 </ImageView>
@@ -346,6 +328,23 @@
                             </RelativeLayout>
 
                         </LinearLayout>
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_marginRight="10dp"
+                            android:layout_height="match_parent">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_height="match_parent">
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:layout_width="match_parent"
+                                    android:id="@+id/weeksList"
+                                    android:orientation="horizontal"
+                                    android:layout_height="wrap_content">
+                                </androidx.recyclerview.widget.RecyclerView>
+                            </LinearLayout>
+                        </FrameLayout>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -456,6 +455,19 @@
                                 </TextView>
                                 <TextView
                                     android:layout_width="match_parent"
+                                    android:hint="Via"
+                                    android:paddingLeft="40dp"
+                                    android:layout_marginTop="10dp"
+                                    android:id="@+id/edtVia"
+                                    android:fontFamily="@font/opensansregular"
+                                    android:gravity="center_vertical"
+                                    android:layout_marginLeft="30dp"
+                                    android:background="@drawable/theme_rounded_rectangle"
+                                    android:layout_height="60dp">
+                                </TextView>
+
+                                <TextView
+                                    android:layout_width="match_parent"
                                     android:layout_marginTop="10dp"
                                     android:paddingLeft="40dp"
                                     android:fontFamily="@font/opensansregular"
@@ -488,8 +500,11 @@
                                 android:layout_marginRight="20dp"
                                 android:orientation="vertical"
                                 android:id="@+id/vehicle_detail"
+                                android:layout_gravity="center_vertical"
+                                android:paddingTop="10dp"
+                                android:paddingBottom="10dp"
                                 android:background="@drawable/themepurple_rounded_rectangle"
-                                android:layout_height="match_parent">
+                                android:layout_height="wrap_content">
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:text="ABC-123"
@@ -539,7 +554,9 @@
                             android:layout_width="wrap_content"
                             android:src="@drawable/scr_dest_path"
                             android:layout_marginLeft="20dp"
-                            android:layout_height="wrap_content">
+                            android:minHeight="100dp"
+                            android:scaleType="fitXY"
+                            android:layout_height="match_parent">
 
                         </ImageView>
 

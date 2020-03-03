@@ -21,9 +21,11 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Build
 import android.view.MenuItem
+import androidx.constraintlayout.widget.Placeholder
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
@@ -49,6 +51,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
 import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.*
+import com.memu.modules.PlaceHolder
 import com.memu.ui.activity.SearchActivity
 import com.memu.ui.adapters.WeekAdapter
 import com.memu.webservices.*
@@ -510,22 +513,43 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     }
 
     fun weekRecyclerView() {
-        var obj : ArrayList<String> =  ArrayList<String>()
-        obj.add("Mon")
-        obj.add("Tues")
-        obj.add("Wed")
-        obj.add("Thur")
-        obj.add("Fri")
-        obj.add("Sat")
-        obj.add("Sun")
-        val sglm2 = GridLayoutManager(context, 2)
-        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing_grid1)
+        var obj : ArrayList<PlaceHolder> =  ArrayList<PlaceHolder>()
+        var placeholder = PlaceHolder()
+        placeholder.name = "Mo"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "Tu"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "We"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "Th"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "Fr"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "Sa"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "Su"
+        obj.add(placeholder)
+
+        val sglm2 = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL, false)
         weeksList.setLayoutManager(sglm2)
         weeksList.setNestedScrollingEnabled(false)
         //weeksList.addItemDecoration(SpacesItemDecoration(2, spacingInPixels, true))
         val adapter = WeekAdapter(context!!)
 
         adapter.obj = obj
+        adapter.weekdays = weekdays
         weeksList.adapter = adapter
 
         (weeksList.adapter as WeekAdapter).productAdapterListener =
@@ -536,6 +560,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                     } else {
                         weekdays.remove(position)
                     }
+                    adapter.weekdays = weekdays
+                    weeksList.adapter?.notifyDataSetChanged()
                     System.out.println("WeekAdapter days "+weekdays.toString())
 
                 }

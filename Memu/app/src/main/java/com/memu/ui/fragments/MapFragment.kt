@@ -294,12 +294,13 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 // frame_layout.removeView(myView)
                 home().proceedDoOnBackPressed()
             }
-            R.id.rloption_a -> {
+           /* R.id.rloption_a -> {
                 startButton.isEnabled = true
                 rloption_b.setBackgroundTintList(null)
                 rloption_c.setBackgroundTintList(null)
                 rloption_a.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Blue)));
                 mapcurrentRoute = routes.get(0)
+                navigationMapRoute!!.addRoute(mapcurrentRoute)
             }
             R.id.rloption_b -> {
                 startButton.isEnabled = true
@@ -307,6 +308,8 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 rloption_c.setBackgroundTintList(null)
                 rloption_b.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Yellow)));
                 mapcurrentRoute = routes.get(1)
+                navigationMapRoute!!.addRoute(mapcurrentRoute)
+
             }
             R.id.rloption_c -> {
                 startButton.isEnabled = true
@@ -314,8 +317,10 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 rloption_b.setBackgroundTintList(null)
                 rloption_c.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.polylinePink)));
                 mapcurrentRoute = routes.get(2)
+                navigationMapRoute!!.addRoute(mapcurrentRoute)
 
-            }
+
+            }*/
             R.id.startButton -> {
                 home().setFragment(MockNavigationFragment(this!!.destinationPoint!!, this@MapFragment.maporiginPoint!!).apply {
                     System.out.println("onMapReady mapcurrentRoute "+mapcurrentRoute?.legs())

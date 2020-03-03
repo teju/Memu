@@ -7,13 +7,16 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import com.memu.R
+import com.memu.modules.PlaceHolder
 import kotlinx.android.synthetic.main.week_item_adapter.view.*
 
 
 class WeekAdapter(val context: Context) : RecyclerView.Adapter<WeekAdapter.ViewHolder>()  {
 
     var productAdapterListener : ProductAdapterListener? = null
-    var obj : ArrayList<String> =  ArrayList<String>()
+    var obj : ArrayList<PlaceHolder> =  ArrayList<PlaceHolder>()
+    var weekdays : java.util.ArrayList<String> = java.util.ArrayList<String>()
+
     interface ProductAdapterListener {
         fun onClick(position: String, checked: Boolean)
     }
@@ -31,15 +34,24 @@ class WeekAdapter(val context: Context) : RecyclerView.Adapter<WeekAdapter.ViewH
 
         holder.pos = position
 
-        holder.checkBox.setText(obj.get(holder.pos))
-        holder.checkBox.setOnCheckedChangeListener(object  : CompoundButton.OnCheckedChangeListener {
-            override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-                productAdapterListener?.let {
-                    it.onClick(obj.get(holder.pos),isChecked)
-
+        holder.checkBox.setText(obj.get(holder.pos).name)
+        if(weekdays.contains(obj.get(holder.pos).name)) {
+            holder.checkBox.setBackgroundColor(context.resources.getColor(R.color.White))
+        } else {
+            holder.checkBox.setBackgroundColor(context.resources.getColor(R.color.transparent))
+        }
+        holder.checkBox.setOnClickListener {
+            productAdapterListener?.let {
+                if(weekdays.contains(obj.get(holder.pos).name)) {
+                    holder.checkBox.setBackgroundColor(context.resources.getColor(R.color.transparent))
+                    it.onClick(obj.get(holder.pos).name, false)
+                } else {
+                    holder.checkBox.setBackgroundColor(context.resources.getColor(R.color.White))
+                    it.onClick(obj.get(holder.pos).name, true)
                 }
+
             }
-        })
+        }
     }
 
 
