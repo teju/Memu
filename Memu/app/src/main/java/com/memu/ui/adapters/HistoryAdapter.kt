@@ -5,16 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.iapps.logs.com.pascalabs.util.log.helper.Helper
 import com.memu.R
 import com.memu.modules.completedRides.Completed
 import kotlinx.android.synthetic.main.history_item.view.*
 
 
 class HistoryAdapter(
-    val context: Context,
-    val compltedRides: List<Completed>
-) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>()  {
+    val context: Context) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>()  {
 
+    var Rides: List<Completed> = listOf()
     companion object {
         var TYPE_SCHEDULED = 1001
         var TYPE_COMPLETED = 1002
@@ -26,7 +26,7 @@ class HistoryAdapter(
     }
 
     override fun getItemCount(): Int {
-        return compltedRides.size
+        return Rides.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -34,15 +34,46 @@ class HistoryAdapter(
         holder.pos = position
         when(type) {
             TYPE_COMPLETED -> {
-                holder.bottom_view.visibility = View.VISIBLE
-                holder.dateTime.text = compltedRides.get(position).date +" "+compltedRides.get(position).time
-                holder.srcLoc.text = compltedRides.get(position).from_address.address_line1
-                holder.destLoc.text = compltedRides.get(position).to_address.address_line1
+                holder.coins_earned.text = "Coins Earned : "+Rides.get(position).coins_earned
+                holder.coins_spent.text = "Coins Spent : "+Rides.get(position).coins_spent
             }
             TYPE_SCHEDULED -> {
                 holder.bottom_view.visibility = View.GONE
-
             }
+
+        }
+        holder.bottom_view.visibility = View.VISIBLE
+        holder.dateTime.text = Rides.get(position).date +" "+Rides.get(position).time
+        holder.srcLoc.text = Rides.get(position).from_address.address_line1
+        holder.destLoc.text = Rides.get(position).to_address.address_line1
+
+        try {
+            com.memu.etc.Helper.loadImage(
+                context,
+                Rides.get(position).matched_budies.get(0).photo,
+                holder.user1,R.drawable.user_default
+            )
+            holder.user1_name.text = Rides.get(position).matched_budies.get(0).name
+        } catch (e : Exception) {
+
+        }
+        try {
+            com.memu.etc.Helper.loadImage(
+                context,
+                Rides.get(position).matched_budies.get(1).photo,
+                holder.user2,R.drawable.user_default
+            )
+            holder.user2_name.text = Rides.get(position).matched_budies.get(1).name
+
+        } catch (e  : java.lang.Exception) {
+
+        }
+        if(Rides.get(position).matched_budies.size > 2) {
+            holder.count.visibility = View.VISIBLE
+            val count = Rides.get(position).matched_budies.size - 2
+            holder.count.text = ""+count+"+"
+        } else {
+            holder.count.visibility = View.GONE
         }
     }
 
@@ -57,6 +88,11 @@ class HistoryAdapter(
         var destLoc = view.destLoc
         var coins_earned = view.coins_earned
         var coins_spent = view.coins_spent
+        var user2 = view.user2
+        var user2_name = view.user2_name
+        var user1 = view.user1
+        var user1_name = view.user1_name
+        var count = view.count
 
     }
 

@@ -157,6 +157,12 @@ open class Helper  {
                 .load(url)
                 .into(v)
         }
+        fun loadImage(context: Context, url : String, v : ImageView,placeholder : Int){
+            Glide.with(context)
+                .load(url)
+                .placeholder(placeholder)
+                .into(v)
+        }
         fun isNetworkAvailable(ctx: Context): Boolean {
             try {
                 val manager = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

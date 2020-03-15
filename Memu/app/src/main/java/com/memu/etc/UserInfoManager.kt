@@ -14,7 +14,7 @@ class UserInfoManager private constructor() {
     private var accessToken: String? = null
     private var accountName: String? = ""
     private var accountId: String? = null
-    private var profilePic: String? = null
+    private var profilePic: String? = ""
     private var deviceToken: String? = ""
     private var otpresendduration: Long? = 0
     private var otpexpirtytimestam: Long? = 0

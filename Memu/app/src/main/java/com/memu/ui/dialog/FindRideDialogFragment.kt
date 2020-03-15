@@ -11,7 +11,10 @@ import com.memu.R
 import kotlinx.android.synthetic.main.find_ride_popup.*
 import android.widget.ArrayAdapter
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.widget.AdapterView
+import com.iapps.gon.etc.callback.FindRideDialogListener
 import com.iapps.libs.helpers.BaseUIHelper.loadImage
+import com.memu.modules.poolerVehicleList.Vehicle
 
 
 class FindRideDialogFragment : BaseDialogFragment() {
@@ -24,8 +27,9 @@ class FindRideDialogFragment : BaseDialogFragment() {
         val BUTTON_NEGATIVE = 0
     }
 
-    lateinit var listener: NotifyListener
-
+    lateinit var listener: FindRideDialogListener
+    var vehicle_list: List<Vehicle> = listOf()
+    var selectedPos = 0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(DATEPICKERFRAGMENT_LAYOUT, container, false)
         return v
@@ -36,7 +40,7 @@ class FindRideDialogFragment : BaseDialogFragment() {
         btn_positive.setOnClickListener(object : View.OnClickListener{
             override fun onClick(v: View?) {
                 listener.let {
-                    listener.onButtonClicked(BUTTON_POSITIVE)
+                    listener.onButtonClicked(selectedPos,select_rate.text.toString())
                 }
                 dismiss()
             }
@@ -46,7 +50,9 @@ class FindRideDialogFragment : BaseDialogFragment() {
 
     fun showVehicleSpinner() {
         val list = ArrayList<String>()
-        list.add("KA 05 A 1234")
+        for(x in vehicle_list) {
+            list.add(x.vehicle_no)
+        }
 
         val dataAdapter = ArrayAdapter<String>(
             activity,
@@ -54,6 +60,23 @@ class FindRideDialogFragment : BaseDialogFragment() {
         )
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         select_vehicle.setAdapter(dataAdapter)
+        select_vehicle.onItemSelectedListener = object  : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                selectedPos = position
+            }
+
+        }
+        vehicle_name.setText(vehicle_list.get(selectedPos).vehicle_name)
+        vehicle_brand.setText(vehicle_list.get(selectedPos).vehicle_brand)
     }
 
 }

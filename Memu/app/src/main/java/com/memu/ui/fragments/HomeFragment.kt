@@ -21,19 +21,17 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Build
 import android.view.MenuItem
-import androidx.constraintlayout.widget.Placeholder
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
+import com.iapps.gon.etc.callback.FindRideDialogListener
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
-import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
@@ -48,7 +46,6 @@ import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
 import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.*
 import com.memu.modules.PlaceHolder
@@ -72,23 +69,22 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     lateinit var postUpdateNotiTokenViewModel: PostUpdateNotiTokenViewModel
     lateinit var postFindRideViewModel: PostFindRideViewModel
     lateinit var postUserVehicleListViewModel: PostUserVehicleListViewModel
+    var viaLatitide:Double = 0.0
     var destLatitide:Double = 0.0
     var destLongitude:Double = 0.0
+    var viaLongitude:Double = 0.0
     var srcLongitude:Double = 0.0
     var srcLatitude:Double = 0.0
     private var mapboxMap: MapboxMap? = null
-    private var navigationMapRoute: NavigationMapRoute? = null
-    private var routes: List<DirectionsRoute> = listOf<DirectionsRoute>()
 
     private val REQUEST_CODE_AUTOCOMPLETE = 1
     private val REQUEST_CODE_AUTOCOMPLETEDEST = 2
+    private val REQUEST_CODE_AUTOCOMPLETEVIA = 3
     private var permissionsManager: PermissionsManager? = null
     private var locationComponent: LocationComponent? = null
     var weekdays : ArrayList<String> =  ArrayList<String>()
 
     var type = 1
-    var FINDRIDER = 1
-    var OFFERRIDE = 2
     var strdate =""
     var strtime =""
     var strseat =""
@@ -164,7 +160,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         }
 
         try {
-            Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic)
+            Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.user_default)
 
         } catch (e : java.lang.Exception){
 
@@ -175,7 +171,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             home_mapView.addView(myView);
             mapView!!.getMapAsync(this)
         } catch (e : Exception){
-            
+
         }
         alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as  AlarmManager;
 
@@ -207,6 +203,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         bike_offer_ride.setOnClickListener(this)
         bike_find_ride.setOnClickListener(this)
         history_icon.setOnClickListener(this)
+        edtVia.setOnClickListener(this)
 
         initSearchFab()
         initSearchFabDest()
@@ -226,7 +223,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             edtScrLoc.setText(getAddress?.get(0)?.getAddressLine(0))
 
         } catch (e : Exception){
-            System.out.println("Exception12223 "+e.toString())
+
         }
     }
 
@@ -270,7 +267,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         }
     }
 
-    fun CallApi() {
+    fun CallApi(vehicle_id : String,rs_per_kms : String) {
 
         val from = FromJSon(srcLatitude!!,srcLongitude!!)
         val latng1 = com.google.android.gms.maps.model.LatLng(srcLatitude,srcLongitude)
@@ -278,6 +275,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
         val distance = BaseHelper.showDistance(latng1,latng2)
         val To = FromJSon(destLatitide, destLongitude)
+        val via = FromJSon(viaLatitide, viaLongitude)
         var is_recuring = "no"
         if(!BaseHelper.isEmpty(days)) {
             is_recuring = "yes"
@@ -285,8 +283,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         if(srcLatitude != 0.0 && srcLongitude != 0.0) {
             postFindRideViewModel.loadData(
                 strdate, strtime, strseat, is_recuring, days,
-                from, To, distance.toInt().toString(), strType
-            )
+                from, To, distance.toInt().toString(), strType,
+                vehicle_id,rs_per_kms,via)
         } else {
             showNotifyDialog(
                 "", "Select your source location",
@@ -319,37 +317,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 spinner()
 
             }
-            R.id.btnNExt -> {
-                if(!BaseHelper.isEmpty(edtdestLoc.text.toString())) {
-                    edtdestLocerror.visibility = View.GONE
-                    if(Keys.MAPTYPE == Keys.SHORTESTROUTE ) {
-                        if((srcLatitude != 0.0 && srcLongitude != 0.0)) {
-                            reset()
-                            home_mapView.removeAllViews()
-                            home().setFragment(MapFragment().apply {
-                                srcLat = srcLatitude
-                                srcLng = srcLongitude
-                                destLng = destLongitude
-                                destLat = destLatitide
-                            })
-                        } else {
-                            showNotifyDialog(
-                                "", "Select your source location",
-                                getString(R.string.ok),"",object : NotifyListener {
-                                    override fun onButtonClicked(which: Int) { }
-                                }
-                            )
-                        }
-
-                    } else {
-
-                        CallApi()
-                    }
-
-                } else {
-                    edtdestLocerror.visibility = View.VISIBLE
-                }
-
+            R.id.edtVia -> {
+                startActivityForResult(Intent(activity, SearchActivity::class.java),REQUEST_CODE_AUTOCOMPLETEVIA);
             }
             R.id.cancel,R.id.arrow_left -> {
                 reset()
@@ -359,12 +328,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 Keys.MAPTYPE = Keys.HISTORY
                 reset()
                 home_mapView.removeAllViews()
-                home().setFragment(MapFragment().apply {
-                    srcLat = srcLatitude
-                    srcLng = srcLongitude
-                    destLng = destLongitude
-                    destLat = destLatitide
-                })
+                home().setFragment(HistoryFragment().apply {})
             }
             R.id.date -> {
 
@@ -394,12 +358,13 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
             }
             R.id.find_ride -> {
-                findRide()
+                findRide("","")
             }
             R.id.bike_find_ride -> {
-                findRide()
+                findRide("","")
             }
             R.id.bike_offer_ride -> {
+                days = weekdays.joinToString(separator = ",")
                 showFindRideDialog()
             }
             R.id.offer_ride -> {
@@ -410,7 +375,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     }
 
 
-    fun  findRide() {
+    fun  findRide(vehicle_id : String,rs_per_kms : String) {
         if(validate()) {
             if (Keys.MAPTYPE == Keys.SHORTESTROUTE) {
                 if ((srcLatitude != 0.0 && srcLongitude != 0.0)) {
@@ -425,7 +390,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 }
 
             } else {
-                CallApi()
+                CallApi(vehicle_id,rs_per_kms)
             }
         }
     }
@@ -454,9 +419,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     }
 
     fun showFindRideDialog() {
-        showFindRideDialog(object : NotifyListener {
-                override fun onButtonClicked(which: Int) {
-
+        showFindRideDialog(postUserVehicleListViewModel.obj?.vehicle_list!!,object :
+            FindRideDialogListener {
+                override fun onButtonClicked(which: Int,rs_per_kms : String) {
+                    findRide(postUserVehicleListViewModel.obj!!.vehicle_list.get(which).vehicle_id,rs_per_kms)
                 }
             }
         )
@@ -778,7 +744,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                     when (state) {
                         PostUserVehicleListViewModel.NEXT_STEP -> {
 
-
                         }
                     }
                 })
@@ -789,11 +754,15 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     fun FromJSon(lattitude : Double,longitude : Double) : JSONObject {
         val getAddress = getAddress(lattitude,longitude)
         val jsonObject = JSONObject()
-        jsonObject.put("address_line1",getAddress?.get(0)?.getAddressLine(0))
-        jsonObject.put("lattitude",lattitude.toString())
-        jsonObject.put("longitude",longitude.toString())
-        jsonObject.put("state",getAddress?.get(0)?.getAdminArea())
-        jsonObject.put("formatted_address",getAddress?.get(0)?.getAddressLine(0))
+        try {
+            jsonObject.put("address_line1", getAddress?.get(0)?.getAddressLine(0))
+            jsonObject.put("lattitude", lattitude.toString())
+            jsonObject.put("longitude", longitude.toString())
+            jsonObject.put("state", getAddress?.get(0)?.getAdminArea())
+            jsonObject.put("formatted_address", getAddress?.get(0)?.getAddressLine(0))
+        } catch (e :java.lang.Exception) {
+
+        }
         return jsonObject
     }
 
@@ -844,6 +813,15 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 } catch (e : Exception){
 
                 }
+
+            }
+            if (requestCode == REQUEST_CODE_AUTOCOMPLETEVIA) {
+                val lat = data?.getDoubleExtra("Lat",0.0)
+                val lng = data?.getDoubleExtra("Lng",0.0)
+                edtVia.setText(data?.getStringExtra("Address"))
+                viaLatitide = lat!!
+                viaLongitude = lng!!
+
 
             }
         } catch (e : Exception){

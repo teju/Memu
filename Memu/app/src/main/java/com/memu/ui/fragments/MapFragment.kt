@@ -93,8 +93,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     lateinit var postnviteRideGiversViewModel: PostnviteRideGiversViewModel
     lateinit var postRidersFragment: PostRequestRideViewModel
     lateinit var postGetRoutesViewModel: PostGetRoutesViewModel
-    lateinit var postCompleteRidesViewModel: PostCompleteRidesViewModel
-    lateinit var postScheduledRidesViewModel: PostScheduledRidesViewModel
+
 
     private var mMap: GoogleMap? = null
     internal var markerPoints = ArrayList<LatLng>()
@@ -120,8 +119,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             frame_layout.addView(myView);
             mapView.onCreate(savedInstanceState)
             mapView!!.getMapAsync(this)
-        } catch (e : Exception){
-        }
+        } catch (e : Exception){ }
         initUI();
     }
 
@@ -158,7 +156,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                         )
                     )
                 )
-
                 navigationMapRoute?.setOnRouteSelectionChangeListener {
                     startButton.isEnabled = true
                     mapcurrentRoute = it
@@ -190,8 +187,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         setInviteRideGiversAPIObserver()
         setRequestRideAPIObserver()
         setGoogleMapRouteAPIObserver()
-        setCompletedAPIObserver()
-        setScheduledAPIObserver()
+
         arrow_left.setOnClickListener(this)
         rloption_c.setOnClickListener(this)
         rloption_a.setOnClickListener(this)
@@ -211,23 +207,19 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 startButton.visibility = View.VISIBLE
                 sos.visibility = View.VISIBLE
             }
-            Keys.HISTORY -> {
-                postScheduledRidesViewModel.loadData()
-            }
+
         }
 
     }
-    override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {
-    }
+    override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {}
 
     override fun onResponse(
         call: Call<DirectionsResponse>,
-        response: Response<DirectionsResponse>
-    ) {
+        response: Response<DirectionsResponse>)
+    {
         if (response.isSuccessful
             && response.body() != null
-            && !response.body()!!.routes().isEmpty()
-        ) {
+            && !response.body()!!.routes().isEmpty()) {
             routes = response.body()!!.routes()
             Collections.sort(routes,object  : Comparator<DirectionsRoute>{
                 override fun compare(o1: DirectionsRoute?, o2: DirectionsRoute?): Int {
@@ -235,7 +227,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
                 }
             })
-
 
             navigationMapRoute?.addRoutes(routes)
             mapcurrentRoute = routes.get(0)
@@ -456,72 +447,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                                     )
                                 }
                             }
-                        }
-                    }
-                })
-            }
-        }
-    }
-    fun setCompletedAPIObserver() {
-        postCompleteRidesViewModel = ViewModelProviders.of(this).get(PostCompleteRidesViewModel::class.java).apply {
-            this@MapFragment.let { thisFragReference ->
-                isLoading.observe(thisFragReference, Observer { aBoolean ->
-                    if(aBoolean!!) {
-                        ld.showLoadingV2()
-                    } else {
-                        ld.hide()
-                    }
-                })
-                errorMessage.observe(thisFragReference, Observer { s ->
-                    showNotifyDialog(
-                        s.title, s.message!!,
-                        getString(R.string.ok),"",object : NotifyListener {
-                            override fun onButtonClicked(which: Int) { }
-                        }
-                    )
-                })
-                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
-                getTrigger().observe(thisFragReference, Observer { state ->
-                    when (state) {
-                        PostCompleteRidesViewModel.NEXT_STEP -> {
-                            showHistory(obj?.completed_list!!, object : RequestListener {
-                                override fun onButtonClicked(user_id: String, id: String) {
-
-                                }
-                            })
-                        }
-                    }
-                })
-            }
-        }
-    }
-    fun setScheduledAPIObserver() {
-        postScheduledRidesViewModel = ViewModelProviders.of(this).get(PostScheduledRidesViewModel::class.java).apply {
-            this@MapFragment.let { thisFragReference ->
-                isLoading.observe(thisFragReference, Observer { aBoolean ->
-                    if(aBoolean!!) {
-                        ld.showLoadingV2()
-                    } else {
-                        ld.hide()
-                    }
-                })
-                errorMessage.observe(thisFragReference, Observer { s ->
-                    showNotifyDialog(
-                        s.title, s.message!!,
-                        getString(R.string.ok),"",object : NotifyListener {
-                            override fun onButtonClicked(which: Int) { }
-                        }
-                    )
-                })
-                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
-                getTrigger().observe(thisFragReference, Observer { state ->
-                    when (state) {
-                        PostScheduledRidesViewModel.NEXT_STEP -> {
-                            showHistory(obj?.completed_list!!, object : RequestListener {
-                                override fun onButtonClicked(user_id: String, id: String) {
-
-                                }
-                            })
                         }
                     }
                 })

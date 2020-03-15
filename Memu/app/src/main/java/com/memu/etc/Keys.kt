@@ -56,6 +56,8 @@ class Keys : BaseKeys() {
         val OFFSET = "offset"
         val LIMIT = "limit"
         val VEHICLE_ID = "vehicle_id"
+        val RS_PER_KMS = "rs_per_kms"
+        val TRIP_VIA = "trip_via"
         val TYPE = "type"
         val TO_USER_ID = "to_user_id"
         val ID = "id"

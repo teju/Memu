@@ -19,6 +19,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.fitness.data.DataSource
 import com.google.android.gms.fitness.data.DataType
+import com.iapps.gon.etc.callback.FindRideDialogListener
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.gon.etc.callback.PermissionListener
 import com.iapps.gon.etc.callback.RequestListener
@@ -32,8 +33,8 @@ import com.memu.R
 import com.memu.etc.Constants
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
-import com.memu.modules.completedRides.Completed
 import com.memu.modules.mapFeeds.MapFeed
+import com.memu.modules.poolerVehicleList.Vehicle
 import com.memu.modules.riderList.Rider
 import com.memu.ui.dialog.*
 import com.memu.webservices.PostUpdateLocationViewModel
@@ -369,10 +370,12 @@ open class BaseFragment : GenericFragment() {
         }
 
     }
-    open fun showFindRideDialog(
-        n: NotifyListener){
+    open fun showFindRideDialog(vehicle_list : List<Vehicle>,
+        n: FindRideDialogListener
+    ){
         val f = FindRideDialogFragment().apply {
             this.listener = n
+            this.vehicle_list = vehicle_list
         }
         f.isCancelable = false
         f.show(activity!!.supportFragmentManager, FindRideDialogFragment.TAG)
@@ -397,10 +400,9 @@ open class BaseFragment : GenericFragment() {
         f.isCancelable = true
         f.show(activity!!.supportFragmentManager, MatchingRidersFragment.TAG)
     }
-    open fun showHistory(compltedRides: List<Completed>, n: RequestListener){
+    open fun showHistory(n: RequestListener){
         val f = HistoryFragment().apply {
             this.listener = n
-            this.compltedRides = compltedRides
         }
         f.isCancelable = true
         f.show(activity!!.supportFragmentManager, HistoryFragment.TAG)

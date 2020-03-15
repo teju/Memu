@@ -6,13 +6,10 @@ import com.google.gson.GsonBuilder
 import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
 import com.memu.etc.*
-import com.memu.modules.GenericResponse
-import com.memu.modules.UserSignup.UserSignUp
-import com.memu.modules.completedRides.CompletedRides
-import org.json.JSONArray
-import org.json.JSONObject
+import com.memu.modules.completedRides.CompletedScheduled
+import com.memu.ui.adapters.HistoryAdapter
 
-class PostCompleteRidesViewModel(application: Application) : BaseViewModel(application) {
+class PostScheduledCompleteRidesViewModel(application: Application) : BaseViewModel(application) {
 
     private val trigger = SingleLiveEvent<Integer>()
 
@@ -20,7 +17,7 @@ class PostCompleteRidesViewModel(application: Application) : BaseViewModel(appli
 
     var apl: Application
 
-    var obj: CompletedRides? = null
+    var obj: CompletedScheduled? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -31,7 +28,7 @@ class PostCompleteRidesViewModel(application: Application) : BaseViewModel(appli
         this.apl = application
     }
 
-    fun loadData() {
+    fun loadData(type: Int) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -51,7 +48,7 @@ class PostCompleteRidesViewModel(application: Application) : BaseViewModel(appli
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), CompletedRides::class.java)
+                        obj = gson.fromJson(response!!.content.toString(), CompletedScheduled::class.java)
                         if (obj!!.status.equals(Keys.STATUS_CODE)) {
                             trigger.postValue(GetVehicleTypeViewModel.NEXT_STEP)
                         }else{
@@ -69,7 +66,11 @@ class PostCompleteRidesViewModel(application: Application) : BaseViewModel(appli
         genericHttpAsyncTask.method = BaseConstants.POST
         genericHttpAsyncTask.context = apl.applicationContext
         Helper.applyHeader(apl,genericHttpAsyncTask)
-        genericHttpAsyncTask.setUrl(APIs.postCompleteRides)
+        if(type == HistoryAdapter.TYPE_COMPLETED) {
+            genericHttpAsyncTask.setUrl(APIs.postCompleteRides)
+        } else {
+            genericHttpAsyncTask.setUrl(APIs.postScheduledRides)
+        }
         genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
         genericHttpAsyncTask.setPostParams(Keys.OFFSET, "0")
         genericHttpAsyncTask.setPostParams(Keys.LIMIT, "1000")

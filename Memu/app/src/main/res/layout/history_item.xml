@@ -41,8 +41,8 @@
                 android:layout_marginBottom="40dp"
                 android:layout_height="wrap_content">
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1.2"
                     android:layout_gravity="center_vertical"
                     android:orientation="vertical"
                     android:layout_height="wrap_content">
@@ -73,7 +73,6 @@
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_weight="1"
                         android:layout_marginTop="8dp"
                         android:orientation="vertical"
                         android:layout_height="wrap_content">
@@ -126,33 +125,38 @@
 
                 </LinearLayout>
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1.2"
                     android:layout_marginRight="20dp"
-                    android:layout_marginLeft="20dp"
                     android:layout_height="wrap_content">
+
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:src="@drawable/icon_open_menu"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_height="wrap_content">
+                        android:src="@drawable/icon_open_menu">
 
                     </ImageView>
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:orientation="vertical"
+                        android:layout_marginRight="25dp"
                         android:layout_height="wrap_content">
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:orientation="horizontal"
                             android:layout_height="wrap_content">
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
                                 android:orientation="vertical"
+                                android:gravity="center_horizontal"
                                 android:layout_height="wrap_content">
                                 <ImageView
                                     android:layout_width="40dp"
+                                    android:id="@+id/user1"
+                                    android:layout_gravity="center_horizontal"
                                     android:src="@drawable/user_default"
                                     android:tint="@color/Blue"
                                     android:layout_height="40dp">
@@ -160,7 +164,8 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:fontFamily="@font/opensansregular"
-                                    android:text="User"
+                                    android:maxLines="2"
+                                    android:id="@+id/user1_name"
                                     android:textAlignment="center"
                                     android:textSize="12dp"
                                     android:layout_height="wrap_content">
@@ -168,20 +173,24 @@
                                 </TextView>
                             </LinearLayout>
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
                                 android:orientation="vertical"
+                                android:gravity="center_horizontal"
                                 android:layout_marginLeft="10dp"
                                 android:layout_height="wrap_content">
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:src="@drawable/user_default"
                                     android:tint="@color/Blue"
+                                    android:id="@+id/user2"
                                     android:layout_height="40dp">
                                 </ImageView>
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:fontFamily="@font/opensansregular"
-                                    android:text="User"
+                                    android:maxLines="2"
+                                    android:id="@+id/user2_name"
                                     android:textAlignment="center"
                                     android:textSize="12dp"
                                     android:layout_height="wrap_content">
@@ -196,16 +205,15 @@
                             android:layout_marginTop="10dp"
                             android:layout_gravity="center_horizontal"
                             android:layout_height="wrap_content">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:src="@drawable/cirecle_empty"
-                                android:layout_height="wrap_content">
-                            </ImageView>
                             <TextView
                                 android:layout_width="match_parent"
                                 android:fontFamily="@font/opensansregular"
-                                android:text="User"
+                                android:text="2+"
+                                android:visibility="gone"
+                                android:background="@drawable/cirecle_empty"
                                 android:textAlignment="center"
+                                android:gravity="center"
+                                android:id="@+id/count"
                                 android:textSize="12dp"
                                 android:layout_height="wrap_content">
 
