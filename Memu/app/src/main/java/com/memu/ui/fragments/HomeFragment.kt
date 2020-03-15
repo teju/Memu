@@ -71,6 +71,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
     lateinit var postUpdateNotiTokenViewModel: PostUpdateNotiTokenViewModel
     lateinit var postFindRideViewModel: PostFindRideViewModel
+    lateinit var postUserVehicleListViewModel: PostUserVehicleListViewModel
     var destLatitide:Double = 0.0
     var destLongitude:Double = 0.0
     var srcLongitude:Double = 0.0
@@ -111,7 +112,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 mapView!!.getMapAsync(this)
 
             } catch (e : Exception){
-                System.out.println("initUIException "+e.toString())
+
             }
         }
     }
@@ -154,6 +155,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     private fun initUI() {
         setUpdateNotiTokenAPIObserver()
         setFindTripAPIObserver()
+        setPoolerVehicleListAPIObserver()
         cv.setCardBackgroundColor(activity!!.resources.getColor(R.color.Purple));
         gpsTracker = GPSTracker(activity)
         if(gpsTracker?.canGetLocation()!!) {
@@ -173,7 +175,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             home_mapView.addView(myView);
             mapView!!.getMapAsync(this)
         } catch (e : Exception){
-            System.out.println("initUIException "+e.toString())
+            
         }
         alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as  AlarmManager;
 
@@ -188,6 +190,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             }
 
         });
+        postUserVehicleListViewModel.loadData()
+
         rlBestRoute.setOnClickListener(this)
         rlpooling.setOnClickListener(this)
         rlcab.setOnClickListener(this)
@@ -321,6 +325,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                     if(Keys.MAPTYPE == Keys.SHORTESTROUTE ) {
                         if((srcLatitude != 0.0 && srcLongitude != 0.0)) {
                             reset()
+                            home_mapView.removeAllViews()
                             home().setFragment(MapFragment().apply {
                                 srcLat = srcLatitude
                                 srcLng = srcLongitude
@@ -353,6 +358,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             R.id.history_icon -> {
                 Keys.MAPTYPE = Keys.HISTORY
                 reset()
+                home_mapView.removeAllViews()
                 home().setFragment(MapFragment().apply {
                     srcLat = srcLatitude
                     srcLng = srcLongitude
@@ -389,39 +395,16 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             }
             R.id.find_ride -> {
                 findRide()
-               /* strType = "find_ride_bike"
-               // seatstv.text = "01\nSeats"
-                type = FINDRIDER
-                *//*find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
-                offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)*/
             }
             R.id.bike_find_ride -> {
                 findRide()
-               /* strType = "find_ride_bike"
-               // seatstv.text = "01\nSeats"
-                type = FINDRIDER
-                *//*find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
-                offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)*/
             }
             R.id.bike_offer_ride -> {
                 showFindRideDialog()
-               /* strType = "find_ride_bike"
-               // seatstv.text = "01\nSeats"
-                type = FINDRIDER
-                *//*find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)
-                offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)*/
             }
             R.id.offer_ride -> {
-
                 days = weekdays.joinToString(separator = ",")
-                System.out.println("WeekAdapter days "+days)
-
                 showFindRideDialog()
-               /* seatstv.text = "01\nSeats"
-                strType = "offer_ride"
-                type = OFFERRIDE
-                find_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.White)
-                offer_ride.backgroundTintList = activity?.resources?.getColorStateList(R.color.LightBlue)*/
             }
         }
     }
@@ -432,6 +415,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             if (Keys.MAPTYPE == Keys.SHORTESTROUTE) {
                 if ((srcLatitude != 0.0 && srcLongitude != 0.0)) {
                     reset()
+                    home_mapView.removeAllViews()
                     home().setFragment(MapFragment().apply {
                         srcLat = srcLatitude
                         srcLng = srcLongitude
@@ -457,17 +441,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             )
             return false
         }
-        /*if (BaseHelper.isEmpty(days)) {
-            edtdestLoc.requestFocus()
-            showNotifyDialog(
-                "", "Select  days",
-                getString(R.string.ok), "", object : NotifyListener {
-                    override fun onButtonClicked(which: Int) {}
-                }
-            )
-            return false
-        }*/
-
         return true
     }
     val cal = Calendar.getInstance()
@@ -506,6 +479,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
     fun poolingUI() {
         popUpView.visibility = View.VISIBLE
+        edtVia.visibility = View.VISIBLE
         arrow_left.visibility = View.VISIBLE
         llPooling.visibility = View.VISIBLE
         cancel.visibility = View.GONE
@@ -555,7 +529,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         val sglm2 = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL, false)
         weeksList.setLayoutManager(sglm2)
         weeksList.setNestedScrollingEnabled(false)
-        //weeksList.addItemDecoration(SpacesItemDecoration(2, spacingInPixels, true))
+
         val adapter = WeekAdapter(context!!)
 
         adapter.obj = obj
@@ -572,13 +546,13 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                     }
                     adapter.weekdays = weekdays
                     weeksList.adapter?.notifyDataSetChanged()
-                    System.out.println("WeekAdapter days "+weekdays.toString())
 
                 }
             }
     }
     fun bestRouteUI() {
         popUpView.visibility = View.VISIBLE
+        edtVia.visibility = View.GONE
         cancel.visibility = View.GONE
         rlTopBar.visibility = View.GONE
         llPooling.visibility = View.GONE
@@ -781,6 +755,36 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             }
         }
     }
+    fun setPoolerVehicleListAPIObserver() {
+        postUserVehicleListViewModel = ViewModelProviders.of(this).get(PostUserVehicleListViewModel::class.java).apply {
+            this@HomeFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostUserVehicleListViewModel.NEXT_STEP -> {
+
+
+                        }
+                    }
+                })
+            }
+        }
+    }
 
     fun FromJSon(lattitude : Double,longitude : Double) : JSONObject {
         val getAddress = getAddress(lattitude,longitude)
@@ -821,7 +825,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                     mapView!!.getMapAsync(this)
 
                 } catch (e : Exception){
-                    System.out.println("initUIException "+e.toString())
+
                 }
 
 
@@ -838,13 +842,12 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                     mapView!!.getMapAsync(this)
 
                 } catch (e : Exception){
-                    System.out.println("initUIException "+e.toString())
+
                 }
-                //selectedCarmenFeatureDest = PlaceAutocomplete.getPlace(data);
-                //edtdestLoc.setText(selectedCarmenFeatureDest!!.placeName())
+
             }
         } catch (e : Exception){
-            System.out.println("Exception123 "+e.toString())
+
         }
 
 

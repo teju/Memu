@@ -73,5 +73,14 @@ class APIs : BaseKeys() {
 
         val postAcceptRejectReq : String
             get() = BASE_URL!!  + BOOKING+ "ride-approve-reject"
+
+        val postCompleteRides : String
+            get() = BASE_URL!!  + BOOKING+ "my-completed-rides"
+
+        val postScheduledRides : String
+            get() = BASE_URL!!  + BOOKING+ "my-rides"
+
+        val postVehicleList : String
+            get() = BASE_URL!!  + USER+ "pooler-vehicle-list"
     }
 }

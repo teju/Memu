@@ -32,6 +32,7 @@ import com.memu.R
 import com.memu.etc.Constants
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
+import com.memu.modules.completedRides.Completed
 import com.memu.modules.mapFeeds.MapFeed
 import com.memu.modules.riderList.Rider
 import com.memu.ui.dialog.*
@@ -396,9 +397,10 @@ open class BaseFragment : GenericFragment() {
         f.isCancelable = true
         f.show(activity!!.supportFragmentManager, MatchingRidersFragment.TAG)
     }
-    open fun showHistory(n: RequestListener){
+    open fun showHistory(compltedRides: List<Completed>, n: RequestListener){
         val f = HistoryFragment().apply {
             this.listener = n
+            this.compltedRides = compltedRides
         }
         f.isCancelable = true
         f.show(activity!!.supportFragmentManager, HistoryFragment.TAG)

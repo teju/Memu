@@ -1,7 +1,6 @@
 package com.memu.ui.fragments
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -85,29 +84,28 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     var trip_rider_id: String? = ""
     var type: String? = ""
     private var gpsTracker: GPSTracker? = null
-    //private var mapboxMap: MapboxMap? = null
-    // variables for adding location layer
+
     private var permissionsManager: PermissionsManager? = null
     private var locationComponent: LocationComponent? = null
-    // variables for calculating and drawing a route
+
     private var navigationMapRoute: NavigationMapRoute? = null
-    // variables needed to initialize navigation
+
     lateinit var postnviteRideGiversViewModel: PostnviteRideGiversViewModel
     lateinit var postRidersFragment: PostRequestRideViewModel
     lateinit var postGetRoutesViewModel: PostGetRoutesViewModel
+    lateinit var postCompleteRidesViewModel: PostCompleteRidesViewModel
+    lateinit var postScheduledRidesViewModel: PostScheduledRidesViewModel
+
     private var mMap: GoogleMap? = null
-    internal var markerPoints = ArrayList<com.google.android.gms.maps.model.LatLng>()
+    internal var markerPoints = ArrayList<LatLng>()
     var mapcurrentRoute: DirectionsRoute? = null
     private var mapboxMap: MapboxMap? = null
-    private val styleCycle = StyleCycle()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        v = inflater.inflate(com.memu.R.layout.map_fragment, container, false)
+        savedInstanceState: Bundle?): View? {
+        v = inflater.inflate(R.layout.map_fragment, container, false)
         return v
     }
 
@@ -115,7 +113,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         super.onViewCreated(view, savedInstanceState)
         googlemapView?.onCreate(savedInstanceState);
         googlemapView?.onResume();
-       // mapView?.getMapAsync(this)
+
         try {
             val  inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
             myView = inflater.inflate(R.layout.map_view, null) as LinearLayout
@@ -123,7 +121,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             mapView.onCreate(savedInstanceState)
             mapView!!.getMapAsync(this)
         } catch (e : Exception){
-            System.out.println("initUIException "+e.toString())
         }
         initUI();
     }
@@ -132,10 +129,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         if(!hidden) {
             try {
                 frame_layout.addView(myView);
-               // mapView!!.getMapAsync(this)
-
             } catch (e : Exception){
-                System.out.println("initUIException "+e.toString())
             }
         } else {
             frame_layout.removeAllViews()
@@ -192,45 +186,12 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         loadedMapStyle.addLayer(destinationSymbolLayer)
     }
 
-    private fun initializeLocationComponent(mapboxMap: MapboxMap) {
-        val locationComponent = mapboxMap.locationComponent
-        locationComponent.activateLocationComponent(activity!!, mapboxMap.style!!)
-        locationComponent.isLocationComponentEnabled = true
-        locationComponent.renderMode = RenderMode.COMPASS
-        locationComponent.cameraMode = CameraMode.TRACKING
-        locationComponent.zoomWhileTracking(12.0)
-    }
-    class StyleCycle {
-
-        private var index: Int = 0
-
-        val nextStyle: String
-            get() {
-                index++
-                if (index == STYLES.size) {
-                    index = 0
-                }
-                return style
-            }
-
-        val style: String
-            get() = STYLES[index]
-
-        companion object {
-            val STYLES = arrayOf(
-                Style.MAPBOX_STREETS,
-                Style.OUTDOORS,
-                Style.LIGHT,
-                Style.DARK,
-                Style.SATELLITE_STREETS
-            )
-        }
-    }
-
     private fun initUI() {
         setInviteRideGiversAPIObserver()
         setRequestRideAPIObserver()
         setGoogleMapRouteAPIObserver()
+        setCompletedAPIObserver()
+        setScheduledAPIObserver()
         arrow_left.setOnClickListener(this)
         rloption_c.setOnClickListener(this)
         rloption_a.setOnClickListener(this)
@@ -251,11 +212,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 sos.visibility = View.VISIBLE
             }
             Keys.HISTORY -> {
-                showHistory(object : RequestListener {
-                        override fun onButtonClicked(user_id: String, id: String) {
-
-                        }
-                    })
+                postScheduledRidesViewModel.loadData()
             }
         }
 
@@ -290,48 +247,18 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 .tilt(20.0)
                 .build();
             mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
-            System.out.println("onResponse DirectionsResponse "+response.body()!!.routes().size)
 
         }
     }
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.arrow_left -> {
-                // frame_layout.removeView(myView)
                 home().proceedDoOnBackPressed()
             }
-           /* R.id.rloption_a -> {
-                startButton.isEnabled = true
-                rloption_b.setBackgroundTintList(null)
-                rloption_c.setBackgroundTintList(null)
-                rloption_a.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Blue)));
-                mapcurrentRoute = routes.get(0)
-                navigationMapRoute!!.addRoute(mapcurrentRoute)
-            }
-            R.id.rloption_b -> {
-                startButton.isEnabled = true
-                rloption_a.setBackgroundTintList(null)
-                rloption_c.setBackgroundTintList(null)
-                rloption_b.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Yellow)));
-                mapcurrentRoute = routes.get(1)
-                navigationMapRoute!!.addRoute(mapcurrentRoute)
 
-            }
-            R.id.rloption_c -> {
-                startButton.isEnabled = true
-                rloption_a.setBackgroundTintList(null)
-                rloption_b.setBackgroundTintList(null)
-                rloption_c.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.polylinePink)));
-                mapcurrentRoute = routes.get(2)
-                navigationMapRoute!!.addRoute(mapcurrentRoute)
-
-
-            }*/
             R.id.startButton -> {
                 home().setFragment(MockNavigationFragment(this!!.destinationPoint!!, this@MapFragment.maporiginPoint!!).apply {
-                    System.out.println("onMapReady mapcurrentRoute "+mapcurrentRoute?.legs())
                     this.currentRoute = mapcurrentRoute
-
                 })
             }
         }
@@ -384,7 +311,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        System.out.println("onMapReady called")
         mMap = googleMap
         val origin = LatLng(srcLat, srcLng)
         val dest = LatLng(destLat, destLng)
@@ -438,38 +364,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             .getRoute(this)
     }
 
-    private fun displayMap(travelRoutes: List<Route>) {
-        for(i in  0..(travelRoutes.size - 1)){
-            val route = travelRoutes.get(i)
-            if (route != null && route.overview_polyline != null) {
-                val  routePoints = getPoints(route.overview_polyline.points)
-                val polylineOptions = PolylineOptions()
-                if(i == 0) {
-                    rloption_a.visibility = View.VISIBLE
-                    option_a_time.text = route.legs.get(0).duration.text
-                    option_a_date.text = route.legs.get(0).distance.text
-                    polylineOptions.color(resources.getColor(R.color.Blue))
-                }else if(i == 1) {
-                    rloption_b.visibility = View.VISIBLE
-                    option_b_time.text = route.legs.get(0).duration.text
-                    option_b_dist.text = route.legs.get(0).distance.text
-                    polylineOptions.color(resources.getColor(R.color.Yellow))
-                } else {
-                    if(!BaseHelper.isEmpty(route.legs.get(0).duration.text)) {
-                        option_c_time.text = route.legs.get(0).duration.text
-                        option_c_dist.text = route.legs.get(0).distance.text
-                        rloption_c.visibility = View.VISIBLE
-                        polylineOptions.color(resources.getColor(R.color.BlueViolet))
-                    }
-                }
-                polylineOptions.addAll(routePoints)
-                mMap!!.addPolyline(polylineOptions).isClickable = true
-                mMap!!.setOnPolylineClickListener { polyline ->
-                    //polyline.color = Color.GREEN
-                }
-            }
-        }
-    }
     private fun getDirectionsUrl(origin: LatLng, dest: LatLng): String {
 
         // Origin of route
@@ -494,212 +388,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         return "https://maps.googleapis.com/maps/api/directions/$output?$parameters"
     }
 
-    fun addMarkers() {
-
-        val symbolLayerIconFeatureList = ArrayList<Feature>()
-        try {
-            for (x in 0 until postnviteRideGiversViewModel.obj?.pooler_list?.size!!) {
-                symbolLayerIconFeatureList.add(
-                    Feature.fromGeometry(
-                        Point.fromLngLat(
-                            postnviteRideGiversViewModel.obj?.pooler_list?.get(x)?.from_address?.longitude!!.toDouble(),
-                            postnviteRideGiversViewModel.obj?.pooler_list?.get(x)?.from_address?.lattitude!!.toDouble()
-                        )
-                    )
-                )
-                System.out.println(
-                    "addMarkers " + postnviteRideGiversViewModel.obj?.pooler_list?.get(
-                        x
-                    )?.from_address?.longitude!!
-                )
-
-            }
-        } catch (e : Exception){
-
-        }
-        try {
-            for (x in 0 until postnviteRideGiversViewModel.obj?.rider_list?.size!!) {
-                symbolLayerIconFeatureList.add(
-                    Feature.fromGeometry(
-                        Point.fromLngLat(
-                            postnviteRideGiversViewModel.obj?.rider_list?.get(x)?.from_address?.longitude!!.toDouble(),
-                            postnviteRideGiversViewModel.obj?.rider_list?.get(x)?.from_address?.lattitude!!.toDouble()
-                        )
-                    )
-                )
-                System.out.println(
-                    "addMarkers " + postnviteRideGiversViewModel.obj?.rider_list?.get(
-                        x
-                    )?.from_address?.longitude!!
-                )
-
-            }
-        } catch (e : Exception){
-            ld.hide()
-        }
-        val drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.map_marker, null);
-        val mBitmap = com.mapbox.mapboxsdk.utils.BitmapUtils.getBitmapFromDrawable(drawable);
-        mapboxMap?.setStyle(
-            Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
-
-                // Add the SymbolLayer icon image to the map style
-                .withImage(
-                    ICON_ID, mBitmap!!)
-
-
-                // Adding a GeoJson source for the SymbolLayer icons.
-                .withSource(
-                    GeoJsonSource(
-                        SOURCE_ID,
-                        FeatureCollection.fromFeatures(symbolLayerIconFeatureList)
-                    )
-                )
-
-                // Adding the actual SymbolLayer to the map style. An offset is added that the bottom of the red
-                // marker icon gets fixed to the coordinate, rather than the middle of the icon being fixed to
-                // the coordinate point. This is offset is not always needed and is dependent on the image
-                // that you use for the SymbolLayer icon.
-                .withLayer(
-                    SymbolLayer(
-                        LAYER_ID,
-                        SOURCE_ID
-                    )
-                        .withProperties(
-                            PropertyFactory.iconImage(ICON_ID),
-                            PropertyFactory.iconAllowOverlap(true),
-                            PropertyFactory.iconIgnorePlacement(true),
-                            PropertyFactory.iconOffset(arrayOf(0f, -9f))
-                        )
-                )
-        ) {
-            initializeLocationComponent(mapboxMap!!)
-        }
-    }
-
-    /* override fun onMapReady(@io.reactivex.annotations.NonNull mapboxMap: MapboxMap) {
-        this.mapboxMap = mapboxMap
-        mapboxMap.setStyle(getString(R.string.navigation_guidance_day)) { style ->
-            enableLocationComponent(style)
-            addDestinationIconSymbolLayer(style)
-            //mapboxMap.addOnMapClickListener(this@MapFragment)
-            startButton!!.setOnClickListener {
-                *//*val simulateRoute = false
-                val options = NavigationLauncherOptions.builder()
-                    .directionsRoute(currentRoute)
-                    .shouldSimulateRoute(simulateRoute)
-
-                    .build()
-                // Call this method with Context from within an Activity
-                NavigationLauncher.startNavigation(activity, options)*//*
-                home().setFragment(NavigationFragment().apply {
-                    this.currentRoute = this@MapFragment.currentRoute
-                })
-            }
-            showRoute()
-        }
-
-
-    }
-
-
-    override fun onMapClick(@io.reactivex.annotations.NonNull point: LatLng): Boolean {
-
-        val destinationPoint = Point.fromLngLat(point.longitude, point.latitude)
-        val originPoint = Point.fromLngLat(
-            locationComponent!!.lastKnownLocation!!.longitude,
-            locationComponent!!.lastKnownLocation!!.latitude
-        )
-
-        val source = mapboxMap!!.style!!.getSourceAs<GeoJsonSource>("destination-source-id")
-        source?.setGeoJson(Feature.fromGeometry(destinationPoint))
-
-        getRoute(originPoint, destinationPoint)
-        startButton!!.isEnabled = true
-        return true
-    }
-
-
-    fun addMarkers() {
-
-        val symbolLayerIconFeatureList = ArrayList<Feature>()
-        try {
-            for (x in 0 until postnviteRideGiversViewModel.obj?.pooler_list?.size!!) {
-                symbolLayerIconFeatureList.add(
-                    Feature.fromGeometry(
-                        Point.fromLngLat(
-                            postnviteRideGiversViewModel.obj?.pooler_list?.get(x)?.from_address?.longitude!!.toDouble(),
-                            postnviteRideGiversViewModel.obj?.pooler_list?.get(x)?.from_address?.lattitude!!.toDouble()
-                        )
-                    )
-                )
-                System.out.println(
-                    "addMarkers " + postnviteRideGiversViewModel.obj?.pooler_list?.get(
-                        x
-                    )?.from_address?.longitude!!
-                )
-
-            }
-        } catch (e : Exception){
-
-        }
-        try {
-            for (x in 0 until postnviteRideGiversViewModel.obj?.rider_list?.size!!) {
-                symbolLayerIconFeatureList.add(
-                    Feature.fromGeometry(
-                        Point.fromLngLat(
-                            postnviteRideGiversViewModel.obj?.rider_list?.get(x)?.from_address?.longitude!!.toDouble(),
-                            postnviteRideGiversViewModel.obj?.rider_list?.get(x)?.from_address?.lattitude!!.toDouble()
-                        )
-                    )
-                )
-                System.out.println(
-                    "addMarkers " + postnviteRideGiversViewModel.obj?.rider_list?.get(
-                        x
-                    )?.from_address?.longitude!!
-                )
-
-            }
-        } catch (e : Exception){
-            ld.hide()
-        }
-        val drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.map_marker, null);
-        val mBitmap = com.mapbox.mapboxsdk.utils.BitmapUtils.getBitmapFromDrawable(drawable);
-        mapboxMap?.setStyle(
-            Style.Builder().fromUri("mapbox://styles/mapbox/cjf4m44iw0uza2spb3q0a7s41")
-
-                // Add the SymbolLayer icon image to the map style
-                .withImage(
-                    ICON_ID, mBitmap!!)
-
-
-                // Adding a GeoJson source for the SymbolLayer icons.
-                .withSource(
-                    GeoJsonSource(
-                        SOURCE_ID,
-                        FeatureCollection.fromFeatures(symbolLayerIconFeatureList)
-                    )
-                )
-
-                // Adding the actual SymbolLayer to the map style. An offset is added that the bottom of the red
-                // marker icon gets fixed to the coordinate, rather than the middle of the icon being fixed to
-                // the coordinate point. This is offset is not always needed and is dependent on the image
-                // that you use for the SymbolLayer icon.
-                .withLayer(
-                    SymbolLayer(
-                        LAYER_ID,
-                        SOURCE_ID
-                    )
-                        .withProperties(
-                            PropertyFactory.iconImage(ICON_ID),
-                            PropertyFactory.iconAllowOverlap(true),
-                            PropertyFactory.iconIgnorePlacement(true),
-                            PropertyFactory.iconOffset(arrayOf(0f, -9f))
-                        )
-                )
-        ) {
-            enableLocationComponent(it)
-        }
-    }*/
 
     private fun enableLocationComponent(@io.reactivex.annotations.NonNull loadedMapStyle: Style?) {
         // Check if permissions are enabled and if not request
@@ -742,7 +430,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                     when (state) {
                         PostnviteRideGiversViewModel.NEXT_STEP -> {
                             if(Keys.MAPTYPE == Keys.POOLING) {
-                               // addMarkers()
                                 try {
                                     if (postnviteRideGiversViewModel.obj?.pooler_list != null) {
                                         showMatchingRiders(postnviteRideGiversViewModel.obj?.pooler_list!!,
@@ -769,6 +456,72 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                                     )
                                 }
                             }
+                        }
+                    }
+                })
+            }
+        }
+    }
+    fun setCompletedAPIObserver() {
+        postCompleteRidesViewModel = ViewModelProviders.of(this).get(PostCompleteRidesViewModel::class.java).apply {
+            this@MapFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostCompleteRidesViewModel.NEXT_STEP -> {
+                            showHistory(obj?.completed_list!!, object : RequestListener {
+                                override fun onButtonClicked(user_id: String, id: String) {
+
+                                }
+                            })
+                        }
+                    }
+                })
+            }
+        }
+    }
+    fun setScheduledAPIObserver() {
+        postScheduledRidesViewModel = ViewModelProviders.of(this).get(PostScheduledRidesViewModel::class.java).apply {
+            this@MapFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostScheduledRidesViewModel.NEXT_STEP -> {
+                            showHistory(obj?.completed_list!!, object : RequestListener {
+                                override fun onButtonClicked(user_id: String, id: String) {
+
+                                }
+                            })
                         }
                     }
                 })
@@ -828,7 +581,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostGetRoutesViewModel.NEXT_STEP -> {
-                           // displayMap(postGetRoutesViewModel.obj?.routes!!)
+
                         }
                     }
                 })
@@ -846,7 +599,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
     override fun onPermissionResult(granted: Boolean) {
         if (granted) {
-            //enableLocationComponent(mapboxMap!!.style)
+
         } else {
             Toast.makeText(activity, R.string.app_name, Toast.LENGTH_LONG).show()
 
@@ -878,16 +631,9 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         mapView!!.onSaveInstanceState(outState)
     }
 
-
     override fun onLowMemory() {
         super.onLowMemory()
         mapView!!.onLowMemory()
-    }
-    companion object {
-        private val TAG = "DirectionsActivity"
-        val SOURCE_ID = "SOURCE_ID"
-        private val ICON_ID = "ICON_ID"
-        val LAYER_ID = "LAYER_ID"
     }
 
 }

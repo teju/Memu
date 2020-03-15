@@ -117,7 +117,7 @@ class MockNavigationFragment(
     private var routeRefresh: RouteRefresh? = null
     private var isRefreshing = false
     private var mapView: MapView? = null
-
+    var showDialog : Boolean = false
     private class MyBroadcastReceiver internal constructor(navigation: MapboxNavigation) :
         BroadcastReceiver() {
         private val weakNavigation: WeakReference<MapboxNavigation>
@@ -141,12 +141,22 @@ class MockNavigationFragment(
     }
 
     fun showAlertsDialog() {
-        System.out.println("showAlertsDialog map_feeds "+postGetAlertListViewModel.obj?.map_feeds!!)
-        showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!!,object : NotifyListener {
-            override fun onButtonClicked(which: Int) {
-                postMApFeedAddViewModel.loadData(postGetAlertListViewModel.obj?.map_feeds!!.get(which).id)
-            } }
-        )
+        try {
+            System.out.println("showAlertsDialog map_feeds " + postGetAlertListViewModel.obj?.map_feeds!!)
+            showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!!, object : NotifyListener {
+                override fun onButtonClicked(which: Int) {
+                    postMApFeedAddViewModel.loadData(
+                        postGetAlertListViewModel.obj?.map_feeds!!.get(
+                            which
+                        ).id
+                    )
+                }
+            })
+        } catch (e : Exception){
+            showDialog = true
+            postGetAlertListViewModel.loadData()
+
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -481,7 +491,18 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostGetAlertListViewModel.NEXT_STEP -> {
-
+                            if(showDialog) {
+                                showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!!, object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) {
+                                        postMApFeedAddViewModel.loadData(
+                                            postGetAlertListViewModel.obj?.map_feeds!!.get(
+                                                which
+                                            ).id
+                                        )
+                                    }
+                                })
+                                showDialog = false
+                            }
                         }
                     }
                 })

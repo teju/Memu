@@ -26,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:textColor="@color/DarkBlue"
                 android:textSize="16dp"
+                android:id="@+id/dateTime"
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/opensanssemibold"
                 android:textAlignment="center"
@@ -80,6 +81,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="via"
+                            android:singleLine="true"
                             android:id="@+id/viaLoc"
                             android:layout_height="wrap_content">
                         </TextView>
@@ -107,6 +109,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="Airport"
+                            android:singleLine="true"
                             android:layout_marginLeft="20dp"
                             android:id="@+id/destLoc"
                             android:layout_height="wrap_content">
@@ -225,6 +228,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:id="@+id/coins_earned"
                 android:text="Coins Earned : 00"
                 android:background="@color/White"
                 android:layout_height="wrap_content">
@@ -232,6 +236,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:id="@+id/coins_spent"
                 android:text="Coins Spent : 00"
                 android:background="@color/White"
                 android:layout_marginLeft="15dp"

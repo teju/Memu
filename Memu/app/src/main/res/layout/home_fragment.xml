@@ -460,6 +460,7 @@
                                     android:paddingLeft="40dp"
                                     android:layout_marginTop="10dp"
                                     android:id="@+id/edtVia"
+                                    android:visibility="gone"
                                     android:fontFamily="@font/opensansregular"
                                     android:gravity="center_vertical"
                                     android:layout_marginLeft="30dp"
