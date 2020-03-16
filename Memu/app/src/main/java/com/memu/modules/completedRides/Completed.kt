@@ -11,5 +11,8 @@ data class Completed(
     val time: String = "",
     val days: String = "",
     val type: String = "",
+    val vehicle_id: String = "",
+    val is_recurring_ride: String = "",
+    val no_of_seats: String = "",
     val to_address: ToAddress = ToAddress()
 )

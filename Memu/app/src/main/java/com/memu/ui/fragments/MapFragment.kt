@@ -2,6 +2,8 @@ package com.memu.ui.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +21,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
 
 import com.iapps.gon.etc.callback.NotifyListener
@@ -29,8 +30,6 @@ import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
@@ -38,7 +37,6 @@ import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.location.modes.CameraMode
-import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
@@ -56,7 +54,8 @@ import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
 import com.memu.modules.PlaceHolder
 import com.memu.modules.completedRides.Completed
-import com.memu.modules.googleMaps.Route
+import com.memu.modules.completedRides.FromAddress
+import com.memu.modules.completedRides.ToAddress
 import com.memu.ui.activity.MockNavigationFragment
 import com.memu.ui.activity.SearchActivity
 import com.memu.ui.adapters.WeekAdapter
@@ -64,9 +63,11 @@ import com.memu.webservices.*
 import kotlinx.android.synthetic.main.map_fragment.*
 import kotlinx.android.synthetic.main.map_fragment.ld
 import kotlinx.android.synthetic.main.map_view.*
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 
 
 import java.lang.Exception
@@ -103,6 +104,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     lateinit var postnviteRideGiversViewModel: PostnviteRideGiversViewModel
     lateinit var postRidersFragment: PostRequestRideViewModel
     lateinit var postGetRoutesViewModel: PostGetRoutesViewModel
+    lateinit var postEditRecuringViewModel: PostEditRecuringViewModel
     var destLatitide:Double = 0.0
     var destLongitude:Double = 0.0
     var viaLongitude:Double = 0.0
@@ -204,7 +206,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         setInviteRideGiversAPIObserver()
         setRequestRideAPIObserver()
         setGoogleMapRouteAPIObserver()
-
+        setEditRecurringAPIObserver()
         arrow_left.setOnClickListener(this)
         rloption_c.setOnClickListener(this)
         rloption_a.setOnClickListener(this)
@@ -245,6 +247,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
         }
     }
+
     fun weeAdapter() {
         var obj : java.util.ArrayList<PlaceHolder> = java.util.ArrayList<PlaceHolder>()
         var placeholder = PlaceHolder()
@@ -280,29 +283,104 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         weeksList.setNestedScrollingEnabled(false)
 
         val adapter = WeekAdapter(context!!)
-
+        val recursive = recursivedays?.split(",")!!
+        for(week in recursive) {
+            weekdays.add(week)
+        }
         adapter.obj = obj
         adapter.weekdays = weekdays
         weeksList.adapter = adapter
         adapter.isHome = false
-        val recursive = recursivedays?.split(",")!!
-        adapter.recursivedays = recursive
         (weeksList.adapter as WeekAdapter).productAdapterListener =
             object : WeekAdapter.ProductAdapterListener {
                 override fun onClick(position: String, checked: Boolean) {
-                    if(checked &&  !weekdays.contains(position)) {
+
+                    if(checked && !BaseHelper.containsIgnoreCase(weekdays,position)) {
                         weekdays.add(position)
                     } else {
+
                         weekdays.remove(position)
+                        weekdays.remove(position.toLowerCase())
+                        System.out.println("recursivedays WeekAdapter "+weekdays)
+
                     }
+
                     adapter.weekdays = weekdays
                     weeksList.adapter?.notifyDataSetChanged()
 
                 }
             }
+        srcLatitude = completed!!.from_address.lattitude.toDouble()
+        srcLongitude = completed!!.from_address.longitude.toDouble()
+        destLatitide = completed!!.to_address.lattitude.toDouble()
+        destLongitude = completed!!.to_address.longitude.toDouble()
+
         srcLoc.setText(completed?.from_address?.address_line1)
         destLoc.setText(completed?.from_address?.address_line1)
+        pause_button.setOnClickListener {
+            makeCompletedPAram()
+        }
     }
+
+    fun makeCompletedPAram() {
+        try {
+            val fromAddress = FromJSon(srcLatitude, srcLongitude)
+            val toAddress = FromJSon(destLatitide, destLongitude)
+            val days = weekdays.joinToString(separator = ",")
+            var is_recuring = "no"
+            if (!BaseHelper.isEmpty(days)) {
+                is_recuring = "yes"
+            }
+            val completed = Completed(
+                "", "", completed?.date!!,
+                FromAddress(), completed?.id!!, listOf(),
+                completed?.status!!,
+                completed!!.time,
+                days,
+                completed!!.type,
+                completed!!.vehicle_id,
+                is_recuring,
+                completed!!.no_of_seats,
+                ToAddress()
+            )
+            postEditRecuringViewModel.loadData(completed,fromAddress,toAddress)
+
+            System.out.println("makeCompletedPAram " + completed)
+        } catch (e : Exception){
+            System.out.println("makeCompletedPAram Exception " + e.toString())
+
+        }
+    }
+    fun FromJSon(lattitude : Double,longitude : Double) : JSONObject {
+        val getAddress = getAddress(lattitude,longitude)
+        val jsonObject = JSONObject()
+        try {
+            jsonObject.put("address_line1", getAddress?.get(0)?.getAddressLine(0))
+            jsonObject.put("lattitude", lattitude.toString())
+            jsonObject.put("longitude", longitude.toString())
+            jsonObject.put("state", getAddress?.get(0)?.getAdminArea())
+            jsonObject.put("formatted_address", getAddress?.get(0)?.getAddressLine(0))
+        } catch (e :java.lang.Exception) {
+            System.out.println("makeCompletedPAram " + e.toString())
+
+        }
+        return jsonObject
+    }
+
+    fun getAddress(latitude : Double,longitude : Double): List<Address>? {
+        val geocoder: Geocoder
+        var addresses: List<Address>? = null
+        geocoder = Geocoder(context, Locale.getDefault())
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return addresses
+    }
+
+
     override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {
         System.out.println("GetRoutes onFailure "+t.stackTrace.toString())
 
@@ -606,6 +684,35 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                     when (state) {
                         PostRequestRideViewModel.NEXT_STEP -> {
 
+                        }
+                    }
+                })
+            }
+        }
+    }
+    fun setEditRecurringAPIObserver() {
+        postEditRecuringViewModel = ViewModelProviders.of(this).get(PostEditRecuringViewModel::class.java).apply {
+            this@MapFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostEditRecuringViewModel.NEXT_STEP -> {
+                            onBackTriggered()
                         }
                     }
                 })

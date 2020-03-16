@@ -1,14 +1,18 @@
 package com.memu.ui.adapters
 
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.iapps.libs.helpers.BaseHelper
 import com.memu.R
 import com.memu.modules.PlaceHolder
 import kotlinx.android.synthetic.main.week_item_adapter.view.*
+import java.util.regex.Pattern
 
 
 class WeekAdapter(val context: Context) : RecyclerView.Adapter<WeekAdapter.ViewHolder>()  {
@@ -17,7 +21,6 @@ class WeekAdapter(val context: Context) : RecyclerView.Adapter<WeekAdapter.ViewH
     var obj : ArrayList<PlaceHolder> =  ArrayList<PlaceHolder>()
     var weekdays : java.util.ArrayList<String> = java.util.ArrayList<String>()
     var isHome = true
-    var recursivedays = listOf<String>()
     interface ProductAdapterListener {
         fun onClick(position: String, checked: Boolean)
     }
@@ -31,19 +34,32 @@ class WeekAdapter(val context: Context) : RecyclerView.Adapter<WeekAdapter.ViewH
         return obj.size
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.pos = position
 
         holder.checkBox.setText(obj.get(holder.pos).name)
-        if(weekdays.contains(obj.get(holder.pos).name)) {
-            holder.checkBox.setBackgroundColor(context.resources.getColor(R.color.White))
+        System.out.println("recursivedays onBindViewHolder "+weekdays)
+
+        if(BaseHelper.containsIgnoreCase(weekdays,obj.get(holder.pos).name)) {
+            if(isHome) {
+                holder.checkBox.setBackgroundColor(context.resources.getColor(R.color.White))
+            } else {
+                holder.checkBox.setBackgroundResource(R.drawable.themegreen_rounded_rectangle)
+            }
         } else {
-            holder.checkBox.setBackgroundColor(context.resources.getColor(R.color.transparent))
+            if(isHome) {
+                holder.checkBox.setBackgroundColor(context.resources.getColor(R.color.transparent))
+            } else {
+                holder.checkBox.setBackgroundResource(R.drawable.themegrayrecursive_rounded_rectangle)
+            }
         }
         holder.checkBox.setOnClickListener {
             productAdapterListener?.let {
-                if(weekdays.contains(obj.get(holder.pos).name)) {
+                System.out.println("recursivedays "+BaseHelper.containsIgnoreCase(weekdays,obj.get(holder.pos).name))
+
+                if(BaseHelper.containsIgnoreCase(weekdays,obj.get(holder.pos).name)) {
                     if(isHome) {
                         holder.checkBox.setBackgroundColor(context.resources.getColor(R.color.transparent))
                     } else {
@@ -61,14 +77,7 @@ class WeekAdapter(val context: Context) : RecyclerView.Adapter<WeekAdapter.ViewH
 
             }
         }
-        if(!isHome) {
-            System.out.println("recursivedays "+obj.get(holder.pos).name+" "+recursivedays)
-            if(recursivedays.contains(obj.get(holder.pos).name.toLowerCase())) {
-                holder.checkBox.setBackgroundResource(R.drawable.themegreen_rounded_rectangle)
-            } else {
-                holder.checkBox.setBackgroundResource(R.drawable.themegrayrecursive_rounded_rectangle)
-            }
-        }
+
     }
 
 

@@ -24,6 +24,8 @@ import com.memu.etc.UserInfoManager
 import com.memu.modules.completedRides.Completed
 import com.memu.ui.adapters.RecurringListAdapter
 import com.memu.webservices.PostRecurryingRidesViewModel
+import androidx.core.os.HandlerCompat.postDelayed
+import android.os.Handler
 
 
 class HistoryFragment : BaseFragment() ,View.OnClickListener {
@@ -84,7 +86,7 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
         }
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recurringrecyclerView.layoutManager = LinearLayoutManager(activity,
-            LinearLayoutManager.HORIZONTAL, true)
+            LinearLayoutManager.HORIZONTAL, false)
         try {
             Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.user_default)
         } catch (e : java.lang.Exception){ }
@@ -196,6 +198,7 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                             recurringListAdapter?.Rides = postRecurryingRidesViewModel.obj!!.scheduled_list
                             recurringListAdapter?.screenWidth = screenWidth
                             recurringrecyclerView.adapter = recurringListAdapter
+                            
                         }
                     }
                 })

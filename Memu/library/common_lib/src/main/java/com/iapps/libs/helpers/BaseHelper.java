@@ -1763,4 +1763,12 @@ public class BaseHelper {
 		bm.recycle();
 		return resizedBitmap;
 	}
+	public static boolean containsIgnoreCase(List<String> list, String soughtFor) {
+		for (String current : list) {
+			if (current.equalsIgnoreCase(soughtFor)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
