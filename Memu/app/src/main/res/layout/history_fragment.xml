@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -10,7 +13,6 @@
         android:layout_marginLeft="35dp"
         android:layout_marginRight="30dp"
         android:id="@+id/profile_pic"
-        android:background="@drawable/blue_bg"
         android:src="@drawable/dummy_profile_pic"
         android:layout_height="70dp">
     </de.hdodenhof.circleimageview.CircleImageView>
@@ -66,9 +68,34 @@
                 </TextView>
 
             </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="Recurring Rides"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="15dp"
+                android:id="@+id/tvRecuring"
+                android:fontFamily="@font/opensanssemibold"
+                android:textColor="@color/DeepSkyBlue"
+                android:layout_height="wrap_content">
+            </TextView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recurringrecyclerView"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:layout_marginBottom="10dp"
+                android:scrollbars="vertical"/>
+            <View
+                android:layout_width="match_parent"
+                android:background="@color/soft_grey"
+                android:layout_height="5dp">
+
+            </View>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:layout_gravity="end"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="30dp"
@@ -85,6 +112,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:orientation="horizontal"
+                    android:id="@+id/create_new"
                     android:layout_alignParentRight="true"
                     android:layout_height="wrap_content">
                     <TextView
@@ -154,3 +182,4 @@
         android:visibility="gone" />
 
 </FrameLayout>
+</androidx.core.widget.NestedScrollView>

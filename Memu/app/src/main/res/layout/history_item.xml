@@ -56,13 +56,14 @@
                             android:layout_height="wrap_content">
 
                         </ImageView>
+
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:text="Airport"
-                            android:layout_marginLeft="20dp"
                             android:id="@+id/srcLoc"
-                            android:layout_height="wrap_content">
-                        </TextView>
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:maxLines="2"
+                            android:text="Airport"></TextView>
                         <View
                             android:layout_width="match_parent"
                             android:background="@color/soft_grey"
@@ -74,6 +75,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_marginTop="8dp"
+                        android:visibility="gone"
                         android:orientation="vertical"
                         android:layout_height="wrap_content">
 
@@ -108,7 +110,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="Airport"
-                            android:singleLine="true"
+                            android:maxLines="2"
                             android:layout_marginLeft="20dp"
                             android:id="@+id/destLoc"
                             android:layout_height="wrap_content">

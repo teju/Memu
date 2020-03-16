@@ -25,6 +25,7 @@ class Keys : BaseKeys() {
         val NEARBYTELLERSERVICECOMPELETE = "NearbyTellerServiceCompleted"
         val SHORTESTROUTE = 101
         val POOLING = 102
+        val RECURSIVE_EDIT = 104
         val HISTORY = 103
         var MAPTYPE = 0
 

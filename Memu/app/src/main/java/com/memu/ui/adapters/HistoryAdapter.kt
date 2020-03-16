@@ -5,14 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.iapps.gon.etc.callback.RecursiveListener
 import com.iapps.logs.com.pascalabs.util.log.helper.Helper
 import com.memu.R
 import com.memu.modules.completedRides.Completed
 import kotlinx.android.synthetic.main.history_item.view.*
+import java.text.SimpleDateFormat
 
 
 class HistoryAdapter(
     val context: Context) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>()  {
+    lateinit var listener: RecursiveListener
 
     var Rides: List<Completed> = listOf()
     companion object {
@@ -34,6 +37,7 @@ class HistoryAdapter(
         holder.pos = position
         when(type) {
             TYPE_COMPLETED -> {
+                holder.bottom_view.visibility = View.VISIBLE
                 holder.coins_earned.text = "Coins Earned : "+Rides.get(position).coins_earned
                 holder.coins_spent.text = "Coins Spent : "+Rides.get(position).coins_spent
             }
@@ -42,8 +46,11 @@ class HistoryAdapter(
             }
 
         }
-        holder.bottom_view.visibility = View.VISIBLE
-        holder.dateTime.text = Rides.get(position).date +" "+Rides.get(position).time
+        val dob = com.memu.etc.Helper.parseDate( Rides.get(position).date.trim(), "yyyy-MM-dd")
+
+        val dateFormat = SimpleDateFormat("EEEE, dd MMM yyyy")
+        val strDate = dateFormat.format(dob)
+        holder.dateTime.text = strDate +" "+Rides.get(position).time
         holder.srcLoc.text = Rides.get(position).from_address.address_line1
         holder.destLoc.text = Rides.get(position).to_address.address_line1
 
@@ -75,6 +82,12 @@ class HistoryAdapter(
         } else {
             holder.count.visibility = View.GONE
         }
+        holder.root.setOnClickListener {
+            listener.let {
+                listener.onButtonClicked(Rides.get(holder.pos))
+            }
+        }
+
     }
 
 

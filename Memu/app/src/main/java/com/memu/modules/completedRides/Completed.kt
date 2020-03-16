@@ -9,5 +9,7 @@ data class Completed(
     val matched_budies: List<MatchedBudy> = listOf(),
     val status: String = "",
     val time: String = "",
+    val days: String = "",
+    val type: String = "",
     val to_address: ToAddress = ToAddress()
 )

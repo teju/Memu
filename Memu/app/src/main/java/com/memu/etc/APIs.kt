@@ -77,6 +77,9 @@ class APIs : BaseKeys() {
         val postCompleteRides : String
             get() = BASE_URL!!  + BOOKING+ "my-completed-rides"
 
+        val postRecuringRides : String
+            get() = BASE_URL!!  + BOOKING+ "my-recuring-rides"
+
         val postScheduledRides : String
             get() = BASE_URL!!  + BOOKING+ "my-rides"
 

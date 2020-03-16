@@ -307,6 +307,35 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 poolingUI()
                 Keys.MAPTYPE = Keys.POOLING
             }
+            R.id.btnNExt -> {
+                if(!BaseHelper.isEmpty(edtdestLoc.text.toString())) {
+                    edtdestLocerror.visibility = View.GONE
+                    if(Keys.MAPTYPE == Keys.SHORTESTROUTE ) {
+                        if((srcLatitude != 0.0 && srcLongitude != 0.0)) {
+                            reset()
+                            home_mapView.removeAllViews()
+                            home().setFragment(MapFragment().apply {
+                                srcLat = srcLatitude
+                                srcLng = srcLongitude
+                                destLng = destLongitude
+                                destLat = destLatitide
+                            })
+                        } else {
+                            showNotifyDialog(
+                                "", "Select your source location",
+                                getString(R.string.ok),"",object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) { }
+                                }
+                            )
+                        }
+
+                    }
+
+                } else {
+                    edtdestLocerror.visibility = View.VISIBLE
+                }
+
+            }
             R.id.rlcab -> {
 
             }
@@ -358,16 +387,20 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
             }
             R.id.find_ride -> {
+                strType ="find_ride"
                 findRide("","")
             }
             R.id.bike_find_ride -> {
+                strType ="find_ride"
                 findRide("","")
             }
             R.id.bike_offer_ride -> {
+                strType ="offer_ride"
                 days = weekdays.joinToString(separator = ",")
                 showFindRideDialog()
             }
             R.id.offer_ride -> {
+                strType ="offer_ride"
                 days = weekdays.joinToString(separator = ",")
                 showFindRideDialog()
             }
@@ -445,7 +478,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
     fun poolingUI() {
         popUpView.visibility = View.VISIBLE
-        edtVia.visibility = View.VISIBLE
+        edtVia.visibility = View.GONE
         arrow_left.visibility = View.VISIBLE
         llPooling.visibility = View.VISIBLE
         cancel.visibility = View.GONE

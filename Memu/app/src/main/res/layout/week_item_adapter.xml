@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:id="@+id/clRoot"
     android:layout_height="25dp">
-    <LinearLayout
+    <FrameLayout
         android:layout_width="wrap_content"
         android:orientation="horizontal"
         android:layout_marginLeft="5dp"
@@ -18,5 +18,5 @@
             android:fontFamily="@font/opensansregular"
             android:layout_height="wrap_content">
         </TextView>
-    </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

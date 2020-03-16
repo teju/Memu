@@ -130,6 +130,10 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
                     when (state) {
                         PostOtpViewModel.NEXT_STEP -> {
                             home().setFragment(HomeFragment())
+                            System.out.println("loadImage "+postOtpViewModel.obj?.photo!!.original_path)
+
+                            UserInfoManager.getInstance(activity!!).saveProfilePic(
+                                postOtpViewModel.obj?.photo!!.original_path)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAccountName(postOtpViewModel.obj?.name!!)
@@ -168,6 +172,7 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostLoginViewModel.NEXT_STEP -> {
+
                             login.text = "Sign-in"
                             get_otp.visibility = View.VISIBLE
                             otp_number.visibility = View.VISIBLE

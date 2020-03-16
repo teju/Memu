@@ -8,5 +8,6 @@ data class UserSignUp(
     val name: String,
     val role_type: String,
     val status: String,
+    val photo: Photo,
     val user_id: Int
 )

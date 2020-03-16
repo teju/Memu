@@ -24,6 +24,8 @@ import android.util.TypedValue
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import org.json.JSONObject
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -157,6 +159,18 @@ open class Helper  {
                 .load(url)
                 .into(v)
         }
+        fun parseDate(dateString : String, dateFormat : String ) : Date{
+        val simpleDateFormat = SimpleDateFormat(dateFormat);
+        var date = Date();
+        try {
+            date = simpleDateFormat.parse(dateString);
+        } catch ( e : ParseException) {
+            e.printStackTrace();
+        }
+
+        return date;
+    }
+
         fun loadImage(context: Context, url : String, v : ImageView,placeholder : Int){
             Glide.with(context)
                 .load(url)

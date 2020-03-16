@@ -1,6 +1,7 @@
 package com.memu.ui.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
@@ -49,9 +51,15 @@ import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute
 
 import com.memu.etc.GPSTracker
+import com.memu.etc.Helper
 import com.memu.etc.Keys
+import com.memu.etc.UserInfoManager
+import com.memu.modules.PlaceHolder
+import com.memu.modules.completedRides.Completed
 import com.memu.modules.googleMaps.Route
 import com.memu.ui.activity.MockNavigationFragment
+import com.memu.ui.activity.SearchActivity
+import com.memu.ui.adapters.WeekAdapter
 import com.memu.webservices.*
 import kotlinx.android.synthetic.main.map_fragment.*
 import kotlinx.android.synthetic.main.map_fragment.ld
@@ -80,11 +88,13 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     var srcLng = 0.0
     var destLat = 0.0
     var destLng = 0.0
+    var weekdays : java.util.ArrayList<String> = java.util.ArrayList<String>()
 
     var trip_rider_id: String? = ""
     var type: String? = ""
+    var recursivedays: String? = ""
     private var gpsTracker: GPSTracker? = null
-
+    var completed : Completed?= null
     private var permissionsManager: PermissionsManager? = null
     private var locationComponent: LocationComponent? = null
 
@@ -93,12 +103,19 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     lateinit var postnviteRideGiversViewModel: PostnviteRideGiversViewModel
     lateinit var postRidersFragment: PostRequestRideViewModel
     lateinit var postGetRoutesViewModel: PostGetRoutesViewModel
-
+    var destLatitide:Double = 0.0
+    var destLongitude:Double = 0.0
+    var viaLongitude:Double = 0.0
+    var srcLongitude:Double = 0.0
+    var srcLatitude:Double = 0.0
 
     private var mMap: GoogleMap? = null
     internal var markerPoints = ArrayList<LatLng>()
     var mapcurrentRoute: DirectionsRoute? = null
     private var mapboxMap: MapboxMap? = null
+
+    private val REQUEST_CODE_AUTOCOMPLETE = 1
+    private val REQUEST_CODE_AUTOCOMPLETEDEST = 2
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -193,30 +210,110 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         rloption_a.setOnClickListener(this)
         rloption_b.setOnClickListener(this)
         startButton.setOnClickListener(this)
+        srcRl.setOnClickListener(this)
+        destRl.setOnClickListener(this)
         gpsTracker = GPSTracker(activity)
+        try {
+            Helper.loadImage(activity!!,
+                UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.user_default)
 
+        } catch (e : java.lang.Exception){
+
+        }
         startButton.isEnabled = false
         when (Keys.MAPTYPE) {
             Keys.SHORTESTROUTE -> {
                 shortes_route_result.visibility = View.VISIBLE
                 sos.visibility = View.GONE
+                fledit_recuring.visibility = View.GONE
+
             }
             Keys.POOLING -> {
                 postnviteRideGiversViewModel.loadData(trip_rider_id!!, type!!)
                 shortes_route_result.visibility = View.GONE
                 startButton.visibility = View.VISIBLE
                 sos.visibility = View.VISIBLE
+                fledit_recuring.visibility = View.GONE
+
+            }
+            Keys.RECURSIVE_EDIT -> {
+                shortes_route_result.visibility = View.GONE
+                startButton.visibility = View.GONE
+                fledit_recuring.visibility = View.VISIBLE
+                weeAdapter()
             }
 
         }
+    }
+    fun weeAdapter() {
+        var obj : java.util.ArrayList<PlaceHolder> = java.util.ArrayList<PlaceHolder>()
+        var placeholder = PlaceHolder()
+        placeholder.name = "Mon"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "Tue"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "Wed"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "Thu"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "Fri"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "Sat"
+        obj.add(placeholder)
+
+        placeholder = PlaceHolder()
+        placeholder.name = "Sun"
+        obj.add(placeholder)
+
+        val sglm2 = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        weeksList.setLayoutManager(sglm2)
+        weeksList.setNestedScrollingEnabled(false)
+
+        val adapter = WeekAdapter(context!!)
+
+        adapter.obj = obj
+        adapter.weekdays = weekdays
+        weeksList.adapter = adapter
+        adapter.isHome = false
+        val recursive = recursivedays?.split(",")!!
+        adapter.recursivedays = recursive
+        (weeksList.adapter as WeekAdapter).productAdapterListener =
+            object : WeekAdapter.ProductAdapterListener {
+                override fun onClick(position: String, checked: Boolean) {
+                    if(checked &&  !weekdays.contains(position)) {
+                        weekdays.add(position)
+                    } else {
+                        weekdays.remove(position)
+                    }
+                    adapter.weekdays = weekdays
+                    weeksList.adapter?.notifyDataSetChanged()
+
+                }
+            }
+        srcLoc.setText(completed?.from_address?.address_line1)
+        destLoc.setText(completed?.from_address?.address_line1)
+    }
+    override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {
+        System.out.println("GetRoutes onFailure "+t.stackTrace.toString())
 
     }
-    override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {}
 
     override fun onResponse(
         call: Call<DirectionsResponse>,
         response: Response<DirectionsResponse>)
     {
+        System.out.println("GetRoutes onResponse "+response)
+
         if (response.isSuccessful
             && response.body() != null
             && !response.body()!!.routes().isEmpty()) {
@@ -246,13 +343,45 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             R.id.arrow_left -> {
                 home().proceedDoOnBackPressed()
             }
+            R.id.srcRl -> {
+                startActivityForResult(Intent(activity, SearchActivity::class.java),REQUEST_CODE_AUTOCOMPLETE);
 
+            }
+            R.id.destRl -> {
+                startActivityForResult(Intent(activity, SearchActivity::class.java),REQUEST_CODE_AUTOCOMPLETEDEST);
+
+            }
             R.id.startButton -> {
                 home().setFragment(MockNavigationFragment(this!!.destinationPoint!!, this@MapFragment.maporiginPoint!!).apply {
                     this.currentRoute = mapcurrentRoute
                 })
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        try {
+            if (requestCode == REQUEST_CODE_AUTOCOMPLETE) {
+                val lat = data?.getDoubleExtra("Lat",0.0)
+                val lng = data?.getDoubleExtra("Lng",0.0)
+                srcLoc.setText(data?.getStringExtra("Address"))
+                srcLatitude = lat!!
+                srcLongitude = lng!!
+                            }
+            if (requestCode == REQUEST_CODE_AUTOCOMPLETEDEST) {
+                val lat = data?.getDoubleExtra("Lat",0.0)
+                val lng = data?.getDoubleExtra("Lng",0.0)
+                destLoc.setText(data?.getStringExtra("Address"))
+                destLatitide = lat!!
+                destLongitude = lng!!
+
+            }
+        } catch (e : Exception){
+
+        }
+
+
     }
 
     fun addButtons(routes: List<DirectionsRoute>) {

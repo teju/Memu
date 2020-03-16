@@ -61,7 +61,7 @@ class ActivityMain : AppCompatActivity(){
 
             }, 2 * 2000
         ) // wait for 5 s
-       // BaseHelper.triggerNotifLog(this);
+        BaseHelper.triggerNotifLog(this);
         setAcceptRejectAPIObserver()
         Mapbox.getInstance(this, getString(R.string.map_box_access_token));
 

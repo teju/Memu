@@ -954,8 +954,10 @@ public abstract class HTTPAsyncTask
 	}
 
 	public void printResponse(String responseString, String httpStatus){
-		System.out.println("\n" + this.url.toString());
-		System.out.println("\n"  + " \n http status : " + httpStatus + " \n header : " + mHeaderParams.toString() + " \n params : " + params.toString() + " \n response : " + responseString + "\n");
+		if(!url.toString().contains("current-vehicle-location")) {
+			System.out.println("\n" + this.url.toString());
+			System.out.println("\n" + " \n http status : " + httpStatus + " \n header : " + mHeaderParams.toString() + " \n params : " + params.toString() + " \n response : " + responseString + "\n");
+		}
 	}
 
 

@@ -10,22 +10,29 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 
-import com.iapps.gon.etc.callback.NotifyListener
 import com.memu.ui.adapters.HistoryAdapter
 import com.memu.webservices.PostScheduledCompleteRidesViewModel
 import kotlinx.android.synthetic.main.history_fragment.*
 import android.text.style.UnderlineSpan
 import android.text.SpannableString
+import android.util.DisplayMetrics
 import android.widget.TextView
+import com.iapps.gon.etc.callback.RecursiveListener
 import com.memu.etc.Helper
+import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
+import com.memu.modules.completedRides.Completed
+import com.memu.ui.adapters.RecurringListAdapter
+import com.memu.webservices.PostRecurryingRidesViewModel
 
 
 class HistoryFragment : BaseFragment() ,View.OnClickListener {
 
 
     lateinit var postScheduledCompleteRidesViewModel: PostScheduledCompleteRidesViewModel
+    lateinit var postRecurryingRidesViewModel: PostRecurryingRidesViewModel
     var history:HistoryAdapter? = null
+    var recurringListAdapter:RecurringListAdapter? = null
     val completedContent = SpannableString("Completed &\nCancelled")
     val scheduledContent = SpannableString("Scheduled &\nUpcoming")
 
@@ -43,19 +50,51 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
 
     private fun initUI() {
         setCompletedAPIObserver()
+        setRecuringAPIObserver()
         history = HistoryAdapter(activity!!)
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        try {
-            Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.user_default)
-
-        } catch (e : java.lang.Exception){
+        history!!.listener = object  : RecursiveListener {
+            override fun onButtonClicked(which: Completed) {
+                Keys.MAPTYPE = Keys.POOLING
+                home().setFragment(MapFragment().apply {
+                    srcLat = which.from_address.lattitude.toDouble()
+                    srcLng = which.from_address.longitude.toDouble()
+                    destLng = which.to_address.longitude.toDouble()
+                    destLat = which.to_address.lattitude.toDouble()
+                    this.type = which.type
+                    this.trip_rider_id = which.id
+                })
+            }
 
         }
+        recurringListAdapter = RecurringListAdapter(activity!!)
+        recurringListAdapter!!.listener = object  : RecursiveListener {
+            override fun onButtonClicked(which: Completed) {
+                home().setFragment(MapFragment().apply {
+                    Keys.MAPTYPE = Keys.RECURSIVE_EDIT
+                    srcLat = which.from_address.lattitude.toDouble()
+                    srcLng = which.from_address.longitude.toDouble()
+                    destLng = which.to_address.longitude.toDouble()
+                    destLat = which.to_address.lattitude.toDouble()
+                    this.type = which.type
+                    this.recursivedays = which.days
+                    this.completed = which
+                })
+            }
+
+        }
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recurringrecyclerView.layoutManager = LinearLayoutManager(activity,
+            LinearLayoutManager.HORIZONTAL, true)
+        try {
+            Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.user_default)
+        } catch (e : java.lang.Exception){ }
         completed.setOnClickListener (this)
         upcoming.setOnClickListener (this)
+        create_new.setOnClickListener (this)
         arrow_left.setOnClickListener (this)
         history!!.type = HistoryAdapter.TYPE_SCHEDULED
         postScheduledCompleteRidesViewModel.loadData(history!!.type)
+        postRecurryingRidesViewModel.loadData()
 
     }
 
@@ -85,6 +124,9 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                 postScheduledCompleteRidesViewModel.loadData(history!!.type)
             }
             R.id.arrow_left -> {
+                onBackTriggered()
+            }
+            R.id.create_new -> {
                 onBackTriggered()
             }
         }
@@ -121,6 +163,39 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                                     postScheduledCompleteRidesViewModel.obj!!.scheduled_list
                             }
                             recyclerView.adapter = history
+                        }
+                    }
+                })
+            }
+        }
+    }
+    fun setRecuringAPIObserver() {
+        postRecurryingRidesViewModel = ViewModelProviders.of(this).get(PostRecurryingRidesViewModel::class.java).apply {
+            this@HistoryFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                   recurringrecyclerView.visibility = View.GONE
+                    tvRecuring.visibility = View.GONE
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostRecurryingRidesViewModel.NEXT_STEP -> {
+                            System.out.println("onBindViewHolder ")
+                            val displayMetrics = DisplayMetrics()
+                            activity!!.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics)
+                            val screenWidth = displayMetrics.widthPixels
+                            recurringrecyclerView.visibility = View.VISIBLE
+                            tvRecuring.visibility = View.VISIBLE
+                            recurringListAdapter?.Rides = postRecurryingRidesViewModel.obj!!.scheduled_list
+                            recurringListAdapter?.screenWidth = screenWidth
+                            recurringrecyclerView.adapter = recurringListAdapter
                         }
                     }
                 })

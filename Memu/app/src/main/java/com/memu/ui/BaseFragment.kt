@@ -400,13 +400,6 @@ open class BaseFragment : GenericFragment() {
         f.isCancelable = true
         f.show(activity!!.supportFragmentManager, MatchingRidersFragment.TAG)
     }
-    open fun showHistory(n: RequestListener){
-        val f = HistoryFragment().apply {
-            this.listener = n
-        }
-        f.isCancelable = true
-        f.show(activity!!.supportFragmentManager, HistoryFragment.TAG)
-    }
 
     open fun showHTMLNotifyDialog(
         tittle: String?,

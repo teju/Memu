@@ -69,9 +69,7 @@ class UserInfoManager private constructor() {
         editor.commit()
     }
     fun getProfilePic(): String {
-        if (profilePic == null) {
-            this.profilePic = this.prefs!!.getString(KEY_PROFILE_PIC, null)
-        }
+        this.profilePic = this.prefs!!.getString(KEY_PROFILE_PIC, null)
         return profilePic!!
     }
     fun getAccountId(): String {
