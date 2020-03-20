@@ -86,7 +86,7 @@ class ActivityMain : AppCompatActivity(){
                     NotificationResponse::class.java
                 )
                 println("Notification_received showDialog " +obj.type)
-                var btn_positive = "Reject"
+                var btn_positive = "OK"
                 var btn_negative = ""
                 if(obj.type.equals("alerts")) {
                     btn_positive = "OK"

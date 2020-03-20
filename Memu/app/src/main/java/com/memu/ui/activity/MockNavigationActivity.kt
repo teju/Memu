@@ -111,7 +111,6 @@ class MockNavigationActivity : AppCompatActivity(), OnMapReadyCallback,
         ButterKnife.bind(this)
         routeRefresh = RouteRefresh(Mapbox.getAccessToken(), this)
         mapView = findViewById(R.id.mapView)
-        startRouteButton = findViewById(R.id.startRouteButton)
         mapView = findViewById(R.id.mapView)
         mapView!!.onCreate(savedInstanceState)
         mapView!!.getMapAsync(this)

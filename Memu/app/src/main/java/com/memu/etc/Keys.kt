@@ -24,7 +24,9 @@ class Keys : BaseKeys() {
         @kotlin.jvm.JvmField
         val NEARBYTELLERSERVICECOMPELETE = "NearbyTellerServiceCompleted"
         val SHORTESTROUTE = 101
-        val POOLING = 102
+        val POOLING_FIND_RIDE = 102
+        val POOLING_OFFER_RIDE = 106
+        val POOLING_BACK = 105
         val RECURSIVE_EDIT = 104
         val HISTORY = 103
         var MAPTYPE = 0

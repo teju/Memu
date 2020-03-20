@@ -111,6 +111,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
             }
         }
+        if(Keys.MAPTYPE == Keys.POOLING_BACK) {
+            poolingUI()
+        }
     }
     override fun onBackTriggered() {
         super.onBackTriggered()
@@ -147,6 +150,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         super.onLowMemory()
         mapView!!.onLowMemory()
     }
+
 
     private fun initUI() {
         setUpdateNotiTokenAPIObserver()
@@ -305,7 +309,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
             R.id.rlpooling -> {
                 poolingUI()
-                Keys.MAPTYPE = Keys.POOLING
             }
             R.id.btnNExt -> {
                 if(!BaseHelper.isEmpty(edtdestLoc.text.toString())) {
@@ -313,13 +316,17 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                     if(Keys.MAPTYPE == Keys.SHORTESTROUTE ) {
                         if((srcLatitude != 0.0 && srcLongitude != 0.0)) {
                             reset()
+                            System.out.println("GetRoutes maporiginPoint " +
+                                    "srcLatitude "+srcLatitude+" srcLongitude "+srcLongitude)
+
                             home_mapView.removeAllViews()
-                            home().setFragment(MapFragment().apply {
-                                srcLat = srcLatitude
-                                srcLng = srcLongitude
-                                destLng = destLongitude
-                                destLat = destLatitide
-                            })
+                            val mapFragment = MapFragment()
+                            mapFragment.srcLat = srcLatitude
+                            mapFragment.srcLng = srcLongitude
+                            mapFragment.destLng = destLongitude
+                            mapFragment.destLat = destLatitide
+                            home().setFragment(mapFragment)
+
                         } else {
                             showNotifyDialog(
                                 "", "Select your source location",
@@ -377,29 +384,38 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 }
 
                 date.setOnClickListener {
-                    DatePickerDialog(activity, dateSetListener,
+                    val datePickerDialog = DatePickerDialog(activity, dateSetListener,
                         cal.get(Calendar.YEAR),
                         cal.get(Calendar.MONTH),
-                        cal.get(Calendar.DAY_OF_MONTH)).show()
+                        cal.get(Calendar.DAY_OF_MONTH))
+                    datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() );
+                    datePickerDialog.show()
                 }
             }
             R.id.time -> {
                 TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
             }
             R.id.find_ride -> {
+                Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
+                days = weekdays.joinToString(separator = ",")
+
                 strType ="find_ride"
                 findRide("","")
             }
             R.id.bike_find_ride -> {
+                Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
+                days = weekdays.joinToString(separator = ",")
                 strType ="find_ride"
                 findRide("","")
             }
             R.id.bike_offer_ride -> {
+                Keys.MAPTYPE = Keys.POOLING_OFFER_RIDE
                 strType ="offer_ride"
                 days = weekdays.joinToString(separator = ",")
                 showFindRideDialog()
             }
             R.id.offer_ride -> {
+                Keys.MAPTYPE = Keys.POOLING_OFFER_RIDE
                 strType ="offer_ride"
                 days = weekdays.joinToString(separator = ",")
                 showFindRideDialog()
@@ -414,12 +430,13 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 if ((srcLatitude != 0.0 && srcLongitude != 0.0)) {
                     reset()
                     home_mapView.removeAllViews()
-                    home().setFragment(MapFragment().apply {
-                        srcLat = srcLatitude
-                        srcLng = srcLongitude
-                        destLng = destLongitude
-                        destLat = destLatitide
-                    })
+                    val mapFragment = MapFragment()
+                    mapFragment.srcLat = srcLatitude
+                    mapFragment.srcLng = srcLongitude
+                    mapFragment.destLng = destLongitude
+                    mapFragment.destLat = destLatitide
+                    home().setFragment(mapFragment)
+
                 }
 
             } else {
@@ -452,13 +469,24 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     }
 
     fun showFindRideDialog() {
-        showFindRideDialog(postUserVehicleListViewModel.obj?.vehicle_list!!,object :
-            FindRideDialogListener {
-                override fun onButtonClicked(which: Int,rs_per_kms : String) {
-                    findRide(postUserVehicleListViewModel.obj!!.vehicle_list.get(which).vehicle_id,rs_per_kms)
+        if(postUserVehicleListViewModel.obj?.vehicle_list?.size != 0) {
+            showFindRideDialog(postUserVehicleListViewModel.obj?.vehicle_list!!, object :
+                FindRideDialogListener {
+                override fun onButtonClicked(which: Int, rs_per_kms: String) {
+                    findRide(
+                        postUserVehicleListViewModel.obj!!.vehicle_list.get(which).vehicle_id,
+                        rs_per_kms
+                    )
                 }
-            }
-        )
+            })
+        } else {
+            showNotifyDialog(
+                "",postUserVehicleListViewModel.obj?.message,
+                getString(R.string.ok),"",object : NotifyListener {
+                    override fun onButtonClicked(which: Int) { }
+                }
+            )
+        }
     }
 
     fun reset() {
@@ -735,18 +763,18 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                     when (state) {
                         PostFindRideViewModel.NEXT_STEP -> {
                             home_mapView.removeAllViews()
-                            home().setFragment(MapFragment().apply {
-                                srcLat = srcLatitude
-                                srcLng = srcLongitude
-                                destLng = destLongitude
-                                destLat = destLatitide
-                                if(postFindRideViewModel.obj?.trip_id != null) {
-                                    trip_rider_id = postFindRideViewModel.obj?.trip_id!!
-                                } else {
-                                    trip_rider_id = postFindRideViewModel.obj?.trip_rider_id!!
-                                }
-                                this.type = strType
-                            })
+                            val mapFragment = MapFragment()
+                            mapFragment.srcLat = srcLatitude
+                            mapFragment.srcLng = srcLongitude
+                            mapFragment.destLng = destLongitude
+                            mapFragment.destLat = destLatitide
+                            if(postFindRideViewModel.obj?.trip_id != null) {
+                                mapFragment.trip_rider_id = postFindRideViewModel.obj?.trip_id!!
+                            } else {
+                                mapFragment.trip_rider_id = postFindRideViewModel.obj?.trip_rider_id!!
+                            }
+                            mapFragment.type = strType
+                            home().setFragment(mapFragment)
 
                         }
                     }

@@ -253,7 +253,7 @@
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
         android:id="@+id/fledit_recuring"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_margin="20dp"
         android:background="@drawable/themeblue_rounded_rectangle"
         android:layout_height="wrap_content">

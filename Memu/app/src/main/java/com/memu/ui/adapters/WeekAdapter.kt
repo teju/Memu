@@ -57,7 +57,6 @@ class WeekAdapter(val context: Context) : RecyclerView.Adapter<WeekAdapter.ViewH
         }
         holder.checkBox.setOnClickListener {
             productAdapterListener?.let {
-                System.out.println("recursivedays "+BaseHelper.containsIgnoreCase(weekdays,obj.get(holder.pos).name))
 
                 if(BaseHelper.containsIgnoreCase(weekdays,obj.get(holder.pos).name)) {
                     if(isHome) {
@@ -65,6 +64,8 @@ class WeekAdapter(val context: Context) : RecyclerView.Adapter<WeekAdapter.ViewH
                     } else {
                         holder.checkBox.setBackgroundResource(R.drawable.themegrayrecursive_rounded_rectangle)
                     }
+                    System.out.println("recursivedays setOnClickListener "+BaseHelper.containsIgnoreCase(weekdays,obj.get(holder.pos).name))
+
                     it.onClick(obj.get(holder.pos).name, false)
                 } else {
                     if(isHome) {

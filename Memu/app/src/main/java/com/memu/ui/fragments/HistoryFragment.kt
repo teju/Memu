@@ -59,7 +59,11 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
         history = HistoryAdapter(activity!!)
         history!!.listener = object  : RecursiveListener {
             override fun onButtonClicked(which: Completed) {
-                Keys.MAPTYPE = Keys.POOLING
+                if(which.type.equals("offer_ride",ignoreCase = true)) {
+                    Keys.MAPTYPE = Keys.POOLING_OFFER_RIDE
+                } else {
+                    Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
+                }
                 home().setFragment(MapFragment().apply {
                     srcLat = which.from_address.lattitude.toDouble()
                     srcLng = which.from_address.longitude.toDouble()
@@ -132,6 +136,7 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                 onBackTriggered()
             }
             R.id.create_new -> {
+                Keys.MAPTYPE = Keys.POOLING_BACK
                 onBackTriggered()
             }
         }

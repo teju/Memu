@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Bundle
@@ -14,44 +13,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineCallback
 import com.mapbox.android.core.location.LocationEngineResult
-import com.mapbox.android.core.permissions.PermissionsManager
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
-import com.mapbox.geojson.Feature
-import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.location.LocationComponent
-import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
 import com.mapbox.services.android.navigation.v5.instruction.Instruction
@@ -80,32 +63,27 @@ import java.lang.ref.WeakReference
 import java.util.Random
 
 import com.memu.ui.BaseFragment
-import com.memu.ui.fragments.MapFragment
-import com.memu.webservices.PostGetAlertListViewModel
-import com.memu.webservices.PostMApFeedAddViewModel
-import com.memu.webservices.PostMApFeedDataViewModel
+import com.memu.webservices.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_mock_navigation.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
-import java.net.URL
 
 class MockNavigationFragment(
     var desrpoint: Point,
     var originpoint: Point) : BaseFragment(), OnMapReadyCallback, ProgressChangeListener, NavigationEventListener,
     MilestoneEventListener, OffRouteListener, RefreshCallback {
+    var trip_id: String = ""
     var currentRoute: DirectionsRoute? = null
-    private var locationComponent: LocationComponent? = null
-    private var permissionsManager: PermissionsManager? = null
-
-    var startRouteButton: Button? = null
 
     private var mapboxMap: MapboxMap? = null
     lateinit var postGetAlertListViewModel: PostGetAlertListViewModel
     lateinit var postMApFeedDataViewModel: PostMApFeedDataViewModel
     lateinit var postMApFeedAddViewModel: PostMApFeedAddViewModel
+    lateinit var postStartNavigationViewModel: PostStartNavigationViewModel
+    lateinit var postEndNavigationViewModel: PostEndNavigationViewModel
 
     // Navigation related variables
     private var locationEngine: LocationEngine? = null
@@ -118,6 +96,7 @@ class MockNavigationFragment(
     private var isRefreshing = false
     private var mapView: MapView? = null
     var showDialog : Boolean = false
+    var distanceTravelled = 0.0
     private class MyBroadcastReceiver internal constructor(navigation: MapboxNavigation) :
         BroadcastReceiver() {
         private val weakNavigation: WeakReference<MapboxNavigation>
@@ -155,7 +134,6 @@ class MockNavigationFragment(
         } catch (e : Exception){
             showDialog = true
             postGetAlertListViewModel.loadData()
-
         }
     }
 
@@ -164,9 +142,10 @@ class MockNavigationFragment(
         setGetAlertsAPIObserver()
         setMapFeedsDataAPIObserver()
         setAddAlertAPIObserver()
+        setStartTripAPIObserver()
+        setEndTripAPIObserver()
         routeRefresh = RouteRefresh(Mapbox.getAccessToken(), this)
         mapView = v?.findViewById(R.id.mapView)
-        startRouteButton = v?.findViewById(R.id.startRouteButton)
         mapView = v?.findViewById(R.id.mapView)
         mapView!!.onCreate(savedInstanceState)
         mapView!!.getMapAsync(this)
@@ -192,19 +171,27 @@ class MockNavigationFragment(
                 ).build()
         )
         customNotification.register(MyBroadcastReceiver(navigation!!), context)
-        startRouteButton!!.setOnClickListener { onStartRouteClick() }
         alert.setOnClickListener {
             showAlertsDialog()
+        }
+        endButton.setOnClickListener {
+            navigation!!.stopNavigation()
+            if(!BaseHelper.isEmpty(trip_id)) {
+                postEndNavigationViewModel.loadData(trip_id,distanceTravelled)
+            }
         }
     }
 
     fun onStartRouteClick() {
+        if(!BaseHelper.isEmpty(trip_id)) {
+            postStartNavigationViewModel.loadData(trip_id)
+        }
+
         val isValidNavigation = navigation != null
         val isValidRoute = route != null && route!!.distance()!! > TWENTY_FIVE_METERS
         if (isValidNavigation && isValidRoute) {
 
             // Hide the start button
-            startRouteButton!!.visibility = View.INVISIBLE
 
             // Attach all of our navigation listeners.
             navigation!!.addNavigationEventListener(this)
@@ -224,8 +211,8 @@ class MockNavigationFragment(
             mapboxMap!!.locationComponent.isLocationComponentEnabled = true
             navigation!!.startNavigation(route!!)
         }
-    }
 
+    }
 
     private fun newOrigin() {
         val gpsTracker = GPSTracker(activity!!)
@@ -291,19 +278,6 @@ class MockNavigationFragment(
         }
 
     }
-    private fun enableLocationComponent(@io.reactivex.annotations.NonNull loadedMapStyle: Style?) {
-        // Check if permissions are enabled and if not request
-        if (PermissionsManager.areLocationPermissionsGranted(activity)) {
-            // Activate the MapboxMap LocationComponent to show user location
-            // Adding in LocationComponentOptions is also an optional parameter
-            locationComponent = mapboxMap!!.locationComponent
-            locationComponent!!.activateLocationComponent(activity!!, loadedMapStyle!!)
-            locationComponent!!.isLocationComponentEnabled = true
-            // Set the component's camera mode
-            locationComponent!!.cameraMode = CameraMode.TRACKING
-            locationComponent!!.zoomWhileTracking(12.0);
-        }
-    }
 
     fun onMapClick() {
 
@@ -341,7 +315,6 @@ class MockNavigationFragment(
         }
         val origin = Point.fromLngLat(userLocation.longitude, userLocation.latitude)
         if (TurfMeasurement.distance(origin, destination!!, TurfConstants.UNIT_METERS) < 50) {
-            startRouteButton?.visibility = View.GONE
             return
         }
 
@@ -408,8 +381,14 @@ class MockNavigationFragment(
         }
         Timber.d(
             "onProgressChange: fraction of route traveled: %f",
-            routeProgress.fractionTraveled()
+            routeProgress.distanceTraveled()
         )
+        distanceTravelled = routeProgress.distanceTraveled()/1000
+        if(routeProgress.fractionTraveled() == 1f){
+            if(!BaseHelper.isEmpty(trip_id)) {
+                postEndNavigationViewModel.loadData(trip_id,distanceTravelled)
+            }
+        }
     }
 
     /*
@@ -469,6 +448,7 @@ class MockNavigationFragment(
             return "Have a safe trip!"
         }
     }
+
     fun setGetAlertsAPIObserver() {
         postGetAlertListViewModel = ViewModelProviders.of(this).get(PostGetAlertListViewModel::class.java).apply {
             this@MockNavigationFragment.let { thisFragReference ->
@@ -509,6 +489,7 @@ class MockNavigationFragment(
             }
         }
     }
+
     fun setMapFeedsDataAPIObserver() {
         postMApFeedDataViewModel = ViewModelProviders.of(this).get(PostMApFeedDataViewModel::class.java).apply {
             this@MockNavigationFragment.let { thisFragReference ->
@@ -542,6 +523,73 @@ class MockNavigationFragment(
             }
         }
     }
+
+    fun setStartTripAPIObserver() {
+        postStartNavigationViewModel = ViewModelProviders.of(this).get(PostStartNavigationViewModel::class.java).apply {
+            this@MockNavigationFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostStartNavigationViewModel.NEXT_STEP -> {
+
+                        }
+                    }
+                })
+            }
+        }
+    }
+
+    fun setEndTripAPIObserver() {
+        postEndNavigationViewModel = ViewModelProviders.of(this).get(PostEndNavigationViewModel::class.java).apply {
+            this@MockNavigationFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostEndNavigationViewModel.NEXT_STEP -> {
+                            home().backToMainScreen()
+                            showNotifyDialog(
+                                "",postEndNavigationViewModel.obj?.message,
+                                getString(R.string.ok),"",object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) { }
+                                }
+                            )
+                        }
+                    }
+                })
+            }
+        }
+    }
+
     fun setAddAlertAPIObserver() {
         postMApFeedAddViewModel = ViewModelProviders.of(this).get(PostMApFeedAddViewModel::class.java).apply {
             this@MockNavigationFragment.let { thisFragReference ->

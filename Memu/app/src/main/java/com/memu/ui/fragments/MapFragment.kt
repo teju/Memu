@@ -103,7 +103,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
     lateinit var postnviteRideGiversViewModel: PostnviteRideGiversViewModel
     lateinit var postRidersFragment: PostRequestRideViewModel
-    lateinit var postGetRoutesViewModel: PostGetRoutesViewModel
     lateinit var postEditRecuringViewModel: PostEditRecuringViewModel
     var destLatitide:Double = 0.0
     var destLongitude:Double = 0.0
@@ -138,7 +137,10 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             frame_layout.addView(myView);
             mapView.onCreate(savedInstanceState)
             mapView!!.getMapAsync(this)
-        } catch (e : Exception){ }
+        } catch (e : Exception){
+
+        }
+
         initUI();
     }
 
@@ -154,6 +156,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     }
     override fun onMapReady(mapboxMap: MapboxMap) {
         try {
+
             this.mapboxMap = mapboxMap
             mapboxMap.setStyle(getString(R.string.navigation_guidance_day)) { style ->
                 enableLocationComponent(style)
@@ -205,7 +208,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     private fun initUI() {
         setInviteRideGiversAPIObserver()
         setRequestRideAPIObserver()
-        setGoogleMapRouteAPIObserver()
         setEditRecurringAPIObserver()
         arrow_left.setOnClickListener(this)
         rloption_c.setOnClickListener(this)
@@ -230,13 +232,16 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 fledit_recuring.visibility = View.GONE
 
             }
-            Keys.POOLING -> {
+            Keys.POOLING_OFFER_RIDE,Keys.POOLING_FIND_RIDE -> {
                 postnviteRideGiversViewModel.loadData(trip_rider_id!!, type!!)
                 shortes_route_result.visibility = View.GONE
-                startButton.visibility = View.VISIBLE
                 sos.visibility = View.VISIBLE
                 fledit_recuring.visibility = View.GONE
-
+                if(Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
+                    startButton.visibility = View.GONE
+                } else {
+                    startButton.visibility = View.VISIBLE
+                }
             }
             Keys.RECURSIVE_EDIT -> {
                 shortes_route_result.visibility = View.GONE
@@ -413,28 +418,32 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         response: Response<DirectionsResponse>)
     {
         System.out.println("GetRoutes onResponse "+response)
+        try {
+            if (response.isSuccessful
+                && response.body() != null
+                && !response.body()!!.routes().isEmpty()) {
+                routes = response.body()!!.routes()
+                Collections.sort(routes,object  : Comparator<DirectionsRoute>{
+                    override fun compare(o1: DirectionsRoute?, o2: DirectionsRoute?): Int {
+                        return o1?.duration()?.compareTo(o2?.duration()!!)!!; // To compare string values
 
-        if (response.isSuccessful
-            && response.body() != null
-            && !response.body()!!.routes().isEmpty()) {
-            routes = response.body()!!.routes()
-            Collections.sort(routes,object  : Comparator<DirectionsRoute>{
-                override fun compare(o1: DirectionsRoute?, o2: DirectionsRoute?): Int {
-                    return o1?.duration()?.compareTo(o2?.duration()!!)!!; // To compare string values
+                    }
+                })
 
-                }
-            })
+                navigationMapRoute?.addRoutes(routes)
+                mapcurrentRoute = routes.get(0)
+                startButton.isEnabled = true
+                addButtons(response.body()!!.routes())
+                val position = CameraPosition.Builder()
+                    .target(com.mapbox.mapboxsdk.geometry.LatLng(srcLat, srcLng))
+                    .zoom(12.0)
+                    .tilt(20.0)
+                    .build();
+                mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
 
-            navigationMapRoute?.addRoutes(routes)
-            mapcurrentRoute = routes.get(0)
-            startButton.isEnabled = true
-            addButtons(response.body()!!.routes())
-            val position = CameraPosition.Builder()
-                .target(com.mapbox.mapboxsdk.geometry.LatLng(srcLat, srcLng))
-                .zoom(12.0)
-                .tilt(20.0)
-                .build();
-            mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
+            }
+
+        } catch (e : Exception){
 
         }
     }
@@ -453,6 +462,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             }
             R.id.startButton -> {
                 home().setFragment(MockNavigationFragment(this!!.destinationPoint!!, this@MapFragment.maporiginPoint!!).apply {
+                    this.trip_id = trip_rider_id!!
                     this.currentRoute = mapcurrentRoute
                 })
             }
@@ -550,16 +560,8 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 17f
             )
         )
-        if (markerPoints.size >= 2) {
-            // Getting URL to the Google Directions API
-            val url = getDirectionsUrl(origin, dest)
-            postGetRoutesViewModel.loadData(url)
 
-        }
         GetRoutes()
-    }
-    fun  getPoints(points: String): List<LatLng>? {
-        return PolyUtil.decode(points);
     }
 
     fun GetRoutes() {
@@ -570,7 +572,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             destLng,
             destLat
         )
-
         findRoute(maporiginPoint!!, destinationPoint!!)
     }
 
@@ -583,31 +584,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             .build()
             .getRoute(this)
     }
-
-    private fun getDirectionsUrl(origin: LatLng, dest: LatLng): String {
-
-        // Origin of route
-        val str_origin = "origin=" + origin.latitude + "," + origin.longitude
-
-        // Destination of route
-        val str_dest = "destination=" + dest.latitude + "," + dest.longitude
-
-        // Sensor enabled
-        val sensor = "&alternatives=true&sensor=false"
-        val mode = "mode=driving"
-        val key = "key=" + getString(R.string.google_maps_key)
-        // Building the parameters to the web service
-        val parameters = "$str_origin&$str_dest&$sensor&$mode&$key"
-
-        // Output format
-        val output = "json"
-
-        // Building the url to the web service
-
-
-        return "https://maps.googleapis.com/maps/api/directions/$output?$parameters"
-    }
-
 
     private fun enableLocationComponent(@io.reactivex.annotations.NonNull loadedMapStyle: Style?) {
         // Check if permissions are enabled and if not request
@@ -649,7 +625,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostnviteRideGiversViewModel.NEXT_STEP -> {
-                            if(Keys.MAPTYPE == Keys.POOLING) {
+                            if(Keys.MAPTYPE == Keys.POOLING_OFFER_RIDE || Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
                                 try {
                                     if (postnviteRideGiversViewModel.obj?.pooler_list != null) {
                                         showMatchingRiders(postnviteRideGiversViewModel.obj?.pooler_list!!,
@@ -742,35 +718,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         }
     }
 
-    fun setGoogleMapRouteAPIObserver() {
-        postGetRoutesViewModel = ViewModelProviders.of(this).get(PostGetRoutesViewModel::class.java).apply {
-            this@MapFragment.let { thisFragReference ->
-                isLoading.observe(thisFragReference, Observer { aBoolean ->
-                    if(aBoolean!!) {
-                        ld.showLoadingV2()
-                    } else {
-                        ld.hide()
-                    }
-                })
-                errorMessage.observe(thisFragReference, Observer { s ->
-                    showNotifyDialog(
-                        s.title, s.message!!,
-                        getString(R.string.ok),"",object : NotifyListener {
-                            override fun onButtonClicked(which: Int) { }
-                        }
-                    )
-                })
-                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
-                getTrigger().observe(thisFragReference, Observer { state ->
-                    when (state) {
-                        PostGetRoutesViewModel.NEXT_STEP -> {
-
-                        }
-                    }
-                })
-            }
-        }
-    }
 
     override fun onRequestPermissionsResult(requestCode: Int, @io.reactivex.annotations.NonNull permissions: Array<String>, @io.reactivex.annotations.NonNull grantResults: IntArray) {
         permissionsManager!!.onRequestPermissionsResult(requestCode, permissions, grantResults)

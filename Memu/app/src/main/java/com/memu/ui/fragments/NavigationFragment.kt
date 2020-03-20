@@ -26,6 +26,7 @@ import com.memu.ui.BaseFragment
 import com.memu.webservices.PostMApFeedDataViewModel
 import com.memu.webservices.PostGetAlertListViewModel
 import com.memu.webservices.PostMApFeedAddViewModel
+import com.memu.webservices.PostStartNavigationViewModel
 import kotlinx.android.synthetic.main.activity_embedded_navigation.*
 
 class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, NavigationListener,
@@ -61,6 +62,7 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
             showAlertsDialog()
         }
     }
+
     private fun updateNightMode() {
         if (wasNavigationStopped()) {
             updateWasNavigationStopped(false)
@@ -264,6 +266,7 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
             }
         }
     }
+
 
     private fun wasInTunnel(): Boolean {
         val context = activity

@@ -86,6 +86,12 @@ class APIs : BaseKeys() {
         val postEditRecuring : String
             get() = BASE_URL!!  + BOOKING+ "edit-recuring-rides"
 
+        val postStartTrip : String
+            get() = BASE_URL!!  + BOOKING+ "start-trip"
+
+        val postEndTrip : String
+            get() = BASE_URL!!  + BOOKING+ "end-trip"
+
         val postVehicleList : String
             get() = BASE_URL!!  + USER+ "pooler-vehicle-list"
     }
