@@ -318,11 +318,14 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         srcLoc.setText(completed?.from_address?.address_line1)
         destLoc.setText(completed?.from_address?.address_line1)
         pause_button.setOnClickListener {
-            makeCompletedPAram()
+            makeCompletedPAram(getStatus())
+        }
+        delete.setOnClickListener {
+            makeCompletedPAram("delete")
         }
     }
 
-    fun makeCompletedPAram() {
+    fun makeCompletedPAram(status: String) {
         try {
             val fromAddress = FromJSon(srcLatitude, srcLongitude)
             val toAddress = FromJSon(destLatitide, destLongitude)
@@ -334,7 +337,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             val completed = Completed(
                 "", "", completed?.date!!,
                 FromAddress(), completed?.id!!, listOf(),
-                completed?.status!!,
+                status,
                 completed!!.time,
                 days,
                 completed!!.type,
@@ -350,6 +353,25 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             System.out.println("makeCompletedPAram Exception " + e.toString())
 
         }
+    }
+    fun getStatus() : String{
+        when(completed?.status) {
+            "offer_ride" -> {
+                if(completed?.status!!.contentEquals("scheduled")) {
+                    return "pause"
+                } else {
+                    return "scheduled"
+                }
+            }
+            "find_ride" -> {
+                if(completed?.status!!.contentEquals("requested")) {
+                    return "pause"
+                } else {
+                    return "requested"
+                }
+            }
+        }
+        return "pause"
     }
     fun FromJSon(lattitude : Double,longitude : Double) : JSONObject {
         val getAddress = getAddress(lattitude,longitude)

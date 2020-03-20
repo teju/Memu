@@ -43,7 +43,10 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
         return v
     }
 
-
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        initUI()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -198,7 +201,7 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                             recurringListAdapter?.Rides = postRecurryingRidesViewModel.obj!!.scheduled_list
                             recurringListAdapter?.screenWidth = screenWidth
                             recurringrecyclerView.adapter = recurringListAdapter
-                            
+
                         }
                     }
                 })

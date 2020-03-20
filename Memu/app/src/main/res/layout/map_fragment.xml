@@ -476,6 +476,7 @@
                         android:layout_width="0dp"
                         android:layout_marginLeft="15dp"
                         android:text="Delete"
+                        android:id="@+id/delete"
                         android:fontFamily="@font/opensansbolditalic"
                         android:textColor="@color/White"
                         android:paddingBottom="30dp"

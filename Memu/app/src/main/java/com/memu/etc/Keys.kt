@@ -51,6 +51,7 @@ class Keys : BaseKeys() {
         val TIME = "time"
         val NO_OF_SEATS = "no_of_seats"
         val IS_RECURING_RIDE = "is_recuring_ride"
+        val IS_RECURRING_RIDE = "is_recurring_ride"
         val DAYS = "days"
         val NO_OF_KMS = "no_of_kms"
         val TRIP_RIDER_ID = "trip_or_rider_id"
