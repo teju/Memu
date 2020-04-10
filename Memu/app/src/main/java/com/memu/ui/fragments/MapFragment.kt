@@ -153,6 +153,12 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         } else {
             frame_layout.removeAllViews()
         }
+        if(Keys.MAPTYPE == Keys.RECURSIVE_EDIT) {
+            shortes_route_result.visibility = View.GONE
+            startButton.visibility = View.GONE
+            fledit_recuring.visibility = View.VISIBLE
+            weeAdapter()
+        }
     }
     override fun onMapReady(mapboxMap: MapboxMap) {
         try {
@@ -256,31 +262,31 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     fun weeAdapter() {
         var obj : java.util.ArrayList<PlaceHolder> = java.util.ArrayList<PlaceHolder>()
         var placeholder = PlaceHolder()
-        placeholder.name = "Mon"
+        placeholder.name = "Mo"
         obj.add(placeholder)
 
         placeholder = PlaceHolder()
-        placeholder.name = "Tue"
+        placeholder.name = "Tu"
         obj.add(placeholder)
 
         placeholder = PlaceHolder()
-        placeholder.name = "Wed"
+        placeholder.name = "We"
         obj.add(placeholder)
 
         placeholder = PlaceHolder()
-        placeholder.name = "Thu"
+        placeholder.name = "Th"
         obj.add(placeholder)
 
         placeholder = PlaceHolder()
-        placeholder.name = "Fri"
+        placeholder.name = "Fr"
         obj.add(placeholder)
 
         placeholder = PlaceHolder()
-        placeholder.name = "Sat"
+        placeholder.name = "Sa"
         obj.add(placeholder)
 
         placeholder = PlaceHolder()
-        placeholder.name = "Sun"
+        placeholder.name = "Su"
         obj.add(placeholder)
 
         val sglm2 = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -326,8 +332,9 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             makeCompletedPAram(getStatus())
         }
         delete.setOnClickListener {
-            makeCompletedPAram("delete")
+            makeCompletedPAram("deleted")
         }
+        pause_button.setText(getStatusText())
     }
 
     fun makeCompletedPAram(status: String) {
@@ -336,8 +343,12 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             val toAddress = FromJSon(destLatitide, destLongitude)
             val days = weekdays.joinToString(separator = ",")
             var is_recuring = "no"
+            var vehicle_id = ""
             if (!BaseHelper.isEmpty(days)) {
                 is_recuring = "yes"
+            }
+            if (!BaseHelper.isEmpty(completed!!.vehicle_id)) {
+                vehicle_id = completed!!.vehicle_id
             }
             val completed = Completed(
                 "", "", completed?.date!!,
@@ -346,7 +357,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 completed!!.time,
                 days,
                 completed!!.type,
-                completed!!.vehicle_id,
+                vehicle_id,
                 is_recuring,
                 completed!!.no_of_seats,
                 ToAddress()
@@ -360,16 +371,16 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         }
     }
     fun getStatus() : String{
-        when(completed?.status) {
+        when(completed?.type) {
             "offer_ride" -> {
-                if(completed?.status!!.contentEquals("scheduled")) {
+                if(completed?.status!!.equals("scheduled",ignoreCase = true)) {
                     return "pause"
                 } else {
                     return "scheduled"
                 }
             }
             "find_ride" -> {
-                if(completed?.status!!.contentEquals("requested")) {
+                if(completed?.status!!.equals("requested",ignoreCase = true)) {
                     return "pause"
                 } else {
                     return "requested"
@@ -378,6 +389,27 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         }
         return "pause"
     }
+
+    fun getStatusText() : String{
+        when(completed?.type) {
+            "offer_ride" -> {
+                if(completed?.status!!.equals("scheduled",ignoreCase = true)) {
+                    return "Pause"
+                } else {
+                    return "Scheduled"
+                }
+            }
+            "find_ride" -> {
+                if(completed?.status!!.equals("requested",ignoreCase = true)) {
+                    return "Pause"
+                } else {
+                    return "Requested"
+                }
+            }
+        }
+        return "Pause"
+    }
+
     fun FromJSon(lattitude : Double,longitude : Double) : JSONObject {
         val getAddress = getAddress(lattitude,longitude)
         val jsonObject = JSONObject()

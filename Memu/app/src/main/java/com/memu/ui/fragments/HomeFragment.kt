@@ -92,6 +92,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     var days = ""
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.home_fragment, container, false)
+
         return v
     }
 
@@ -164,6 +165,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         }
 
         try {
+            System.out.println("loadImage "+UserInfoManager.getInstance(activity!!).getProfilePic())
             Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.user_default)
 
         } catch (e : java.lang.Exception){
@@ -229,6 +231,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         } catch (e : Exception){
 
         }
+
     }
 
     fun spinner() {
@@ -473,10 +476,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             showFindRideDialog(postUserVehicleListViewModel.obj?.vehicle_list!!, object :
                 FindRideDialogListener {
                 override fun onButtonClicked(which: Int, rs_per_kms: String) {
-                    findRide(
-                        postUserVehicleListViewModel.obj!!.vehicle_list.get(which).vehicle_id,
-                        rs_per_kms
-                    )
+                    vehicle_number.text = postUserVehicleListViewModel.obj?.vehicle_list?.get(which)?.vehicle_no
+                    tvrs_per_kms.text = rs_per_kms
+                    findRide(postUserVehicleListViewModel.obj!!.vehicle_list.get(which).vehicle_id, rs_per_kms)
                 }
             })
         } else {
@@ -511,7 +513,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         llPooling.visibility = View.VISIBLE
         cancel.visibility = View.GONE
         rlTopBar.visibility = View.GONE
-        vehicle_detail.visibility = View.VISIBLE
+        //vehicle_detail.visibility = View.VISIBLE
         cv.visibility = View.VISIBLE
         home_map_bg.alpha = 0.5f
         rlpooling.alpha = 1f
@@ -804,7 +806,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUserVehicleListViewModel.NEXT_STEP -> {
-
+                            vehicle_number.text = postUserVehicleListViewModel.obj?.vehicle_list?.get(0)?.vehicle_no
                         }
                     }
                 })

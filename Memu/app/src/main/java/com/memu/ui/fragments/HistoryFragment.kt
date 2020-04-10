@@ -102,6 +102,9 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
         create_new.setOnClickListener (this)
         arrow_left.setOnClickListener (this)
         history!!.type = HistoryAdapter.TYPE_SCHEDULED
+        scheduledContent.setSpan(UnderlineSpan(), 0, scheduledContent.length, 0)
+        upcoming.setText(scheduledContent)
+        removeSpam(completedContent,completed)
         postScheduledCompleteRidesViewModel.loadData(history!!.type)
         postRecurryingRidesViewModel.loadData()
 
@@ -119,6 +122,7 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.completed -> {
+                tvSubTitle.text = "Completed Rides"
                 completedContent.setSpan(UnderlineSpan(), 0, completedContent.length, 0)
                 completed.setText(completedContent)
                 removeSpam(scheduledContent,upcoming)
@@ -126,6 +130,7 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                 postScheduledCompleteRidesViewModel.loadData(history!!.type)
             }
             R.id.upcoming -> {
+                tvSubTitle.text = "Upcoming Rides"
                 history!!.type = HistoryAdapter.TYPE_SCHEDULED
                 scheduledContent.setSpan(UnderlineSpan(), 0, scheduledContent.length, 0)
                 upcoming.setText(scheduledContent)

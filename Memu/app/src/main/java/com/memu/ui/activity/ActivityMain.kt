@@ -28,6 +28,7 @@ import com.google.gson.GsonBuilder
 import com.memu.modules.notification.NotificationResponse
 import android.os.Handler
 import android.view.View
+import com.mapbox.mapboxsdk.MapStrictMode
 import com.memu.R
 import com.memu.ui.fragments.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -63,7 +64,9 @@ class ActivityMain : AppCompatActivity(){
         ) // wait for 5 s
         BaseHelper.triggerNotifLog(this);
         setAcceptRejectAPIObserver()
-        Mapbox.getInstance(this, getString(R.string.map_box_access_token));
+        val mContext = this.getBaseContext();
+        MapStrictMode.setStrictModeEnabled(true)
+        Mapbox.getInstance(mContext, getString(R.string.map_box_access_token));
 
         showDialog(getIntent())
         mReceiver = object : BroadcastReceiver() {
@@ -104,10 +107,10 @@ class ActivityMain : AppCompatActivity(){
                             status = "accept"
 
                             if (which == NotifyDialogFragment.BUTTON_NEGATIVE) {
-                                status = "accept"
+                                status = "reject"
                             }
                             if (which == NotifyDialogFragment.BUTTON_POSITIVE) {
-                                status = "reject"
+                                status = "accept"
                             }
                             System.out.println(
                                 "Notification_received key mNotificationReceiver trip_id " +
