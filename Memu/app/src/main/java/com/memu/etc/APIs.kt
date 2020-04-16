@@ -8,7 +8,7 @@ class APIs : BaseKeys() {
         val VEHICLE = "vehicle/"
         val BOOKING = "booking/"
         val USER = "user/"
-        val PROFILE = "profile/"
+        val PROFILE = "profile_wall/"
         val MAP_FEEDS = "map-feeds/"
 
         val getVehicleType: String
@@ -36,7 +36,7 @@ class APIs : BaseKeys() {
             get() = BASE_URL!!  + USER+ "upload-driving-licence"
 
         val postUploadProfilePhoto: String
-            get() = BASE_URL!!  + PROFILE+ "update-profile-image"
+            get() = BASE_URL!!  + PROFILE+ "update-profile_wall-image"
 
         val currentVehicleLocation: String
             get() = BASE_URL!!  + VEHICLE+ "current-vehicle-location"

@@ -3,4 +3,5 @@
     <dimen name="spacing_grid1">5dp</dimen>
     <dimen name="speed_text_size">50sp</dimen>
     <dimen name="mph_text_size">10sp</dimen>
+    <dimen name="mp_text_size">20sp</dimen>
 </resources>

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/transparent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_marginLeft="25dp"
+            android:visibility="visible"
+            android:layout_centerVertical="true"
+            android:id="@+id/arrow_left"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/arrow_left"
+            android:layout_height="40dp">
+        </ImageView>
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_gravity="end"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:id="@+id/thumb_up_memu_logo"
+            android:src="@drawable/thumb_up_memu_logo"
+            android:layout_height="wrap_content">
+        </ImageView>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/transparent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@color/transparent"
+
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/rlTopBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="-50dp"
+                android:layout_toRightOf="@+id/profile_pic"
+                android:background="@drawable/theme_fullrounded_rectangle"
+                android:orientation="vertical"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:visibility="visible">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="60dp"
+                        android:fontFamily="@font/opensansbold"
+                        android:text="User Name"
+                        android:textColor="@color/Black"
+                        android:textSize="15dp"
+                        android:textStyle="bold"></TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_below="@+id/name"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="60dp"
+                        android:fontFamily="@font/opensansregular"
+                        android:text="Add your profession"
+                        android:textColor="@color/Black"
+                        android:textSize="12dp"></TextView>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:src="@drawable/star_icon"
+                            android:layout_height="20dp">
+                        </ImageView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="4.0(06)"
+                            android:layout_height="wrap_content">
+
+                        </TextView>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="30dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="06"
+                            android:textColor="@color/Black"
+                            android:textSize="10dp"></TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Posts"
+                            android:textColor="@color/Black"
+                            android:textSize="10dp"></TextView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="8dp"
+                        android:background="@color/Black">
+
+                    </View>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="06"
+                            android:textColor="@color/Black"
+                            android:textSize="10dp"></TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Likes"
+                            android:textColor="@color/Black"
+                            android:textSize="10dp"></TextView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="8dp"
+                        android:background="@color/Black">
+
+                    </View>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="06"
+                            android:textColor="@color/Black"
+                            android:textSize="10dp"></TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Followers"
+                            android:textColor="@color/Black"
+                            android:textSize="10dp"></TextView>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="8dp"
+                        android:background="@color/Black">
+
+                    </View>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="06"
+                            android:textColor="@color/Black"
+                            android:textSize="12dp"></TextView>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Following"
+                            android:textColor="@color/Black"
+                            android:textSize="12dp"></TextView>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="18dp"
+                android:src="@drawable/default_profile_icon"></de.hdodenhof.circleimageview.CircleImageView>
+        </RelativeLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/ll_options"
+        android:layout_marginLeft="60dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="120dp"
+            android:text="Friends"
+            android:id="@+id/tvFriends"
+            android:paddingTop="15dp"
+            android:textSize="13dp"
+            android:textAlignment="center"
+            android:textColor="@color/White"
+            android:background="@drawable/pink_button_friends"
+            android:layout_height="80dp">
+
+        </TextView>
+        <TextView
+            android:layout_width="120dp"
+            android:text="Followers"
+            android:id="@+id/tvfollowers"
+            android:paddingTop="15dp"
+            android:layout_marginLeft="-40dp"
+            android:textSize="13dp"
+            android:textAlignment="center"
+            android:textColor="@color/White"
+            android:background="@drawable/button_red_followers"
+            android:layout_height="80dp">
+
+        </TextView>
+        <TextView
+            android:layout_width="120dp"
+            android:text="Messages"
+            android:paddingTop="15dp"
+            android:layout_marginLeft="-40dp"
+            android:textSize="13dp"
+            android:textAlignment="center"
+            android:textColor="@color/White"
+            android:background="@drawable/button_blue_msg"
+            android:layout_height="80dp">
+        </TextView>
+    </LinearLayout>
+
+</LinearLayout>

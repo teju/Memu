@@ -210,6 +210,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         bike_find_ride.setOnClickListener(this)
         history_icon.setOnClickListener(this)
         edtVia.setOnClickListener(this)
+        my_profile.setOnClickListener(this)
 
         initSearchFab()
         initSearchFabDest()
@@ -308,6 +309,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             R.id.rlBestRoute -> {
                 bestRouteUI()
                 Keys.MAPTYPE = Keys.SHORTESTROUTE
+            }
+            R.id.my_profile -> {
+                home().setFragment(ProfileWallFragment())
             }
 
             R.id.rlpooling -> {

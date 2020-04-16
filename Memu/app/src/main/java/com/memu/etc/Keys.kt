@@ -67,7 +67,7 @@ class Keys : BaseKeys() {
         val ID = "id"
         val TRIP_ID = "trip_id"
         val TRIP_RIDER_ID_ = "trip_rider_id"
-        val PROFILE = "profile"
+        val PROFILE = "profile_wall"
         val STATUS = "status"
         val ACCESS_TOKEN = "access_token"
 
