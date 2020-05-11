@@ -24,6 +24,7 @@ import com.facebook.GraphResponse
 import org.json.JSONObject
 import com.facebook.GraphRequest
 import com.memu.etc.SpacesItemDecoration
+import com.memu.modules.userMainData.UserMainData
 import com.memu.ui.adapters.FollowersAdapter
 import com.memu.ui.adapters.FriendsAdapter
 import com.memu.ui.adapters.PostsAdapter
@@ -31,7 +32,6 @@ import kotlinx.android.synthetic.main.followers_request_fragment.*
 import kotlinx.android.synthetic.main.profile_header.*
 
 class FollowersRequestFragment : BaseFragment() ,View.OnClickListener {
-
 
     var isFriendsRequest = false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -70,6 +70,8 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener {
             txtfollow.text = "I Follow"
 
         }
+        setUSerMAinDataAPIObserver()
+        posUserMainDataViewModel.loadData()
     }
 
     override fun onClick(v: View?) {

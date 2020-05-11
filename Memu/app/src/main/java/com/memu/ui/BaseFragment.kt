@@ -36,8 +36,11 @@ import com.memu.etc.UserInfoManager
 import com.memu.modules.mapFeeds.MapFeed
 import com.memu.modules.poolerVehicleList.Vehicle
 import com.memu.modules.riderList.Rider
+import com.memu.modules.userMainData.UserMainData
 import com.memu.ui.dialog.*
+import com.memu.webservices.PosUserMainDataViewModel
 import com.memu.webservices.PostUpdateLocationViewModel
+import kotlinx.android.synthetic.main.profile_header.*
 
 import kotlinx.coroutines.*
 import java.util.*
@@ -47,6 +50,7 @@ open class BaseFragment : GenericFragment() {
 
     lateinit var userInfo: UserInfoManager
         private set
+    lateinit var posUserMainDataViewModel: PosUserMainDataViewModel
 
     var permissionsThatNeedTobeCheck: List<String>? = null
         private set
@@ -58,7 +62,7 @@ open class BaseFragment : GenericFragment() {
         var postUpdateLocationViewModel: PostUpdateLocationViewModel? = null
 
     }
-
+    var userMainData : UserMainData? = null
     var obsNoInternet: Observer<Boolean> = Observer { isHaveInternet ->
         try {
             if (!isHaveInternet) {
@@ -113,6 +117,38 @@ open class BaseFragment : GenericFragment() {
             }
         } catch (e: Exception) {
            Helper.logException(activity, e)
+        }
+    }
+
+    fun setUserMainData() {
+        try {
+            name.setText(userMainData?.name)
+            ratings.setText(userMainData?.rating)
+            posts.setText(userMainData?.posts.toString())
+            likes.setText(userMainData?.likes.toString())
+            followers_cnt.setText(userMainData?.followers.toString())
+            following.setText(userMainData?.followings.toString())
+            if(userMainData?.friends != 0) {
+                friends_cnt.visibility = View.VISIBLE
+                friends_cnt.text = userMainData?.friends.toString()
+            }
+            if(userMainData?.followers != 0) {
+                followers_cnt_.visibility = View.VISIBLE
+                followers_cnt_.text = userMainData?.followers.toString()
+            }
+            if(userMainData?.messages != 0) {
+                messages_cnt.visibility = View.VISIBLE
+                messages_cnt.text = userMainData?.messages.toString()
+            }
+            try {
+                Helper.loadImage(activity!!,userMainData?.photo?.profile_path!!,profile_pic,R.drawable.default_profile_icon)
+
+            } catch (e : java.lang.Exception){
+
+            }
+        } catch (e: Exception) {
+            System.out.println("ExceptionlogException "+e.toString())
+            Helper.logException(activity, e)
         }
     }
 
@@ -476,5 +512,32 @@ open class BaseFragment : GenericFragment() {
             .build()
     }
 
+    fun setUSerMAinDataAPIObserver() {
+        posUserMainDataViewModel = ViewModelProviders.of(this).get(PosUserMainDataViewModel::class.java).apply {
+            this@BaseFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+
+                    } else {
+
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer {
+                    userMainData = posUserMainDataViewModel.obj
+                    setUserMainData()
+                })
+
+            }
+        }
+    }
 
 }

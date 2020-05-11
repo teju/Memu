@@ -70,7 +70,12 @@ public class NavigationMapRouteActivity extends AppCompatActivity implements OnM
         routeLoading = findViewById(R.id.routeLoadingProgressBar);
         fabRemoveRoute = findViewById(R.id.fabRemoveRoute);
         mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull MapboxMap mapboxMap) {
+
+            }
+        });
     }
 
     public void onStyleFabClick() {

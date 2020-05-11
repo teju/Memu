@@ -23,13 +23,13 @@ import com.facebook.GraphResponse
 import org.json.JSONObject
 import com.facebook.GraphRequest
 import com.memu.etc.SpacesItemDecoration
+import com.memu.modules.userMainData.UserMainData
 import com.memu.ui.adapters.FriendsAdapter
 import com.memu.ui.adapters.PostsAdapter
 import kotlinx.android.synthetic.main.friends_fragment.*
 import kotlinx.android.synthetic.main.profile_header.*
 
 class FriendsFragment : BaseFragment() ,View.OnClickListener {
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.friends_fragment, container, false)
@@ -59,8 +59,8 @@ class FriendsFragment : BaseFragment() ,View.OnClickListener {
 
                 }
             }*/
-
-
+        setUSerMAinDataAPIObserver()
+        posUserMainDataViewModel.loadData()
     }
 
     override fun onClick(v: View?) {

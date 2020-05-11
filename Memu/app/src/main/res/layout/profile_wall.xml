@@ -3,175 +3,203 @@
     android:layout_height="match_parent"
     android:background="@color/transparent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:background="@color/transparent"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <include layout="@layout/profile_header">
-        </include>
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/earth_points_bg"
-            android:layout_marginTop="5dp"
-            android:paddingTop="20dp"
-            android:paddingBottom="10dp"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="30dp"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Co2 Reduced"
-                    android:fontFamily="@font/opensanssemibold"
-                    android:textColor="@color/Black"
-                    android:textSize="10dp"
-                    android:layout_height="wrap_content">
-                </TextView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Posts"
-                    android:textColor="@color/Black"
-                    android:textSize="10dp"
-                    android:layout_height="wrap_content">
-                </TextView>
-            </LinearLayout>
-            <View
-                android:layout_width="1dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
-                android:background="@color/Black"
-                android:layout_height="25dp">
-
-            </View>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Rides Shared"
-                    android:fontFamily="@font/opensanssemibold"
-                    android:textColor="@color/Black"
-                    android:textSize="10dp"
-                    android:layout_height="wrap_content">
-                </TextView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Likes"
-                    android:textColor="@color/Black"
-                    android:textSize="10dp"
-                    android:layout_height="wrap_content">
-                </TextView>
-            </LinearLayout>
-            <View
-                android:layout_width="1dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
-                android:background="@color/Black"
-                android:layout_height="25dp">
-
-            </View>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Distance Shared"
-                    android:fontFamily="@font/opensanssemibold"                android:textColor="@color/Black"
-                    android:textSize="10dp"
-                    android:layout_height="wrap_content">
-                </TextView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Followers"
-                    android:textColor="@color/Black"
-                    android:textSize="10dp"
-                    android:layout_height="wrap_content">
-                </TextView>
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:background="@color/transparent"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
-            <FrameLayout
+            android:layout_height="match_parent">
+            <include layout="@layout/profile_header">
+            </include>
+            <LinearLayout
                 android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/earth_points_bg"
+                android:layout_marginTop="5dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp"
+                android:gravity="center_horizontal"
                 android:layout_height="wrap_content">
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_marginLeft="-20dp"
-                    android:background="@drawable/friends_heading_bg"
-                    android:layout_height="150dp">
-                </ImageView>
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:text="Friends"
-                    android:layout_marginTop="60dp"
-                    android:rotation="90"
-                    android:textColor="@color/Black"
-                    android:textSize="10dp"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="30dp"
                     android:layout_height="wrap_content">
-                </TextView>
-            </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Co2 Reduced"
+                        android:fontFamily="@font/opensanssemibold"
+                        android:textColor="@color/Black"
+                        android:textSize="10dp"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Posts"
+                        android:textColor="@color/Black"
+                        android:textSize="10dp"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:background="@color/Black"
+                    android:layout_height="25dp">
+
+                </View>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Rides Shared"
+                        android:fontFamily="@font/opensanssemibold"
+                        android:textColor="@color/Black"
+                        android:textSize="10dp"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Likes"
+                        android:textColor="@color/Black"
+                        android:textSize="10dp"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                </LinearLayout>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:background="@color/Black"
+                    android:layout_height="25dp">
+
+                </View>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Distance Shared"
+                        android:fontFamily="@font/opensanssemibold"                android:textColor="@color/Black"
+                        android:textSize="10dp"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Followers"
+                        android:textColor="@color/Black"
+                        android:textSize="10dp"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_marginLeft="-20dp"
+                        android:background="@drawable/friends_heading_bg"
+                        android:layout_height="150dp">
+                    </ImageView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Friends"
+                        android:layout_marginTop="60dp"
+                        android:rotation="90"
+                        android:textColor="@color/Black"
+                        android:textSize="10dp"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                </FrameLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:id="@+id/friens_rl"
+                    android:layout_marginLeft="-30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </LinearLayout>
+            <TextView
+                android:layout_width="150dp"
+                android:text="Find More"
+                android:layout_marginTop="-50dp"
+                android:paddingTop="15dp"
+                android:layout_gravity="end"
+                android:id="@+id/find_more"
+                android:textSize="13dp"
+                android:textAlignment="center"
+                android:textColor="@color/White"
+                android:background="@drawable/pink_button_friends"
+                android:layout_height="80dp">
+
+            </TextView>
+            <TextView
+                android:layout_width="180dp"
+                android:text="Upload image"
+                android:layout_marginTop="-50dp"
+                android:paddingTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/upload_activity"
+                android:textSize="13dp"
+                android:textAlignment="center"
+                android:textColor="@color/White"
+                android:background="@drawable/button_blue_msg"
+                android:layout_height="90dp">
+
+            </TextView>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/friends_map_bg"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content">
+            </ImageView>
+            <TextView
+                android:layout_width="150dp"
+                android:text="Your recent posts"
+                android:paddingTop="15dp"
+                android:fontFamily="@font/opensansbold"
+                android:textSize="13dp"
+                android:textAlignment="center"
+                android:textColor="@color/DarkBlue"
+                android:layout_height="wrap_content">
+
+            </TextView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:id="@+id/friens_rl"
-                android:layout_marginLeft="-30dp"
-                android:layout_gravity="center_vertical"
+                android:id="@+id/posts_rl"
+                android:background="@color/transparent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_height="wrap_content">
-
             </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
-        <TextView
-            android:layout_width="150dp"
-            android:text="Find More"
-            android:layout_marginTop="-50dp"
-            android:paddingTop="15dp"
-            android:layout_gravity="end"
-            android:id="@+id/find_more"
-            android:textSize="13dp"
-            android:textAlignment="center"
-            android:textColor="@color/White"
-            android:background="@drawable/pink_button_friends"
-            android:layout_height="80dp">
-
-        </TextView>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:src="@drawable/friends_map_bg"
-            android:layout_gravity="center_horizontal"
-            android:layout_height="wrap_content">
-        </ImageView>
-        <TextView
-            android:layout_width="150dp"
-            android:text="Your recent posts"
-            android:paddingTop="15dp"
-            android:fontFamily="@font/opensansbold"
-            android:textSize="13dp"
-            android:textAlignment="center"
-            android:textColor="@color/DarkBlue"
-            android:layout_height="wrap_content">
-
-        </TextView>
-
-        <androidx.recyclerview.widget.RecyclerView
+        <com.iapps.libs.views.LoadingCompound
+            android:id="@+id/ld"
             android:layout_width="match_parent"
-            android:id="@+id/posts_rl"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_height="wrap_content">
-        </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </ScrollView>

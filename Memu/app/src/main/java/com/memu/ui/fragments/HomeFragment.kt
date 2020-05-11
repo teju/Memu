@@ -810,7 +810,11 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUserVehicleListViewModel.NEXT_STEP -> {
-                            vehicle_number.text = postUserVehicleListViewModel.obj?.vehicle_list?.get(0)?.vehicle_no
+                            if(postUserVehicleListViewModel.obj?.vehicle_list?.size != 0) {
+                                vehicle_number.text =
+                                    postUserVehicleListViewModel.obj?.vehicle_list?.get(0)
+                                        ?.vehicle_no
+                            }
                         }
                     }
                 })

@@ -46,6 +46,7 @@ class Keys : BaseKeys() {
         val ContentType = "Content-Type"
         val Authorization = "Authorization"
         val USER_ID = "user_id"
+        val DESCRIPTION = "description"
         val LOCATION_DETAILS = "location_details"
         val To = "to"
         val FROM = "from"
@@ -68,6 +69,7 @@ class Keys : BaseKeys() {
         val TRIP_ID = "trip_id"
         val TRIP_RIDER_ID_ = "trip_rider_id"
         val PROFILE = "profile_wall"
+        val IMAGE = "image"
         val STATUS = "status"
         val ACCESS_TOKEN = "access_token"
 

@@ -84,6 +84,14 @@ class PostUploadDocViewModel(application: Application) : BaseViewModel(applicati
             genericHttpAsyncTask.setFileParams(Keys.PROFILE,path,"multipart/form-data; boundar")
             genericHttpAsyncTask.settxtFileParams(Keys.USER_ID,UserInfoManager.getInstance(apl).getAccountId())
 
+        }else if(doc_type == ACTIVITY_PHOTO) {
+
+            genericHttpAsyncTask.setUrl(APIs.uploadActivityPhoto)
+            Helper.applyHeader(apl,genericHttpAsyncTask)
+            genericHttpAsyncTask.setFileParams(Keys.IMAGE,path,"multipart/form-data; boundar")
+            genericHttpAsyncTask.settxtFileParams(Keys.USER_ID,UserInfoManager.getInstance(apl).getAccountId())
+            genericHttpAsyncTask.settxtFileParams(Keys.DESCRIPTION,"")
+
         }
 
         genericHttpAsyncTask.setCache(false)
@@ -98,6 +106,7 @@ class PostUploadDocViewModel(application: Application) : BaseViewModel(applicati
         var VEHICLE_REG_CERT_PHOTO = 3
         var VEHICLE_DL_PHOTO =  4
         var PROFILE_PHOTO =  5
+        var ACTIVITY_PHOTO =  6
     }
 
 }
