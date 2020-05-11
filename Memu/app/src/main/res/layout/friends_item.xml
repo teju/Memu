@@ -5,10 +5,11 @@
     android:id="@+id/clRoot"
     android:layout_marginBottom="10dp"
     android:layout_height="wrap_content">
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="50dp"
         android:layout_gravity="center_vertical"
+        android:id="@+id/friend_img"
         android:src="@drawable/default_profile_icon"
         android:layout_height="50dp">
-    </ImageView>
+    </de.hdodenhof.circleimageview.CircleImageView>
 </LinearLayout>

@@ -6,12 +6,7 @@ import com.google.gson.GsonBuilder
 import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
 import com.memu.etc.*
-import com.memu.modules.GenericResponse
-import com.memu.modules.UserSignup.UserSignUp
-import com.memu.modules.googleMaps.GoogleMAps
 import com.memu.modules.userMainData.UserMainData
-import org.json.JSONArray
-import org.json.JSONObject
 
 class PosUserMainDataViewModel(application: Application) : BaseViewModel(application) {
 
@@ -32,7 +27,7 @@ class PosUserMainDataViewModel(application: Application) : BaseViewModel(applica
         this.apl = application
     }
 
-    fun loadData() {
+    fun loadData(userId: String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -68,7 +63,7 @@ class PosUserMainDataViewModel(application: Application) : BaseViewModel(applica
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.context = apl.applicationContext
         Helper.applyHeader(apl,genericHttpAsyncTask)
-        genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
+        genericHttpAsyncTask.setPostParams(Keys.USER_ID, userId)
         genericHttpAsyncTask.execute()
 
     }

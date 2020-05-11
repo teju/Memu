@@ -47,7 +47,8 @@ import kotlin.Comparator
 
 class PostsAdapter(val context: Context) : RecyclerView.Adapter<PostsAdapter.ViewHolder>() {
     private var locationComponent: LocationComponent? = null
-
+    var user_name = ""
+    var profile_photo = ""
     fun addMarkers(
         mapboxMap: MapboxMap,
         srcLatitude: Double,
@@ -196,10 +197,25 @@ class PostsAdapter(val context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.pos = position
-        holder.name.setText(UserInfoManager.getInstance(context!!).getAccountName())
+        if(BaseHelper.isEmpty(user_name)) {
+            holder.name.setText(UserInfoManager.getInstance(context!!).getAccountName())
+        } else {
+            holder.name.setText(user_name)
+        }
         holder.description.setText(obj.get(holder.pos).message)
-        Helper.loadImage(context!!,UserInfoManager.getInstance(context!!).getProfilePic(),holder.profile_pic,R.drawable.default_profile_icon)
-
+        if(BaseHelper.isEmpty(profile_photo)) {
+            Helper.loadImage(
+                context!!,
+                UserInfoManager.getInstance(context!!).getProfilePic(),
+                holder.profile_pic,
+                R.drawable.default_profile_icon)
+        } else {
+            Helper.loadImage(
+                context!!,
+                profile_photo,
+                holder.profile_pic,
+                R.drawable.default_profile_icon)
+        }
         try {
             Helper.loadImage(context!!,obj.get(position).logo,holder.post_img_icon,0)
         } catch (e : java.lang.Exception){

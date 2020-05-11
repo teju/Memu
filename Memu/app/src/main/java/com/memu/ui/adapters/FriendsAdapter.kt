@@ -8,13 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.memu.R
 import com.memu.etc.Helper
 import com.memu.modules.mapFeeds.MapFeed
+import com.memu.modules.userSearch.User
 import kotlinx.android.synthetic.main.friends_item.view.*
 
 
 class FriendsAdapter(val context: Context) : RecyclerView.Adapter<FriendsAdapter.ViewHolder>()  {
 
     var productAdapterListener : ProductAdapterListener? = null
-    var obj : ArrayList<MapFeed> =  ArrayList<MapFeed>()
+    var obj : ArrayList<User> =  ArrayList<User>()
     interface ProductAdapterListener {
         fun onClick(position:Int)
     }
@@ -25,19 +26,27 @@ class FriendsAdapter(val context: Context) : RecyclerView.Adapter<FriendsAdapter
     }
 
     override fun getItemCount(): Int {
-        return 30
+        return obj.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.pos = position
+        try {
+            Helper.loadImage(context!!,obj.get(position).photo.profile_path,holder.friend_img,R.drawable.default_profile_icon)
+        } catch (e : java.lang.Exception){
 
+        }
+        holder.friend_img.setOnClickListener {
+            productAdapterListener?.onClick(holder.pos)
+        }
     }
 
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         var pos : Int = 0
         var clRoot = view.clRoot
+        var friend_img = view.friend_img
 
     }
 

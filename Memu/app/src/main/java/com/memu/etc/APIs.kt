@@ -104,5 +104,8 @@ class APIs : BaseKeys() {
 
         val userMainData : String
             get() = BASE_URL!!  + PROFILE+ "user-main-data"
+
+        val searchUser : String
+            get() = BASE_URL!!  + PROFILE+ "search-user"
     }
 }

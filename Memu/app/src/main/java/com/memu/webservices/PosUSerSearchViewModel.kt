@@ -6,9 +6,15 @@ import com.google.gson.GsonBuilder
 import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
 import com.memu.etc.*
-import com.memu.modules.profileWall.ProfileWall
+import com.memu.modules.GenericResponse
+import com.memu.modules.UserSignup.UserSignUp
+import com.memu.modules.googleMaps.GoogleMAps
+import com.memu.modules.userMainData.UserMainData
+import com.memu.modules.userSearch.UserSearch
+import org.json.JSONArray
+import org.json.JSONObject
 
-class GetUserWallViewModel(application: Application) : BaseViewModel(application) {
+class PosUSerSearchViewModel(application: Application) : BaseViewModel(application) {
 
     private val trigger = SingleLiveEvent<Integer>()
 
@@ -16,7 +22,7 @@ class GetUserWallViewModel(application: Application) : BaseViewModel(application
 
     var apl: Application
 
-    var obj: ProfileWall? = null
+    var obj: UserSearch? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -27,7 +33,7 @@ class GetUserWallViewModel(application: Application) : BaseViewModel(application
         this.apl = application
     }
 
-    fun loadData(userId: String) {
+    fun loadData(search_word : String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -47,13 +53,9 @@ class GetUserWallViewModel(application: Application) : BaseViewModel(application
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), ProfileWall::class.java)
-                        if (obj!!.status.equals(Keys.STATUS_CODE)) {
-                            trigger.postValue(NEXT_STEP)
-                        }else{
-                            errorMessage.value = createErrorMessageObject(response)
+                        obj = gson.fromJson(response!!.content.toString(), UserSearch::class.java)
+                        trigger.postValue(GetVehicleTypeViewModel.NEXT_STEP)
 
-                        }
                     } catch (e: Exception) {
                         showUnknowResponseErrorMessage()
                     }
@@ -62,15 +64,13 @@ class GetUserWallViewModel(application: Application) : BaseViewModel(application
             }
         })
 
-        genericHttpAsyncTask.method = BaseConstants.POST
-        genericHttpAsyncTask.setUrl(APIs.getUserActivities)
-        Helper.applyHeader(apl,genericHttpAsyncTask)
-        genericHttpAsyncTask.setPostParams(Keys.LIMIT,"1000000")
-        genericHttpAsyncTask.setPostParams(Keys.OFFSET,"0")
-
-        genericHttpAsyncTask.setPostParams(Keys.USER_ID,userId)
-        genericHttpAsyncTask.context = apl.applicationContext
+        genericHttpAsyncTask.method = BaseConstants.GET
+        genericHttpAsyncTask.setUrl(APIs.searchUser)
         genericHttpAsyncTask.setCache(false)
+        genericHttpAsyncTask.context = apl.applicationContext
+        Helper.applyHeader(apl,genericHttpAsyncTask)
+        genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
+        genericHttpAsyncTask.setPostParams(Keys.SEARCH_WORD, search_word)
         genericHttpAsyncTask.execute()
 
     }

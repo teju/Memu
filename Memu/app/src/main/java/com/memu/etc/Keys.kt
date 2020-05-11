@@ -46,6 +46,7 @@ class Keys : BaseKeys() {
         val ContentType = "Content-Type"
         val Authorization = "Authorization"
         val USER_ID = "user_id"
+        val SEARCH_WORD = "search_word"
         val DESCRIPTION = "description"
         val LOCATION_DETAILS = "location_details"
         val To = "to"

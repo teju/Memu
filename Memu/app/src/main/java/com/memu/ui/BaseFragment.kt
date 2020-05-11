@@ -120,7 +120,7 @@ open class BaseFragment : GenericFragment() {
         }
     }
 
-    fun setUserMainData() {
+    open fun setUserMainData() {
         try {
             name.setText(userMainData?.name)
             ratings.setText(userMainData?.rating)

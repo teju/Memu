@@ -1,35 +1,29 @@
 package com.memu.ui.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.memu.R
 import com.memu.ui.BaseFragment
-import com.facebook.AccessToken
-import com.facebook.FacebookException
-import com.facebook.login.LoginResult
-import com.facebook.FacebookCallback
-import com.facebook.CallbackManager
-import com.facebook.Profile.getCurrentProfile
-import com.facebook.internal.ImageRequest.getProfilePictureUri
-import com.squareup.picasso.Picasso
-import android.util.Log
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import java.util.*
-import org.json.JSONException
-import com.facebook.GraphResponse
-import org.json.JSONObject
-import com.facebook.GraphRequest
 import com.memu.etc.SpacesItemDecoration
-import com.memu.modules.userMainData.UserMainData
 import com.memu.ui.adapters.FriendsAdapter
-import com.memu.ui.adapters.PostsAdapter
+import com.memu.webservices.PosUSerSearchViewModel
 import kotlinx.android.synthetic.main.friends_fragment.*
 import kotlinx.android.synthetic.main.profile_header.*
+import androidx.lifecycle.Observer
+import com.iapps.gon.etc.callback.NotifyListener
+import com.memu.etc.UserInfoManager
+import com.memu.modules.userSearch.User
+import kotlin.collections.ArrayList
 
 class FriendsFragment : BaseFragment() ,View.OnClickListener {
+    private var adapter: FriendsAdapter? = null
+    lateinit var posUSerSearchViewModel: PosUSerSearchViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.friends_fragment, container, false)
@@ -51,16 +45,32 @@ class FriendsFragment : BaseFragment() ,View.OnClickListener {
         friens_rl.setLayoutManager(sglm2)
         friens_rl.setNestedScrollingEnabled(false)
         friens_rl.addItemDecoration(SpacesItemDecoration(3, spacingInPixels, true))
-        val adapter = FriendsAdapter(context!!)
+        adapter = FriendsAdapter(context!!)
         friens_rl.adapter = adapter
-        /*(friens_rl.adapter as FriendsAdapter).productAdapterListener =
+        (friens_rl.adapter as FriendsAdapter).productAdapterListener =
             object : FriendsAdapter.ProductAdapterListener {
                 override fun onClick(position: Int) {
-
+                        home().setFragment(ProfileWallFragment().apply {
+                            user_id = posUSerSearchViewModel.obj?.user_list?.get(position)?.id!!
+                            isPubLicWall = true
+                        })
                 }
-            }*/
+            }
         setUSerMAinDataAPIObserver()
-        posUserMainDataViewModel.loadData()
+        setSearchUserAPIObserver()
+        posUserMainDataViewModel.loadData(UserInfoManager.getInstance(activity!!).getAccountId())
+        serach.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                posUSerSearchViewModel.loadData(p0.toString())
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
     }
 
     override fun onClick(v: View?) {
@@ -73,6 +83,38 @@ class FriendsFragment : BaseFragment() ,View.OnClickListener {
             }
             R.id.tvFriends -> {
                 home().setFragment(FollowersRequestFragment())
+            }
+        }
+    }
+
+    fun setSearchUserAPIObserver() {
+        posUSerSearchViewModel = ViewModelProviders.of(this).get(PosUSerSearchViewModel::class.java).apply {
+            this@FriendsFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer {
+                    if( posUSerSearchViewModel.obj?.user_list!!.size != 0) {
+                        adapter?.obj = posUSerSearchViewModel.obj?.user_list!! as ArrayList<User>
+                    } else {
+                        adapter?.obj = ArrayList<User>()
+                    }
+                    adapter?.notifyDataSetChanged()
+
+                })
             }
         }
     }

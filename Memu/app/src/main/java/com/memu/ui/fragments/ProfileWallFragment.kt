@@ -1,41 +1,23 @@
 package com.memu.ui.fragments
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.memu.R
 import com.memu.ui.BaseFragment
-import com.facebook.AccessToken
-import com.facebook.FacebookException
-import com.facebook.login.LoginResult
-import com.facebook.FacebookCallback
-import com.facebook.CallbackManager
-import com.facebook.Profile.getCurrentProfile
-import com.facebook.internal.ImageRequest.getProfilePictureUri
-import com.squareup.picasso.Picasso
-import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import java.util.*
-import org.json.JSONException
-import com.facebook.GraphResponse
-import org.json.JSONObject
-import com.facebook.GraphRequest
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
-import com.memu.etc.Helper
 import com.memu.etc.SpacesItemDecoration
 import com.memu.etc.UserInfoManager
 import com.memu.ui.adapters.FriendsAdapter
 import com.memu.ui.adapters.PostsAdapter
 import com.memu.webservices.GetUserWallViewModel
-import com.memu.webservices.PosUserMainDataViewModel
 import com.memu.webservices.PostUploadDocViewModel
 import kotlinx.android.synthetic.main.profile_header.*
 import kotlinx.android.synthetic.main.profile_wall.*
@@ -45,7 +27,8 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener {
     lateinit var getUserWallViewModel: GetUserWallViewModel
     lateinit var postUploadDocViewModel: PostUploadDocViewModel
     val PICK_PHOTO_PHOTO = 10010
-
+    var user_id = ""
+    var isPubLicWall = false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.profile_wall, container, false)
         return v
@@ -80,10 +63,33 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener {
 
                 }
             }*/
+        if(BaseHelper.isEmpty(user_id)) {
+            user_id = UserInfoManager.getInstance(activity!!).getAccountId()
+        } else {
+            privateWallSettings()
+        }
 
+        getUserWallViewModel.loadData(user_id)
+        posUserMainDataViewModel.loadData(user_id)
+    }
 
-        getUserWallViewModel.loadData()
-        posUserMainDataViewModel.loadData()
+    fun privateWallSettings() {
+        upload_activity.visibility = View.GONE
+        friends_map_bg.visibility = View.GONE
+        llFriends.visibility = View.GONE
+        find_more.visibility = View.GONE
+    }
+
+    override fun setUserMainData() {
+        super.setUserMainData()
+        if(isPubLicWall) {
+            followers_cnt_.visibility = View.GONE
+            messages_cnt.visibility = View.GONE
+            friends_cnt.visibility = View.GONE
+            tvFriends.text = "Add Friends"
+            tvfollowers.text = "Follow"
+            messages.text = "Message"
+        }
     }
 
     override fun onClick(v: View?) {
@@ -130,12 +136,11 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener {
                 isNetworkAvailable.observe(thisFragReference, obsNoInternet)
                 getTrigger().observe(thisFragReference, Observer {
                     posts_rl.layoutManager = LinearLayoutManager(activity)
+                    posts_rl.isNestedScrollingEnabled = false
                     val postsAdapter =  PostsAdapter(activity!!)
                     postsAdapter.obj = getUserWallViewModel.obj?.activities!!
                     posts_rl.adapter = postsAdapter
-
                 })
-
             }
         }
     }
@@ -178,7 +183,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUploadDocViewModel.NEXT_STEP -> {
-                            getUserWallViewModel.loadData()
+                            getUserWallViewModel.loadData(user_id)
                         }
                     }
                 })

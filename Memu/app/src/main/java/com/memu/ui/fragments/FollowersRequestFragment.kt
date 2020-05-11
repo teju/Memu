@@ -1,33 +1,14 @@
 package com.memu.ui.fragments
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.memu.R
 import com.memu.ui.BaseFragment
-import com.facebook.AccessToken
-import com.facebook.FacebookException
-import com.facebook.login.LoginResult
-import com.facebook.FacebookCallback
-import com.facebook.CallbackManager
-import com.facebook.Profile.getCurrentProfile
-import com.facebook.internal.ImageRequest.getProfilePictureUri
-import com.squareup.picasso.Picasso
-import android.util.Log
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import java.util.*
-import org.json.JSONException
-import com.facebook.GraphResponse
-import org.json.JSONObject
-import com.facebook.GraphRequest
-import com.memu.etc.SpacesItemDecoration
-import com.memu.modules.userMainData.UserMainData
+import com.memu.etc.UserInfoManager
 import com.memu.ui.adapters.FollowersAdapter
-import com.memu.ui.adapters.FriendsAdapter
-import com.memu.ui.adapters.PostsAdapter
 import kotlinx.android.synthetic.main.followers_request_fragment.*
 import kotlinx.android.synthetic.main.profile_header.*
 
@@ -71,7 +52,7 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener {
 
         }
         setUSerMAinDataAPIObserver()
-        posUserMainDataViewModel.loadData()
+        posUserMainDataViewModel.loadData(UserInfoManager.getInstance(activity!!).getAccountId())
     }
 
     override fun onClick(v: View?) {
