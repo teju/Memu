@@ -29,7 +29,6 @@ import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute
 import com.memu.R
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
-import com.memu.modules.profileWall.Activity
 import com.memu.ui.fragments.HomeFragment
 import io.reactivex.annotations.NonNull
 import kotlinx.android.synthetic.main.post_wall_item.view.*
@@ -39,6 +38,7 @@ import java.lang.Exception
 import com.mapbox.api.directions.v5.models.DirectionsRoute
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
+import com.memu.modules.profileWall.Activity
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
@@ -47,8 +47,7 @@ import kotlin.Comparator
 
 class PostsAdapter(val context: Context) : RecyclerView.Adapter<PostsAdapter.ViewHolder>() {
     private var locationComponent: LocationComponent? = null
-    var user_name = ""
-    var profile_photo = ""
+
     fun addMarkers(
         mapboxMap: MapboxMap,
         srcLatitude: Double,
@@ -197,24 +196,16 @@ class PostsAdapter(val context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.pos = position
-        if(BaseHelper.isEmpty(user_name)) {
-            holder.name.setText(UserInfoManager.getInstance(context!!).getAccountName())
-        } else {
-            holder.name.setText(user_name)
-        }
+        holder.name.setText(obj.get(position).user_info.name)
         holder.description.setText(obj.get(holder.pos).message)
-        if(BaseHelper.isEmpty(profile_photo)) {
+        try {
             Helper.loadImage(
                 context!!,
-                UserInfoManager.getInstance(context!!).getProfilePic(),
+                obj.get(position).user_info.photo.profile_path,
                 holder.profile_pic,
                 R.drawable.default_profile_icon)
-        } else {
-            Helper.loadImage(
-                context!!,
-                profile_photo,
-                holder.profile_pic,
-                R.drawable.default_profile_icon)
+        }catch (e : Exception){
+
         }
         try {
             Helper.loadImage(context!!,obj.get(position).logo,holder.post_img_icon,0)

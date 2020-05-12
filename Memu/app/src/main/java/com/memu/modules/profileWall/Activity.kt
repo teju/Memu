@@ -11,5 +11,6 @@ data class Activity(
     val message: String = "",
     val shares: Int = 0,
     val to_address: ToAddress = ToAddress(),
-    val type: String = ""
+    val type: String = "",
+    val user_info: UserInfo = UserInfo()
 )

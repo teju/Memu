@@ -8,6 +8,6 @@ data class Address(
     val formatted_address: String = "",
     val lattitude: String = "",
     val longitude: String = "",
-    val pincode: Any? = Any(),
+    val pincode: String = "",
     val state: String = ""
 )
