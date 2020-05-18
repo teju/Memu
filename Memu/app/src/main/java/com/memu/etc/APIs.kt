@@ -107,5 +107,17 @@ class APIs : BaseKeys() {
 
         val searchUser : String
             get() = BASE_URL!!  + PROFILE+ "search-user"
+
+        val friendList : String
+            get() = BASE_URL!!  + PROFILE+ "friend-list"
+
+        val friendRequest : String
+            get() = BASE_URL!!  + PROFILE+ "friend-request"
+
+        val pendingFriendRequest : String
+            get() = BASE_URL!!  + PROFILE+ "friend-pending-list"
+
+        val acceptFriendRequest : String
+            get() = BASE_URL!!  + PROFILE+ "accept-friend-request"
     }
 }

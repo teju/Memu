@@ -73,6 +73,9 @@ class Keys : BaseKeys() {
         val IMAGE = "image"
         val STATUS = "status"
         val ACCESS_TOKEN = "access_token"
+        val SEARCHBYLOC = "searchByLoc"
+        val FREIND_ID = "freind_id"
+        val REQUEST = "request"
 
         @kotlin.jvm.JvmField
         var GCM_DT : String = "dt"

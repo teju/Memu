@@ -230,6 +230,7 @@
         android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_width="140dp"
+            android:id="@+id/rlFriends"
             android:background="@drawable/pink_button_friends"
             android:layout_height="80dp">
             <TextView

@@ -39,7 +39,9 @@ import com.memu.modules.riderList.Rider
 import com.memu.modules.userMainData.UserMainData
 import com.memu.ui.dialog.*
 import com.memu.webservices.PosUserMainDataViewModel
+import com.memu.webservices.PostFriendListViewModel
 import com.memu.webservices.PostUpdateLocationViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.profile_header.*
 
 import kotlinx.coroutines.*
@@ -51,6 +53,7 @@ open class BaseFragment : GenericFragment() {
     lateinit var userInfo: UserInfoManager
         private set
     lateinit var posUserMainDataViewModel: PosUserMainDataViewModel
+    lateinit var postFriendListViewModel: PostFriendListViewModel
 
     var permissionsThatNeedTobeCheck: List<String>? = null
         private set
@@ -534,6 +537,35 @@ open class BaseFragment : GenericFragment() {
                 getTrigger().observe(thisFragReference, Observer {
                     userMainData = posUserMainDataViewModel.obj
                     setUserMainData()
+                })
+
+            }
+        }
+    }
+
+    fun setFriendListAPIObserver() {
+        postFriendListViewModel = ViewModelProviders.of(this).get(PostFriendListViewModel::class.java).apply {
+            this@BaseFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+
+                    }
                 })
 
             }

@@ -165,13 +165,16 @@
 
             </TextView>
 
-            <ImageView
+            <FrameLayout
                 android:layout_width="wrap_content"
-                android:src="@drawable/friends_map_bg"
-                android:id="@+id/friends_map_bg"
+                android:background="@drawable/friends_map_bg"
+                android:id="@+id/frame_layout"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:padding="10dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_height="wrap_content">
-            </ImageView>
+                android:layout_height="400dp">
+            </FrameLayout>
             <TextView
                 android:layout_width="150dp"
                 android:text="Your recent posts"
