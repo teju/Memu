@@ -97,12 +97,6 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         friens_rl.setNestedScrollingEnabled(false)
         friens_rl.addItemDecoration(SpacesItemDecoration(3, spacingInPixels, true))
 
-        /*(friens_rl.adapter as FriendsAdapter).productAdapterListener =
-            object : FriendsAdapter.ProductAdapterListener {
-                override fun onClick(position: Int) {
-
-                }
-            }*/
         if(BaseHelper.isEmpty(user_id)) {
             user_id = UserInfoManager.getInstance(activity!!).getAccountId()
         } else {
@@ -142,6 +136,15 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
             val adapter = FriendsAdapter(context!!)
             adapter.obj = result?.user_list as ArrayList<User>
             friens_rl.adapter = adapter
+            /*(friens_rl.adapter as FriendsAdapter).productAdapterListener =
+                object : FriendsAdapter.ProductAdapterListener {
+                    override fun onClick(position: Int) {
+                        home().setFragment(ProfileWallFragment().apply {
+                            user_id = result?.user_list.get(position)?.freind_id!!
+                            isPubLicWall = true
+                        })
+                    }
+                }*/
         } else {
             addMarkers(result!!)
         }
@@ -192,7 +195,12 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                 home().onBackPressed()
             }
             R.id.tvfollowers -> {
-                home().setFragment(FollowersRequestFragment())
+                if(isPubLicWall) {
+                    postFriendRequestViewModel.loadData("FL", user_id)
+                } else {
+                    home().setFragment(FollowersRequestFragment())
+                }
+
             }
             R.id.upload_activity -> {
                 pickImage()

@@ -62,6 +62,8 @@ class PostFriendListViewModel(application: Application) : BaseViewModel(applicat
 
                         }
                     } catch (e: Exception) {
+                        System.out.println("postPendingFriendListViewModel Exception "+e.toString())
+
                         showUnknowResponseErrorMessage()
                     }
                 }

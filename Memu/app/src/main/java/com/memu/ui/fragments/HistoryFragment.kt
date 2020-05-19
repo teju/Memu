@@ -95,7 +95,7 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
         recurringrecyclerView.layoutManager = LinearLayoutManager(activity,
             LinearLayoutManager.HORIZONTAL, false)
         try {
-            Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.user_default)
+            Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.default_profile_icon)
         } catch (e : java.lang.Exception){ }
         completed.setOnClickListener (this)
         upcoming.setOnClickListener (this)

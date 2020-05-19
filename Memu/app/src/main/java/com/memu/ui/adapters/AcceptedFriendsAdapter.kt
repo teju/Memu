@@ -8,13 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.memu.R
 import com.memu.etc.Helper
 import com.memu.modules.friendList.User
+import com.memu.modules.friendList.UserX
 import kotlinx.android.synthetic.main.followers_item.view.*
 
 
 class AcceptedFriendsAdapter(val context: Context) : RecyclerView.Adapter<AcceptedFriendsAdapter.ViewHolder>()  {
 
     var productAdapterListener : ProductAdapterListener? = null
-    var obj : ArrayList<User> =  ArrayList<User>()
+    var obj : ArrayList<UserX> =  ArrayList<UserX>()
     var isFriendsRequest =  false
     interface ProductAdapterListener {
         fun onClick(position:Int,status : String)
@@ -26,8 +27,8 @@ class AcceptedFriendsAdapter(val context: Context) : RecyclerView.Adapter<Accept
     }
 
     override fun getItemCount(): Int {
-
         return obj.size
+
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -37,11 +38,11 @@ class AcceptedFriendsAdapter(val context: Context) : RecyclerView.Adapter<Accept
         if(isFriendsRequest) {
             holder.accept_remove.text = "Remove"
         }
-        holder.user_name.text = obj.get(position).name
-        holder.accept_remove.setOnClickListener {
-            productAdapterListener?.onClick(holder.pos,"Reject")
-        }
         try {
+            holder.user_name.text = obj.get(position).name
+            holder.accept_remove.setOnClickListener {
+                productAdapterListener?.onClick(holder.pos,"Reject")
+            }
             Helper.loadImage(
                 context,
                 obj.get(position).photo,

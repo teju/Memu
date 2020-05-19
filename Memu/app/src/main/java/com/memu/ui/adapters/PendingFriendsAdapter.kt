@@ -1,6 +1,8 @@
 package com.memu.ui.adapters
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Color.GREEN
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,10 +36,20 @@ class PendingFriendsAdapter(val context: Context) : RecyclerView.Adapter<Pending
         holder.pos = position
         holder.llfollowers_rect.background = context.getDrawable(R.drawable.followers_rect)
         if(isFriendsRequest) {
+            holder.accept_remove.setTextColor(context.resources.getColor(R.color.DarkGreen))
             holder.accept_remove.text = "Accept"
         }
         holder.user_name.text = obj.get(position).name
-        Helper.loadImage(context,obj.get(position).photo,holder.profile_icon,R.drawable.default_profile_icon)
+        try {
+            Helper.loadImage(
+                context,
+                obj.get(position).photo.profile_path,
+                holder.profile_icon,
+                R.drawable.default_profile_icon
+            )
+        } catch (e : Exception){
+
+        }
         holder.accept_remove.setOnClickListener {
             productAdapterListener?.onClick(holder.pos,"Accepted")
         }

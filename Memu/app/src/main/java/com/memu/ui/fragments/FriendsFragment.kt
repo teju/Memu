@@ -82,7 +82,10 @@ class FriendsFragment : BaseFragment() ,View.OnClickListener {
                 home().setFragment(FollowersRequestFragment())
             }
             R.id.tvFriends -> {
-                home().setFragment(FollowersRequestFragment())
+                home().setFragment(FollowersRequestFragment().apply {
+                    isFriendsRequest = true
+
+                })
             }
         }
     }
