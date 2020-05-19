@@ -8,14 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.memu.R
 import com.memu.etc.Helper
 import com.memu.modules.friendList.User
-import com.memu.modules.friendList.UserX
 import kotlinx.android.synthetic.main.followers_item.view.*
 
 
 class AcceptedFriendsAdapter(val context: Context) : RecyclerView.Adapter<AcceptedFriendsAdapter.ViewHolder>()  {
 
     var productAdapterListener : ProductAdapterListener? = null
-    var obj : ArrayList<UserX> =  ArrayList<UserX>()
+    var obj : ArrayList<User> =  ArrayList<User>()
     var isFriendsRequest =  false
     interface ProductAdapterListener {
         fun onClick(position:Int,status : String)
@@ -45,7 +44,7 @@ class AcceptedFriendsAdapter(val context: Context) : RecyclerView.Adapter<Accept
             }
             Helper.loadImage(
                 context,
-                obj.get(position).photo,
+                obj.get(position).photo.profile_path,
                 holder.profile_icon,
                 R.drawable.default_profile_icon
             )

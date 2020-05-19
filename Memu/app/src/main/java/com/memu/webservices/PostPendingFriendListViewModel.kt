@@ -7,7 +7,6 @@ import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
 import com.memu.etc.*
 import com.memu.modules.friendList.FriendList
-import com.memu.modules.friendList.PendingFriendList
 
 class PostPendingFriendListViewModel(application: Application) : BaseViewModel(application) {
 
@@ -17,7 +16,7 @@ class PostPendingFriendListViewModel(application: Application) : BaseViewModel(a
 
     var apl: Application
 
-    var obj: PendingFriendList? = null
+    var obj: FriendList? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -48,7 +47,7 @@ class PostPendingFriendListViewModel(application: Application) : BaseViewModel(a
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), PendingFriendList::class.java)
+                        obj = gson.fromJson(response!!.content.toString(), FriendList::class.java)
                         if (obj!!.status.equals(Keys.STATUS_CODE)) {
                             trigger.postValue(NEXT_STEP)
 

@@ -13,7 +13,6 @@ import com.iapps.gon.etc.callback.NotifyListener
 import com.memu.etc.UserInfoManager
 import com.memu.modules.friendList.FriendList
 import com.memu.modules.friendList.User
-import com.memu.modules.friendList.UserX
 import com.memu.ui.adapters.AcceptedFriendsAdapter
 import com.memu.ui.adapters.PendingFriendsAdapter
 import com.memu.webservices.PostAcceptFriendRequestViewModel
@@ -73,7 +72,7 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
         if(result?.user_list?.size != 0) {
             val followersAdapter = AcceptedFriendsAdapter(activity!!)
             followersAdapter.isFriendsRequest = isFriendsRequest
-            followersAdapter.obj = result?.user_list as ArrayList<UserX>
+            followersAdapter.obj = result?.user_list as ArrayList<User>
             followers.adapter = followersAdapter
         }
         (followers.adapter as AcceptedFriendsAdapter).productAdapterListener =
