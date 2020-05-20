@@ -1,5 +1,7 @@
 package com.memu.modules.userSearch
 
+import com.memu.modules.friendList.User
+
 data class UserSearch(
     val count: Int = 0,
     val status: String = "",

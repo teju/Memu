@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.memu.R
 import com.memu.etc.Helper
-import com.memu.modules.mapFeeds.MapFeed
-import com.memu.modules.userSearch.User
+import com.memu.modules.friendList.User
 import kotlinx.android.synthetic.main.friends_item.view.*
 
 
@@ -33,8 +32,10 @@ class FriendsAdapter(val context: Context) : RecyclerView.Adapter<FriendsAdapter
 
         holder.pos = position
         try {
+            println("onBindViewHolder "+obj.get(position).photo.profile_path)
             Helper.loadImage(context!!,obj.get(position).photo.profile_path,holder.friend_img,R.drawable.default_profile_icon)
         } catch (e : java.lang.Exception){
+            println("onBindViewHolder Exception "+e.toString())
 
         }
         holder.friend_img.setOnClickListener {

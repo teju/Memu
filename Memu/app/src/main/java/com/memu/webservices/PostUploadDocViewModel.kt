@@ -58,6 +58,8 @@ class PostUploadDocViewModel(application: Application) : BaseViewModel(applicati
 
                         }
                     } catch (e: Exception) {
+                        System.out.println("PostUploadDocViewModel Exception "+e.toString())
+
                         showUnknowResponseErrorMessage()
                     }
                 }

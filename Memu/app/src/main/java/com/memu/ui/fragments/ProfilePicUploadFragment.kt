@@ -101,6 +101,8 @@ class ProfilePicUploadFragment : BaseFragment()  {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUploadDocViewModel.NEXT_STEP -> {
+                            System.out.println("PostUploadDocViewModel "+postUploadDocViewModel.obj?.original_path!!)
+
                             Helper.loadImage(activity!!,postUploadDocViewModel.obj?.original_path!!,profilePic)
                             Handler().postDelayed(
                                 Runnable // Using handler with postDelayed called runnable run method

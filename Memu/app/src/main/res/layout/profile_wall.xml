@@ -136,6 +136,14 @@
 
                 </androidx.recyclerview.widget.RecyclerView>
             </LinearLayout>
+            <com.iapps.libs.views.LoadingCompound
+                android:id="@+id/ld"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:clickable="true"
+                android:visibility="gone" />
+
             <TextView
                 android:layout_width="150dp"
                 android:text="Find More"
@@ -197,13 +205,6 @@
                 android:layout_height="wrap_content">
             </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
-        <com.iapps.libs.views.LoadingCompound
-            android:id="@+id/ld"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:clickable="true"
-            android:visibility="gone" />
 
     </FrameLayout>
 

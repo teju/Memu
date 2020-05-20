@@ -174,11 +174,17 @@ class MockNavigationFragment(
         alert.setOnClickListener {
             showAlertsDialog()
         }
+        if(BaseHelper.isEmpty(trip_id)) {
+            endButton.visibility = View.GONE
+        }
         endButton.setOnClickListener {
             navigation!!.stopNavigation()
             if(!BaseHelper.isEmpty(trip_id)) {
                 postEndNavigationViewModel.loadData(trip_id,distanceTravelled)
             }
+        }
+        arrow_left.setOnClickListener {
+            home().proceedDoOnBackPressed()
         }
     }
 
@@ -580,7 +586,9 @@ class MockNavigationFragment(
                             showNotifyDialog(
                                 "",postEndNavigationViewModel.obj?.message,
                                 getString(R.string.ok),"",object : NotifyListener {
-                                    override fun onButtonClicked(which: Int) { }
+                                    override fun onButtonClicked(which: Int) {
+                                        home().backToMainScreen()
+                                    }
                                 }
                             )
                         }

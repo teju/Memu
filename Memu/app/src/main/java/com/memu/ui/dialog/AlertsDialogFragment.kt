@@ -100,6 +100,9 @@ class AlertsDialogFragment : BaseDialogFragment() {
                     dismiss()
                 }
             }
+        arrow_left.setOnClickListener {
+            dismiss()
+        }
     }
 
 }

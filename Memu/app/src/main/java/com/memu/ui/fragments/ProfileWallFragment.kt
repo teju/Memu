@@ -16,11 +16,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.gms.maps.GoogleMap
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import com.mapbox.android.core.permissions.PermissionsManager
-import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraPosition
@@ -38,7 +36,7 @@ import com.mapbox.mapboxsdk.utils.BitmapUtils
 import com.memu.etc.SpacesItemDecoration
 import com.memu.etc.UserInfoManager
 import com.memu.modules.friendList.FriendList
-import com.memu.modules.userSearch.User
+import com.memu.modules.friendList.User
 import com.memu.ui.adapters.FriendsAdapter
 import com.memu.ui.adapters.PostsAdapter
 import com.memu.webservices.GetUserWallViewModel
@@ -49,9 +47,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.map_view.*
 import kotlinx.android.synthetic.main.profile_header.*
 import kotlinx.android.synthetic.main.profile_wall.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     PostFriendListViewModel.FriendsSearchResListener , OnMapReadyCallback{
@@ -136,7 +131,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
             val adapter = FriendsAdapter(context!!)
             adapter.obj = result?.user_list as ArrayList<User>
             friens_rl.adapter = adapter
-            /*(friens_rl.adapter as FriendsAdapter).productAdapterListener =
+            (friens_rl.adapter as FriendsAdapter).productAdapterListener =
                 object : FriendsAdapter.ProductAdapterListener {
                     override fun onClick(position: Int) {
                         home().setFragment(ProfileWallFragment().apply {
@@ -144,7 +139,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                             isPubLicWall = true
                         })
                     }
-                }*/
+                }
         } else {
             addMarkers(result!!)
         }
@@ -276,9 +271,24 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                 val latLng = LatLng(
                     user_list.user_list.get(x).lattitude?.toDouble()!!,
                     user_list.user_list.get(x).longitude?.toDouble()!!)
-                mapboxMap!!.addMarker(
-                    MarkerOptions()
-                        .position(latLng))
+                Picasso.get().load(user_list.user_list.get(x).photo.profile_path).into(object : com.squareup.picasso.Target {
+                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                        val bmp = BaseHelper.ScaleBitmap(bitmap,150)
+                        // loaded bitmap is here (bitmap)
+                        val iconFactory = IconFactory.getInstance(activity!!);
+                        val icon = iconFactory.fromBitmap(bmp!!);
+
+                        mapboxMap!!.addMarker(MarkerOptions()
+                            .position(latLng)
+                            .icon(icon))
+                    }
+
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+
+                    }
+
+                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
+                })
 
             }
         } catch (e : java.lang.Exception){

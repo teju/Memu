@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.profile_header.*
 import androidx.lifecycle.Observer
 import com.iapps.gon.etc.callback.NotifyListener
 import com.memu.etc.UserInfoManager
-import com.memu.modules.userSearch.User
+import com.memu.modules.friendList.User
 import kotlin.collections.ArrayList
 
 class FriendsFragment : BaseFragment() ,View.OnClickListener {
