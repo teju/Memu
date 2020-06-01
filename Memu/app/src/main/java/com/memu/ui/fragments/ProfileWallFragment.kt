@@ -55,7 +55,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     lateinit var postUploadDocViewModel: PostUploadDocViewModel
     lateinit var postFriendRequestViewModel: PostFriendRequestViewModel
     val PICK_PHOTO_PHOTO = 10010
-    var user_id = ""
+    var friend_id = ""
     var isPubLicWall = false
     private var myView: LinearLayout? = null
     private var mapboxMap: MapboxMap? = null
@@ -92,14 +92,14 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         friens_rl.setNestedScrollingEnabled(false)
         friens_rl.addItemDecoration(SpacesItemDecoration(3, spacingInPixels, true))
 
-        if(BaseHelper.isEmpty(user_id)) {
-            user_id = UserInfoManager.getInstance(activity!!).getAccountId()
+        if(BaseHelper.isEmpty(friend_id)) {
+            friend_id = UserInfoManager.getInstance(activity!!).getAccountId()
         } else {
             privateWallSettings()
         }
 
-        getUserWallViewModel.loadData(user_id)
-        posUserMainDataViewModel.loadData(user_id)
+        getUserWallViewModel.loadData(friend_id)
+        posUserMainDataViewModel.loadData(friend_id)
         postFriendListViewModel.loadData("FR","",0,this)
         postFriendListViewModel.loadData("FR","",1,this)
 
@@ -135,7 +135,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                 object : FriendsAdapter.ProductAdapterListener {
                     override fun onClick(position: Int) {
                         home().setFragment(ProfileWallFragment().apply {
-                            user_id = result?.user_list.get(position)?.freind_id!!
+                            friend_id = result?.user_list.get(position)?.freind_id!!
                             isPubLicWall = true
                         })
                     }
@@ -174,7 +174,11 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
             followers_cnt_.visibility = View.GONE
             messages_cnt.visibility = View.GONE
             friends_cnt.visibility = View.GONE
-            tvFriends.text = "Add Friends"
+            if(getUserWallViewModel.obj != null && getUserWallViewModel.obj?.is_freind!!) {
+                tvFriends.text = "Friend"
+            } else {
+                tvFriends.text = "Add Friends"
+            }
             tvfollowers.text = "Follow"
             messages.text = "Message"
             rlFriends.setOnClickListener(this)
@@ -191,7 +195,8 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
             }
             R.id.tvfollowers -> {
                 if(isPubLicWall) {
-                    postFriendRequestViewModel.loadData("FL", user_id)
+                        postFriendRequestViewModel.loadData("FL", friend_id)
+
                 } else {
                     home().setFragment(FollowersRequestFragment())
                 }
@@ -205,7 +210,9 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
             }
             R.id.tvFriends -> {
                 if(isPubLicWall) {
-                    postFriendRequestViewModel.loadData("FR", user_id)
+                    if(!getUserWallViewModel.obj?.is_freind!!) {
+                        postFriendRequestViewModel.loadData("FR", friend_id)
+                    }
                 } else {
                     home().setFragment(FollowersRequestFragment().apply {
                         isFriendsRequest = true
@@ -241,6 +248,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                     val postsAdapter =  PostsAdapter(activity!!)
                     postsAdapter.obj = getUserWallViewModel.obj?.activities!!
                     posts_rl.adapter = postsAdapter
+
                 })
             }
         }
@@ -335,7 +343,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUploadDocViewModel.NEXT_STEP -> {
-                            getUserWallViewModel.loadData(user_id)
+                            getUserWallViewModel.loadData(friend_id)
                         }
                     }
                 })

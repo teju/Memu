@@ -51,7 +51,7 @@ class FriendsFragment : BaseFragment() ,View.OnClickListener {
             object : FriendsAdapter.ProductAdapterListener {
                 override fun onClick(position: Int) {
                         home().setFragment(ProfileWallFragment().apply {
-                            user_id = posUSerSearchViewModel.obj?.user_list?.get(position)?.id!!
+                            friend_id = posUSerSearchViewModel.obj?.user_list?.get(position)?.id!!
                             isPubLicWall = true
                         })
                 }
