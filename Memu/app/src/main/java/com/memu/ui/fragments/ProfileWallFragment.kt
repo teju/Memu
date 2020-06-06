@@ -97,8 +97,11 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         } else {
             privateWallSettings()
         }
-
-        getUserWallViewModel.loadData(friend_id)
+        var type = "private"
+        if(isPubLicWall) {
+            type = "public"
+        }
+        getUserWallViewModel.loadData(friend_id,type)
         posUserMainDataViewModel.loadData(friend_id)
         postFriendListViewModel.loadData("FR","",0,this)
         postFriendListViewModel.loadData("FR","",1,this)
@@ -343,7 +346,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUploadDocViewModel.NEXT_STEP -> {
-                            getUserWallViewModel.loadData(friend_id)
+                            getUserWallViewModel.loadData(friend_id,"private")
                         }
                     }
                 })

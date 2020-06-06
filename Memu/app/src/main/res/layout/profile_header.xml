@@ -235,6 +235,7 @@
             android:layout_height="80dp">
             <TextView
                 android:layout_width="wrap_content"
+                android:text="Friends"
                 android:id="@+id/tvFriends"
                 android:paddingTop="15dp"
                 android:textSize="13dp"

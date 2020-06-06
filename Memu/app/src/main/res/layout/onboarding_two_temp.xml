@@ -186,7 +186,7 @@
                             android:layout_height="wrap_content">
                             <EditText
                                 android:layout_width="match_parent"
-                                android:hint="Registration No"
+                                android:hint="Registration No\n(KA 01 JE 1111)"
                                 android:paddingTop="7dp"
                                 android:fontFamily="@font/opensansregular"
                                 android:id="@+id/cab_reg_no"
@@ -252,7 +252,7 @@
                             android:layout_height="wrap_content">
                             <EditText
                                 android:layout_width="match_parent"
-                                android:hint="Driving License No"
+                                android:hint="Driving License No\n(KA43 202000001111)"
                                 android:paddingTop="7dp"
                                 android:fontFamily="@font/opensansregular"
                                 android:id="@+id/cab_dl"

@@ -2,7 +2,7 @@
 <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android" >
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:backgroundTint="@color/transparent"
@@ -35,20 +35,23 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_marginTop="130dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="15dp"
             android:layout_height="match_parent">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:scaleType="fitXY"
-                    android:src="@drawable/schedule_completed_tabs"
-                    android:layout_height="wrap_content">
-                </ImageView>
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/schedule_completed_tabs"></ImageView>
+
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="60dp"
                     android:id="@+id/upcoming"
                     android:fontFamily="@font/opensansregular"
                     android:textColor="@color/DarkBlue"

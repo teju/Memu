@@ -27,7 +27,7 @@ class GetUserWallViewModel(application: Application) : BaseViewModel(application
         this.apl = application
     }
 
-    fun loadData(friendID : String) {
+    fun loadData(friendID : String,type : String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -70,6 +70,7 @@ class GetUserWallViewModel(application: Application) : BaseViewModel(application
 
         genericHttpAsyncTask.setPostParams(Keys.USER_ID,UserInfoManager.getInstance(apl!!).getAccountId())
         genericHttpAsyncTask.setPostParams(Keys.FREIND_ID,friendID)
+        genericHttpAsyncTask.setPostParams(Keys.TYPE,type)
         genericHttpAsyncTask.context = apl.applicationContext
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.execute()
