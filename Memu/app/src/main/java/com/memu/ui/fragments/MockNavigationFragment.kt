@@ -9,14 +9,12 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.location.Location
 import android.os.Bundle
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import com.mapbox.android.core.location.LocationEngine
@@ -28,6 +26,7 @@ import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.annotations.IconFactory
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
+import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.modes.RenderMode
@@ -35,22 +34,13 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
-
+import com.mapbox.services.android.navigation.ui.v5.camera.NavigationCamera
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
 import com.mapbox.services.android.navigation.v5.instruction.Instruction
 import com.mapbox.services.android.navigation.v5.location.replay.ReplayRouteLocationEngine
-import com.mapbox.services.android.navigation.v5.milestone.Milestone
-import com.mapbox.services.android.navigation.v5.milestone.MilestoneEventListener
-import com.mapbox.services.android.navigation.v5.milestone.RouteMilestone
-import com.mapbox.services.android.navigation.v5.milestone.Trigger
-import com.mapbox.services.android.navigation.v5.milestone.TriggerProperty
-import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation
-import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigationOptions
-import com.mapbox.services.android.navigation.v5.navigation.NavigationEventListener
-import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute
-import com.mapbox.services.android.navigation.v5.navigation.RefreshCallback
-import com.mapbox.services.android.navigation.v5.navigation.RefreshError
-import com.mapbox.services.android.navigation.v5.navigation.RouteRefresh
+import com.mapbox.services.android.navigation.v5.milestone.*
+import com.mapbox.services.android.navigation.v5.navigation.*
+import com.mapbox.services.android.navigation.v5.navigation.camera.RouteInformation
 import com.mapbox.services.android.navigation.v5.offroute.OffRouteListener
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress
@@ -58,10 +48,6 @@ import com.mapbox.turf.TurfConstants
 import com.mapbox.turf.TurfMeasurement
 import com.memu.R
 import com.memu.etc.GPSTracker
-
-import java.lang.ref.WeakReference
-import java.util.Random
-
 import com.memu.ui.BaseFragment
 import com.memu.webservices.*
 import com.squareup.picasso.Picasso
@@ -70,6 +56,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import timber.log.Timber
+import java.lang.ref.WeakReference
+import java.util.*
 
 class MockNavigationFragment(
     var desrpoint: Point,
@@ -212,12 +200,17 @@ class MockNavigationFragment(
                 originpoint.latitude(),
                 originpoint.longitude()
             ))
-
-           // navigation!!.locationEngine = locationEngine!!
             mapboxMap!!.locationComponent.isLocationComponentEnabled = true
+           // navigation!!.locationEngine = locationEngine!!
             navigation!!.startNavigation(route!!)
         }
 
+        val camera =
+            NavigationCamera(mapboxMap!!,  navigation!!,  mapboxMap!!.locationComponent)
+        camera.start(route);
+        camera.updateCameraTrackingMode(NavigationCamera.NAVIGATION_TRACKING_MODE_NORTH);
+
+       // navigation.initialize(this, initialPosition)
     }
 
     private fun newOrigin() {
@@ -230,7 +223,7 @@ class MockNavigationFragment(
             mapboxMap!!.addMarker(MarkerOptions().position(latLng))
             if(gpsTracker.canGetLocation()) {
                 val currentLoc = LatLng(gpsTracker.latitude,gpsTracker.longitude)
-                mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 17.0))
+                mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 28.0))
             }
         }
     }
@@ -238,12 +231,14 @@ class MockNavigationFragment(
     @SuppressLint("MissingPermission", "WrongConstant")
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
+        ld.showLoadingV2()
         mapboxMap.setStyle(Style.MAPBOX_STREETS) { style ->
             val locationComponent = mapboxMap.locationComponent
             locationComponent.activateLocationComponent(activity!!, style)
             locationComponent.renderMode = RenderMode.GPS
             locationComponent.isLocationComponentEnabled = false
             navigationMapRoute = NavigationMapRoute(navigation, mapView!!, mapboxMap)
+            locationComponent.zoomWhileTracking(32.0)
             locationEngine = ReplayRouteLocationEngine()
             newOrigin()
             onMapClick()
@@ -342,6 +337,7 @@ class MockNavigationFragment(
                     if (!response.body()!!.routes().isEmpty()) {
                         this@MockNavigationFragment.route = currentRoute
                         navigationMapRoute!!.addRoute(this@MockNavigationFragment.route)
+                        ld.hide()
                         onStartRouteClick()
                     }
                 }
@@ -362,6 +358,7 @@ class MockNavigationFragment(
         instruction: String,
         milestone: Milestone
     ) {
+
         Timber.d("Milestone Event Occurred with id: %d", milestone.identifier)
         Timber.d("Voice instruction: %s", instruction)
     }
@@ -395,6 +392,8 @@ class MockNavigationFragment(
                 postEndNavigationViewModel.loadData(trip_id,distanceTravelled)
             }
         }
+        RouteInformation.create(route, location, routeProgress);
+
     }
 
     /*

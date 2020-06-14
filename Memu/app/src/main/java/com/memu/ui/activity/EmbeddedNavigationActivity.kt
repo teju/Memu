@@ -36,6 +36,7 @@ import com.mapbox.services.android.navigation.ui.v5.listeners.SpeechAnnouncement
 import com.mapbox.services.android.navigation.ui.v5.voice.SpeechAnnouncement
 import com.mapbox.services.android.navigation.v5.navigation.MapboxNavigation
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute
+import com.mapbox.services.android.navigation.v5.navigation.camera.RouteInformation
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress
 import com.memu.R
@@ -78,6 +79,7 @@ class EmbeddedNavigationActivity : AppCompatActivity(), OnNavigationReadyCallbac
             .build()
         navigationView!!.onCreate(savedInstanceState)
         navigationView!!.initialize(this, initialPosition)
+
     }
 
     override fun onNavigationReady(isRunning: Boolean) {

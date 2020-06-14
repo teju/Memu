@@ -162,7 +162,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     }
     override fun onMapReady(mapboxMap: MapboxMap) {
         try {
-
+            ld.showLoadingV2()
             this.mapboxMap = mapboxMap
             mapboxMap.setStyle(getString(R.string.navigation_guidance_day)) { style ->
                 enableLocationComponent(style)
@@ -449,6 +449,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         call: Call<DirectionsResponse>,
         response: Response<DirectionsResponse>)
     {
+        ld.hide()
         System.out.println("GetRoutes onResponse "+response)
         try {
             if (response.isSuccessful
