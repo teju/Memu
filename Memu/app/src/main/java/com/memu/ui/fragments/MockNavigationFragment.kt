@@ -94,7 +94,6 @@ class MockNavigationFragment(
     lateinit var postMApFeedAddViewModel: PostMApFeedAddViewModel
     lateinit var postStartNavigationViewModel: PostStartNavigationViewModel
     lateinit var postEndNavigationViewModel: PostEndNavigationViewModel
-    lateinit var postGetMatchedBuddiesViewModel: PostGetMatchedBuddiesViewModel
 
     // Navigation related variables
     private var locationEngine: LocationEngine? = null
@@ -162,7 +161,6 @@ class MockNavigationFragment(
         setAddAlertAPIObserver()
         setStartTripAPIObserver()
         setEndTripAPIObserver()
-        setGetMAtchedBuddiesAPIObserver()
 
         routeRefresh = RouteRefresh(Mapbox.getAccessToken(), this)
         mapView = v?.findViewById(R.id.mapView)
@@ -226,9 +224,7 @@ class MockNavigationFragment(
         }
         initializeSpeechPlayer()
         instructionView.retrieveFeedbackButton().hide()
-        showRideInfo.setOnClickListener {
-            postGetMatchedBuddiesViewModel.loadData(trip_id,trip_type)
-        }
+
     }
     /*val voiceInstructionsObserver = object : VoiceInstructionsObserver {
         override fun onNewVoiceInstructions(voiceInstructions: VoiceInstructions) {
@@ -714,47 +710,7 @@ class MockNavigationFragment(
             }
         }
     }
-    fun setGetMAtchedBuddiesAPIObserver() {
-        postGetMatchedBuddiesViewModel = ViewModelProviders.of(this).get(PostGetMatchedBuddiesViewModel::class.java).apply {
-            this@MockNavigationFragment.let { thisFragReference ->
-                isLoading.observe(thisFragReference, Observer { aBoolean ->
-                    if(aBoolean!!) {
-                        ld.showLoadingV2()
-                    } else {
-                        ld.hide()
-                    }
-                })
-                errorMessage.observe(thisFragReference, Observer { s ->
-                    showNotifyDialog(
-                        s.title, s.message!!,
-                        getString(R.string.ok),"",object : NotifyListener {
-                            override fun onButtonClicked(which: Int) { }
-                        }
-                    )
-                })
-                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
-                getTrigger().observe(thisFragReference, Observer { state ->
-                    when (state) {
-                        PostGetMatchedBuddiesViewModel.NEXT_STEP -> {
-                            if(postGetMatchedBuddiesViewModel.obj?.matched_budies != null) {
-                                setMatchedBuddiesData()
-                            }
-                        }
-                    }
-                })
-            }
-        }
-    }
 
-    fun setMatchedBuddiesData() {
-        ride_info.visibility = View.GONE
-        val sglm2 = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        matched_buddies.setLayoutManager(sglm2)
-        matched_buddies.setNestedScrollingEnabled(false)
-        val adapter = MatchingBuddiesAdapter(context!!)
-        adapter.obj = postGetMatchedBuddiesViewModel.obj?.matched_budies as ArrayList<MatchedBudy>
-        matched_buddies.adapter = adapter
-    }
 
     companion object {
         const val VOICE_INSTRUCTION_CACHE = "voice-instruction-cache"

@@ -53,18 +53,20 @@ class ActivityMain : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Paper.init(this);
+
+        mReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                showDialog(intent)
+            }
+        }
         Handler().postDelayed(
             Runnable // Using handler with postDelayed called runnable run method
 
             {
                 memo_logo_icon.visibility = View.GONE
                 triggerMainProcess()
+
                 showDialog(getIntent())
-                mReceiver = object : BroadcastReceiver() {
-                    override fun onReceive(context: Context, intent: Intent) {
-                        showDialog(intent)
-                    }
-                }
 
             }, 2 * 2000
         ) // wait for 5 s
@@ -88,8 +90,8 @@ class ActivityMain : AppCompatActivity(){
                     NotificationResponse::class.java
                 )
                 println("Notification_received showDialog " +obj.type)
-                var btn_positive = "OK"
-                var btn_negative = ""
+                var btn_positive = "Accept"
+                var btn_negative = "Reject"
                 if(obj.type.equals("alerts")) {
                     btn_positive = "OK"
                     btn_negative = ""

@@ -43,7 +43,7 @@ class MatchingRidersAdapter(val poolers : List<Rider>, val context: Context) : R
             var route_per = poolers.get(position).route_per!!
             holder.route_percent.text = route_per+"%"
         }
-       // Helper.loadImage(context!!,poolers.get(holder.position).photo.original_path,holder.profile_pic,R.drawable.default_profile_icon)
+       Helper.loadImage(context!!,poolers.get(holder.position).photo.original_path,holder.profile_pic,R.drawable.default_profile_icon)
 
     }
 }
