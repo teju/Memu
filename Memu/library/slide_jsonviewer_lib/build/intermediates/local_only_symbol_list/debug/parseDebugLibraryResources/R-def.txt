@@ -1,9 +1,0 @@
-R_DEF: Internal format may change without notice
-local
-drawable ic_keyboard_arrow_right_black_24dp
-id iv_next
-id rv_json
-id tv_property
-id tv_value
-layout json_item_adapter
-layout json_viewer_activity
