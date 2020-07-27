@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion project.ext.myCompileSdkVersion
+    buildToolsVersion project.ext.myBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion project.ext.myMinSdkVersion
+        targetSdkVersion project.ext.myTargetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+
+    lintOptions {
+        abortOnError false
+        disable "Instantiatable"
+        disable 'MissingTranslation'
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+
+dependencies {
+    //    compile 'joda-time:joda-time:2.7'
+    //    compile files('libs/joda-time-2.2.jar')
+    compile 'com.android.support:support-compat:27.0.2'
+    compile 'com.android.support:support-compat:27.0.2'
+    compile 'com.android.support:support-fragment:27.0.2'
+    compile project(':slide_jsonviewer_lib')
+    compile 'io.paperdb:paperdb:2.1'
+}

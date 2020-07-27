@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:clipChildren="false"
+    android:background="@color/soft_transparent_grey"
+    android:layout_height="match_parent">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/sv"
+        android:fillViewport="true"
+        android:background="@color/transparent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/ll"
+            android:clipChildren="false"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="match_parent"
+                android:src="@drawable/onbording_1"
+                android:adjustViewBounds="true"
+                android:visibility="gone"
+                android:layout_height="wrap_content">
+            </ImageView>
+            <include layout="@layout/onboarding_start"></include>
+            <include layout="@layout/onboarding_one"></include>
+            <include layout="@layout/onboarding_two"></include>
+            <include layout="@layout/onboarding_two_temp"></include>
+            <include layout="@layout/onboarding_three"></include>
+            <include layout="@layout/onboarding_four"></include>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+    <Button
+        android:layout_width="70dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/submit_btn"
+        android:layout_margin="15dp"
+        android:src="@drawable/chevron_right"
+        android:id="@+id/btnNExt"
+        android:layout_height="60dp">
+
+    </Button>
+    <com.iapps.libs.views.LoadingCompound
+        android:id="@+id/ld"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:visibility="gone" />
+    <View
+        android:id="@+id/shuttleView"
+        android:layout_width="0dp"
+        android:layout_marginLeft="300dp"
+        android:layout_height="0dp"
+        android:background="@android:color/holo_blue_bright"/>
+
+</RelativeLayout>

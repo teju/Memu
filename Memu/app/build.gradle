@@ -1,0 +1,115 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+/*
+apply plugin: 'io.fabric'
+*/
+
+android {
+    compileSdkVersion project.ext.myCompileSdkVersion
+    buildToolsVersion project.ext.myBuildToolsVersion
+    defaultConfig {
+        applicationId project.ext.applicationId
+        minSdkVersion project.ext.myMinSdkVersion
+        targetSdkVersion project.ext.myTargetSdkVersion
+        versionCode project.ext.myVersionCode
+        versionName project.ext.myVersionName
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    compileOptions {
+        sourceCompatibility "8"
+        targetCompatibility "8"
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/INDEX.LIST'
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.core:core-ktx:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.core:core-ktx:1.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-M2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-M2'
+    implementation("com.google.android.gms:play-services-auth:$project.ext.googleServiceVersion") {
+        exclude module: 'support-v4'
+    }
+
+//    implementation ('com.google.android.gms:play-services-safetynet:11.6.2') {
+//        exclude module: 'support-v4'
+//    }
+    implementation project(':library:common_lib')
+
+    implementation 'com.github.hkk595:Resizer:v1.5'
+    implementation "com.google.android.gms:play-services-maps:10.0.1"
+
+    implementation("com.google.android.gms:play-services-fitness:$project.ext.googleServiceVersion") {
+        exclude module: 'support-v4'
+    }
+
+    implementation 'com.github.mike14u:shimmer-recyclerview-x:1.0.1'
+    implementation('com.jakewharton:butterknife:8.4.0') {
+        exclude group: 'com.google.guava'
+    }
+    kapt 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation 'com.google.firebase:firebase-messaging:+'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places-v9:0.11.+'
+    implementation 'com.android.support:appcompat-v7:24.2.1'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation:0.42.6'
+    //implementation 'com.mapbox.navigation:core:1.0.+'
+
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    implementation 'com.google.android.libraries.places:places:1.0.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-core:3.0.0'
+
+    implementation("com.google.android.gms:play-services-places:$project.ext.googleServiceVersion") {
+        exclude module: 'support-v4'
+    }
+    implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
+
+    implementation("com.google.android.libraries.places:places:1.0.0") {
+        exclude module: 'support-v4'
+    }
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
+
+    implementation 'com.google.guava:guava:27.0.1-android'
+    compile'io.reactivex.rxjava2:rxjava:2.0.6'
+
+}
+apply plugin: 'com.google.gms.google-services'
