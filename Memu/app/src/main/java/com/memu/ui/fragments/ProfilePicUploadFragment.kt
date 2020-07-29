@@ -70,7 +70,6 @@ class ProfilePicUploadFragment : BaseFragment()  {
                 val imageuri = data?.getData();// Get intent
                 // Get real path and show over text view
                 val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
-                val bitmap = MediaStore.Images.Media.getBitmap(activity?.getContentResolver(), imageuri);
               //  profilePic.setImageBitmap(bitmap);
                 System.out.println("onActivityResult12 onActivityResult")
 

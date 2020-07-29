@@ -20,6 +20,7 @@ class PendingFriendsAdapter(val context: Context) : RecyclerView.Adapter<Pending
     var isFriendsRequest =  false
     interface ProductAdapterListener {
         fun onClick(position:Int,status : String)
+        fun onClickOfList(position:Int,status : String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -53,12 +54,16 @@ class PendingFriendsAdapter(val context: Context) : RecyclerView.Adapter<Pending
         holder.accept_remove.setOnClickListener {
             productAdapterListener?.onClick(holder.pos,"Accepted")
         }
+        holder.clRoot.setOnClickListener {
+            productAdapterListener?.onClickOfList(holder.pos,"Remove")
+        }
     }
 
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         var pos : Int = 0
         var llfollowers_rect = view.llfollowers_rect
+        var clRoot = view.clRoot
         var accept_remove = view.accept_remove
         var user_name = view.user_name
         var profile_icon = view.profile_icon

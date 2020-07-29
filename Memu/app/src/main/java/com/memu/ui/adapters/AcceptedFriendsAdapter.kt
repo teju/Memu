@@ -41,10 +41,10 @@ class AcceptedFriendsAdapter(val context: Context) : RecyclerView.Adapter<Accept
         try {
             holder.user_name.text = obj.get(position).name
             holder.accept_remove.setOnClickListener {
-                productAdapterListener?.onClick(holder.pos,"Reject")
+                productAdapterListener?.onClick(holder.pos,"Remove")
             }
             holder.clRoot.setOnClickListener {
-                productAdapterListener?.onClickOfList(holder.pos,"Reject")
+                productAdapterListener?.onClickOfList(holder.pos,"Remove")
             }
             Helper.loadImage(
                 context,

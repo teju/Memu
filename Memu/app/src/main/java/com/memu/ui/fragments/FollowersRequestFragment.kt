@@ -163,7 +163,14 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
                                            )
                                        }
                                    }
-                            }
+
+                                    override fun onClickOfList(position: Int, status: String) {
+                                        home().setFragment(ProfileWallFragment().apply {
+                                            friend_id =  postPendingFriendListViewModel.obj!!?.user_list?.get(position).freind_id
+                                            isPubLicWall = true
+                                        })
+                                    }
+                                }
                         }
                     }
                 })
@@ -205,6 +212,13 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
                                     override fun onClick(position: Int,status : String) {
                                         postAcceptFriendRequestViewModel.loadData("FL",
                                             postFollowersListViewModel.obj!!.user_list.get(position).freind_id,"Remove")
+                                    }
+
+                                    override fun onClickOfList(position: Int, status: String) {
+                                        home().setFragment(ProfileWallFragment().apply {
+                                            friend_id =  postFollowersListViewModel.obj!!?.user_list?.get(position).freind_id
+                                            isPubLicWall = true
+                                        })
                                     }
                                 }
                         }

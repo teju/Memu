@@ -1,5 +1,9 @@
 package com.memu.ui.activity
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.os.Build
@@ -24,10 +28,12 @@ import io.paperdb.Paper
 import java.util.ArrayList
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import com.google.gson.GsonBuilder
 import com.memu.modules.notification.NotificationResponse
 import android.os.Handler
 import android.view.View
+import androidx.core.app.NotificationCompat
 import com.mapbox.mapboxsdk.MapStrictMode
 import com.memu.R
 import com.memu.ui.fragments.*
@@ -81,58 +87,72 @@ class ActivityMain : AppCompatActivity(){
     }
 
     fun showDialog(intent : Intent){
+        val gson = GsonBuilder().create()
+
         if(intent.getExtras()?.getString("title") != null) {
 
             try {
-                val gson = GsonBuilder().create()
                 val obj = gson.fromJson(
                     intent.getExtras()?.getString("body"),
-                    NotificationResponse::class.java
-                )
-                println("Notification_received showDialog " +obj.type)
-                var btn_positive = "Accept"
-                var btn_negative = "Reject"
-                if(obj.type.equals("alerts")) {
-                    btn_positive = "OK"
-                    btn_negative = ""
+                    NotificationResponse::class.java)
+                println("Notification_received showDialog " +obj)
+
+                var btn_positive = "OK"
+                var btn_negative = ""
+                if(obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
+                    btn_positive = "Accept"
+                    btn_negative = "Reject"
                 }
+
+                sendNotification(intent.getExtras()?.getString("title")!!,
+                    intent.getExtras()?.getString("message")!!)
                 showNotifyDialog(
                     intent.getExtras()?.getString("title"),
                     intent.getExtras()?.getString("message"),
                     btn_positive, btn_negative, object : NotifyListener {
                         override fun onButtonClicked(which: Int) {
-                            var trip_id = obj.trip_id
-                            var trip_rider_id = obj.trip_rider_id
-                            var status = ""
-                            var type = obj.type
-                            status = "accept"
-
-                            if (which == NotifyDialogFragment.BUTTON_NEGATIVE) {
-                                status = "reject"
-                            }
-                            if (which == NotifyDialogFragment.BUTTON_POSITIVE) {
+                            if (obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
+                                var trip_id = obj.trip_id
+                                var trip_rider_id = obj.trip_rider_id
+                                var status = ""
+                                var type = obj.type
                                 status = "accept"
-                            }
-                            System.out.println(
-                                "Notification_received key mNotificationReceiver trip_id " +
-                                        trip_id + " status " + status + " trip_rider_id "
-                                        + trip_rider_id + " type " + type + " postacceptRejectViewModel " + postacceptRejectViewModel
-                            )
-                            if(trip_id != null && status != null && trip_rider_id != null
-                                && obj.type != null) {
-                                postacceptRejectViewModel?.loadData(
-                                    trip_id,
-                                    status,
-                                    trip_rider_id,
-                                    obj.type
-                                )
+
+                                if (which == NotifyDialogFragment.BUTTON_NEGATIVE) {
+                                    status = "reject"
+                                }
+                                if (which == NotifyDialogFragment.BUTTON_POSITIVE) {
+                                    status = "accept"
+                                }
+
+                                if (trip_id != null && status != null && trip_rider_id != null
+                                    && obj.type != null
+                                ) {
+                                    postacceptRejectViewModel?.loadData(
+                                        trip_id,
+                                        status,
+                                        trip_rider_id,
+                                        obj.type
+                                    )
+                                }
+                            } else {
+                                if(obj.type.equals("FR",ignoreCase = true)) {
+                                    setFragment(FollowersRequestFragment().apply {
+                                        isFriendsRequest = true
+
+                                    })
+                                } else if(obj.type.equals("FL",ignoreCase = true)) {
+                                    setFragment(FollowersRequestFragment())
+                                }
                             }
                         }
                     }
                 )
             } catch (e : Exception){
+                println("Notification_received Exception " +e.toString())
 
             }
+
         }
 
     }
@@ -151,7 +171,7 @@ class ActivityMain : AppCompatActivity(){
             f.notify_messsage = messsage
             f.button_positive = button_positive
             f.button_negative = button_negative
-            f.isCancelable = false
+            f.isCancelable = true
             f.show(supportFragmentManager, NotifyDialogFragment.TAG)
         } catch (e : Exception){
             System.out.println("Notification_received Exception " +e.toString())
@@ -212,13 +232,65 @@ class ActivityMain : AppCompatActivity(){
 
     }
 
-    override fun onPause() {
-        super.onPause()
 
+    private fun sendNotification(title:String,_description:String) {
+        var notifyManager: NotificationManager? = null
+        val NOTIFY_ID = 1002
+
+        val name = "KotlinApplication"
+        val id = "kotlin_app"
+        val description = "kotlin_app_first_channel"
+
+        val intent: Intent
+        val pendingIntent: PendingIntent
+        val builder: NotificationCompat.Builder
+
+        if (notifyManager == null) {
+            notifyManager = getSystemService(Context.NOTIFICATION_SERVICE)
+                    as NotificationManager
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            var mChannel = notifyManager.getNotificationChannel(id)
+            if (mChannel == null) {
+                mChannel = NotificationChannel(id, name, importance)
+                mChannel.description = description
+                mChannel.enableVibration(true)
+                mChannel.lightColor = Color.GREEN
+                mChannel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+                notifyManager.createNotificationChannel(mChannel)
+            }
+        }
+
+        builder = NotificationCompat.Builder(this, id)
+
+        intent = Intent(this, ActivityMain::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+        builder.setContentTitle(title)  // required
+            .setSmallIcon(R.drawable.memu_logo) // required
+            .setContentText(_description)  // required
+            .setDefaults(Notification.DEFAULT_ALL)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .setTicker(description)
+            .setVibrate(longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400))
+
+        val dismissIntent = Intent(this, ActivityMain::class.java)
+        dismissIntent.action = "DISMISS"
+        dismissIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        val pendingDismissIntent = PendingIntent.getActivity(this, 0, dismissIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT)
+        val dismissAction = NotificationCompat.Action(R.drawable.memu_logo,
+            "OK", pendingDismissIntent)
+        builder.addAction(dismissAction)
+
+        val notification = builder.build()
+        notifyManager.notify(NOTIFY_ID, notification)
     }
-
     fun triggerMainProcess(){
-
         if(!BaseHelper.isEmpty(UserInfoManager.getInstance(this).authToken))
             setFragment(HomeFragment())
         else

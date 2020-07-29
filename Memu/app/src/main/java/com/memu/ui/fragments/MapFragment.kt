@@ -196,6 +196,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
         }
     }
+
     private fun addDestinationIconSymbolLayer(@io.reactivex.annotations.NonNull loadedMapStyle: Style) {
         val drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.map_marker, null);
         val mBitmap = BitmapUtils.getBitmapFromDrawable(drawable);
@@ -242,7 +243,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             }
             Keys.POOLING_OFFER_RIDE,Keys.POOLING_FIND_RIDE -> {
                 postnviteRideGiversViewModel.loadData(trip_rider_id!!, type!!)
-                shortes_route_result.visibility = View.GONE
+                shortes_route_result.visibility = View.VISIBLE
                 sos.visibility = View.VISIBLE
                 fledit_recuring.visibility = View.GONE
                 startButton.visibility = View.VISIBLE
@@ -448,7 +449,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         response: Response<DirectionsResponse>)
     {
         ld.hide()
-        System.out.println("GetRoutes onResponse "+response)
         try {
             if (response.isSuccessful
                 && response.body() != null
@@ -528,6 +528,8 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     }
 
     fun addButtons(routes: List<DirectionsRoute>) {
+        System.out.println("GetRoutes onResponse "+routes.size)
+
         for(i in  0..(routes.size - 1)) {
             if (i == 0) {
                 rloption_a.visibility = View.VISIBLE
@@ -537,7 +539,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             } else if (i == 1) {
                 rloption_b.visibility = View.VISIBLE
                 var duration = splitToComponentTimes(BigDecimal(routes.get(i).duration()!!))
-
                 option_b_time.text = duration
                 option_b_dist.text = FormatDistance(routes.get(i).distance()!!,"km")
             } else {

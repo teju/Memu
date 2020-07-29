@@ -288,7 +288,7 @@ class MockNavigationFragment(
     @SuppressLint("MissingPermission", "WrongConstant")
     override fun onMapReady(mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
-        ld.showLoadingV2()
+
         mapboxMap.setStyle(Style.MAPBOX_STREETS) { style ->
             mockLocationEngine = ReplayRouteLocationEngine()
 
@@ -301,7 +301,12 @@ class MockNavigationFragment(
             locationComponent.zoomWhileTracking(32.0)
             locationEngine = ReplayRouteLocationEngine()
             newOrigin(LatLng(originpoint.latitude(),originpoint.longitude()))
-            showRoute()
+            if(currentRoute != null) {
+                ld.showLoadingV2()
+                showRoute()
+            } else {
+                reroute(originpoint.longitude(),originpoint.latitude())
+            }
             val currentCameraPosition =
                 mapboxMap!!.cameraPosition
             val currentZoom = currentCameraPosition.zoom
@@ -417,14 +422,17 @@ class MockNavigationFragment(
     }
 
     override fun userOffRoute(location: Location) {
+        reroute(location.longitude,location.latitude)
+    }
+
+    fun reroute(longitude : Double,latitude : Double ) {
         ld.showLoadingV2()
-        val origin = Point.fromLngLat(location.longitude, location.latitude)
+        val origin = Point.fromLngLat(longitude, latitude)
         Snackbar.make(v!!, "User Off Route", Snackbar.LENGTH_SHORT).show();
         originpoint = origin
         navigationMapRoute?.removeRoute()
         navigationRoute(origin)
     }
-
     override fun onProgressChange(location: Location, routeProgress: RouteProgress) {
         mapboxMap!!.locationComponent.forceLocationUpdate(location)
 
