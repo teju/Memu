@@ -102,6 +102,9 @@ class ActivityMain : AppCompatActivity(){
                 if(obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
                     btn_positive = "Accept"
                     btn_negative = "Reject"
+                } else {
+                    btn_positive = "Ok"
+                    btn_negative = ""
                 }
 
                 sendNotification(intent.getExtras()?.getString("title")!!,

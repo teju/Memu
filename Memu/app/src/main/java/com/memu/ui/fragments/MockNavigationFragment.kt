@@ -625,12 +625,7 @@ class MockNavigationFragment(
                     }
                 })
                 errorMessage.observe(thisFragReference, Observer { s ->
-                    showNotifyDialog(
-                        s.title, s.message!!,
-                        getString(R.string.ok),"",object : NotifyListener {
-                            override fun onButtonClicked(which: Int) { }
-                        }
-                    )
+
                 })
                 isNetworkAvailable.observe(thisFragReference, obsNoInternet)
                 getTrigger().observe(thisFragReference, Observer { state ->
@@ -655,12 +650,7 @@ class MockNavigationFragment(
                     }
                 })
                 errorMessage.observe(thisFragReference, Observer { s ->
-                    showNotifyDialog(
-                        s.title, s.message!!,
-                        getString(R.string.ok),"",object : NotifyListener {
-                            override fun onButtonClicked(which: Int) { }
-                        }
-                    )
+
                 })
                 isNetworkAvailable.observe(thisFragReference, obsNoInternet)
                 getTrigger().observe(thisFragReference, Observer { state ->

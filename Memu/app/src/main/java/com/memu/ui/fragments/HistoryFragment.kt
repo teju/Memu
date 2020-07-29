@@ -66,8 +66,26 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                 } else {
                     Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
                 }
-                if(!which.status.contains("complete", ignoreCase = true)) {
-                    if(which.type.equals("offer_ride",ignoreCase = true)) {
+                if(!which.status.contains("complete", ignoreCase = true) && !which.status.contains("cancelled", ignoreCase = true)) {
+                    if (which.status.contains("confirm", ignoreCase = true)
+                        || which.status.contains("started", ignoreCase = true)) {
+                        val maporiginPoint = Point.fromLngLat(
+                            which.from_address.longitude.toDouble(),
+                            which.from_address.lattitude.toDouble()
+                        )
+                        val destinationPoint = Point.fromLngLat(
+                            which.to_address.longitude.toDouble(),
+                            which.to_address.lattitude.toDouble()
+                        )
+                        home().setFragment(
+                            MockNavigationFragment(
+                                destinationPoint!!,
+                                maporiginPoint!!
+                            ).apply {
+                                this.trip_id = which.id
+                                this.trip_type = which.type
+                            })
+                    } else {
                         home().setFragment(MapFragment().apply {
                             srcLat = which.from_address.lattitude.toDouble()
                             srcLng = which.from_address.longitude.toDouble()
@@ -76,34 +94,6 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                             this.type = which.type
                             this.trip_rider_id = which.id
                         })
-                    } else {
-                        if (which.status.contains("confirm", ignoreCase = true)) {
-                            val maporiginPoint = Point.fromLngLat(
-                                which.from_address.longitude.toDouble(),
-                                which.from_address.lattitude.toDouble()
-                            )
-                            val destinationPoint = Point.fromLngLat(
-                                which.to_address.longitude.toDouble(),
-                                which.to_address.lattitude.toDouble()
-                            )
-                            home().setFragment(
-                                MockNavigationFragment(
-                                    destinationPoint!!,
-                                    maporiginPoint!!
-                                ).apply {
-                                    this.trip_id = which.id
-                                    this.trip_type = which.type
-                                })
-                        } else {
-                            home().setFragment(MapFragment().apply {
-                                srcLat = which.from_address.lattitude.toDouble()
-                                srcLng = which.from_address.longitude.toDouble()
-                                destLng = which.to_address.longitude.toDouble()
-                                destLat = which.to_address.lattitude.toDouble()
-                                this.type = which.type
-                                this.trip_rider_id = which.id
-                            })
-                        }
                     }
                 }
             }
