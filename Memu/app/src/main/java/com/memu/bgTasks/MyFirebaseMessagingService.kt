@@ -127,7 +127,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         contentView.setTextViewText(R.id.text, message);
         val buildNotification = mBuilder.build()
         val mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        mNotifyMgr.notify(1, buildNotification)
+        //mNotifyMgr.notify(1, buildNotification)
     }
 
 }

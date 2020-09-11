@@ -107,8 +107,8 @@ class ActivityMain : AppCompatActivity(){
                     btn_negative = ""
                 }
 
-                sendNotification(intent.getExtras()?.getString("title")!!,
-                    intent.getExtras()?.getString("message")!!)
+               // sendNotification(intent.getExtras()?.getString("title")!!,
+                 //   intent.getExtras()?.getString("message")!!)
                 showNotifyDialog(
                     intent.getExtras()?.getString("title"),
                     intent.getExtras()?.getString("message"),

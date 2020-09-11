@@ -244,7 +244,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             Keys.POOLING_OFFER_RIDE,Keys.POOLING_FIND_RIDE -> {
                 postnviteRideGiversViewModel.loadData(trip_rider_id!!, type!!)
                 shortes_route_result.visibility = View.VISIBLE
-                sos.visibility = View.VISIBLE
+                sos.visibility = View.GONE
                 fledit_recuring.visibility = View.GONE
                 startButton.visibility = View.VISIBLE
             }
