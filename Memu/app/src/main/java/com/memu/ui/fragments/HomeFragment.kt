@@ -209,6 +209,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         bike_offer_ride.setOnClickListener(this)
         bike_find_ride.setOnClickListener(this)
         history_icon.setOnClickListener(this)
+        wallet.setOnClickListener(this)
         edtVia.setOnClickListener(this)
         my_profile.setOnClickListener(this)
 
@@ -375,6 +376,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 reset()
                 home_mapView.removeAllViews()
                 home().setFragment(HistoryFragment().apply {})
+            }
+            R.id.wallet -> {
+                home().setFragment(WalletFragment().apply {})
             }
             R.id.date -> {
 

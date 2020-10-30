@@ -77,6 +77,14 @@ class Keys : BaseKeys() {
         val SEARCHBYLOC = "searchByLoc"
         val FREIND_ID = "freind_id"
         val REQUEST = "request"
+        val MID = "MID"
+        val ORDER_ID = "ORDER_ID"
+        val CUST_ID = "CUST_ID"
+        val CHANNEL_ID = "CHANNEL_ID"
+        val TXN_AMOUNT = "TXN_AMOUNT"
+        val WEBSITE = "WEBSITE"
+        val CALLBACK_URL = "CALLBACK_URL"
+        val INDUSTRY_TYPE_ID = "INDUSTRY_TYPE_ID"
 
         @kotlin.jvm.JvmField
         var GCM_DT : String = "dt"

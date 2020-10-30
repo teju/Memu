@@ -11,5 +11,6 @@ data class NotificationResponse(
     val trip_id: String = "",
     val trip_rider_id: String = "",
     val type: String = "",
-    val user_id: String = ""
+    val user_id: String = "",
+    val freind_id: String = ""
 )

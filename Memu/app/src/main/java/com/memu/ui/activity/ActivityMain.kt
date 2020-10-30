@@ -37,7 +37,10 @@ import androidx.core.app.NotificationCompat
 import com.mapbox.mapboxsdk.MapStrictMode
 import com.memu.R
 import com.memu.ui.fragments.*
+import com.memu.webservices.PostAcceptFriendRequestViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.followers_request_fragment.*
+import kotlinx.android.synthetic.main.generic_dialog.*
 import kotlinx.android.synthetic.main.home_fragment.ld
 
 
@@ -53,7 +56,8 @@ class ActivityMain : AppCompatActivity(){
     private var mReceiver: BroadcastReceiver? = null
     private var mIntentFilter: IntentFilter? = null
     lateinit var postacceptRejectViewModel: PostacceptRejectViewModel
-
+    lateinit var postAcceptFriendRequestViewModel: PostAcceptFriendRequestViewModel
+    var isFriendsReques = true
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +88,7 @@ class ActivityMain : AppCompatActivity(){
 
         mIntentFilter = IntentFilter("OPEN_NEW_ACTIVITY")
         BaseHelper.getHAshKey(this)
+        setAcceptFriendRequestObserver()
     }
 
     fun showDialog(intent : Intent){
@@ -99,58 +104,75 @@ class ActivityMain : AppCompatActivity(){
 
                 var btn_positive = "OK"
                 var btn_negative = ""
-                if(obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
+                if(obj.type.equals("find_ride") || obj.type.equals("offer_ride") ||
+                    obj.type.equals("FR",ignoreCase = true) || obj.type.equals("FL",ignoreCase = true)) {
                     btn_positive = "Accept"
-                    btn_negative = "Reject"
+                    btn_negative = "Ignore"
                 } else {
-                    btn_positive = "Ok"
+                    btn_positive = "Great"
                     btn_negative = ""
                 }
 
                // sendNotification(intent.getExtras()?.getString("title")!!,
                  //   intent.getExtras()?.getString("message")!!)
+                var drawable =0
+                if (obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
+                    drawable = R.drawable.carpoolcar
+                } else if(obj.type.equals("FR",ignoreCase = true)) {
+                    drawable = R.drawable.myfriends
+                }else if(obj.type.equals("FL",ignoreCase = true)) {
+                    drawable = R.drawable.notificationsmain
+                }
                 showNotifyDialog(
-                    intent.getExtras()?.getString("title"),
-                    intent.getExtras()?.getString("message"),
-                    btn_positive, btn_negative, object : NotifyListener {
-                        override fun onButtonClicked(which: Int) {
-                            if (obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
-                                var trip_id = obj.trip_id
-                                var trip_rider_id = obj.trip_rider_id
-                                var status = ""
-                                var type = obj.type
+                intent.getExtras()?.getString("title"),
+                intent.getExtras()?.getString("message"),
+                btn_positive, btn_negative, object : NotifyListener {
+                    override fun onButtonClicked(which: Int) {
+                        if (obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
+                            var trip_id = obj.trip_id
+                            var trip_rider_id = obj.trip_rider_id
+                            var status = ""
+                            var type = obj.type
+                            status = "accept"
+
+                            if (which == NotifyDialogFragment.BUTTON_NEGATIVE) {
+                                status = "reject"
+                            }
+                            if (which == NotifyDialogFragment.BUTTON_POSITIVE) {
                                 status = "accept"
+                            }
 
-                                if (which == NotifyDialogFragment.BUTTON_NEGATIVE) {
-                                    status = "reject"
-                                }
-                                if (which == NotifyDialogFragment.BUTTON_POSITIVE) {
-                                    status = "accept"
-                                }
+                            if (trip_id != null && status != null && trip_rider_id != null
+                                && obj.type != null
+                            ) {
+                                postacceptRejectViewModel?.loadData(
+                                    trip_id,
+                                    status,
+                                    trip_rider_id,
+                                    obj.type
+                                )
+                            }
+                        } else {
+                            if(obj.type.equals("FR",ignoreCase = true)) {
+                                isFriendsReques = true
 
-                                if (trip_id != null && status != null && trip_rider_id != null
-                                    && obj.type != null
-                                ) {
-                                    postacceptRejectViewModel?.loadData(
-                                        trip_id,
-                                        status,
-                                        trip_rider_id,
-                                        obj.type
+                                if(which == NotifyDialogFragment.BUTTON_POSITIVE) {
+                                    isFriendsReques = true
+                                    postAcceptFriendRequestViewModel.loadData(
+                                        "FR",
+                                        obj.freind_id, "Accept"
                                     )
                                 }
-                            } else {
-                                if(obj.type.equals("FR",ignoreCase = true)) {
-                                    setFragment(FollowersRequestFragment().apply {
-                                        isFriendsRequest = true
 
-                                    })
-                                } else if(obj.type.equals("FL",ignoreCase = true)) {
+                            } else if(obj.type.equals("FL",ignoreCase = true)) {
+                                isFriendsReques = false
+                                if(which == NotifyDialogFragment.BUTTON_POSITIVE) {
                                     setFragment(FollowersRequestFragment())
                                 }
                             }
                         }
                     }
-                )
+                },drawable)
             } catch (e : Exception){
                 println("Notification_received Exception " +e.toString())
 
@@ -165,7 +187,7 @@ class ActivityMain : AppCompatActivity(){
         messsage: String?,
         button_positive:String?,
         button_negative: String?,
-        n: NotifyListener){
+        n: NotifyListener,drawable : Int){
         try {
             val f = NotifyDialogFragment().apply {
                 this.listener = n
@@ -174,6 +196,7 @@ class ActivityMain : AppCompatActivity(){
             f.notify_messsage = messsage
             f.button_positive = button_positive
             f.button_negative = button_negative
+            f.image_drawable = drawable
             f.isCancelable = true
             f.show(supportFragmentManager, NotifyDialogFragment.TAG)
         } catch (e : Exception){
@@ -486,6 +509,42 @@ class ActivityMain : AppCompatActivity(){
 
         MAIN_FLOW_INDEX = 0
     }
+    fun setAcceptFriendRequestObserver() {
+        postAcceptFriendRequestViewModel = ViewModelProviders.of(this).get(
+            PostAcceptFriendRequestViewModel::class.java).apply {
+            this@ActivityMain.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        },0)
+                })
+                getTrigger().observe(thisFragReference, Observer { state ->
+
+                    when (state) {
+                        PostAcceptFriendRequestViewModel.NEXT_STEP -> {
+                            if (isFriendsReques) {
+                                setFragment(FollowersRequestFragment().apply {
+                                    isFriendsRequest = true
+
+                                })
+                            } else {
+
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
 
     fun setAcceptRejectAPIObserver() {
         postacceptRejectViewModel = ViewModelProviders.of(this).get(PostacceptRejectViewModel::class.java).apply {
@@ -502,8 +561,7 @@ class ActivityMain : AppCompatActivity(){
                         s.title, s.message!!,
                         getString(R.string.ok),"",object : NotifyListener {
                             override fun onButtonClicked(which: Int) { }
-                        }
-                    )
+                        },0)
                 })
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
@@ -513,7 +571,7 @@ class ActivityMain : AppCompatActivity(){
                                 getString(R.string.ok),"",object : NotifyListener {
                                     override fun onButtonClicked(which: Int) { }
                                 }
-                            )
+                            ,0)
                         }
 
                     }

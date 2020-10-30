@@ -283,24 +283,35 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                 val latLng = LatLng(
                     user_list.user_list.get(x).lattitude?.toDouble()!!,
                     user_list.user_list.get(x).longitude?.toDouble()!!)
-                Picasso.get().load(user_list.user_list.get(x).photo.profile_path).into(object : com.squareup.picasso.Target {
-                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                        val bmp = BaseHelper.ScaleBitmap(bitmap,150)
-                        // loaded bitmap is here (bitmap)
-                        val iconFactory = IconFactory.getInstance(activity!!);
-                        val icon = iconFactory.fromBitmap(bmp!!);
+                try {
+                    Picasso.get().load(user_list.user_list.get(x).photo.profile_path)
+                        .into(object : com.squareup.picasso.Target {
+                            override fun onBitmapLoaded(
+                                bitmap: Bitmap?,
+                                from: Picasso.LoadedFrom?
+                            ) {
+                                val bmp = BaseHelper.ScaleBitmap(bitmap, 150)
+                                // loaded bitmap is here (bitmap)
+                                val iconFactory = IconFactory.getInstance(activity!!);
+                                val icon = iconFactory.fromBitmap(bmp!!);
 
-                        mapboxMap!!.addMarker(MarkerOptions()
-                            .position(latLng)
-                            .icon(icon))
-                    }
+                                mapboxMap!!.addMarker(
+                                    MarkerOptions()
+                                        .position(latLng)
+                                        .icon(icon)
+                                )
+                            }
 
-                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
 
-                    }
+                            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
 
-                    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
-                })
+                            }
+
+                            override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {}
+                        })
+                } catch (e: Exception){
+
+                }
 
             }
         } catch (e : java.lang.Exception){

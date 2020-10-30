@@ -2,13 +2,17 @@ package com.memu.ui.dialog
 
 import android.os.Bundle
 import android.text.Html
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import com.memu.R
 import kotlinx.android.synthetic.main.generic_dialog.*
+
 
 class NotifyDialogFragment : BaseDialogFragment() {
 
@@ -25,7 +29,7 @@ class NotifyDialogFragment : BaseDialogFragment() {
     var button_negative : String? = ""
     var useHtml = false
     lateinit var listener: NotifyListener
-
+    var image_drawable = 0
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(DATEPICKERFRAGMENT_LAYOUT, container, false)
         return v
@@ -36,7 +40,7 @@ class NotifyDialogFragment : BaseDialogFragment() {
         if(BaseHelper.isEmpty(notify_tittle)){
             vw_title.visibility = View.GONE
         }else{
-            vw_title.visibility = View.VISIBLE
+            vw_title.visibility = View.GONE
             vw_title.text = notify_tittle
         }
 
@@ -69,7 +73,19 @@ class NotifyDialogFragment : BaseDialogFragment() {
                 dismiss()
             }
         })
+        if(image_drawable != 0) {
+            right_img.visibility = View.VISIBLE
+            right_img.setImageDrawable(context?.getDrawable(image_drawable))
+        } else {
+            val params = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT
+            )
 
+            params.setMargins(5, 10, 5, 0)
+            vw_text.layoutParams = params
+            vw_text.textAlignment = View.TEXT_ALIGNMENT_CENTER
+            vw_text.gravity = Gravity.CENTER_HORIZONTAL
+        }
     }
 
 }

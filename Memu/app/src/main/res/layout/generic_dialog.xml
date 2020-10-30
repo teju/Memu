@@ -5,70 +5,120 @@
               android:layout_height="match_parent">
     <androidx.cardview.widget.CardView
             xmlns:android="http://schemas.android.com/apk/res/android"
-                                       xmlns:app="http://schemas.android.com/apk/res-auto"
-                                       android:id="@+id/cv"
-                                       android:layout_width="match_parent"
-                                       android:layout_height="wrap_content"
-                                       app:cardCornerRadius="15dp"
-                                       android:layout_centerVertical="true"
-                                       app:cardElevation="10dp"
-                                       app:contentPadding="10dp">
-
-    <LinearLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="15dp"
+            android:layout_centerVertical="true"
+            app:cardElevation="10dp"
+            app:contentPadding="10dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:background="@color/White"
             android:layout_height="wrap_content">
-        <TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:text="@string/app_name"
-                android:layout_gravity="center_horizontal"
                 android:id="@+id/vw_title"
-                android:textAlignment="center"
+                android:visibility="gone"
                 android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_height="wrap_content">
-        </TextView>
-        <TextView
-                android:layout_width="wrap_content"
-                android:fontFamily="@font/poppins_regular"
-                android:id="@+id/vw_text"
-                android:textAlignment="center"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:textSize="16dp"
+            </TextView>
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-        </TextView>
-        <LinearLayout
+                <TextView
+                    android:layout_width="match_parent"
+                    android:fontFamily="@font/poppins_regular"
+                    android:id="@+id/vw_text"
+                    android:layout_marginRight="100dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="18dp"
+                    android:textColor="#1B245C"
+                    android:layout_height="wrap_content">
+                </TextView>
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:src="@drawable/myfriends"
+                    android:id="@+id/right_img"
+                    android:layout_marginRight="-20dp"
+                    android:visibility="gone"
+                    android:layout_marginTop="-0dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="100dp">
+
+                </ImageView>
+
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="50dp"
+                    android:id="@+id/profile_pic"
+                    android:src="@drawable/default_profile_icon"
+                    android:layout_height="50dp">
+                </de.hdodenhof.circleimageview.CircleImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:id="@+id/user_name"
+                    android:layout_marginRight="100dp"
+                    android:textSize="18dp"
+                    android:layout_marginLeft="10dp"
+                    android:text="user"
+                    android:textColor="#1B245C"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content">
+                </TextView>
+
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:gravity="center_horizontal"
                 android:layout_height="wrap_content">
-            <androidx.appcompat.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="120dp"
                     android:text="@string/cancel"
                     android:id="@+id/btn_negative"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:textSize="16dp"
-                    android:textColor="@color/themeBlue"
-                    android:background="@drawable/themewhite_rounded_rectangle"
+                    android:textColor="@color/white"
+                    android:backgroundTint="#414141"
+                    android:background="@drawable/rounded_corner_btn_border_enabled"
                     android:layout_marginEnd="30dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_height="wrap_content">
-            </androidx.appcompat.widget.AppCompatButton>
-            <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="120dp"
-                android:text="@string/ok"
-                android:id="@+id/btn_positive"
-                android:textSize="16dp"
-                android:textColor="@color/themeBlue"
-                android:background="@drawable/themewhite_rounded_rectangle"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="wrap_content">
-            </androidx.appcompat.widget.AppCompatButton>
+                    android:layout_height="50dp">
+                </androidx.appcompat.widget.AppCompatButton>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="120dp"
+                    android:text="@string/ok"
+                    android:id="@+id/btn_positive"
+                    android:textSize="16dp"
+                    android:textColor="@color/white"
+                    android:backgroundTint="#0028FF"
+                    android:background="@drawable/rounded_corner_btn_border_enabled"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="50dp">
+                </androidx.appcompat.widget.AppCompatButton>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+    </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

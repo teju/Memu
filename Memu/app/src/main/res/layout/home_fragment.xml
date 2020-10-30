@@ -248,6 +248,7 @@
                                 android:layout_width="match_parent"
                                 android:scaleType="fitXY"
                                 android:layout_marginLeft="-10dp"
+                                android:id="@+id/wallet"
                                 android:src="@drawable/wallet_icon"
                                 android:layout_height="match_parent">
                             </ImageView>

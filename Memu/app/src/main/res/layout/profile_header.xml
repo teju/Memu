@@ -267,6 +267,7 @@
         <RelativeLayout
             android:layout_width="140dp"
             android:layout_marginLeft="-40dp"
+            android:id="@+id/rlButtons"
             android:background="@drawable/button_red_followers"
             android:layout_height="80dp">
             <TextView
