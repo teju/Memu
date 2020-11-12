@@ -6,7 +6,9 @@ import com.google.gson.GsonBuilder
 import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
 import com.memu.etc.*
+import com.memu.modules.checksum.CheckSum
 import com.memu.modules.profileWall.ProfileWall
+import org.json.JSONObject
 
 class GetCheckSumViewModel(application: Application) : BaseViewModel(application) {
 
@@ -16,7 +18,7 @@ class GetCheckSumViewModel(application: Application) : BaseViewModel(application
 
     var apl: Application
 
-    var obj: ProfileWall? = null
+    var obj: CheckSum? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -47,13 +49,8 @@ class GetCheckSumViewModel(application: Application) : BaseViewModel(application
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), ProfileWall::class.java)
-                        if (obj!!.status.equals(Keys.STATUS_CODE)) {
-                            trigger.postValue(NEXT_STEP)
-                        }else{
-                            errorMessage.value = createErrorMessageObject(response)
-
-                        }
+                        obj = gson.fromJson(response!!.content.toString(), CheckSum::class.java)
+                        trigger.postValue(NEXT_STEP)
                     } catch (e: Exception) {
                         showUnknowResponseErrorMessage()
                     }
@@ -63,16 +60,20 @@ class GetCheckSumViewModel(application: Application) : BaseViewModel(application
         })
 
         genericHttpAsyncTask.method = BaseConstants.POST
-        genericHttpAsyncTask.setUrl("https://www.blueappsoftware.com/payment/payment_paytm/generateChecksum.php")
+        genericHttpAsyncTask.setUrl(APIs.getPaytmCheckSum)
         Helper.applyHeader(apl,genericHttpAsyncTask)
-        genericHttpAsyncTask.setPostParams(Keys.MID,"1000000")
-        genericHttpAsyncTask.setPostParams(Keys.ORDER_ID,order_id)
-        genericHttpAsyncTask.setPostParams(Keys.CUST_ID,cust_id)
-        genericHttpAsyncTask.setPostParams(Keys.CHANNEL_ID,"WAP")
-        genericHttpAsyncTask.setPostParams(Keys.TXN_AMOUNT,"0")
-        genericHttpAsyncTask.setPostParams(Keys.WEBSITE,"WEBSTAGING")
-        genericHttpAsyncTask.setPostParams(Keys.CALLBACK_URL,callback_url)
-        genericHttpAsyncTask.setPostParams(Keys.INDUSTRY_TYPE_ID,"Retail")
+        var paytm_params = JSONObject()
+        paytm_params.put(Keys.MID,"IDacRJsO55733339470443")
+        paytm_params.put(Keys.ORDER_ID,order_id)
+        paytm_params.put(Keys.CUST_ID,cust_id)
+        paytm_params.put(Keys.CHANNEL_ID,"WAP")
+        paytm_params.put(Keys.TXN_AMOUNT,"1.00")
+        paytm_params.put(Keys.WEBSITE,"WEBSTAGING")
+        paytm_params.put(Keys.CALLBACK_URL,callback_url)
+        paytm_params.put(Keys.INDUSTRY_TYPE_ID,"Retail")
+        genericHttpAsyncTask.setPostParams(Keys.USER_ID,UserInfoManager.getInstance(apl!!).getAccountId())
+        genericHttpAsyncTask.setPostParams(Keys.PAYTM_PARAMS, paytm_params)
+
         genericHttpAsyncTask.context = apl.applicationContext
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.execute()

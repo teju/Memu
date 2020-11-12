@@ -78,6 +78,7 @@ class Keys : BaseKeys() {
         val FREIND_ID = "freind_id"
         val REQUEST = "request"
         val MID = "MID"
+        val PAYTM_PARAMS = "paytm_params"
         val ORDER_ID = "ORDER_ID"
         val CUST_ID = "CUST_ID"
         val CHANNEL_ID = "CHANNEL_ID"

@@ -29,11 +29,11 @@ import org.json.JSONObject
 class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnClickListener {
 
     lateinit var getchecksumviewmodel: GetCheckSumViewModel
-    var TAG = "WalletFragment"
-    var mid = "eNnjXe00637647587210"
-    var orderId="1234"
-    var custid = "4321"
-    var CHECKSUMHASH = ""
+    var TAG = "WalletFragmentTAG"
+    var mid = "EYZGKu85499319132530"
+    var orderId="1000"
+    var custid = "123"
+    var CHECKSUMHASH = "sHcyxSNUDdSxtGB+i9falOEf07yOJrm4b9N70RpIyiCDpWAYecx2y+9TUL8bJF+LQZdHNITWoRB6UKBrbWWFfrm6Ah6iBT+Csw6UFlwejqs="
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.fragment_wallet, container, false)
@@ -46,6 +46,7 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setGetCheckSUMRequestObserver()
         initUI();
     }
 
@@ -81,7 +82,10 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         GetCheckSumViewModel.NEXT_STEP -> {
-                            val Service = PaytmPGService.getStagingService()
+                            if(getchecksumviewmodel.obj?.generate_signature != null) {
+                                CHECKSUMHASH = getchecksumviewmodel.obj?.generate_signature!!
+                            }
+                            val Service = PaytmPGService.getProductionService()
                             val paramMap =
                                 HashMap<String, String>()
                             //these are mandatory parameters
@@ -89,13 +93,13 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
                             paramMap["ORDER_ID"] = orderId
                             paramMap["CUST_ID"] = custid
                             paramMap["CHANNEL_ID"] = "WAP"
-                            paramMap["TXN_AMOUNT"] = "100"
-                            paramMap["WEBSITE"] = "WEBSTAGING"
-                            paramMap["CALLBACK_URL"] = "varifyurl"
-                            //paramMap.put( "EMAIL" , "abc@gmail.com");   // no need
-                            // paramMap.put( "MOBILE_NO" , "9144040888");  // no need
+                            paramMap["TXN_AMOUNT"] = "100.0"
+                            paramMap["WEBSITE"] = "DEFAULT"
+                            paramMap["CALLBACK_URL"] = "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=" + orderId
+                           // paramMap.put("EMAIL", "daya_salagare@yahoo.com");   // no need
+                           // paramMap.put("MOBILE_NO", "9986104911");  // no need
                             paramMap["CHECKSUMHASH"] = CHECKSUMHASH
-                            //paramMap.put("PAYMENT_TYPE_ID" ,"CC");    // no need
+                            paramMap.put("PAYMENT_TYPE_ID", "CC");    // no need
                             paramMap["INDUSTRY_TYPE_ID"] = "Retail"
                             val Order = PaytmOrder(paramMap)
                             Log.e("checksum ", "param $paramMap")
@@ -103,8 +107,8 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
                             // start payment service call here
                             Service.startPaymentTransaction(
                                 context, true, true,
-                                this@WalletFragment
-            )
+                                this@WalletFragment)
+
                         }
                     }
                 })
@@ -141,7 +145,7 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
         inErrorMessage: String?,
         inFailingUrl: String?
     ) {
-        Log.d(TAG,"onErrorLoadingWebPage ")
+        Log.d(TAG,"onErrorLoadingWebPage "+inErrorMessage)
 
     }
 
@@ -152,7 +156,7 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.recharge -> {
-                var varifyurl = "https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp"
+                var varifyurl = "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=" + orderId
                 getchecksumviewmodel.loadData(varifyurl,orderId,custid)
             }
         }

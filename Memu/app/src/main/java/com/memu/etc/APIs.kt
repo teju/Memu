@@ -9,6 +9,7 @@ class APIs : BaseKeys() {
         val BOOKING = "booking/"
         val USER = "user/"
         val PROFILE = "profile/"
+        val PAYMENT = "payment/"
         val MAP_FEEDS = "map-feeds/"
 
         val getVehicleType: String
@@ -121,5 +122,8 @@ class APIs : BaseKeys() {
 
         val acceptFriendRequest : String
             get() = BASE_URL!!  + PROFILE+ "accept-friend-request"
+
+        val getPaytmCheckSum : String
+            get() = BASE_URL!!  + PAYMENT+ "check-sum"
     }
 }
