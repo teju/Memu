@@ -29,6 +29,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
 import com.iapps.gon.etc.callback.FindRideDialogListener
 import com.iapps.gon.etc.callback.NotifyListener
+import com.iapps.gon.etc.callback.WalletBalanceListener
 import com.iapps.libs.helpers.BaseHelper
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
@@ -51,6 +52,7 @@ import com.memu.etc.*
 import com.memu.modules.PlaceHolder
 import com.memu.ui.activity.SearchActivity
 import com.memu.ui.adapters.WeekAdapter
+import com.memu.ui.dialog.NotifyDialogFragment
 import com.memu.webservices.*
 import kotlinx.android.synthetic.main.map_view.*
 import org.json.JSONObject
@@ -59,7 +61,7 @@ import java.text.SimpleDateFormat
 
 
 class HomeFragment : BaseFragment() , View.OnClickListener,
-    OnMapReadyCallback, PermissionsListener{
+    OnMapReadyCallback, PermissionsListener,WalletBalanceListener{
 
     private var myView: LinearLayout? = null
     private var pendingIntent: PendingIntent? = null
@@ -90,6 +92,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     var strseat =""
     var strType = "find_ride"
     var days = ""
+    var walletBalance = ""
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.home_fragment, container, false)
 
@@ -157,6 +160,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         setUpdateNotiTokenAPIObserver()
         setFindTripAPIObserver()
         setPoolerVehicleListAPIObserver()
+        setWalletBalanceObserver(this)
         cv.setCardBackgroundColor(activity!!.resources.getColor(R.color.Purple));
         gpsTracker = GPSTracker(activity)
         if(gpsTracker?.canGetLocation()!!) {
@@ -193,6 +197,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
         });
         postUserVehicleListViewModel.loadData()
+        getWalletBalanceViewModel.loadData()
 
         rlBestRoute.setOnClickListener(this)
         rlpooling.setOnClickListener(this)
@@ -318,7 +323,6 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
             R.id.rlpooling -> {
                 btnNExt.visibility = View.GONE
-
                 poolingUI()
             }
             R.id.btnNExt -> {
@@ -362,14 +366,12 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             }
             R.id.seatstv -> {
                 spinner()
-
             }
             R.id.edtVia -> {
                 startActivityForResult(Intent(activity, SearchActivity::class.java),REQUEST_CODE_AUTOCOMPLETEVIA);
             }
             R.id.cancel,R.id.arrow_left -> {
                 reset()
-
             }
             R.id.history_icon -> {
                 Keys.MAPTYPE = Keys.HISTORY
@@ -410,11 +412,25 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
             }
             R.id.find_ride -> {
-                Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
-                days = weekdays.joinToString(separator = ",")
-
-                strType ="find_ride"
-                findRide("","")
+                if(!BaseHelper.isEmpty(walletBalance) && walletBalance.toDouble() != 0.0) {
+                    Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
+                    days = weekdays.joinToString(separator = ",")
+                    strType = "find_ride"
+                    findRide("", "")
+                } else {
+                    showNotifyDialog(
+                        "", "Please recharge your wallet to proceed to booking",
+                        "Recharge Now", "Later", object : NotifyListener {
+                            override fun onButtonClicked(which: Int) {
+                                if(which == NotifyDialogFragment.BUTTON_POSITIVE) {
+                                    home().setFragment(WalletFragment().apply {
+                                        isFromHome = true
+                                    })
+                                }
+                            }
+                        }
+                    )
+                }
             }
             R.id.bike_find_ride -> {
                 Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
@@ -429,10 +445,23 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 showFindRideDialog()
             }
             R.id.offer_ride -> {
-                Keys.MAPTYPE = Keys.POOLING_OFFER_RIDE
-                strType ="offer_ride"
-                days = weekdays.joinToString(separator = ",")
-                showFindRideDialog()
+                if(!BaseHelper.isEmpty(walletBalance) && walletBalance.toDouble() != 0.0) {
+                    Keys.MAPTYPE = Keys.POOLING_OFFER_RIDE
+                    strType ="offer_ride"
+                    days = weekdays.joinToString(separator = ",")
+                    showFindRideDialog()
+                } else {
+                    showNotifyDialog(
+                        "", "Please recharge your wallet to proceed to booking",
+                        "Recharge Now", "Later", object : NotifyListener {
+                            override fun onButtonClicked(which: Int) {
+                                home().setFragment(WalletFragment().apply {
+                                    isFromHome = true
+                                })
+                            }
+                        }
+                    )
+                }
             }
         }
     }
@@ -913,5 +942,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         val SOURCE_ID = "SOURCE_ID"
         private val ICON_ID = "ICON_ID"
         val LAYER_ID = "LAYER_ID"
+    }
+
+    override fun walletBalanceResponse(balance: String) {
+        walletBalance = balance
     }
 }

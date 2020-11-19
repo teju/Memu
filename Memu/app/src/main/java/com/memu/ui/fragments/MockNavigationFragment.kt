@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.location.Location
@@ -13,11 +14,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.iapps.gon.etc.callback.NotifyListener
+import com.iapps.gon.etc.callback.WalletBalanceListener
 import com.iapps.libs.helpers.BaseHelper
 import com.mapbox.android.core.location.LocationEngine
 import com.mapbox.android.core.location.LocationEngineCallback
@@ -62,9 +65,14 @@ import com.memu.etc.Helper
 import com.memu.modules.completedRides.MatchedBudy
 import com.memu.ui.BaseFragment
 import com.memu.ui.adapters.MatchingBuddiesAdapter
+import com.memu.ui.fragments.HomeFragment
+import com.memu.ui.fragments.WalletFragment
 import com.memu.webservices.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_mock_navigation.*
+import kotlinx.android.synthetic.main.activity_mock_navigation.ld
+import kotlinx.android.synthetic.main.custom_notification_layout.view.*
+import kotlinx.android.synthetic.main.fragment_wallet.*
 import okhttp3.Cache
 import retrofit2.Call
 import retrofit2.Callback
@@ -79,7 +87,7 @@ import java.util.*
 class MockNavigationFragment(
     var desrpoint: Point,
     var originpoint: Point) : BaseFragment(), OnMapReadyCallback, ProgressChangeListener, NavigationEventListener,
-    MilestoneEventListener, OffRouteListener, RefreshCallback{
+    MilestoneEventListener, OffRouteListener, RefreshCallback,WalletBalanceListener{
     private var speechPlayer: NavigationSpeechPlayer?= null
     private var navigationViewModel: NavigationViewModel? = null
     private var srcmarker: Marker? = null
@@ -87,13 +95,14 @@ class MockNavigationFragment(
     var trip_id: String = ""
     var trip_type: String = ""
     var currentRoute: DirectionsRoute? = null
-
+    var isTripStarted = false
     private var mapboxMap: MapboxMap? = null
     lateinit var postGetAlertListViewModel: PostGetAlertListViewModel
     lateinit var postMApFeedDataViewModel: PostMApFeedDataViewModel
     lateinit var postMApFeedAddViewModel: PostMApFeedAddViewModel
     lateinit var postStartNavigationViewModel: PostStartNavigationViewModel
     lateinit var postEndNavigationViewModel: PostEndNavigationViewModel
+    lateinit var postMakePaymentViewModel: PostMakePaymentViewModel
 
     // Navigation related variables
     private var locationEngine: LocationEngine? = null
@@ -108,6 +117,8 @@ class MockNavigationFragment(
     var distanceTravelled = 0.0
     private var mockLocationEngine: ReplayRouteLocationEngine? = null
     private var tracking = false
+    var walletBalance = ""
+    var invoive_id = ""
 
     private val callback = RerouteActivityLocationCallback(this)
     private class MyBroadcastReceiver internal constructor(navigation: MapboxNavigation) :
@@ -161,6 +172,8 @@ class MockNavigationFragment(
         setAddAlertAPIObserver()
         setStartTripAPIObserver()
         setEndTripAPIObserver()
+        setWalletBalanceObserver(this)
+        setPaymentAPIObserver()
 
         routeRefresh = RouteRefresh(Mapbox.getAccessToken(), this)
         mapView = v?.findViewById(R.id.mapView)
@@ -198,10 +211,27 @@ class MockNavigationFragment(
         if(BaseHelper.isEmpty(trip_id)) {
             endButton.visibility = View.GONE
         }
+        if(!isTripStarted) {
+            endButton.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Green)));
+            txtendbtn.text = "Start Ride"
+        } else {
+            endButton.setBackgroundTintList(null);
+            txtendbtn.text = "End Ride"
+        }
         endButton.setOnClickListener {
-            navigation!!.stopNavigation()
-            if(!BaseHelper.isEmpty(trip_id)) {
-                postEndNavigationViewModel.loadData(trip_id,distanceTravelled)
+            if(!isTripStarted) {
+                if(!BaseHelper.isEmpty(trip_id)) {
+                    postStartNavigationViewModel.loadData(trip_id)
+                }
+            } else {
+                navigation!!.stopNavigation()
+                if(!BaseHelper.isEmpty(trip_id)) {
+                    if(!BaseHelper.isEmpty(walletBalance) && walletBalance.toDouble() != 0.0) {
+                        postEndNavigationViewModel.loadData(trip_id,distanceTravelled)
+                    } else {
+                        home().setFragment(WalletFragment())
+                    }
+                }
             }
         }
         arrow_left.setOnClickListener {
@@ -249,9 +279,6 @@ class MockNavigationFragment(
     }
     fun onStartRouteClick() {
 
-        if(!BaseHelper.isEmpty(trip_id)) {
-            postStartNavigationViewModel.loadData(trip_id)
-        }
 
         val isValidNavigation = navigation != null
         val isValidRoute = route != null && route!!.distance()!! > TWENTY_FIVE_METERS
@@ -264,7 +291,6 @@ class MockNavigationFragment(
             //(locationEngine as ReplayRouteLocationEngine).assign(route)
             //navigation!!.locationEngine = locationEngine!!
             mapboxMap!!.locationComponent.isLocationComponentEnabled = true
-
             navigation!!.startNavigation(route!!)
         }
     }
@@ -447,7 +473,11 @@ class MockNavigationFragment(
         distanceTravelled = routeProgress.distanceTraveled()/1000
         if(routeProgress.fractionTraveled() == 1f){
             if(!BaseHelper.isEmpty(trip_id)) {
-                postEndNavigationViewModel.loadData(trip_id,distanceTravelled)
+                if(!BaseHelper.isEmpty(walletBalance) && walletBalance.toDouble() != 0.0) {
+                    postEndNavigationViewModel.loadData(trip_id,distanceTravelled)
+                } else {
+                    home().setFragment(WalletFragment())
+                }
             }
         }
 
@@ -625,13 +655,30 @@ class MockNavigationFragment(
                     }
                 })
                 errorMessage.observe(thisFragReference, Observer { s ->
-
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) {
+                                postMakePaymentViewModel.loadData("before","100.0",
+                                    walletBalance,"123","234",trip_id,"online",
+                                    "","500.0","pending")
+                                isTripStarted = true
+                                endButton.setBackgroundTintList(null);
+                                txtendbtn.text = "End Ride"
+                            }
+                        }
+                    )
                 })
                 isNetworkAvailable.observe(thisFragReference, obsNoInternet)
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostStartNavigationViewModel.NEXT_STEP -> {
-
+                            isTripStarted = true
+                            endButton.setBackgroundTintList(null);
+                            txtendbtn.text = "End Ride"
+                            postMakePaymentViewModel.loadData("before","100.0",
+                                walletBalance,"","",trip_id,"online",
+                                "","100.0","pending")
                         }
                     }
                 })
@@ -650,7 +697,12 @@ class MockNavigationFragment(
                     }
                 })
                 errorMessage.observe(thisFragReference, Observer { s ->
-
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
                 })
                 isNetworkAvailable.observe(thisFragReference, obsNoInternet)
                 getTrigger().observe(thisFragReference, Observer { state ->
@@ -660,7 +712,10 @@ class MockNavigationFragment(
                                 "",postEndNavigationViewModel.obj?.message +"\nPay Now",
                                 getString(R.string.ok),"",object : NotifyListener {
                                     override fun onButtonClicked(which: Int) {
-                                        home().backToMainScreen()
+                                        isTripStarted = false
+                                        postMakePaymentViewModel.loadData("before","100.0",
+                                            walletBalance,"","",trip_id,"online",
+                                            invoive_id,"100.0","pending")
                                     }
                                 }
                             )
@@ -709,6 +764,47 @@ class MockNavigationFragment(
         }
     }
 
+    fun setPaymentAPIObserver() {
+        postMakePaymentViewModel = ViewModelProviders.of(this).get(
+            PostMakePaymentViewModel::class.java).apply {
+            this@MockNavigationFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostMakePaymentViewModel.NEXT_STEP -> {
+                            invoive_id  = obj!!.transaction_id
+                            if(isTripStarted) {
+                                showNotifyDialog(
+                                    "", obj!!.message!!,
+                                    getString(R.string.ok),"",object : NotifyListener {
+                                        override fun onButtonClicked(which: Int) {
+                                            home().setFragment(HomeFragment())
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
+
 
     companion object {
         const val VOICE_INSTRUCTION_CACHE = "voice-instruction-cache"
@@ -746,5 +842,9 @@ class MockNavigationFragment(
         init {
             activityWeakReference = WeakReference(activity)
         }
+    }
+
+    override fun walletBalanceResponse(balance: String) {
+        walletBalance = balance
     }
 }

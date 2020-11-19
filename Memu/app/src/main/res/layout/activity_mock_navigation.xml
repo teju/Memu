@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
+            android:id="@+id/txtendbtn"
             android:fontFamily="@font/opensansregular"
             android:text="End Ride"
             android:textColor="@color/White"

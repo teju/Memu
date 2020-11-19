@@ -17,12 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.gms.fitness.data.DataSource
-import com.google.android.gms.fitness.data.DataType
-import com.iapps.gon.etc.callback.FindRideDialogListener
-import com.iapps.gon.etc.callback.NotifyListener
-import com.iapps.gon.etc.callback.PermissionListener
-import com.iapps.gon.etc.callback.RequestListener
+import com.iapps.gon.etc.callback.*
 import com.iapps.libs.generics.GenericFragment
 import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.helpers.BaseUIHelper
@@ -38,10 +33,7 @@ import com.memu.modules.poolerVehicleList.Vehicle
 import com.memu.modules.riderList.Rider
 import com.memu.modules.userMainData.UserMainData
 import com.memu.ui.dialog.*
-import com.memu.webservices.PosUserMainDataViewModel
-import com.memu.webservices.PostFriendListViewModel
-import com.memu.webservices.PostUpdateLocationViewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import com.memu.webservices.*
 import kotlinx.android.synthetic.main.activity_main.ld
 import kotlinx.android.synthetic.main.profile_header.*
 import kotlinx.android.synthetic.main.profile_wall.*
@@ -56,6 +48,7 @@ open class BaseFragment : GenericFragment() {
         private set
     lateinit var posUserMainDataViewModel: PosUserMainDataViewModel
     lateinit var postFriendListViewModel: PostFriendListViewModel
+    lateinit var getWalletBalanceViewModel: GetWalletBalanceViewModel
 
     var permissionsThatNeedTobeCheck: List<String>? = null
         private set
@@ -509,16 +502,6 @@ open class BaseFragment : GenericFragment() {
             override fun onTextChanged(cs: CharSequence?, start: Int, before: Int, count: Int) {}
         })}
 
-    private fun getDataSource(): DataSource {
-        return DataSource.Builder()
-            .setAppPackageName("com.google.android.gms")
-            .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
-            .setType(DataSource.TYPE_DERIVED)
-            .setStreamName("estimated_steps")
-            .setName("steps")
-            .build()
-    }
-
     fun setUSerMAinDataAPIObserver() {
         posUserMainDataViewModel = ViewModelProviders.of(this).get(PosUserMainDataViewModel::class.java).apply {
             this@BaseFragment.let { thisFragReference ->
@@ -572,6 +555,36 @@ open class BaseFragment : GenericFragment() {
                     }
                 })
 
+            }
+        }
+    }
+    fun setWalletBalanceObserver(walletBalanceListener: WalletBalanceListener) {
+        getWalletBalanceViewModel = ViewModelProviders.of(this).get(
+            GetWalletBalanceViewModel::class.java).apply {
+            this@BaseFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        GetWalletBalanceViewModel.NEXT_STEP -> {
+                            walletBalanceListener.walletBalanceResponse(obj!!.balance)
+                        }
+                    }
+                })
             }
         }
     }

@@ -125,5 +125,11 @@ class APIs : BaseKeys() {
 
         val getPaytmCheckSum : String
             get() = BASE_URL!!  + PAYMENT+ "check-sum"
+
+        val getWalletBalance: String
+            get() = BASE_URL!!  + PAYMENT+ "wallet-balance"
+
+        val postPay: String
+            get() = BASE_URL!!  + PAYMENT+ "pay"
     }
 }

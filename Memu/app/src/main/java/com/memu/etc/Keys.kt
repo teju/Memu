@@ -86,6 +86,16 @@ class Keys : BaseKeys() {
         val WEBSITE = "WEBSITE"
         val CALLBACK_URL = "CALLBACK_URL"
         val INDUSTRY_TYPE_ID = "INDUSTRY_TYPE_ID"
+        val CREDIT_AMOUNT = "credit_amount"
+        val WALLET_BALANCE = "wallet_balance"
+        val CUSTOMER_ID = "customer_id"
+        val DRIVER_ID = "driver_id"
+        val PAYMENT_MODE = "payment_mode"
+        val INVOICE_ID = "invoice_id"
+        val AMOUNT = "amount"
+        val WALLET_DETAILS = "wallet_details"
+        val MODE = "mode"
+        val PAYMENT_DETAILS = "payment_details"
 
         @kotlin.jvm.JvmField
         var GCM_DT : String = "dt"

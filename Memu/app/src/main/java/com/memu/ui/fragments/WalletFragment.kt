@@ -1,8 +1,5 @@
 package com.memu.ui.fragments
 
-import android.app.ProgressDialog
-import android.content.Context
-import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,31 +7,35 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.iapps.gon.etc.callback.NotifyListener
+import com.iapps.gon.etc.callback.WalletBalanceListener
 import com.memu.R
-import com.memu.etc.JSONParser
 import com.memu.etc.UserInfoManager
 import com.memu.ui.BaseFragment
 import com.memu.webservices.GetCheckSumViewModel
-import com.memu.webservices.PostAcceptFriendRequestViewModel
+import com.memu.webservices.GetWalletBalanceViewModel
+import com.memu.webservices.PostMakePaymentViewModel
 import com.paytm.pgsdk.Log
 import com.paytm.pgsdk.PaytmOrder
 import com.paytm.pgsdk.PaytmPGService
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_wallet.*
-import kotlinx.android.synthetic.main.profile_header.rlButtons
-import org.json.JSONException
-import org.json.JSONObject
+import kotlinx.android.synthetic.main.fragment_wallet.ld
+import kotlinx.android.synthetic.main.profile_header.*
 
 
-class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnClickListener {
+class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnClickListener,WalletBalanceListener {
 
     lateinit var getchecksumviewmodel: GetCheckSumViewModel
-    var TAG = "WalletFragmentTAG"
+    lateinit var postMakePaymentViewModel: PostMakePaymentViewModel
+
+    var TAG = "check-sum"
     var mid = "EYZGKu85499319132530"
     var orderId="1000"
     var custid = "123"
-    var CHECKSUMHASH = "sHcyxSNUDdSxtGB+i9falOEf07yOJrm4b9N70RpIyiCDpWAYecx2y+9TUL8bJF+LQZdHNITWoRB6UKBrbWWFfrm6Ah6iBT+Csw6UFlwejqs="
-
+    var CHECKSUMHASH = ""
+    var wallet_Balance = ""
+    var isFromHome = false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.fragment_wallet, container, false)
         return v
@@ -52,11 +53,45 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
 
     private fun initUI() {
         setUSerMAinDataAPIObserver()
+        setWalletBalanceObserver(this)
         setGetCheckSUMRequestObserver()
-        rlButtons.visibility = View.GONE
+        setPaymentAPIObserver()
+        ll_options.visibility = View.GONE
         recharge.setOnClickListener(this)
+        arrow_left.setOnClickListener(this)
         posUserMainDataViewModel.loadData(UserInfoManager.getInstance(activity!!).getAccountId())
+        getWalletBalanceViewModel.loadData()
+    }
 
+    fun setPaymentAPIObserver() {
+        postMakePaymentViewModel = ViewModelProviders.of(this).get(
+            PostMakePaymentViewModel::class.java).apply {
+            this@WalletFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        GetWalletBalanceViewModel.NEXT_STEP -> {
+                            getWalletBalanceViewModel.loadData()
+                        }
+                    }
+                })
+            }
+        }
     }
 
     fun setGetCheckSUMRequestObserver() {
@@ -93,15 +128,18 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
                             paramMap["ORDER_ID"] = orderId
                             paramMap["CUST_ID"] = custid
                             paramMap["CHANNEL_ID"] = "WAP"
-                            paramMap["TXN_AMOUNT"] = "100.0"
+                            paramMap["TXN_AMOUNT"] = "1.00"
                             paramMap["WEBSITE"] = "DEFAULT"
                             paramMap["CALLBACK_URL"] = "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=" + orderId
                            // paramMap.put("EMAIL", "daya_salagare@yahoo.com");   // no need
                            // paramMap.put("MOBILE_NO", "9986104911");  // no need
-                            paramMap["CHECKSUMHASH"] = CHECKSUMHASH
-                            paramMap.put("PAYMENT_TYPE_ID", "CC");    // no need
+                           paramMap["CHECKSUMHASH"] = "Lxiq5J37TzCVdtK7LruQiCsF5yJprUs+fIuw90DiAWZfLwfAbjsm2FdqT7H6KHOYFXEzomKyCmHRiO7q0SjJUxbrOluUJsNDmLbSF/57koY="
+                           // paramMap.put("PAYMENT_TYPE_ID", "CC");    // no need
                             paramMap["INDUSTRY_TYPE_ID"] = "Retail"
                             val Order = PaytmOrder(paramMap)
+                            Log.d(TAG,"checksum "+"param $paramMap")
+                            System.out.println("check-sum "+"param $paramMap")
+
                             Log.e("checksum ", "param $paramMap")
                             Service.initialize(Order, null)
                             // start payment service call here
@@ -118,6 +156,8 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
 
     override fun onTransactionResponse(inResponse: Bundle?) {
         Log.d(TAG,"inResponse "+inResponse.toString())
+        postMakePaymentViewModel.loadData("wallet","100.00",wallet_Balance,
+            "","","","","","","")
     }
 
     override fun clientAuthenticationFailed(inErrorMessage: String?) {
@@ -156,9 +196,16 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.recharge -> {
-                var varifyurl = "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=" + orderId
-                getchecksumviewmodel.loadData(varifyurl,orderId,custid)
+                getchecksumviewmodel.loadData(custid,orderId)
+            }
+            R.id.arrow_left -> {
+                home().proceedDoOnBackPressed()
             }
         }
+    }
+
+    override fun walletBalanceResponse(balance: String) {
+        wallet_Balance = balance
+        walletBalance.setText(balance)
     }
 }
