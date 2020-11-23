@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 
 import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
+import com.memu.R
 import com.memu.etc.*
 import com.memu.modules.checksum.CheckSum
 import com.memu.modules.checksum.WalletBalance
@@ -29,7 +30,7 @@ class GetCheckSumViewModel(application: Application) : BaseViewModel(application
         this.apl = application
     }
 
-    fun loadData(cust_id:String,order_id:String) {
+    fun loadData(cust_id:String,order_id:String,amt :Double) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -67,11 +68,12 @@ class GetCheckSumViewModel(application: Application) : BaseViewModel(application
         genericHttpAsyncTask.setUrl(APIs.getPaytmCheckSum)
         Helper.applyHeader(apl,genericHttpAsyncTask)
         var paytm_params = JSONObject()
-        paytm_params.put(Keys.MID,"EYZGKu85499319132530")
+        paytm_params.put(Keys.MID,apl.getString(R.string.mid))
+        paytm_params.put(Keys.CUST_ID,UserInfoManager.getInstance(apl!!).getAccountId())
         paytm_params.put(Keys.ORDER_ID,order_id)
-        paytm_params.put(Keys.CUST_ID,cust_id)
+       // paytm_params.put(Keys.MOBILE_NO,"9964062237")
         paytm_params.put(Keys.CHANNEL_ID,"WAP")
-        paytm_params.put(Keys.TXN_AMOUNT,"1.00")
+        paytm_params.put(Keys.TXN_AMOUNT,amt.toString())
         paytm_params.put(Keys.WEBSITE,"DEFAULT")
         paytm_params.put(Keys.CALLBACK_URL,"https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=" + order_id)
         paytm_params.put(Keys.INDUSTRY_TYPE_ID,"Retail")

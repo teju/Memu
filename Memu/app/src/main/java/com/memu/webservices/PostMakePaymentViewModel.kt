@@ -54,10 +54,9 @@ class PostMakePaymentViewModel(application: Application) : BaseViewModel(applica
                         val gson = GsonBuilder().create()
                         obj = gson.fromJson(response!!.content.toString(), Payment::class.java)
                         if (obj!!.status.equals(Keys.STATUS_CODE)) {
-                            trigger.postValue(GetUserWallViewModel.NEXT_STEP)
-                        }else{
-                            errorMessage.value = createErrorMessageObject(response)
                         }
+                        trigger.postValue(GetUserWallViewModel.NEXT_STEP)
+
                     } catch (e: Exception) {
                         showUnknowResponseErrorMessage()
                     }

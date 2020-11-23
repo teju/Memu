@@ -147,6 +147,59 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:id="@+id/amount"
+                    android:text="200"
+                    android:inputType="numberDecimal"
+                    android:textAlignment="center"
+                    android:layout_height="wrap_content">
+                </EditText>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="+ 200"
+                        android:textColor="@color/Black"
+                        android:id="@+id/recharge_200"
+                        android:background="@drawable/themeblue_rounded_rectangle"
+                        android:layout_height="wrap_content">
+                    </Button>
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:text="+ 500"
+                        android:id="@+id/recharge_500"
+                        android:textColor="@color/Black"
+                        android:layout_marginLeft="15dp"
+                        android:background="@drawable/themeblue_rounded_rectangle"
+                        android:layout_height="wrap_content">
+                    </Button>
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:textColor="@color/Black"
+                        android:text="+ 1000"
+                        android:id="@+id/recharge_1000"
+                        android:layout_marginLeft="15dp"
+                        android:background="@drawable/themeblue_rounded_rectangle"
+                        android:layout_height="wrap_content">
+                    </Button>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="30dp"
@@ -173,7 +226,6 @@
                     android:paddingBottom="10dp"
                     android:layout_height="wrap_content">
                 </Button>
-
             </LinearLayout>
         </LinearLayout>
 

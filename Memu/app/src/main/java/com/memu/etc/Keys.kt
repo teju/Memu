@@ -39,6 +39,7 @@ class Keys : BaseKeys() {
         val FEED_ID = "feed_id"
         val LoginForm = "LoginForm"
         val MOBILE = "mobile"
+        val MOBILE_NO = "mobile_no"
         val PUSHNOTIFICATION = "PushNotification"
         val DRIVING_LICENCE = "driving_licence"
         val REGISTRATION_CERTIFICATE = "registration_certificate"

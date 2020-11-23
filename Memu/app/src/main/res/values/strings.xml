@@ -29,6 +29,7 @@
     <string name="language_key">language_key</string>
     <string name="default_locale">language_key</string>
     <string name="resend_OTP_available"> %02d:%02d </string>
+    <string name="mid">EYZGKu85499319132530</string>
 
     <string-array name="Seats">
         <item>01</item>

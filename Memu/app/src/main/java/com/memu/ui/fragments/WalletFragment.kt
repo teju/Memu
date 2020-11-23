@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.gon.etc.callback.WalletBalanceListener
+import com.iapps.libs.helpers.BaseHelper
 import com.memu.R
 import com.memu.etc.UserInfoManager
 import com.memu.ui.BaseFragment
@@ -18,10 +19,11 @@ import com.paytm.pgsdk.Log
 import com.paytm.pgsdk.PaytmOrder
 import com.paytm.pgsdk.PaytmPGService
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_wallet.*
-import kotlinx.android.synthetic.main.fragment_wallet.ld
 import kotlinx.android.synthetic.main.profile_header.*
+import org.json.JSONObject
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnClickListener,WalletBalanceListener {
@@ -30,8 +32,7 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
     lateinit var postMakePaymentViewModel: PostMakePaymentViewModel
 
     var TAG = "check-sum"
-    var mid = "EYZGKu85499319132530"
-    var orderId="1000"
+    var orderId="1001"
     var custid = "123"
     var CHECKSUMHASH = ""
     var wallet_Balance = ""
@@ -61,6 +62,9 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
         arrow_left.setOnClickListener(this)
         posUserMainDataViewModel.loadData(UserInfoManager.getInstance(activity!!).getAccountId())
         getWalletBalanceViewModel.loadData()
+        recharge_200.setOnClickListener(this)
+        recharge_500.setOnClickListener(this)
+        recharge_1000.setOnClickListener(this)
     }
 
     fun setPaymentAPIObserver() {
@@ -120,20 +124,21 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
                             if(getchecksumviewmodel.obj?.generate_signature != null) {
                                 CHECKSUMHASH = getchecksumviewmodel.obj?.generate_signature!!
                             }
+                            val amt = amount.text.toString().toDouble()
                             val Service = PaytmPGService.getProductionService()
                             val paramMap =
                                 HashMap<String, String>()
                             //these are mandatory parameters
-                            paramMap["MID"] = mid //MID provided by paytm
+                            paramMap["MID"] = getString(R.string.mid) //MID provided by paytm
+                            paramMap["CUST_ID"] = UserInfoManager.getInstance(apl!!).getAccountId()
                             paramMap["ORDER_ID"] = orderId
-                            paramMap["CUST_ID"] = custid
                             paramMap["CHANNEL_ID"] = "WAP"
-                            paramMap["TXN_AMOUNT"] = "1.00"
+                            paramMap["TXN_AMOUNT"] = amt.toString()
                             paramMap["WEBSITE"] = "DEFAULT"
                             paramMap["CALLBACK_URL"] = "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=" + orderId
                            // paramMap.put("EMAIL", "daya_salagare@yahoo.com");   // no need
-                           // paramMap.put("MOBILE_NO", "9986104911");  // no need
-                           paramMap["CHECKSUMHASH"] = "Lxiq5J37TzCVdtK7LruQiCsF5yJprUs+fIuw90DiAWZfLwfAbjsm2FdqT7H6KHOYFXEzomKyCmHRiO7q0SjJUxbrOluUJsNDmLbSF/57koY="
+                          // paramMap.put("MOBILE_NO", "9964062237");  // no need
+                           paramMap["CHECKSUMHASH"] = CHECKSUMHASH
                            // paramMap.put("PAYMENT_TYPE_ID", "CC");    // no need
                             paramMap["INDUSTRY_TYPE_ID"] = "Retail"
                             val Order = PaytmOrder(paramMap)
@@ -155,14 +160,17 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
     }
 
     override fun onTransactionResponse(inResponse: Bundle?) {
-        Log.d(TAG,"inResponse "+inResponse.toString())
-        postMakePaymentViewModel.loadData("wallet","100.00",wallet_Balance,
-            "","","","","","","")
+        Log.d(TAG,"inResponse "+inResponse!!.getString("RESPCODE"))
+        if(inResponse!!.getString("RESPCODE") == "01"){
+            postMakePaymentViewModel.loadData("wallet",amount.text.toString(),wallet_Balance,
+                "","","","","","","")
+        } else {
+           BaseHelper.showAlert(activity,inResponse.getString("RESPMSG"))
+        }
     }
 
     override fun clientAuthenticationFailed(inErrorMessage: String?) {
         Log.d(TAG,"inErrorMessage "+inErrorMessage.toString())
-
     }
 
     override fun someUIErrorOccurred(inErrorMessage: String?) {
@@ -196,10 +204,27 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.recharge -> {
-                getchecksumviewmodel.loadData(custid,orderId)
+                orderId = "ID"+Random().nextInt()
+                getchecksumviewmodel.loadData(custid,orderId,amount.text.toString().toDouble())
             }
             R.id.arrow_left -> {
                 home().proceedDoOnBackPressed()
+            }
+            R.id.recharge_200 -> {
+                var amt =  amount.text.toString().toInt()
+                amt = amt + 200
+                amount.setText(amt.toString())
+
+            }
+            R.id.recharge_500 -> {
+                var amt =  amount.text.toString().toInt()
+                amt = amt + 500
+                amount.setText(amt.toString())
+            }
+            R.id.recharge_1000 -> {
+                var amt =  amount.text.toString().toInt()
+                amt = amt + 1000
+                amount.setText(amt.toString())
             }
         }
     }

@@ -10,10 +10,12 @@ buildscript {
     repositories {
         mavenLocal()
         mavenCentral()
+        maven { url "https://artifactory.paytm.in/libs-release-local" }
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url 'https://maven.fabric.io/public' }
         maven { url 'https://api.mapbox.com/downloads/v1/navigation/android/maven'}
+        maven { url 'https://jitpack.io' }
         jcenter()
         google()
 
@@ -41,6 +43,8 @@ allprojects {
         maven { url 'https://maven.fabric.io/public' }
         maven { url 'https://mapbox.bintray.com/mapbox' }
         maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://artifactory.paytm.in/libs-release-local" }
+
 
     }
 
