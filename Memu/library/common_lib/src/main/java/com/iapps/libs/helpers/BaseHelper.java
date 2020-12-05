@@ -21,6 +21,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
@@ -29,6 +30,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +45,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +55,9 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.iapps.common_library.R;
@@ -78,7 +84,11 @@ import org.json.JSONObject;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
@@ -95,6 +105,8 @@ import java.util.Locale;
 import java.util.Random;
 
 import io.paperdb.Paper;
+
+import static com.iapps.libs.helpers.BaseUIHelper.calculateInSampleSize;
 
 
 public class BaseHelper {
@@ -1488,7 +1500,6 @@ public class BaseHelper {
 			Helper.setAppPackage(act, act.getPackageName());
 			builder.setContentTitle("Memu User Log is running");
 			builder.setContentText("Click to launch screen");
-			builder.setNumber(101);
 			builder.setContentIntent(pendingIntent);
 			builder.setTicker("Memu Log");
 			builder.setSmallIcon(R.drawable.memu_logo);

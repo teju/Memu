@@ -50,6 +50,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.*
 import com.memu.modules.PlaceHolder
+import com.memu.modules.checksum.WalletBalance
 import com.memu.ui.activity.SearchActivity
 import com.memu.ui.adapters.WeekAdapter
 import com.memu.ui.dialog.NotifyDialogFragment
@@ -412,25 +413,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 TimePickerDialog(context, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true).show()
             }
             R.id.find_ride -> {
-                if(!BaseHelper.isEmpty(walletBalance) && walletBalance.toDouble() != 0.0) {
-                    Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
-                    days = weekdays.joinToString(separator = ",")
-                    strType = "find_ride"
-                    findRide("", "")
-                } else {
-                    showNotifyDialog(
-                        "", "Please recharge your wallet to proceed to booking",
-                        "Recharge Now", "Later", object : NotifyListener {
-                            override fun onButtonClicked(which: Int) {
-                                if(which == NotifyDialogFragment.BUTTON_POSITIVE) {
-                                    home().setFragment(WalletFragment().apply {
-                                        isFromHome = true
-                                    })
-                                }
-                            }
-                        }
-                    )
-                }
+                Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
+                days = weekdays.joinToString(separator = ",")
+                strType = "find_ride"
+                findRide("", "")
             }
             R.id.bike_find_ride -> {
                 Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
@@ -445,23 +431,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 showFindRideDialog()
             }
             R.id.offer_ride -> {
-                if(!BaseHelper.isEmpty(walletBalance) && walletBalance.toDouble() != 0.0) {
-                    Keys.MAPTYPE = Keys.POOLING_OFFER_RIDE
-                    strType ="offer_ride"
-                    days = weekdays.joinToString(separator = ",")
-                    showFindRideDialog()
-                } else {
-                    showNotifyDialog(
-                        "", "Please recharge your wallet to proceed to booking",
-                        "Recharge Now", "Later", object : NotifyListener {
-                            override fun onButtonClicked(which: Int) {
-                                home().setFragment(WalletFragment().apply {
-                                    isFromHome = true
-                                })
-                            }
-                        }
-                    )
-                }
+                Keys.MAPTYPE = Keys.POOLING_OFFER_RIDE
+                strType ="offer_ride"
+                days = weekdays.joinToString(separator = ",")
+                showFindRideDialog()
             }
         }
     }
@@ -492,7 +465,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             edtdestLocerror.visibility = View.GONE
             edtdestLoc.requestFocus()
             showNotifyDialog(
-                "", "Select your source location",
+                "", "Select your dest location",
                 getString(R.string.ok), "", object : NotifyListener {
                     override fun onButtonClicked(which: Int) {}
                 }
@@ -811,9 +784,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                             mapFragment.destLng = destLongitude
                             mapFragment.destLat = destLatitide
                             if(postFindRideViewModel.obj?.trip_id != null) {
-                                mapFragment.trip_rider_id = postFindRideViewModel.obj?.trip_id!!
+                                mapFragment.tripriderid = postFindRideViewModel.obj?.trip_id!!
                             } else {
-                                mapFragment.trip_rider_id = postFindRideViewModel.obj?.trip_rider_id!!
+                                mapFragment.tripriderid = postFindRideViewModel.obj?.trip_rider_id!!
                             }
                             mapFragment.type = strType
                             home().setFragment(mapFragment)
@@ -944,7 +917,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         val LAYER_ID = "LAYER_ID"
     }
 
-    override fun walletBalanceResponse(balance: String) {
-        walletBalance = balance
+    override fun walletBalanceResponse(balance: WalletBalance) {
+        walletBalance = balance.balance
     }
 }

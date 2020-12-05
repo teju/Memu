@@ -1167,6 +1167,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAccountName(postUserSignupViewModel.obj?.name!!)
+                            UserInfoManager.getInstance(activity!!).saveRoleType(postUserSignupViewModel.obj?.role_type!!)
                             UserInfoManager.getInstance(activity!!).saveAccountId(
                                 postUserSignupViewModel.obj?.user_id.toString()!!)
                             home().setFragment(ProfilePicUploadFragment())
@@ -1174,7 +1175,6 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                         }
                     }
                 })
-
             }
         }
     }

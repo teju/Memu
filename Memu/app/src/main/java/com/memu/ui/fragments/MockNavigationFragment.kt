@@ -63,6 +63,7 @@ import com.memu.R
 import com.memu.etc.GPSTracker
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
+import com.memu.modules.checksum.WalletBalance
 import com.memu.modules.completedRides.MatchedBudy
 import com.memu.ui.BaseFragment
 import com.memu.ui.adapters.MatchingBuddiesAdapter
@@ -106,7 +107,9 @@ class MockNavigationFragment(
     lateinit var postGetAlertListViewModel: PostGetAlertListViewModel
     lateinit var postMApFeedDataViewModel: PostMApFeedDataViewModel
     lateinit var postMApFeedAddViewModel: PostMApFeedAddViewModel
+    lateinit var postCustomerEndNavigationViewModel: PostCustomerEndNavigationViewModel
     lateinit var postStartNavigationViewModel: PostStartNavigationViewModel
+    lateinit var postCustomerEndNavigationIDViewModel: PostCustomerEndNavigationIDViewModel
     lateinit var postEndNavigationViewModel: PostEndNavigationViewModel
     lateinit var postMakePaymentViewModel: PostMakePaymentViewModel
     lateinit var getchecksumviewmodel: GetCheckSumViewModel
@@ -126,7 +129,7 @@ class MockNavigationFragment(
     private var tracking = false
     var walletBalance = ""
     var invoive_id = ""
-    var amount_to_pay = 10.0
+    var amount_to_pay = 0.0
     var orderId="1000"
 
     private val callback = RerouteActivityLocationCallback(this)
@@ -184,7 +187,8 @@ class MockNavigationFragment(
         setWalletBalanceObserver(this)
         setPaymentAPIObserver()
         setGetCheckSUMRequestObserver()
-
+        setCustomerEndTripAPIObserver()
+        setCustomerEndTripIDAPIObserver()
         routeRefresh = RouteRefresh(Mapbox.getAccessToken(), this)
         mapView = v?.findViewById(R.id.mapView)
         mapView = v?.findViewById(R.id.mapView)
@@ -221,7 +225,7 @@ class MockNavigationFragment(
         if(BaseHelper.isEmpty(trip_id)) {
             endButton.visibility = View.GONE
         }
-        if(!isTripStarted) {
+        if(!isTripStarted && !UserInfoManager.getInstance(activity!!).getRoleType().equals("rider",ignoreCase = true)) {
             endButton.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Green)));
             txtendbtn.text = "Start Ride"
         } else {
@@ -229,13 +233,17 @@ class MockNavigationFragment(
             txtendbtn.text = "End Ride"
         }
         endButton.setOnClickListener {
-            if(!isTripStarted) {
+            if(!isTripStarted && !UserInfoManager.getInstance(activity!!).getRoleType().equals("rider",ignoreCase = true)) {
                 if(!BaseHelper.isEmpty(trip_id)) {
                     postStartNavigationViewModel.loadData(trip_id)
                 }
             } else {
                 navigation!!.stopNavigation()
-                postEndNavigationViewModel.loadData(trip_id,distanceTravelled)
+                if(UserInfoManager.getInstance(activity!!).getRoleType().equals("rider",ignoreCase = true)) {
+                    postCustomerEndNavigationIDViewModel.loadData(trip_id)
+                } else {
+                     postEndNavigationViewModel.loadData(trip_id, distanceTravelled)
+                }
             }
         }
         arrow_left.setOnClickListener {
@@ -574,6 +582,14 @@ class MockNavigationFragment(
         }
     }
 
+    fun amountToPAy()  {
+        if(postCustomerEndNavigationViewModel.obj?.trip_details != null) {
+            amount_to_pay =
+                postCustomerEndNavigationViewModel.obj?.trip_details?.no_of_kms!!.toDouble() *
+                        postCustomerEndNavigationViewModel.obj?.trip_details?.price_per_km!!.toDouble()
+        }
+    }
+
     fun setGetAlertsAPIObserver() {
         postGetAlertListViewModel = ViewModelProviders.of(this).get(PostGetAlertListViewModel::class.java).apply {
             this@MockNavigationFragment.let { thisFragReference ->
@@ -684,6 +700,41 @@ class MockNavigationFragment(
             }
         }
     }
+    fun setCustomerEndTripIDAPIObserver() {
+        postCustomerEndNavigationIDViewModel = ViewModelProviders.of(this).get(PostCustomerEndNavigationIDViewModel::class.java).apply {
+            this@MockNavigationFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) {
+                                endButton.setBackgroundTintList(null);
+                                txtendbtn.text = "End Ride"
+                                isTripStarted = true
+                            }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostCustomerEndNavigationIDViewModel.NEXT_STEP -> {
+                            postCustomerEndNavigationViewModel.loadData(postCustomerEndNavigationIDViewModel.obj?.trip_details?.trip_id!!,
+                                distanceTravelled,postCustomerEndNavigationIDViewModel.obj?.trip_details?.trip_rider_id!!)
+
+                        }
+                    }
+                })
+            }
+        }
+    }
 
     fun setEndTripAPIObserver() {
         postEndNavigationViewModel = ViewModelProviders.of(this).get(PostEndNavigationViewModel::class.java).apply {
@@ -701,14 +752,6 @@ class MockNavigationFragment(
                         getString(R.string.ok),"",object : NotifyListener {
                             override fun onButtonClicked(which: Int) {
                                 isTripStarted = false
-                                var amt = amount_to_pay
-                                if( amount_to_pay > walletBalance.toDouble()) {
-                                    amt = amount_to_pay - walletBalance.toDouble()
-                                }
-                                paymentStates = BEFORE_PAYMENT
-                                postMakePaymentViewModel.loadData("before",amt.toString(),
-                                    walletBalance,"123","234",trip_id,"online",
-                                    invoive_id,amount_to_pay.toString(),"pending")
                             }
                         }
                     )
@@ -718,18 +761,60 @@ class MockNavigationFragment(
                     when (state) {
                         PostEndNavigationViewModel.NEXT_STEP -> {
                             showNotifyDialog(
-                                "",postEndNavigationViewModel.obj?.message +"\nPay Now",
+                                "",postEndNavigationViewModel.obj?.message,
                                 getString(R.string.ok),"",object : NotifyListener {
                                     override fun onButtonClicked(which: Int) {
                                         isTripStarted = false
+                                        home().setFragment(HomeFragment())
+                                    }
+                                }
+                            )
+                        }
+                    }
+                })
+            }
+        }
+    }
+
+    fun setCustomerEndTripAPIObserver() {
+        postCustomerEndNavigationViewModel = ViewModelProviders.of(this).get(PostCustomerEndNavigationViewModel::class.java).apply {
+            this@MockNavigationFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) {
+                            }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostEndNavigationViewModel.NEXT_STEP -> {
+                            showNotifyDialog(
+                                "","Pay Now",
+                                getString(R.string.ok),"",object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) {
+                                        isTripStarted = false
+                                        amountToPAy()
                                         var amt = amount_to_pay
                                         if( amount_to_pay > walletBalance.toDouble()) {
                                             amt = amount_to_pay - walletBalance.toDouble()
                                         }
                                         paymentStates = BEFORE_PAYMENT
                                         postMakePaymentViewModel.loadData("before",amt.toString(),
-                                            walletBalance,"123","234",trip_id,"online",
-                                            invoive_id,amount_to_pay.toString(),"pending")
+                                            walletBalance,
+                                            postCustomerEndNavigationViewModel.obj?.trip_details?.driver_id!!,
+                                            postCustomerEndNavigationViewModel.obj?.trip_details?.trip_id!!,
+                                            "online", invoive_id,amount_to_pay.toString(),"pending")
 
                                         //home().setFragment(HomeFragment())
                                     }
@@ -770,6 +855,7 @@ class MockNavigationFragment(
                             }
                             when (paymentStates) {
                                 BEFORE_PAYMENT -> {
+                                    amountToPAy()
                                     if( amount_to_pay > walletBalance.toDouble()) {
                                         orderId = "ID"+Random().nextInt()
                                         paymentStates = RECHARGE
@@ -782,7 +868,7 @@ class MockNavigationFragment(
                                         }
                                         postMakePaymentViewModel.loadData(
                                             "after", amt.toString(),
-                                            walletBalance, "123", "234", trip_id, "online",
+                                            walletBalance, postCustomerEndNavigationViewModel.obj?.trip_details?.driver_id!!,  trip_id, "online",
                                             invoive_id, amount_to_pay.toString(), "success")
                                     }
                                 }
@@ -791,13 +877,16 @@ class MockNavigationFragment(
                                 }
                                 RECHARGE -> {
                                     paymentStates = AFTER_PAYMENT
+                                    amountToPAy()
                                     var amt = amount_to_pay
                                     if( amount_to_pay > walletBalance.toDouble()) {
                                         amt = amount_to_pay - walletBalance.toDouble()
                                     }
                                     postMakePaymentViewModel.loadData(
                                         "after", amt.toString(),
-                                        walletBalance, "123", "234", trip_id, "online",
+                                        walletBalance,
+                                        postCustomerEndNavigationViewModel.obj?.trip_details?.driver_id!!,
+                                        trip_id, "online",
                                         invoive_id, amount_to_pay.toString(), "success")
                                 }
                             }
@@ -950,17 +1039,16 @@ class MockNavigationFragment(
         }
     }
 
-    override fun walletBalanceResponse(balance: String) {
-        walletBalance = balance
+    override fun walletBalanceResponse(balance: WalletBalance) {
+        walletBalance = balance.balance!!
     }
 
     override fun onTransactionResponse(inResponse: Bundle?) {
         com.paytm.pgsdk.Log.d(TAG,"inResponse "+inResponse.toString())
-        if(inResponse!!.getString("RESPCODE") != "01") {
+        if(inResponse!!.getString("RESPCODE") == "01") {
             val amt_to_pay = amount_to_pay - walletBalance.toDouble()
             paymentStates = RECHARGE
-            postMakePaymentViewModel.loadData("wallet",amt_to_pay.toString(),walletBalance,
-                "","","","","","","")
+            postMakePaymentViewModel.loadData("wallet",amt_to_pay.toString(),walletBalance,"","","","","","")
         } else {
             BaseHelper.showAlert(activity, inResponse.getString("RESPMSG"))
         }

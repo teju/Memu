@@ -31,7 +31,7 @@ class PostMakePaymentViewModel(application: Application) : BaseViewModel(applica
         this.apl = application
     }
 
-    fun loadData(mode : String,credit_amount:String,wallet_balance : String,customer_id : String,
+    fun loadData(mode : String,credit_amount:String,wallet_balance : String,
                  driver_id:String,trip_id:String,payment_mode:String,invoice_id:String,amount:String,status:String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
@@ -75,8 +75,8 @@ class PostMakePaymentViewModel(application: Application) : BaseViewModel(applica
         wallet_details.put(Keys.WALLET_BALANCE,wallet_balance)
         genericHttpAsyncTask.setPostParams(Keys.WALLET_DETAILS,wallet_details)
         val payment_details = JSONObject()
-        if(!BaseHelper.isEmpty(customer_id)) {
-            payment_details.put(Keys.CUSTOMER_ID,customer_id)
+        if(!BaseHelper.isEmpty(driver_id)) {
+            payment_details.put(Keys.CUSTOMER_ID,UserInfoManager.getInstance(apl!!).getAccountId())
             payment_details.put(Keys.DRIVER_ID,driver_id)
             payment_details.put(Keys.TRIP_ID,trip_id)
             payment_details.put(Keys.PAYMENT_MODE,payment_mode)

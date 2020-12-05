@@ -8,11 +8,15 @@ class UserInfoManager private constructor() {
     private val KEY_ACCESS_TOKEN = "F3ZT7"
     private val KEY_ACCOUNT_ID = "V8D85H"
     private val KEY_ACCOUNT_NAME = "key_account_name"
+    private val KEY_ROLE_TYPE = "key_role_type"
+    private val REFERRAL_CODE = "referral_code"
     private val KEY_DEVICE_TOKEN = "key_device_token"
     private val KEY_PROFILE_PIC = "key_profile_pic"
 
     private var accessToken: String? = null
     private var accountName: String? = ""
+    private var roleType: String? = ""
+    private var referral_code: String? = ""
     private var accountId: String? = null
     private var profilePic: String? = ""
     private var deviceToken: String? = ""
@@ -85,10 +89,30 @@ class UserInfoManager private constructor() {
         editor.putString(KEY_ACCOUNT_NAME, accountName)
         editor.commit()
     }
+    fun saveRoleType(roleType: String) {
+        this.roleType = roleType
+        val editor = this.prefs!!.edit()
+        editor.putString(KEY_ROLE_TYPE, roleType)
+        editor.commit()
+    }
+    fun saveReferralCode(referral_code: String) {
+        this.referral_code = referral_code
+        val editor = this.prefs!!.edit()
+        editor.putString(REFERRAL_CODE, referral_code)
+        editor.commit()
+    }
 
     fun getAccountName(): String {
         this.accountName = this.prefs!!.getString(KEY_ACCOUNT_NAME, null)
         return accountName!!
+    }
+    fun getReferralCode(): String {
+        this.referral_code = this.prefs!!.getString(REFERRAL_CODE, null)
+        return referral_code!!
+    }
+    fun getRoleType(): String {
+        this.roleType = this.prefs!!.getString(KEY_ROLE_TYPE, "")
+        return roleType!!
     }
 
     fun saveNotiToken(deviceToken: String?) {

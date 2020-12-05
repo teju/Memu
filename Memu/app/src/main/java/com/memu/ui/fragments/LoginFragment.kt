@@ -137,6 +137,8 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postOtpViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAccountName(postOtpViewModel.obj?.name!!)
+                            UserInfoManager.getInstance(activity!!).saveRoleType(postOtpViewModel.obj?.role_type!!)
+                            UserInfoManager.getInstance(activity!!).saveReferralCode(postOtpViewModel.obj?.referel_code!!)
                             UserInfoManager.getInstance(activity!!).saveAccountId(
                                 postOtpViewModel.obj?.user_id.toString()!!)
 

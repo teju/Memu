@@ -569,7 +569,9 @@ class ActivityMain : AppCompatActivity(){
                             showNotifyDialog(
                                 "Request Status", postacceptRejectViewModel.obj?.message,
                                 getString(R.string.ok),"",object : NotifyListener {
-                                    override fun onButtonClicked(which: Int) { }
+                                    override fun onButtonClicked(which: Int) {
+
+                                    }
                                 }
                             ,0)
                         }

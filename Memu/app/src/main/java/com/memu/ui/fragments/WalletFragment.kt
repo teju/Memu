@@ -1,5 +1,6 @@
 package com.memu.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import com.iapps.gon.etc.callback.WalletBalanceListener
 import com.iapps.libs.helpers.BaseHelper
 import com.memu.R
 import com.memu.etc.UserInfoManager
+import com.memu.modules.checksum.WalletBalance
 import com.memu.ui.BaseFragment
 import com.memu.webservices.GetCheckSumViewModel
 import com.memu.webservices.GetWalletBalanceViewModel
@@ -21,7 +23,6 @@ import com.paytm.pgsdk.PaytmPGService
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback
 import kotlinx.android.synthetic.main.fragment_wallet.*
 import kotlinx.android.synthetic.main.profile_header.*
-import org.json.JSONObject
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -65,6 +66,7 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
         recharge_200.setOnClickListener(this)
         recharge_500.setOnClickListener(this)
         recharge_1000.setOnClickListener(this)
+        refer_now.setOnClickListener(this)
     }
 
     fun setPaymentAPIObserver() {
@@ -162,8 +164,7 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
     override fun onTransactionResponse(inResponse: Bundle?) {
         Log.d(TAG,"inResponse "+inResponse!!.getString("RESPCODE"))
         if(inResponse!!.getString("RESPCODE") == "01"){
-            postMakePaymentViewModel.loadData("wallet",amount.text.toString(),wallet_Balance,
-                "","","","","","","")
+            postMakePaymentViewModel.loadData("wallet",amount.text.toString(),wallet_Balance,"","","","","","")
         } else {
            BaseHelper.showAlert(activity,inResponse.getString("RESPMSG"))
         }
@@ -226,11 +227,28 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
                 amt = amt + 1000
                 amount.setText(amt.toString())
             }
+            R.id.refer_now -> {
+                referFriend()
+            }
         }
     }
 
-    override fun walletBalanceResponse(balance: String) {
-        wallet_Balance = balance
-        walletBalance.setText(balance)
+    override fun walletBalanceResponse(balance: WalletBalance) {
+        wallet_Balance = balance.balance!!
+        walletBalance.setText(wallet_Balance)
+        referral_points.setText(balance.referral_balance!!)
+    }
+    fun referFriend(){
+        try {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "text/plain"
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, activity?.getString(R.string.app_name))
+            var shareMessage = "Give a friend 2,000 points and get 2,000 points when they install app, " +
+                    "use my referal code "+UserInfoManager.getInstance(activity!!).getReferralCode()
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+            startActivity(Intent.createChooser(shareIntent, "choose one"))
+        } catch (e: Exception) {
+            //e.toString();
+        }
     }
 }

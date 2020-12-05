@@ -93,7 +93,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
     var destLng = 0.0
     var weekdays : java.util.ArrayList<String> = java.util.ArrayList<String>()
 
-    var trip_rider_id: String? = ""
+    var tripriderid: String? = ""
     var type: String? = ""
     var recursivedays: String? = ""
     private var gpsTracker: GPSTracker? = null
@@ -242,7 +242,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
             }
             Keys.POOLING_OFFER_RIDE,Keys.POOLING_FIND_RIDE -> {
-                postnviteRideGiversViewModel.loadData(trip_rider_id!!, type!!)
+                postnviteRideGiversViewModel.loadData(tripriderid!!, type!!)
                 shortes_route_result.visibility = View.VISIBLE
                 sos.visibility = View.GONE
                 fledit_recuring.visibility = View.GONE
@@ -359,7 +359,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 vehicle_id,
                 is_recuring,
                 completed!!.no_of_seats,
-                ToAddress()
+                ToAddress(),completed!!.trip_id
             )
             postEditRecuringViewModel.loadData(completed,fromAddress,toAddress)
 
@@ -492,9 +492,9 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
 
             }
             R.id.startButton -> {
-                System.out.println("destinationPoint startButton "+mapcurrentRoute)
+                System.out.println("destinationPoint startButton "+tripriderid)
                 home().setFragment(MockNavigationFragment(this!!.destinationPoint!!, this@MapFragment.maporiginPoint!!).apply {
-                    this.trip_id = trip_rider_id!!
+                    this.trip_id = tripriderid!!
                     this.trip_type = type!!
                     this.currentRoute = mapcurrentRoute
                 })
@@ -627,7 +627,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 })
                 errorMessage.observe(thisFragReference, Observer { s ->
                     showNotifyDialog(
-                        s.title, s.message!!,
+                        s.title, "Currently you dont have ride poolers",
                         getString(R.string.ok),"",object : NotifyListener {
                             override fun onButtonClicked(which: Int) { }
                         }

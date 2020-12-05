@@ -3,6 +3,7 @@ package com.memu.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -17,6 +18,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
+import com.google.gson.JsonParser.parseString
 import com.iapps.gon.etc.callback.*
 import com.iapps.libs.generics.GenericFragment
 import com.iapps.libs.helpers.BaseHelper
@@ -35,7 +38,10 @@ import com.memu.modules.userMainData.UserMainData
 import com.memu.ui.dialog.*
 import com.memu.webservices.*
 import kotlinx.android.synthetic.main.activity_main.ld
+import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.profile_header.*
+import kotlinx.android.synthetic.main.profile_header.name
+import kotlinx.android.synthetic.main.profile_header.profile_pic
 import kotlinx.android.synthetic.main.profile_wall.*
 
 import kotlinx.coroutines.*
@@ -139,10 +145,9 @@ open class BaseFragment : GenericFragment() {
                 messages_cnt.text = userMainData?.messages.toString()
             }
             try {
-                Helper.loadImage(activity!!,userMainData?.photo?.profile_path!!,profile_pic,R.drawable.default_profile_icon)
-
+                Helper.loadImage(activity!!,userMainData?.photo?.original_path!!,profile_pic,R.drawable.default_profile_icon)
             } catch (e : java.lang.Exception){
-
+                e.printStackTrace()
             }
             rides_shared.text = userMainData?.rides_shared!!.toString()
             dist_shared.text = userMainData?.distance_shared!!.toString()
@@ -581,7 +586,7 @@ open class BaseFragment : GenericFragment() {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         GetWalletBalanceViewModel.NEXT_STEP -> {
-                            walletBalanceListener.walletBalanceResponse(obj!!.balance)
+                            walletBalanceListener.walletBalanceResponse(obj!!)
                         }
                     }
                 })

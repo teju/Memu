@@ -92,12 +92,11 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                             destLng = which.to_address.longitude.toDouble()
                             destLat = which.to_address.lattitude.toDouble()
                             this.type = which.type
-                            this.trip_rider_id = which.id
+                            this.tripriderid = which.id
                         })
                     }
                 }
             }
-
         }
         recurringListAdapter = RecurringListAdapter(activity!!)
         recurringListAdapter!!.listener = object  : RecursiveListener {

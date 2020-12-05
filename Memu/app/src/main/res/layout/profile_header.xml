@@ -213,14 +213,14 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_pic"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:src="@drawable/default_profile_icon"
                 android:layout_centerVertical="true"
-                android:layout_marginTop="18dp"
-                android:src="@drawable/default_profile_icon"></de.hdodenhof.circleimageview.CircleImageView>
+                android:layout_marginTop="18dp">
+            </de.hdodenhof.circleimageview.CircleImageView>
         </RelativeLayout>
     </RelativeLayout>
     <LinearLayout

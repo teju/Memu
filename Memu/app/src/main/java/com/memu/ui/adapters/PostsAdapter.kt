@@ -201,7 +201,7 @@ class PostsAdapter(val context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
         try {
             Helper.loadImage(
                 context!!,
-                obj.get(position).user_info.photo.profile_path,
+                obj.get(position).user_info.photo.original_path,
                 holder.profile_pic,
                 R.drawable.default_profile_icon)
         }catch (e : Exception){

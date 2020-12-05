@@ -60,9 +60,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     private var myView: LinearLayout? = null
     private var mapboxMap: MapboxMap? = null
     private var locationComponent: LocationComponent? = null
-    private var permissionsManager: PermissionsManager? = null
-
-
+    var uploadImageType = PostUploadDocViewModel.ACTIVITY_PHOTO
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.profile_wall, container, false)
         return v
@@ -113,6 +111,10 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
             mapView!!.getMapAsync(this)
         } catch (e : Exception){
 
+        }
+        profile_pic.setOnClickListener {
+            uploadImageType = PostUploadDocViewModel.PROFILE_PHOTO
+            pickImage()
         }
     }
     override fun onMapReady(mapboxMap: MapboxMap) {
@@ -207,6 +209,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
 
             }
             R.id.upload_activity -> {
+                uploadImageType = PostUploadDocViewModel.PROFILE_PHOTO
                 pickImage()
             }
             R.id.rlFriends -> {
@@ -331,7 +334,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         try {
             val imageuri = data?.getData();// Get intent
             val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
-            postUploadDocViewModel.loadData(PostUploadDocViewModel.ACTIVITY_PHOTO, real_Path)
+            postUploadDocViewModel.loadData(uploadImageType, real_Path)
         } catch (e: Exception) {
         }
     }
@@ -358,7 +361,11 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUploadDocViewModel.NEXT_STEP -> {
-                            getUserWallViewModel.loadData(friend_id,"private")
+                            if(uploadImageType == PostUploadDocViewModel.PROFILE_PHOTO) {
+                                posUserMainDataViewModel.loadData(friend_id)
+                            } else {
+                                getUserWallViewModel.loadData(friend_id,"private")
+                            }
                         }
                     }
                 })

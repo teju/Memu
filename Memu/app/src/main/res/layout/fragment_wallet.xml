@@ -48,6 +48,7 @@
                     <RelativeLayout
                         android:layout_width="150dp"
                         android:background="@drawable/btn_green"
+                        android:id="@+id/refer_now"
                         android:layout_marginTop="0dp"
                         android:layout_height="80dp">
                         <TextView
@@ -103,6 +104,7 @@
                 <TextView
                     android:layout_width="100dp"
                     android:text="0"
+                    android:id="@+id/referral_points"
                     android:background="@color/white"
                     android:padding="10dp"
                     android:layout_marginLeft="10dp"

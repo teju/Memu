@@ -32,11 +32,8 @@ class FriendsAdapter(val context: Context) : RecyclerView.Adapter<FriendsAdapter
 
         holder.pos = position
         try {
-            println("onBindViewHolder "+obj.get(position).photo.profile_path)
-            Helper.loadImage(context!!,obj.get(position).photo.profile_path,holder.friend_img,R.drawable.default_profile_icon)
+            Helper.loadImage(context!!,obj.get(position).photo.original_path,holder.friend_img,R.drawable.default_profile_icon)
         } catch (e : java.lang.Exception){
-            println("onBindViewHolder Exception "+e.toString())
-
         }
         holder.friend_img.setOnClickListener {
             productAdapterListener?.onClick(holder.pos)
