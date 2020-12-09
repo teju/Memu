@@ -84,6 +84,7 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                             ).apply {
                                 this.trip_id = which.id
                                 this.trip_type = which.type
+                                this.status = which.status
                             })
                     } else {
                         home().setFragment(MapFragment().apply {

@@ -72,12 +72,14 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
     }
 
     override fun onResult(result: FriendList?, searchByLoc: Int) {
+        val followersAdapter = AcceptedFriendsAdapter(activity!!)
+        followersAdapter.isFriendsRequest = isFriendsRequest
         if(result?.user_list?.size != 0) {
-            val followersAdapter = AcceptedFriendsAdapter(activity!!)
-            followersAdapter.isFriendsRequest = isFriendsRequest
             followersAdapter.obj = result?.user_list as ArrayList<User>
-            followers.adapter = followersAdapter
+        } else {
+            followersAdapter.obj = ArrayList<User>()
         }
+        followers.adapter = followersAdapter
         (followers.adapter as AcceptedFriendsAdapter).productAdapterListener =
             object : AcceptedFriendsAdapter.ProductAdapterListener {
                 override fun onClick(position: Int,status : String) {
@@ -144,6 +146,8 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
                             if(postPendingFriendListViewModel.obj?.user_list?.size != 0) {
                                 mefollowersAdapter.obj =
                                     postPendingFriendListViewModel.obj?.user_list as ArrayList<User>
+                            } else {
+                                mefollowersAdapter.obj =  ArrayList<User>()
                             }
                             me_followers.adapter = mefollowersAdapter
                             (me_followers.adapter as PendingFriendsAdapter).productAdapterListener =
@@ -205,6 +209,8 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
                             if(postFollowersListViewModel.obj?.user_list?.size != 0) {
                                 mefollowersAdapter.obj =
                                     postFollowersListViewModel.obj?.user_list as ArrayList<User>
+                            } else {
+                                mefollowersAdapter.obj = ArrayList()
                             }
                             followers.adapter = mefollowersAdapter
                             (followers.adapter as PendingFriendsAdapter).productAdapterListener =

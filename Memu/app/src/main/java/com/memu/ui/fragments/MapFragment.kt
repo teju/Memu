@@ -395,14 +395,14 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 if(completed?.status!!.equals("scheduled",ignoreCase = true)) {
                     return "Pause"
                 } else {
-                    return "Scheduled"
+                    return "Resume"
                 }
             }
             "find_ride" -> {
                 if(completed?.status!!.equals("requested",ignoreCase = true)) {
                     return "Pause"
                 } else {
-                    return "Requested"
+                    return "Resume"
                 }
             }
         }
@@ -614,7 +614,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         }
     }
 
-
     fun setInviteRideGiversAPIObserver() {
         postnviteRideGiversViewModel = ViewModelProviders.of(this).get(PostnviteRideGiversViewModel::class.java).apply {
             this@MapFragment.let { thisFragReference ->
@@ -627,7 +626,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 })
                 errorMessage.observe(thisFragReference, Observer { s ->
                     showNotifyDialog(
-                        s.title, "Currently you dont have ride poolers",
+                        "", "Currently you dont have ride poolers",
                         getString(R.string.ok),"",object : NotifyListener {
                             override fun onButtonClicked(which: Int) { }
                         }
@@ -657,7 +656,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                                     }
                                 } catch (e : Exception){
                                     showNotifyDialog(
-                                        "No Matching List found", "",
+                                        "", "No Matching List found",
                                         getString(R.string.ok),"",object : NotifyListener {
                                             override fun onButtonClicked(which: Int) { }
                                         }

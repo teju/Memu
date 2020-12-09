@@ -101,6 +101,7 @@ class MockNavigationFragment(
     private var cameraPosition: CameraPosition?= null
     var trip_id: String = ""
     var trip_type: String = ""
+    var status: String = ""
     var currentRoute: DirectionsRoute? = null
     var isTripStarted = false
     private var mapboxMap: MapboxMap? = null
@@ -109,6 +110,7 @@ class MockNavigationFragment(
     lateinit var postMApFeedAddViewModel: PostMApFeedAddViewModel
     lateinit var postCustomerEndNavigationViewModel: PostCustomerEndNavigationViewModel
     lateinit var postStartNavigationViewModel: PostStartNavigationViewModel
+    lateinit var postCustomerStartNavigationViewModel: PostCustomerStartNavigationViewModel
     lateinit var postCustomerEndNavigationIDViewModel: PostCustomerEndNavigationIDViewModel
     lateinit var postEndNavigationViewModel: PostEndNavigationViewModel
     lateinit var postMakePaymentViewModel: PostMakePaymentViewModel
@@ -189,6 +191,7 @@ class MockNavigationFragment(
         setGetCheckSUMRequestObserver()
         setCustomerEndTripAPIObserver()
         setCustomerEndTripIDAPIObserver()
+        setCustomerStartTripAPIObserver()
         routeRefresh = RouteRefresh(Mapbox.getAccessToken(), this)
         mapView = v?.findViewById(R.id.mapView)
         mapView = v?.findViewById(R.id.mapView)
@@ -225,7 +228,7 @@ class MockNavigationFragment(
         if(BaseHelper.isEmpty(trip_id)) {
             endButton.visibility = View.GONE
         }
-        if(!isTripStarted && !UserInfoManager.getInstance(activity!!).getRoleType().equals("rider",ignoreCase = true)) {
+        if(!status.equals("started",ignoreCase = true)) {
             endButton.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Green)));
             txtendbtn.text = "Start Ride"
         } else {
@@ -233,9 +236,13 @@ class MockNavigationFragment(
             txtendbtn.text = "End Ride"
         }
         endButton.setOnClickListener {
-            if(!isTripStarted && !UserInfoManager.getInstance(activity!!).getRoleType().equals("rider",ignoreCase = true)) {
+            if(!isTripStarted) {
                 if(!BaseHelper.isEmpty(trip_id)) {
-                    postStartNavigationViewModel.loadData(trip_id)
+                    if(UserInfoManager.getInstance(activity!!).getRoleType().equals("rider",ignoreCase = true)) {
+                        postCustomerStartNavigationViewModel.loadData(trip_id)
+                    } else {
+                        postStartNavigationViewModel.loadData(trip_id)
+                    }
                 }
             } else {
                 navigation!!.stopNavigation()
@@ -700,6 +707,42 @@ class MockNavigationFragment(
             }
         }
     }
+    fun setCustomerStartTripAPIObserver() {
+        postCustomerStartNavigationViewModel = ViewModelProviders.of(this).get(PostCustomerStartNavigationViewModel::class.java).apply {
+            this@MockNavigationFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) {
+                                endButton.setBackgroundTintList(null);
+                                txtendbtn.text = "End Ride"
+                                isTripStarted = true
+                            }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostCustomerStartNavigationViewModel.NEXT_STEP -> {
+                            endButton.setBackgroundTintList(null);
+                            txtendbtn.text = "End Ride"
+                            isTripStarted = true
+                        }
+                    }
+                })
+            }
+        }
+    }
+
     fun setCustomerEndTripIDAPIObserver() {
         postCustomerEndNavigationIDViewModel = ViewModelProviders.of(this).get(PostCustomerEndNavigationIDViewModel::class.java).apply {
             this@MockNavigationFragment.let { thisFragReference ->
@@ -799,12 +842,13 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostEndNavigationViewModel.NEXT_STEP -> {
+                            amountToPAy()
                             showNotifyDialog(
-                                "","Pay Now",
+                                "","Your Wallet balance is"+walletBalance
+                                        +"\nPay Now amount of Rs "+amount_to_pay,
                                 getString(R.string.ok),"",object : NotifyListener {
                                     override fun onButtonClicked(which: Int) {
                                         isTripStarted = false
-                                        amountToPAy()
                                         var amt = amount_to_pay
                                         if( amount_to_pay > walletBalance.toDouble()) {
                                             amt = amount_to_pay - walletBalance.toDouble()

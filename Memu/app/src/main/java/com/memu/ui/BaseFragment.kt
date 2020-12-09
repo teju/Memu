@@ -135,14 +135,20 @@ open class BaseFragment : GenericFragment() {
             if(userMainData?.friends != 0) {
                 friends_cnt.visibility = View.VISIBLE
                 friends_cnt.text = userMainData?.friends.toString()
+            } else {
+                friends_cnt.visibility = View.GONE
             }
             if(userMainData?.followers != 0) {
                 followers_cnt_.visibility = View.VISIBLE
                 followers_cnt_.text = userMainData?.followers.toString()
+            } else {
+                followers_cnt_.visibility = View.GONE
             }
             if(userMainData?.messages != 0) {
                 messages_cnt.visibility = View.VISIBLE
                 messages_cnt.text = userMainData?.messages.toString()
+            } else {
+                messages_cnt.visibility = View.GONE
             }
             try {
                 Helper.loadImage(activity!!,userMainData?.photo?.original_path!!,profile_pic,R.drawable.default_profile_icon)

@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="100dp"
-                    android:text="Referral Balance:"
+                    android:text="Total points:"
                     android:textSize="13dp"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/Black"
@@ -125,7 +125,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="100dp"
-                    android:text="Total Balance:"
+                    android:text="Wallet Balance:"
                     android:textSize="13dp"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/Black"

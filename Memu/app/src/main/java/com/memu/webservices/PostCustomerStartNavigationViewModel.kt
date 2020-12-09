@@ -11,7 +11,7 @@ import com.memu.modules.UserSignup.UserSignUp
 import org.json.JSONArray
 import org.json.JSONObject
 
-class PostStartNavigationViewModel(application: Application) : BaseViewModel(application) {
+class PostCustomerStartNavigationViewModel(application: Application) : BaseViewModel(application) {
 
     private val trigger = SingleLiveEvent<Integer>()
 
@@ -68,7 +68,7 @@ class PostStartNavigationViewModel(application: Application) : BaseViewModel(app
         genericHttpAsyncTask.method = BaseConstants.POST
         genericHttpAsyncTask.setUrl(APIs.postCustomerStartTrip)
         Helper.applyHeader(apl,genericHttpAsyncTask)
-        genericHttpAsyncTask.setPostParams(Keys.TRIP_ID,trip_id)
+        genericHttpAsyncTask.setPostParams(Keys.TRIP_RIDER_ID_,trip_id)
         genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.context = apl.applicationContext

@@ -162,6 +162,12 @@ class ActivityMain : AppCompatActivity(){
                                         "FR",
                                         obj.freind_id, "Accept"
                                     )
+                                } else {
+                                    isFriendsReques = true
+                                    postAcceptFriendRequestViewModel.loadData(
+                                        "FR",
+                                        obj.freind_id, "Reject"
+                                    )
                                 }
 
                             } else if(obj.type.equals("FL",ignoreCase = true)) {

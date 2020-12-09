@@ -59,7 +59,6 @@ class PostFriendListViewModel(application: Application) : BaseViewModel(applicat
 
                         }else{
                             errorMessage.value = createErrorMessageObject(response)
-
                         }
                     } catch (e: Exception) {
                         System.out.println("postPendingFriendListViewModel Exception "+e.toString())

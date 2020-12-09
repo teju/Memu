@@ -72,6 +72,30 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         initUI();
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        var type = "private"
+        if(isPubLicWall) {
+            type = "public"
+        }
+        getUserWallViewModel.loadData(friend_id,type)
+        posUserMainDataViewModel.loadData(friend_id)
+        postFriendListViewModel.loadData("FR","",0,this)
+        postFriendListViewModel.loadData("FR","",1,this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        var type = "private"
+        if(isPubLicWall) {
+            type = "public"
+        }
+        getUserWallViewModel.loadData(friend_id,type)
+        posUserMainDataViewModel.loadData(friend_id)
+        postFriendListViewModel.loadData("FR","",0,this)
+        postFriendListViewModel.loadData("FR","",1,this)
+
+    }
+
     private fun initUI() {
         find_more.setOnClickListener(this)
         arrow_left.setOnClickListener(this)
@@ -95,14 +119,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         } else {
             privateWallSettings()
         }
-        var type = "private"
-        if(isPubLicWall) {
-            type = "public"
-        }
-        getUserWallViewModel.loadData(friend_id,type)
-        posUserMainDataViewModel.loadData(friend_id)
-        postFriendListViewModel.loadData("FR","",0,this)
-        postFriendListViewModel.loadData("FR","",1,this)
+
 
         try {
             val  inflater = activity?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater;
@@ -117,6 +134,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
             pickImage()
         }
     }
+
     override fun onMapReady(mapboxMap: MapboxMap) {
         try {
 
@@ -134,7 +152,11 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     override fun onResult(result: FriendList?, searchByLoc: Int) {
         if(searchByLoc == 0) {
             val adapter = FriendsAdapter(context!!)
-            adapter.obj = result?.user_list as ArrayList<User>
+            if(result?.user_list?.size != 0) {
+                adapter.obj = result?.user_list as ArrayList<User>
+            } else {
+                adapter.obj = ArrayList()
+            }
             friens_rl.adapter = adapter
             (friens_rl.adapter as FriendsAdapter).productAdapterListener =
                 object : FriendsAdapter.ProductAdapterListener {
@@ -209,7 +231,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
 
             }
             R.id.upload_activity -> {
-                uploadImageType = PostUploadDocViewModel.PROFILE_PHOTO
+                uploadImageType = PostUploadDocViewModel.ACTIVITY_PHOTO
                 pickImage()
             }
             R.id.rlFriends -> {
@@ -363,13 +385,14 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                         PostUploadDocViewModel.NEXT_STEP -> {
                             if(uploadImageType == PostUploadDocViewModel.PROFILE_PHOTO) {
                                 posUserMainDataViewModel.loadData(friend_id)
+                                UserInfoManager.getInstance(activity!!).saveProfilePic(
+                                    postUploadDocViewModel.obj?.original_path!!)
                             } else {
                                 getUserWallViewModel.loadData(friend_id,"private")
                             }
                         }
                     }
                 })
-
             }
         }
     }

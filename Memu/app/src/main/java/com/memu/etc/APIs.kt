@@ -90,6 +90,9 @@ class APIs : BaseKeys() {
         val postStartTrip : String
             get() = BASE_URL!!  + BOOKING+ "start-trip"
 
+        val postCustomerStartTrip : String
+            get() = BASE_URL!!  + BOOKING+ "customer-checkin"
+
         val postEndTrip : String
             get() = BASE_URL!!  + BOOKING+ "end-trip"
 

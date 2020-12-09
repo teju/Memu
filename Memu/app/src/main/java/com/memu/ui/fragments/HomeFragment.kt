@@ -119,6 +119,13 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         if(Keys.MAPTYPE == Keys.POOLING_BACK) {
             poolingUI()
         }
+        try {
+            System.out.println("loadImage "+UserInfoManager.getInstance(activity!!).getProfilePic())
+            Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.user_default)
+
+        } catch (e : java.lang.Exception){
+
+        }
     }
     override fun onBackTriggered() {
         super.onBackTriggered()
@@ -130,9 +137,11 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         mapView!!.onStart()
     }
 
+
     override fun onResume() {
         super.onResume()
         mapView!!.onResume()
+
     }
 
     override fun onPause() {

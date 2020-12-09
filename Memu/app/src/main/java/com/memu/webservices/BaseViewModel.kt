@@ -127,7 +127,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
             val errorMessageModel = ErrorMessageModel()
             errorMessageModel.isShouldDisplayDialog = false
             errorMessageModel.title = ""
-            errorMessageModel.message = ""
+            errorMessageModel.message = "No Data Found"
             return errorMessageModel
         }
     }
