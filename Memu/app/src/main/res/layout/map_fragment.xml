@@ -237,7 +237,7 @@
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
         android:id="@+id/fledit_recuring"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_margin="20dp"
         android:background="@drawable/themeblue_rounded_rectangle"
         android:layout_height="wrap_content">
@@ -270,7 +270,7 @@
                     android:layout_marginBottom="20dp"
                     android:layout_height="wrap_content">
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_weight="1.6"
                         android:layout_gravity="center_vertical"
                         android:orientation="vertical"
@@ -327,7 +327,6 @@
                         </RelativeLayout>
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_weight="1"
                             android:id="@+id/destRl"
                             android:layout_marginTop="8dp"
                             android:orientation="vertical"
@@ -366,6 +365,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:orientation="vertical"
+                            android:visibility="gone"
                             android:layout_height="wrap_content">
                             <LinearLayout
                                 android:layout_width="match_parent"

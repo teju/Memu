@@ -68,6 +68,7 @@ class PostFriendRequestViewModel(application: Application) : BaseViewModel(appli
         Helper.applyHeader(apl,genericHttpAsyncTask)
         genericHttpAsyncTask.setPostParams(Keys.TYPE,type)
         genericHttpAsyncTask.setPostParams(Keys.FREIND_ID,freind_id)
+        genericHttpAsyncTask.setPostParams(Keys.REQUEST,"by_me")
         genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
         genericHttpAsyncTask.context = apl.applicationContext
         genericHttpAsyncTask.setCache(false)

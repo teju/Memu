@@ -86,13 +86,11 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
                     if(isFriendsRequest) {
                         postAcceptFriendRequestViewModel.loadData(
                             "FR",
-                            result?.user_list.get(position).freind_id, status
-                        )
+                            result?.user_list.get(position).freind_id, status,"to_me")
                     } else {
                         postAcceptFriendRequestViewModel.loadData(
                             "FL",
-                            result?.user_list.get(position).freind_id, "Remove"
-                        )
+                            result?.user_list.get(position).freind_id, "Remove","to_me")
                     }
                 }
 
@@ -157,14 +155,12 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
                                            postAcceptFriendRequestViewModel.loadData(
                                                "FR",
                                                postPendingFriendListViewModel.obj!!.user_list.get(
-                                                   position
-                                               ).freind_id, status
-                                           )
+                                                   position).freind_id, status,"to_me")
                                        } else {
                                            postAcceptFriendRequestViewModel.loadData(
                                                "FL",
-                                               postPendingFriendListViewModel.obj!!?.user_list.get(position).freind_id, "Remove"
-                                           )
+                                               postPendingFriendListViewModel.obj!!?.user_list.get(position).freind_id,
+                                               "Remove","by_me")
                                        }
                                    }
 
@@ -217,7 +213,8 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
                                 object : PendingFriendsAdapter.ProductAdapterListener {
                                     override fun onClick(position: Int,status : String) {
                                         postAcceptFriendRequestViewModel.loadData("FL",
-                                            postFollowersListViewModel.obj!!.user_list.get(position).freind_id,"Remove")
+                                            postFollowersListViewModel.obj!!.user_list.get(position).freind_id,
+                                            "Remove","to_me")
                                     }
 
                                     override fun onClickOfList(position: Int, status: String) {

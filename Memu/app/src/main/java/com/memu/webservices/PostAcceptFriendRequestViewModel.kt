@@ -27,7 +27,7 @@ class PostAcceptFriendRequestViewModel(application: Application) : BaseViewModel
         this.apl = application
     }
 
-    fun loadData(type: String, freind_id : String,status : String) {
+    fun loadData(type: String, freind_id : String,status : String,request :String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -67,6 +67,7 @@ class PostAcceptFriendRequestViewModel(application: Application) : BaseViewModel
         genericHttpAsyncTask.setUrl(APIs.acceptFriendRequest)
         Helper.applyHeader(apl,genericHttpAsyncTask)
         genericHttpAsyncTask.setPostParams(Keys.TYPE,type)
+        genericHttpAsyncTask.setPostParams(Keys.REQUEST,request)
         genericHttpAsyncTask.setPostParams(Keys.STATUS,status)
         genericHttpAsyncTask.setPostParams(Keys.FREIND_ID,freind_id)
         genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())

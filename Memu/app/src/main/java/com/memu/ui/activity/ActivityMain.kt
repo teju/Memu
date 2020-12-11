@@ -104,8 +104,7 @@ class ActivityMain : AppCompatActivity(){
 
                 var btn_positive = "OK"
                 var btn_negative = ""
-                if(obj.type.equals("find_ride") || obj.type.equals("offer_ride") ||
-                    obj.type.equals("FR",ignoreCase = true) || obj.type.equals("FL",ignoreCase = true)) {
+                if(obj.isAccept) {
                     btn_positive = "Accept"
                     btn_negative = "Ignore"
                 } else {
@@ -160,14 +159,12 @@ class ActivityMain : AppCompatActivity(){
                                     isFriendsReques = true
                                     postAcceptFriendRequestViewModel.loadData(
                                         "FR",
-                                        obj.freind_id, "Accept"
-                                    )
+                                        obj.freind_id, "Accept","to_me")
                                 } else {
                                     isFriendsReques = true
                                     postAcceptFriendRequestViewModel.loadData(
                                         "FR",
-                                        obj.freind_id, "Reject"
-                                    )
+                                        obj.freind_id, "Remove","to_me")
                                 }
 
                             } else if(obj.type.equals("FL",ignoreCase = true)) {

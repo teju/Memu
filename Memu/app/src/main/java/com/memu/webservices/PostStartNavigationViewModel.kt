@@ -66,7 +66,7 @@ class PostStartNavigationViewModel(application: Application) : BaseViewModel(app
         })
 
         genericHttpAsyncTask.method = BaseConstants.POST
-        genericHttpAsyncTask.setUrl(APIs.postCustomerStartTrip)
+        genericHttpAsyncTask.setUrl(APIs.postStartTrip)
         Helper.applyHeader(apl,genericHttpAsyncTask)
         genericHttpAsyncTask.setPostParams(Keys.TRIP_ID,trip_id)
         genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
