@@ -107,8 +107,13 @@ class UserInfoManager private constructor() {
         return accountName!!
     }
     fun getReferralCode(): String {
-        this.referral_code = this.prefs!!.getString(REFERRAL_CODE, null)
-        return referral_code!!
+        try {
+            this.referral_code = this.prefs!!.getString(REFERRAL_CODE, null)
+            return referral_code!!
+        } catch (e:Exception){
+            return ""
+        }
+
     }
     fun getRoleType(): String {
         this.roleType = this.prefs!!.getString(KEY_ROLE_TYPE, "")

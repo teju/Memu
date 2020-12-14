@@ -54,13 +54,13 @@
                 android:src="@drawable/default_profile_icon">
             </de.hdodenhof.circleimageview.CircleImageView>
             <ImageView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:id="@+id/post_img"
+                android:layout_centerHorizontal="true"
                 android:backgroundTint="@android:color/transparent"
                 android:background="@drawable/theme_image_rounded_rectangle"
                 android:layout_margin="20dp"
                 android:layout_height="200dp"
-                android:scaleType="center"
                 android:adjustViewBounds="true">
             </ImageView>
 

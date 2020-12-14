@@ -113,6 +113,7 @@ dependencies {
     implementation('com.paytm:pgplussdk:1.4.4') {
         transitive = true;
     }
+    compile 'com.makeramen:roundedimageview:2.3.0'
 
 }
 apply plugin: 'com.google.gms.google-services'

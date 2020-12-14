@@ -151,7 +151,7 @@ open class BaseFragment : GenericFragment() {
                 messages_cnt.visibility = View.GONE
             }
             try {
-                Helper.loadImage(activity!!,userMainData?.photo?.original_path!!,profile_pic,R.drawable.default_profile_icon)
+                Helper.loadImage(activity!!,userMainData?.photo?.thumb_path!!,profile_pic,R.drawable.default_profile_icon)
             } catch (e : java.lang.Exception){
                 e.printStackTrace()
             }

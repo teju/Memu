@@ -149,7 +149,7 @@
                     android:backgroundTint="@color/YellowGreen"
                     android:background="@drawable/theme_rounded_rectangle"
                     android:layout_marginRight="75dp"
-                    android:text="Tap to find\nCab/Taxi"
+                    android:text="Tap to find\nCab/Taxi\n(Coming Soon)"
                     android:layout_height="wrap_content">
                 </TextView>
                 <ImageView

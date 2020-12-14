@@ -239,7 +239,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
             }
             R.id.tvFriends -> {
                 if(isPubLicWall) {
-                    if(!getUserWallViewModel.obj?.is_freind!!) {
+                    if(getUserWallViewModel.obj != null && !getUserWallViewModel.obj?.is_freind!!) {
                         postFriendRequestViewModel.loadData("FR", friend_id)
                     }
                 } else {

@@ -239,12 +239,17 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
         referral_points.setText(balance.referral_balance!!)
     }
     fun referFriend(){
+        var referral_code =""
+        if(UserInfoManager.getInstance(activity!!).getReferralCode() != null) {
+            referral_code = UserInfoManager.getInstance(activity!!).getReferralCode()
+        }
         try {
+
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, activity?.getString(R.string.app_name))
             var shareMessage = "Give a friend 2,000 points and get 2,000 points when they install app, " +
-                    "use my referal code "+UserInfoManager.getInstance(activity!!).getReferralCode()
+                    "use my referal code "+referral_code+"\nhttps://memu.world"
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
             startActivity(Intent.createChooser(shareIntent, "choose one"))
         } catch (e: Exception) {

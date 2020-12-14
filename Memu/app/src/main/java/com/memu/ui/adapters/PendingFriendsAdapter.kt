@@ -44,7 +44,7 @@ class PendingFriendsAdapter(val context: Context) : RecyclerView.Adapter<Pending
         try {
             Helper.loadImage(
                 context,
-                obj.get(position).photo.profile_path,
+                obj.get(position).photo.thumb_path,
                 holder.profile_icon,
                 R.drawable.default_profile_icon
             )

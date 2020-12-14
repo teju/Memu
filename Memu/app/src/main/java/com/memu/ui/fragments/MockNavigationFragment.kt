@@ -687,9 +687,6 @@ class MockNavigationFragment(
                         s.title, s.message!!,
                         getString(R.string.ok),"",object : NotifyListener {
                             override fun onButtonClicked(which: Int) {
-                                endButton.setBackgroundTintList(null);
-                                txtendbtn.text = "End Ride"
-                                isTripStarted = true
                             }
                         }
                     )
@@ -844,7 +841,7 @@ class MockNavigationFragment(
                         PostEndNavigationViewModel.NEXT_STEP -> {
                             amountToPAy()
                             showNotifyDialog(
-                                "","Your Wallet balance is"+walletBalance
+                                "","Your Wallet balance is "+walletBalance
                                         +"\nPay Now amount of Rs "+amount_to_pay,
                                 getString(R.string.ok),"",object : NotifyListener {
                                     override fun onButtonClicked(which: Int) {

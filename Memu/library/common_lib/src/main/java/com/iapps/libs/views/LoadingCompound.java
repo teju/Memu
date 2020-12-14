@@ -170,12 +170,16 @@ public class LoadingCompound
 	 * Hide the loading compound
 	 */
 	public void hide() {
-		countSuccess++;
+		try {
+			countSuccess++;
 
-		// Hide ld if successfully load all api(s)
-		// If at least 1 api call is fail, don't hide. BUT, you have to handle this on fail.
-		if (countTotal <= countSuccess)
-			BaseHelper.goneView(this);
+			// Hide ld if successfully load all api(s)
+			// If at least 1 api call is fail, don't hide. BUT, you have to handle this on fail.
+			if (countTotal <= countSuccess)
+				BaseHelper.goneView(this);
+		} catch (Exception e){
+
+		}
 	}
 
 	public void hideForce() {

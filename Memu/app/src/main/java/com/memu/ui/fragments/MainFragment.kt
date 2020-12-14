@@ -69,6 +69,7 @@ class MainFragment : BaseFragment() , View.OnClickListener {
         permissions.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
         permissions.add(android.Manifest.permission.READ_SMS)
         permissions.add(android.Manifest.permission.RECEIVE_SMS)
+        permissions.add(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         checkPermissions(permissions, permissionListener)
 
     }

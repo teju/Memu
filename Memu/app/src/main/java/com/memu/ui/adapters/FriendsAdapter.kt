@@ -32,7 +32,7 @@ class FriendsAdapter(val context: Context) : RecyclerView.Adapter<FriendsAdapter
 
         holder.pos = position
         try {
-            Helper.loadImage(context!!,obj.get(position).photo.original_path,holder.friend_img,R.drawable.default_profile_icon)
+            Helper.loadImage(context!!,obj.get(position).photo.thumb_path,holder.friend_img,R.drawable.default_profile_icon)
         } catch (e : java.lang.Exception){
         }
         holder.friend_img.setOnClickListener {

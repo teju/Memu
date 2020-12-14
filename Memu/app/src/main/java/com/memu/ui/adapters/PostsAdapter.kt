@@ -201,7 +201,7 @@ class PostsAdapter(val context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
         try {
             Helper.loadImage(
                 context!!,
-                obj.get(position).user_info.photo.original_path,
+                obj.get(position).user_info.photo.thumb_path,
                 holder.profile_pic,
                 R.drawable.default_profile_icon)
         }catch (e : Exception){
@@ -213,8 +213,14 @@ class PostsAdapter(val context: Context) : RecyclerView.Adapter<PostsAdapter.Vie
 
         }
         try {
-            Helper.loadImage(context!!,obj.get(position).image.profile_path,holder.post_img,0)
+            Helper.loadImage(context!!,obj.get(position).image.original_path,holder.post_img,0)
         } catch (e : java.lang.Exception){
+
+        }
+        if(obj.get(position).type.equals("image")) {
+            holder.home_mapView.visibility = View.GONE
+        } else {
+            holder.home_mapView.visibility = View.VISIBLE
 
         }
         try {

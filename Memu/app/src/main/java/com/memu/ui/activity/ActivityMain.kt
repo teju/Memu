@@ -159,7 +159,7 @@ class ActivityMain : AppCompatActivity(){
                                     isFriendsReques = true
                                     postAcceptFriendRequestViewModel.loadData(
                                         "FR",
-                                        obj.freind_id, "Accept","to_me")
+                                        obj.freind_id, "Accepted","to_me")
                                 } else {
                                     isFriendsReques = true
                                     postAcceptFriendRequestViewModel.loadData(
