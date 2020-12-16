@@ -1,5 +1,6 @@
 package com.memu.ui.fragments
 
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -7,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,6 +56,7 @@ import java.io.File
 class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     PostFriendListViewModel.FriendsSearchResListener , OnMapReadyCallback{
 
+    private var cameraOutputUri: Uri? = null
     lateinit var getUserWallViewModel: GetUserWallViewModel
     lateinit var postUploadDocViewModel: PostUploadDocViewModel
     lateinit var postFriendRequestViewModel: PostFriendRequestViewModel
@@ -287,8 +290,8 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     }
 
     fun pickImage() {
-        val file: File = activity!!.getExternalFilesDir(Environment.DIRECTORY_DCIM)
-        val cameraOutputUri: Uri = Uri.fromFile(file)
+        cameraOutputUri = activity!!.contentResolver
+            .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())
         val intent: Intent = BaseHelper.getPickIntent(cameraOutputUri,activity!!)
         startActivityForResult(intent, PICK_PHOTO_PHOTO)
     }
@@ -359,11 +362,10 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         super.onActivityResult(requestCode, resultCode, data)
         try {
              var imageuri:Uri? = null;
-            if(data?.hasExtra("data")!!) {
-                val photo = data.extras["data"] as Bitmap
-                imageuri = BaseHelper.getImageUri(activity!!.getApplicationContext(), photo)
-            } else {
+            if(data != null) {
                 imageuri = data?.getData();// Get intent
+            } else {
+                imageuri = cameraOutputUri
             }
             val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
             postUploadDocViewModel.loadData(uploadImageType, real_Path)
@@ -394,6 +396,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUploadDocViewModel.NEXT_STEP -> {
+                            ld.hide()
                             if(uploadImageType == PostUploadDocViewModel.PROFILE_PHOTO) {
                                 posUserMainDataViewModel.loadData(friend_id)
                                 UserInfoManager.getInstance(activity!!).saveProfilePic(

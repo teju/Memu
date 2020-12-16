@@ -62,6 +62,8 @@ class PostUploadDocViewModel(application: Application) : BaseViewModel(applicati
 
                         showUnknowResponseErrorMessage()
                     }
+                } else {
+                    isLoading.postValue(false)
                 }
 
             }

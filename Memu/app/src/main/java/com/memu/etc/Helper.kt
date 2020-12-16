@@ -1,34 +1,36 @@
 package com.memu.etc
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.location.Address
 import android.location.Geocoder
 import android.net.ConnectivityManager
+import android.net.Uri
+import android.os.Build
 import android.os.Environment
+import android.provider.MediaStore
+import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
+import android.util.Patterns
+import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.annotation.Nullable
-
+import com.bumptech.glide.Glide
 import com.iapps.libs.helpers.HTTPAsyncTask
 import com.iapps.libs.objects.Response
 import com.memu.R
-import java.io.*
-import android.util.Patterns
-import android.text.TextUtils
-
-import java.util.regex.Pattern
-import android.util.TypedValue
-import android.widget.ImageView
-import com.bumptech.glide.Glide
 import org.json.JSONObject
+import java.io.*
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 
 
 open class Helper  {
@@ -267,5 +269,4 @@ open class Helper  {
         }
         return obj
     }
-
 }

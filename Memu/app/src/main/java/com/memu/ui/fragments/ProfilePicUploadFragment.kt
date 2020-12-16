@@ -1,6 +1,7 @@
 package com.memu.ui.fragments
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -33,6 +34,7 @@ import java.io.File
 
 class ProfilePicUploadFragment : BaseFragment()  {
     lateinit var postUploadDocViewModel: PostUploadDocViewModel
+    private var cameraOutputUri: Uri? = null
 
     val PICK_PHOTO_PHOTO = 10009
     var uploadSuccess = false
@@ -62,8 +64,8 @@ class ProfilePicUploadFragment : BaseFragment()  {
     }
 
     fun pickImage() {
-        val file: File = activity!!.getExternalFilesDir(Environment.DIRECTORY_DCIM)
-        val cameraOutputUri: Uri = Uri.fromFile(file)
+        cameraOutputUri = activity!!.contentResolver
+            .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())
         val intent: Intent = BaseHelper.getPickIntent(cameraOutputUri,activity!!)
         startActivityForResult(intent, PICK_PHOTO_PHOTO)
     }
@@ -73,11 +75,10 @@ class ProfilePicUploadFragment : BaseFragment()  {
         super.onActivityResult(requestCode, resultCode, data)
             try {
                 var imageuri:Uri? = null;
-                if(data?.hasExtra("data")!!) {
-                    val photo = data.extras["data"] as Bitmap
-                    imageuri = BaseHelper.getImageUri(activity!!.getApplicationContext(), photo)
-                } else {
+                if(data != null) {
                     imageuri = data?.getData();// Get intent
+                } else {
+                    imageuri = cameraOutputUri
                 }
                 val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
                 postUploadDocViewModel.loadData(PostUploadDocViewModel.PROFILE_PHOTO, real_Path)

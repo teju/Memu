@@ -3,6 +3,7 @@ package com.memu.ui.fragments
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -10,6 +11,7 @@ import android.location.*
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.view.*
 import com.memu.R
 import com.memu.ui.BaseFragment
@@ -47,7 +49,7 @@ import kotlin.collections.ArrayList
 
 class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListener {
 
-
+    private var cameraOutputUri: Uri? = null
     var fbObj: JSONObject? = null
     val ANIMATION_SPEED = 2000
     val counter = CountDownTimerHelper()
@@ -364,8 +366,8 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     }
 
     fun pickImage() {
-        val file: File = activity!!.getExternalFilesDir(Environment.DIRECTORY_DCIM)
-        val cameraOutputUri: Uri = Uri.fromFile(file)
+        cameraOutputUri = activity!!.contentResolver
+            .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())
         val intent: Intent = BaseHelper.getPickIntent(cameraOutputUri,activity!!)
         startActivityForResult(intent, PICK_PHOTO_DOC)
     }
@@ -387,11 +389,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         } else {
             try {
                 var imageuri: Uri? = null;
-                if(data?.hasExtra("data")!!) {
-                    val photo = data.extras["data"] as Bitmap
-                    imageuri = BaseHelper.getImageUri(activity!!.getApplicationContext(), photo)
-                } else {
+                if(data != null) {
                     imageuri = data?.getData();// Get intent
+                } else {
+                    imageuri = cameraOutputUri
                 }
                 val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
                 postUploadDocViewModel.loadData(State.upload_type, real_Path)

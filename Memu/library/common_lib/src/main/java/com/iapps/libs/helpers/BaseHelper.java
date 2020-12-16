@@ -12,6 +12,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -88,6 +89,7 @@ import org.json.JSONObject;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1536,12 +1538,17 @@ public class BaseHelper {
 			e.printStackTrace();
 		}
 	}
+
+
 	public static Uri getImageUri(Context applicationContext, Bitmap photo)
 	{
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		photo.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-		String path = MediaStore.Images.Media.insertImage(applicationContext.getContentResolver(), photo, "Title", null);
-		return Uri.parse(path);
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(MediaStore.Images.Media.TITLE, "Image");
+		contentValues.put("_data", "/sdcard/signifio/1111.jpg");
+		//String path = applicationContext.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())MediaStore.Images.Media.insertImage(applicationContext.getContentResolver(), photo, "Title", null);
+		return Uri.parse("path");
 	}
 	public static String getRealPathFromUri(Context context, Uri contentUri) {
 		Cursor cursor = null;
@@ -1809,6 +1816,7 @@ public class BaseHelper {
 		for (ResolveInfo res : listCam) {
 			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			if (intent.resolveActivity(context.getPackageManager()) != null) {
+				intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, output);
 				cameraIntents.add(intent);
 			}
 		}
