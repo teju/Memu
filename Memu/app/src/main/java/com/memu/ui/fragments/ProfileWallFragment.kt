@@ -4,14 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
-import com.memu.R
-import com.memu.ui.BaseFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -33,10 +33,12 @@ import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
+import com.memu.R
 import com.memu.etc.SpacesItemDecoration
 import com.memu.etc.UserInfoManager
 import com.memu.modules.friendList.FriendList
 import com.memu.modules.friendList.User
+import com.memu.ui.BaseFragment
 import com.memu.ui.adapters.FriendsAdapter
 import com.memu.ui.adapters.PostsAdapter
 import com.memu.webservices.GetUserWallViewModel
@@ -47,6 +49,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.map_view.*
 import kotlinx.android.synthetic.main.profile_header.*
 import kotlinx.android.synthetic.main.profile_wall.*
+import java.io.File
 
 class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     PostFriendListViewModel.FriendsSearchResListener , OnMapReadyCallback{
@@ -284,9 +287,10 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     }
 
     fun pickImage() {
-        val intent = Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_PHOTO_PHOTO);
+        val file: File = activity!!.getExternalFilesDir(Environment.DIRECTORY_DCIM)
+        val cameraOutputUri: Uri = Uri.fromFile(file)
+        val intent: Intent = BaseHelper.getPickIntent(cameraOutputUri,activity!!)
+        startActivityForResult(intent, PICK_PHOTO_PHOTO)
     }
     private fun enableLocationComponent(@io.reactivex.annotations.NonNull loadedMapStyle: Style?) {
         // Check if permissions are enabled and if not request
@@ -354,10 +358,17 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         try {
-            val imageuri = data?.getData();// Get intent
+             var imageuri:Uri? = null;
+            if(data?.hasExtra("data")!!) {
+                val photo = data.extras["data"] as Bitmap
+                imageuri = BaseHelper.getImageUri(activity!!.getApplicationContext(), photo)
+            } else {
+                imageuri = data?.getData();// Get intent
+            }
             val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
             postUploadDocViewModel.loadData(uploadImageType, real_Path)
         } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

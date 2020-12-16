@@ -2,7 +2,10 @@ package com.memu.ui.fragments
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -25,6 +28,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
+import java.io.File
 
 
 class ProfilePicUploadFragment : BaseFragment()  {
@@ -58,24 +62,27 @@ class ProfilePicUploadFragment : BaseFragment()  {
     }
 
     fun pickImage() {
-        val intent = Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_PHOTO_PHOTO);
+        val file: File = activity!!.getExternalFilesDir(Environment.DIRECTORY_DCIM)
+        val cameraOutputUri: Uri = Uri.fromFile(file)
+        val intent: Intent = BaseHelper.getPickIntent(cameraOutputUri,activity!!)
+        startActivityForResult(intent, PICK_PHOTO_PHOTO)
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
             try {
-
-                val imageuri = data?.getData();// Get intent
-                // Get real path and show over text view
+                var imageuri:Uri? = null;
+                if(data?.hasExtra("data")!!) {
+                    val photo = data.extras["data"] as Bitmap
+                    imageuri = BaseHelper.getImageUri(activity!!.getApplicationContext(), photo)
+                } else {
+                    imageuri = data?.getData();// Get intent
+                }
                 val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
-              //  profilePic.setImageBitmap(bitmap);
-                System.out.println("onActivityResult12 onActivityResult")
-
                 postUploadDocViewModel.loadData(PostUploadDocViewModel.PROFILE_PHOTO, real_Path)
             } catch (e: Exception) {
-                System.out.println("onActivityResult12 Exception "+e.toString())
+                e.printStackTrace()
             }
     }
     fun setUploadDocObserver() {

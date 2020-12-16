@@ -5,8 +5,11 @@ import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.location.*
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.*
 import com.memu.R
 import com.memu.ui.BaseFragment
@@ -35,6 +38,7 @@ import kotlinx.android.synthetic.main.cab_radio_button.*
 import kotlinx.android.synthetic.main.onboarding_start.*
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
 import kotlinx.android.synthetic.main.radio_button.*
+import java.io.File
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -359,37 +363,40 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         startActivityForResult(Intent(activity, SearchActivity::class.java),code);
     }
 
-
     fun pickImage() {
-        val intent = Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_PHOTO_DOC);
+        val file: File = activity!!.getExternalFilesDir(Environment.DIRECTORY_DCIM)
+        val cameraOutputUri: Uri = Uri.fromFile(file)
+        val intent: Intent = BaseHelper.getPickIntent(cameraOutputUri,activity!!)
+        startActivityForResult(intent, PICK_PHOTO_DOC)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            if(requestCode == REQUEST_CODE_AUTOCOMPLETE) {
-                val lat = data?.getDoubleExtra("Lat",0.0)
-                val lng = data?.getDoubleExtra("Lng",0.0)
-                State.lattitude = lat!!
-                State.longitude =lng!!
-                home_address.setText(data?.getStringExtra("Address"))
-            } else if(requestCode == REQUEST_CODE_AUTOCOMPLETE_OFFICE) {
-                val lat = data?.getDoubleExtra("Lat",0.0)
-                val lng = data?.getDoubleExtra("Lng",0.0)
-                State.officelattitude = lat!!
-                State.officelongitude =lng!!
-                officeAddress.setText(data?.getStringExtra("Address"))
-            } else {
-                try {
-
-                    val imageuri = data?.getData();// Get intent
-                    // Get real path and show over text view
-                    val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
-                    postUploadDocViewModel.loadData(State.upload_type, real_Path)
-                } catch (e: Exception) {
+        if(requestCode == REQUEST_CODE_AUTOCOMPLETE) {
+            val lat = data?.getDoubleExtra("Lat",0.0)
+            val lng = data?.getDoubleExtra("Lng",0.0)
+            State.lattitude = lat!!
+            State.longitude =lng!!
+            home_address.setText(data?.getStringExtra("Address"))
+        } else if(requestCode == REQUEST_CODE_AUTOCOMPLETE_OFFICE) {
+            val lat = data?.getDoubleExtra("Lat",0.0)
+            val lng = data?.getDoubleExtra("Lng",0.0)
+            State.officelattitude = lat!!
+            State.officelongitude =lng!!
+            officeAddress.setText(data?.getStringExtra("Address"))
+        } else {
+            try {
+                var imageuri: Uri? = null;
+                if(data?.hasExtra("data")!!) {
+                    val photo = data.extras["data"] as Bitmap
+                    imageuri = BaseHelper.getImageUri(activity!!.getApplicationContext(), photo)
+                } else {
+                    imageuri = data?.getData();// Get intent
                 }
+                val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
+                postUploadDocViewModel.loadData(State.upload_type, real_Path)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

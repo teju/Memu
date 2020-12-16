@@ -43,10 +43,6 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
         return v
     }
 
-    override fun onBackTriggered() {
-        home().exitApp()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setGetCheckSUMRequestObserver()
@@ -172,21 +168,22 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
 
     override fun clientAuthenticationFailed(inErrorMessage: String?) {
         Log.d(TAG,"inErrorMessage "+inErrorMessage.toString())
+        BaseHelper.showAlert(activity,inErrorMessage.toString())
+
     }
 
     override fun someUIErrorOccurred(inErrorMessage: String?) {
         Log.d(TAG,"someUIErrorOccurred "+inErrorMessage.toString())
-
+        BaseHelper.showAlert(activity,inErrorMessage.toString())
     }
 
     override fun onTransactionCancel(inErrorMessage: String?, inResponse: Bundle?) {
         Log.d(TAG,"onTransactionCancel "+inErrorMessage.toString())
-
+        BaseHelper.showAlert(activity,inErrorMessage.toString())
     }
 
     override fun networkNotAvailable() {
         Log.d(TAG,"networkNotAvailable ")
-
     }
 
     override fun onErrorLoadingWebPage(
@@ -195,11 +192,13 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
         inFailingUrl: String?
     ) {
         Log.d(TAG,"onErrorLoadingWebPage "+inErrorMessage)
+        BaseHelper.showAlert(activity,inErrorMessage.toString())
 
     }
 
     override fun onBackPressedCancelTransaction() {
         Log.d(TAG,"onBackPressedCancelTransaction ")
+        BaseHelper.showAlert(activity,"Transaction Cancelled")
     }
 
     override fun onClick(v: View?) {

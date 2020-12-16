@@ -228,7 +228,7 @@ class MockNavigationFragment(
         if(BaseHelper.isEmpty(trip_id)) {
             endButton.visibility = View.GONE
         }
-        if(!status.equals("started",ignoreCase = true)) {
+        if(!status.equals("started",ignoreCase = true) ) {
             endButton.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Green)));
             txtendbtn.text = "Start Ride"
         } else {
@@ -273,6 +273,12 @@ class MockNavigationFragment(
         }
         initializeSpeechPlayer()
         instructionView.retrieveFeedbackButton().hide()
+
+        val origin = com.google.android.gms.maps.model.LatLng(originpoint.latitude(),originpoint.longitude());
+        val dest = com.google.android.gms.maps.model.LatLng(desrpoint.latitude(),desrpoint.longitude());
+        distanceTravelled = BaseHelper.showDistance(origin,dest)
+        println("navigationViewModel originpoint "+originpoint+" desrpoint "+desrpoint+" distanceTravelled "+distanceTravelled)
+
         getWalletBalanceViewModel.loadData()
 
     }
@@ -490,7 +496,6 @@ class MockNavigationFragment(
             "onProgressChange: fraction of route traveled: %f",
             routeProgress.distanceTraveled()
         )
-        distanceTravelled = routeProgress.distanceTraveled()/1000
         if(routeProgress.fractionTraveled() == 1f){
             if(!BaseHelper.isEmpty(trip_id)) {
                 if(!BaseHelper.isEmpty(walletBalance) && walletBalance.toDouble() != 0.0) {
@@ -594,6 +599,7 @@ class MockNavigationFragment(
             amount_to_pay =
                 postCustomerEndNavigationViewModel.obj?.trip_details?.no_of_kms!!.toDouble() *
                         postCustomerEndNavigationViewModel.obj?.trip_details?.price_per_km!!.toDouble()
+            amount_to_pay = Math.round(amount_to_pay).toDouble()
         }
     }
 
@@ -841,12 +847,12 @@ class MockNavigationFragment(
                         PostEndNavigationViewModel.NEXT_STEP -> {
                             amountToPAy()
                             showNotifyDialog(
-                                "","Your Wallet balance is "+walletBalance
-                                        +"\nPay Now amount of Rs "+amount_to_pay,
+                                "","Your Wallet balance is "+walletBalance +"\nDistance Travelled : "
+                                        +String.format("%.2f", distanceTravelled)+"\nPay Now amount of Rs "+amount_to_pay,
                                 getString(R.string.ok),"",object : NotifyListener {
                                     override fun onButtonClicked(which: Int) {
                                         isTripStarted = false
-                                        var amt = amount_to_pay
+                                        var amt = 0.0
                                         if( amount_to_pay > walletBalance.toDouble()) {
                                             amt = amount_to_pay - walletBalance.toDouble()
                                         }
@@ -856,8 +862,6 @@ class MockNavigationFragment(
                                             postCustomerEndNavigationViewModel.obj?.trip_details?.driver_id!!,
                                             postCustomerEndNavigationViewModel.obj?.trip_details?.trip_id!!,
                                             "online", invoive_id,amount_to_pay.toString(),"pending")
-
-                                        //home().setFragment(HomeFragment())
                                     }
                                 }
                             )
@@ -883,7 +887,9 @@ class MockNavigationFragment(
                     showNotifyDialog(
                         s.title, s.message!!,
                         getString(R.string.ok),"",object : NotifyListener {
-                            override fun onButtonClicked(which: Int) { }
+                            override fun onButtonClicked(which: Int) {
+
+                            }
                         }
                     )
                 })
@@ -891,44 +897,39 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostMakePaymentViewModel.NEXT_STEP -> {
-                            if(obj!!.transaction_id != null) {
-                                invoive_id = obj!!.transaction_id
+                            try {
+                                if(!obj!!.invoice_id.isEmpty()) {
+                                    invoive_id = obj!!.invoice_id
+                                }
+                            } catch (e:Exception) {
+
                             }
                             when (paymentStates) {
                                 BEFORE_PAYMENT -> {
                                     amountToPAy()
                                     if( amount_to_pay > walletBalance.toDouble()) {
                                         orderId = "ID"+Random().nextInt()
-                                        paymentStates = RECHARGE
-                                        getchecksumviewmodel.loadData(UserInfoManager.getInstance(activity!!).getAccountId(),orderId,amount_to_pay)
+                                        paymentStates = AFTER_PAYMENT
+                                        val amt = amount_to_pay - walletBalance.toDouble()
+                                        getchecksumviewmodel.loadData(UserInfoManager.getInstance(activity!!).getAccountId(),orderId,amt)
                                     } else {
                                         paymentStates = AFTER_PAYMENT
-                                        var amt = amount_to_pay
-                                        if( amount_to_pay > walletBalance.toDouble()) {
-                                            amt = amount_to_pay - walletBalance.toDouble()
-                                        }
                                         postMakePaymentViewModel.loadData(
-                                            "after", amt.toString(),
+                                            "after", "0.0",
                                             walletBalance, postCustomerEndNavigationViewModel.obj?.trip_details?.driver_id!!,  trip_id, "online",
                                             invoive_id, amount_to_pay.toString(), "success")
                                     }
                                 }
                                 AFTER_PAYMENT -> {
-                                    home().setFragment(HomeFragment())
-                                }
-                                RECHARGE -> {
-                                    paymentStates = AFTER_PAYMENT
-                                    amountToPAy()
-                                    var amt = amount_to_pay
-                                    if( amount_to_pay > walletBalance.toDouble()) {
-                                        amt = amount_to_pay - walletBalance.toDouble()
-                                    }
-                                    postMakePaymentViewModel.loadData(
-                                        "after", amt.toString(),
-                                        walletBalance,
-                                        postCustomerEndNavigationViewModel.obj?.trip_details?.driver_id!!,
-                                        trip_id, "online",
-                                        invoive_id, amount_to_pay.toString(), "success")
+                                    showNotifyDialog(
+                                        "", "Payment Successful",
+                                        getString(R.string.ok),"",object : NotifyListener {
+                                            override fun onButtonClicked(which: Int) {
+                                                home().setFragment(HomeFragment())
+                                            }
+                                        }
+                                    )
+
                                 }
                             }
                         }
@@ -964,6 +965,7 @@ class MockNavigationFragment(
                             if(getchecksumviewmodel.obj?.generate_signature != null) {
                                 CHECKSUMHASH = getchecksumviewmodel.obj?.generate_signature!!
                             }
+                            val amt = amount_to_pay - walletBalance.toDouble()
                             val Service = PaytmPGService.getProductionService()
                             val paramMap =
                                 HashMap<String, String>()
@@ -972,7 +974,7 @@ class MockNavigationFragment(
                             paramMap["CUST_ID"] = UserInfoManager.getInstance(apl!!).getAccountId()
                             paramMap["ORDER_ID"] = orderId
                             paramMap["CHANNEL_ID"] = "WAP"
-                            paramMap["TXN_AMOUNT"] = amount_to_pay.toString()
+                            paramMap["TXN_AMOUNT"] = amt.toString()
                             paramMap["WEBSITE"] = "DEFAULT"
                             paramMap["CALLBACK_URL"] = "https://securegw.paytm.in/theia/paytmCallback?ORDER_ID=" + orderId
                             // paramMap.put("EMAIL", "daya_salagare@yahoo.com");   // no need
@@ -1045,7 +1047,6 @@ class MockNavigationFragment(
         private val BEGIN_ROUTE_MILESTONE = 1001
         private val BEFORE_PAYMENT = 1
         private val AFTER_PAYMENT = 2
-        private val RECHARGE = 3
         private val TWENTY_FIVE_METERS = 25.0
         private val TAG = "check-sum"
         val SOURCE_ID = "SOURCE_ID"
@@ -1085,26 +1086,41 @@ class MockNavigationFragment(
     }
 
     override fun onTransactionResponse(inResponse: Bundle?) {
-        com.paytm.pgsdk.Log.d(TAG,"inResponse "+inResponse.toString())
-        if(inResponse!!.getString("RESPCODE") == "01") {
-            val amt_to_pay = amount_to_pay - walletBalance.toDouble()
-            paymentStates = RECHARGE
-            postMakePaymentViewModel.loadData("wallet",amt_to_pay.toString(),walletBalance,"","","","","","")
-        } else {
-            BaseHelper.showAlert(activity, inResponse.getString("RESPMSG"))
+        try {
+            com.paytm.pgsdk.Log.d(TAG, "inResponse " + inResponse.toString())
+            if (inResponse!!.getString("RESPCODE") == "01") {
+                paymentStates = AFTER_PAYMENT
+                var amt = amount_to_pay
+                if( amount_to_pay > walletBalance.toDouble()) {
+                    amt = amount_to_pay - walletBalance.toDouble()
+                }
+                postMakePaymentViewModel.loadData(
+                    "after", amt.toString(),
+                    walletBalance, postCustomerEndNavigationViewModel.obj?.trip_details?.driver_id!!,  trip_id, "online",
+                    invoive_id, amount_to_pay.toString(), "success")
+            } else {
+                BaseHelper.showAlert(activity, inResponse.getString("RESPMSG"))
+            }
+        } catch (e:java.lang.Exception) {
+            BaseHelper.showAlert(activity, e.toString())
         }
     }
 
     override fun clientAuthenticationFailed(inErrorMessage: String?) {
         com.paytm.pgsdk.Log.d(TAG,"inErrorMessage "+inErrorMessage.toString())
+        BaseHelper.showAlert(activity,inErrorMessage.toString())
+
     }
 
     override fun someUIErrorOccurred(inErrorMessage: String?) {
         com.paytm.pgsdk.Log.d(TAG,"someUIErrorOccurred "+inErrorMessage.toString())
+        BaseHelper.showAlert(activity,inErrorMessage.toString())
     }
 
     override fun onTransactionCancel(inErrorMessage: String?, inResponse: Bundle?) {
         com.paytm.pgsdk.Log.d(TAG,"onTransactionCancel "+inErrorMessage.toString())
+        BaseHelper.showAlert(activity,inErrorMessage.toString())
+
     }
 
     override fun networkNotAvailable() {
@@ -1117,9 +1133,12 @@ class MockNavigationFragment(
         inFailingUrl: String?
     ) {
         com.paytm.pgsdk.Log.d(TAG,"onErrorLoadingWebPage "+inErrorMessage)
+        BaseHelper.showAlert(activity,inErrorMessage.toString())
+
     }
 
     override fun onBackPressedCancelTransaction() {
         com.paytm.pgsdk.Log.d(TAG,"onBackPressedCancelTransaction ")
+        BaseHelper.showAlert(activity,"Transaction Cancelled")
     }
 }

@@ -11,6 +11,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -18,6 +19,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -37,6 +39,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.text.format.DateFormat;
@@ -98,6 +101,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -1532,7 +1536,13 @@ public class BaseHelper {
 			e.printStackTrace();
 		}
 	}
-
+	public static Uri getImageUri(Context applicationContext, Bitmap photo)
+	{
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		photo.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+		String path = MediaStore.Images.Media.insertImage(applicationContext.getContentResolver(), photo, "Title", null);
+		return Uri.parse(path);
+	}
 	public static String getRealPathFromUri(Context context, Uri contentUri) {
 		Cursor cursor = null;
 		try {
@@ -1642,7 +1652,6 @@ public class BaseHelper {
 		return jsonObject;
 	}
 	public static double showDistance(LatLng origin, LatLng dest ) {
-
 		Location locationA = new Location("Location A");
 
 		locationA.setLatitude(origin.latitude);
@@ -1655,6 +1664,7 @@ public class BaseHelper {
 
 		locationB.setLongitude(dest.longitude);
 		locationA.getTime();
+		System.out.println("showDistance "+locationA.distanceTo(locationB) * 0.001);
 		return locationA.distanceTo(locationB) * 0.001;
 
 
@@ -1773,6 +1783,35 @@ public class BaseHelper {
 				bm, 0, 0, width, height, matrix, false);
 		bm.recycle();
 		return resizedBitmap;
+	}
+	public static Intent getPickIntent(Uri cameraOutputUri,Context context) {
+		final List<Intent> intents = new ArrayList<Intent>();
+
+		if (true) {
+			intents.add(new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI));
+		}
+
+		if (true) {
+			setCameraIntents(intents, cameraOutputUri,context);
+		}
+
+		if (intents.isEmpty()) return null;
+		Intent result = Intent.createChooser(intents.remove(0), null);
+		if (!intents.isEmpty()) {
+			result.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toArray(new Parcelable[] {}));
+		}
+		return result;
+	}
+	private static void setCameraIntents(List<Intent> cameraIntents, Uri output, Context context) {
+		final Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		final PackageManager packageManager = context.getPackageManager();
+		final List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
+		for (ResolveInfo res : listCam) {
+			Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+			if (intent.resolveActivity(context.getPackageManager()) != null) {
+				cameraIntents.add(intent);
+			}
+		}
 	}
 	public static boolean containsIgnoreCase(List<String> list, String soughtFor) {
 		for (String current : list) {
