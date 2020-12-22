@@ -178,7 +178,10 @@ open class Helper  {
             val df = DecimalFormat("#.##");
             return ""+df.format(meters/1000 )+unitString
         }
-
+        fun FormatDistance(meters:Double):Double {
+            val df = DecimalFormat("#.##");
+            return df.format(meters/1000 ).toDouble()
+        }
         fun splitToComponentTimes(biggy: BigDecimal):String {
             val longVal = biggy.toLong()
             val hours = longVal.toInt() / 3600
@@ -201,6 +204,7 @@ open class Helper  {
         fun loadImage(context: Context, url : String, v : ImageView,placeholder : Int){
             Glide.with(context)
                 .load(url)
+                .centerInside()
                 .placeholder(placeholder)
                 .into(v)
         }

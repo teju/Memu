@@ -220,6 +220,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         time.setOnClickListener(this)
         seatstv.setOnClickListener(this)
         find_ride.setOnClickListener(this)
+        findcab.setOnClickListener(this)
         arrow_left.setOnClickListener(this)
         bike_offer_ride.setOnClickListener(this)
         bike_find_ride.setOnClickListener(this)
@@ -295,7 +296,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
         val from = FromJSon(srcLatitude!!,srcLongitude!!)
         val latng1 = com.google.android.gms.maps.model.LatLng(srcLatitude,srcLongitude)
-        val latng2 = com.google.android.gms.maps.model.LatLng( destLatitide,destLongitude)
+        val latng2 = com.google.android.gms.maps.model.LatLng(destLatitide,destLongitude)
 
         val distance = BaseHelper.showDistance(latng1,latng2)
         val To = FromJSon(destLatitide, destLongitude)
@@ -304,14 +305,14 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         if(!BaseHelper.isEmpty(days)) {
             is_recuring = "yes"
         }
-        if(srcLatitude != 0.0 && srcLongitude != 0.0) {
+        if(srcLatitude != 0.0 && srcLongitude != 0.0 && destLatitide != 0.0 && destLongitude != 0.0) {
             postFindRideViewModel.loadData(
                 strdate, strtime, strseat, is_recuring, days,
                 from, To, distance.toInt().toString(), strType,
                 vehicle_id,rs_per_kms,via)
         } else {
             showNotifyDialog(
-                "", "Select your source location",
+                "", "Select your source and destination locations",
                 getString(R.string.ok),"",object : NotifyListener {
                     override fun onButtonClicked(which: Int) { }
                 }
@@ -330,7 +331,14 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             R.id.my_profile -> {
                 home().setFragment(ProfileWallFragment())
             }
-
+            R.id.findcab -> {
+                showNotifyDialog(
+                    "", "Coming Soon",
+                    getString(R.string.ok),"",object : NotifyListener {
+                        override fun onButtonClicked(which: Int) { }
+                    }
+                )
+            }
             R.id.rlpooling -> {
                 btnNExt.visibility = View.GONE
                 poolingUI()
@@ -843,10 +851,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     fun FromJSon(lattitude : Double,longitude : Double) : JSONObject {
         val getAddress = getAddress(lattitude,longitude)
         val jsonObject = JSONObject()
+        jsonObject.put("lattitude", lattitude.toString())
+        jsonObject.put("longitude", longitude.toString())
         try {
             jsonObject.put("address_line1", getAddress?.get(0)?.getAddressLine(0))
-            jsonObject.put("lattitude", lattitude.toString())
-            jsonObject.put("longitude", longitude.toString())
             jsonObject.put("state", getAddress?.get(0)?.getAdminArea())
             jsonObject.put("formatted_address", getAddress?.get(0)?.getAddressLine(0))
         } catch (e :java.lang.Exception) {
@@ -891,7 +899,11 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             if (requestCode == REQUEST_CODE_AUTOCOMPLETEDEST) {
                 val lat = data?.getDoubleExtra("Lat",0.0)
                 val lng = data?.getDoubleExtra("Lng",0.0)
-                edtdestLoc.setText(data?.getStringExtra("Address"))
+                try {
+                    edtdestLoc.setText(data?.getStringExtra("Address"))
+                } catch (e : Exception){
+
+                }
                 destLatitide = lat!!
                 destLongitude = lng!!
                 try {
@@ -914,7 +926,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
             }
         } catch (e : Exception){
-
+            BaseHelper.showAlert(activity!!,e.toString())
         }
 
 

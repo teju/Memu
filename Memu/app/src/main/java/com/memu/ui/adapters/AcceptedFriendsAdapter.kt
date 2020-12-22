@@ -48,7 +48,7 @@ class AcceptedFriendsAdapter(val context: Context) : RecyclerView.Adapter<Accept
             }
             Helper.loadImage(
                 context,
-                obj.get(position).photo.thumb_path,
+                obj.get(position).photo.original_path,
                 holder.profile_icon,
                 R.drawable.default_profile_icon
             )

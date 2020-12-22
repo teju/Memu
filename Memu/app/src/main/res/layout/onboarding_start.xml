@@ -233,7 +233,7 @@
             android:fontFamily="@font/opensansregular"
             android:textSize="15dp"
             android:layout_marginLeft="10dp"
-            android:inputType="number"
+            android:inputType="text"
             android:imeOptions="actionNext"
             android:paddingTop="7dp"
             android:layout_below="@+id/get_otp"

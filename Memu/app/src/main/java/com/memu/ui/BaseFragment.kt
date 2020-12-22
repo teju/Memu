@@ -3,7 +3,6 @@ package com.memu.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -18,14 +17,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.Glide
-import com.google.gson.JsonParser.parseString
+import com.bumptech.glide.GenericTransitionOptions.with
+import com.bumptech.glide.Glide.with
 import com.iapps.gon.etc.callback.*
 import com.iapps.libs.generics.GenericFragment
 import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.helpers.BaseUIHelper
 import com.iapps.libs.views.LoadingCompound
-import com.memu.ui.activity.ActivityMain
 import com.memu.BuildConfig
 import com.memu.R
 import com.memu.etc.Constants
@@ -35,15 +33,19 @@ import com.memu.modules.mapFeeds.MapFeed
 import com.memu.modules.poolerVehicleList.Vehicle
 import com.memu.modules.riderList.Rider
 import com.memu.modules.userMainData.UserMainData
-import com.memu.ui.dialog.*
-import com.memu.webservices.*
+import com.memu.ui.activity.ActivityMain
+import com.memu.ui.dialog.AlertsDialogFragment
+import com.memu.ui.dialog.FindRideDialogFragment
+import com.memu.ui.dialog.MatchingRidersFragment
+import com.memu.ui.dialog.NotifyDialogFragment
+import com.memu.webservices.GetWalletBalanceViewModel
+import com.memu.webservices.PosUserMainDataViewModel
+import com.memu.webservices.PostFriendListViewModel
+import com.memu.webservices.PostUpdateLocationViewModel
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.ld
-import kotlinx.android.synthetic.main.home_fragment.*
 import kotlinx.android.synthetic.main.profile_header.*
-import kotlinx.android.synthetic.main.profile_header.name
-import kotlinx.android.synthetic.main.profile_header.profile_pic
 import kotlinx.android.synthetic.main.profile_wall.*
-
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -151,7 +153,7 @@ open class BaseFragment : GenericFragment() {
                 messages_cnt.visibility = View.GONE
             }
             try {
-                Helper.loadImage(activity!!,userMainData?.photo?.thumb_path!!,profile_pic,R.drawable.default_profile_icon)
+                Helper.loadImage(activity!!,userMainData?.photo?.original_path!!,profile_pic,R.drawable.default_profile_icon)
             } catch (e : java.lang.Exception){
                 e.printStackTrace()
             }

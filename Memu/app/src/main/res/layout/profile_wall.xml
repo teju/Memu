@@ -189,15 +189,16 @@
                 android:paddingTop="15dp"
                 android:fontFamily="@font/opensansbold"
                 android:textSize="13dp"
+                android:id="@+id/tv_recents_posts"
+                android:visibility="gone"
                 android:textAlignment="center"
                 android:textColor="@color/DarkBlue"
                 android:layout_height="wrap_content">
-
             </TextView>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:id="@+id/posts_rl"
+                android:visibility="gone"
                 android:background="@color/transparent"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"

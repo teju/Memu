@@ -63,6 +63,7 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
         recharge_500.setOnClickListener(this)
         recharge_1000.setOnClickListener(this)
         refer_now.setOnClickListener(this)
+        withdraw.setOnClickListener(this)
     }
 
     fun setPaymentAPIObserver() {
@@ -228,6 +229,14 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
             }
             R.id.refer_now -> {
                 referFriend()
+            }
+            R.id.withdraw -> {
+                showNotifyDialog(
+                    "", "Coming Soon",
+                    "Great","",object : NotifyListener {
+                        override fun onButtonClicked(which: Int) { }
+                    }
+                )
             }
         }
     }

@@ -45,6 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_centerInParent="true"
                     android:id="@+id/serach"
+                    android:singleLine="true"
                     android:background="@color/transparent"
                     android:textAlignment="center"
                     android:hint="Search by mobile no. or email id"

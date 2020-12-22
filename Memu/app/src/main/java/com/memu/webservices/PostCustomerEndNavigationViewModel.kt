@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder
 import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
 import com.memu.etc.*
-import com.memu.modules.GenericResponse
 import com.memu.modules.endnavigation.EndNavigationResponse
 
 class PostCustomerEndNavigationViewModel(application: Application) : BaseViewModel(application) {
@@ -28,7 +27,7 @@ class PostCustomerEndNavigationViewModel(application: Application) : BaseViewMod
         this.apl = application
     }
 
-    fun loadData(trip_id: String, no_of_kms: Double,trip_rider_id :String) {
+    fun loadData(trip_id: String, no_of_kms: String, trip_rider_id:String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {

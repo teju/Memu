@@ -471,7 +471,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                     .tilt(20.0)
                     .build();
                 mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
-
             }
 
         } catch (e : Exception){
@@ -491,11 +490,21 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 startActivityForResult(Intent(activity, SearchActivity::class.java),REQUEST_CODE_AUTOCOMPLETEDEST);
 
             }
+            R.id.rloption_b -> {
+                mapcurrentRoute = routes.get(1)
+            }
+            R.id.rloption_a -> {
+                mapcurrentRoute = routes.get(0)
+            }
+            R.id.rloption_c -> {
+                mapcurrentRoute = routes.get(1)
+            }
             R.id.startButton -> {
                 System.out.println("destinationPoint startButton "+tripriderid)
                 home().setFragment(MockNavigationFragment(this!!.destinationPoint!!, this@MapFragment.maporiginPoint!!).apply {
                     this.trip_id = tripriderid!!
                     this.trip_type = type!!
+                    this.distanceTravelled = FormatDistance(mapcurrentRoute?.distance()!!)
                     this.currentRoute = mapcurrentRoute
                 })
             }
@@ -604,7 +613,6 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             // Adding in LocationComponentOptions is also an optional parameter
             locationComponent = mapboxMap!!.locationComponent
             locationComponent!!.activateLocationComponent(activity!!, loadedMapStyle!!)
-            locationComponent!!.isLocationComponentEnabled = true
             // Set the component's camera mode
             locationComponent!!.cameraMode = CameraMode.TRACKING
             locationComponent!!.zoomWhileTracking(15.0);
@@ -658,7 +666,11 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                                     showNotifyDialog(
                                         "", "No Matching List found",
                                         getString(R.string.ok),"",object : NotifyListener {
-                                            override fun onButtonClicked(which: Int) { }
+                                            override fun onButtonClicked(which: Int) {
+                                                if(Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
+                                                   // home().setFragment(HistoryFragment())
+                                                }
+                                            }
                                         }
                                     )
                                 }

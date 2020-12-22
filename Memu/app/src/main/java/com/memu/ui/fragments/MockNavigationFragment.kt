@@ -14,10 +14,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.gon.etc.callback.WalletBalanceListener
@@ -28,7 +26,6 @@ import com.mapbox.android.core.location.LocationEngineResult
 import com.mapbox.api.directions.v5.DirectionsCriteria.IMPERIAL
 import com.mapbox.api.directions.v5.models.DirectionsResponse
 import com.mapbox.api.directions.v5.models.DirectionsRoute
-import com.mapbox.api.directions.v5.models.VoiceInstructions
 import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.annotations.IconFactory
@@ -44,7 +41,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.maps.Style
 
-import com.mapbox.navigator.VoiceInstruction
 import com.mapbox.services.android.navigation.ui.v5.NavigationViewModel
 import com.mapbox.services.android.navigation.ui.v5.SoundButton
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute
@@ -62,11 +58,11 @@ import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress
 import com.memu.R
 import com.memu.etc.GPSTracker
 import com.memu.etc.Helper
+import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
 import com.memu.modules.checksum.WalletBalance
-import com.memu.modules.completedRides.MatchedBudy
 import com.memu.ui.BaseFragment
-import com.memu.ui.adapters.MatchingBuddiesAdapter
+import com.memu.ui.fragments.HistoryFragment
 import com.memu.ui.fragments.HomeFragment
 import com.memu.ui.fragments.WalletFragment
 import com.memu.webservices.*
@@ -76,8 +72,6 @@ import com.paytm.pgsdk.PaytmPaymentTransactionCallback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_mock_navigation.*
 import kotlinx.android.synthetic.main.activity_mock_navigation.ld
-import kotlinx.android.synthetic.main.custom_notification_layout.view.*
-import kotlinx.android.synthetic.main.fragment_wallet.*
 import okhttp3.Cache
 import retrofit2.Call
 import retrofit2.Callback
@@ -86,6 +80,7 @@ import timber.log.Timber
 import java.io.File
 import java.lang.ref.WeakReference
 import java.math.BigDecimal
+import java.security.Key
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -103,7 +98,6 @@ class MockNavigationFragment(
     var trip_type: String = ""
     var status: String = ""
     var currentRoute: DirectionsRoute? = null
-    var isTripStarted = false
     private var mapboxMap: MapboxMap? = null
     lateinit var postGetAlertListViewModel: PostGetAlertListViewModel
     lateinit var postMApFeedDataViewModel: PostMApFeedDataViewModel
@@ -115,7 +109,7 @@ class MockNavigationFragment(
     lateinit var postEndNavigationViewModel: PostEndNavigationViewModel
     lateinit var postMakePaymentViewModel: PostMakePaymentViewModel
     lateinit var getchecksumviewmodel: GetCheckSumViewModel
-
+    var isTRipStarted = false
     // Navigation related variables
     private var locationEngine: LocationEngine? = null
     private var navigation: MapboxNavigation? = null
@@ -133,7 +127,6 @@ class MockNavigationFragment(
     var invoive_id = ""
     var amount_to_pay = 0.0
     var orderId="1000"
-
     private val callback = RerouteActivityLocationCallback(this)
     private class MyBroadcastReceiver internal constructor(navigation: MapboxNavigation) :
         BroadcastReceiver() {
@@ -236,21 +229,36 @@ class MockNavigationFragment(
             txtendbtn.text = "End Ride"
         }
         endButton.setOnClickListener {
-            if(!isTripStarted) {
-                if(!BaseHelper.isEmpty(trip_id)) {
-                    if(UserInfoManager.getInstance(activity!!).getRoleType().equals("rider",ignoreCase = true)) {
-                        postCustomerStartNavigationViewModel.loadData(trip_id)
+            if(distanceTravelled != 0.0) {
+                if (!status.equals("started", ignoreCase = true) && !isTRipStarted) {
+                    if (!BaseHelper.isEmpty(trip_id)) {
+                        if (Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
+                            postCustomerStartNavigationViewModel.loadData(
+                                trip_id,
+                                distanceTravelled.toString()
+                            )
+                        } else {
+                            postStartNavigationViewModel.loadData(
+                                trip_id,
+                                distanceTravelled.toString()
+                            )
+                        }
+                    }
+                } else {
+                    navigation!!.stopNavigation()
+                    if (Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
+                        postCustomerEndNavigationIDViewModel.loadData(trip_id)
                     } else {
-                        postStartNavigationViewModel.loadData(trip_id)
+                        postEndNavigationViewModel.loadData(trip_id, distanceTravelled)
                     }
                 }
             } else {
-                navigation!!.stopNavigation()
-                if(UserInfoManager.getInstance(activity!!).getRoleType().equals("rider",ignoreCase = true)) {
-                    postCustomerEndNavigationIDViewModel.loadData(trip_id)
-                } else {
-                     postEndNavigationViewModel.loadData(trip_id, distanceTravelled)
-                }
+                showNotifyDialog(
+                    "", "Unable to fetch location details.Please turn on your Gps",
+                    getString(R.string.ok),"",object : NotifyListener {
+                        override fun onButtonClicked(which: Int) { }
+
+                    })
             }
         }
         arrow_left.setOnClickListener {
@@ -274,9 +282,7 @@ class MockNavigationFragment(
         initializeSpeechPlayer()
         instructionView.retrieveFeedbackButton().hide()
 
-        val origin = com.google.android.gms.maps.model.LatLng(originpoint.latitude(),originpoint.longitude());
-        val dest = com.google.android.gms.maps.model.LatLng(desrpoint.latitude(),desrpoint.longitude());
-        distanceTravelled = BaseHelper.showDistance(origin,dest)
+        //distanceTravelled = BaseHelper.showDistance(origin,dest)
         println("navigationViewModel originpoint "+originpoint+" desrpoint "+desrpoint+" distanceTravelled "+distanceTravelled)
 
         getWalletBalanceViewModel.loadData()
@@ -505,7 +511,10 @@ class MockNavigationFragment(
                 }
             }
         }
+        if(distanceTravelled == 0.0) {
+            distanceTravelled = Helper.FormatDistance(routeProgress.distanceRemaining())
 
+        }
         if (tracking) {
             mapboxMap!!.locationComponent.forceLocationUpdate(location)
             cameraPosition =
@@ -703,7 +712,7 @@ class MockNavigationFragment(
                         PostStartNavigationViewModel.NEXT_STEP -> {
                             endButton.setBackgroundTintList(null);
                             txtendbtn.text = "End Ride"
-                            isTripStarted = true
+                            isTRipStarted = true
                         }
                     }
                 })
@@ -725,9 +734,9 @@ class MockNavigationFragment(
                         s.title, s.message!!,
                         getString(R.string.ok),"",object : NotifyListener {
                             override fun onButtonClicked(which: Int) {
-                                endButton.setBackgroundTintList(null);
-                                txtendbtn.text = "End Ride"
-                                isTripStarted = true
+                               if(postCustomerStartNavigationViewModel.obj?.is_redirect!!) {
+                                    home().setFragment(HistoryFragment())
+                               }
                             }
                         }
                     )
@@ -738,7 +747,7 @@ class MockNavigationFragment(
                         PostCustomerStartNavigationViewModel.NEXT_STEP -> {
                             endButton.setBackgroundTintList(null);
                             txtendbtn.text = "End Ride"
-                            isTripStarted = true
+                            isTRipStarted = true
                         }
                     }
                 })
@@ -763,7 +772,6 @@ class MockNavigationFragment(
                             override fun onButtonClicked(which: Int) {
                                 endButton.setBackgroundTintList(null);
                                 txtendbtn.text = "End Ride"
-                                isTripStarted = true
                             }
                         }
                     )
@@ -772,8 +780,9 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostCustomerEndNavigationIDViewModel.NEXT_STEP -> {
+                            isTRipStarted = false
                             postCustomerEndNavigationViewModel.loadData(postCustomerEndNavigationIDViewModel.obj?.trip_details?.trip_id!!,
-                                distanceTravelled,postCustomerEndNavigationIDViewModel.obj?.trip_details?.trip_rider_id!!)
+                                distanceTravelled.toString(),postCustomerEndNavigationIDViewModel.obj?.trip_details?.trip_rider_id!!)
 
                         }
                     }
@@ -797,7 +806,6 @@ class MockNavigationFragment(
                         s.title, s.message!!,
                         getString(R.string.ok),"",object : NotifyListener {
                             override fun onButtonClicked(which: Int) {
-                                isTripStarted = false
                             }
                         }
                     )
@@ -806,11 +814,11 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostEndNavigationViewModel.NEXT_STEP -> {
+                            isTRipStarted = false
                             showNotifyDialog(
                                 "",postEndNavigationViewModel.obj?.message,
                                 getString(R.string.ok),"",object : NotifyListener {
                                     override fun onButtonClicked(which: Int) {
-                                        isTripStarted = false
                                         home().setFragment(HomeFragment())
                                     }
                                 }
@@ -851,7 +859,6 @@ class MockNavigationFragment(
                                         +String.format("%.2f", distanceTravelled)+"\nPay Now amount of Rs "+amount_to_pay,
                                 getString(R.string.ok),"",object : NotifyListener {
                                     override fun onButtonClicked(which: Int) {
-                                        isTripStarted = false
                                         var amt = 0.0
                                         if( amount_to_pay > walletBalance.toDouble()) {
                                             amt = amount_to_pay - walletBalance.toDouble()

@@ -30,7 +30,7 @@ class PostCustomerStartNavigationViewModel(application: Application) : BaseViewM
         this.apl = application
     }
 
-    fun loadData(trip_id: String) {
+    fun loadData(trip_id: String,no_of_kms :String) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -69,6 +69,7 @@ class PostCustomerStartNavigationViewModel(application: Application) : BaseViewM
         genericHttpAsyncTask.setUrl(APIs.postCustomerStartTrip)
         Helper.applyHeader(apl,genericHttpAsyncTask)
         genericHttpAsyncTask.setPostParams(Keys.TRIP_RIDER_ID_,trip_id)
+        genericHttpAsyncTask.setPostParams(Keys.NO_OF_KMS,no_of_kms)
         genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
         genericHttpAsyncTask.setCache(false)
         genericHttpAsyncTask.context = apl.applicationContext

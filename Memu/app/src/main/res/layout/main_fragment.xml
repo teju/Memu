@@ -98,6 +98,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:minHeight="60dp"
+                android:id="@+id/rlfblogin"
                 android:background="@drawable/fb_button"
                 android:layout_height="wrap_content">
                 <ImageView
@@ -108,7 +109,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
                     android:layout_height="40dp">
-
                 </ImageView>
                 <TextView
                     android:layout_width="match_parent"

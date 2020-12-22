@@ -23,6 +23,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import com.facebook.appevents.codeless.internal.ViewHierarchy.setOnClickListener
 import com.facebook.AccessToken
+import com.facebook.login.LoginBehavior
 import com.iapps.gon.etc.callback.PermissionListener
 
 
@@ -80,8 +81,11 @@ class MainFragment : BaseFragment() , View.OnClickListener {
         login.setOnClickListener(this)
         fblogin.setOnClickListener(this)
         btnfblogin.setOnClickListener(this)
+        rlfblogin.setOnClickListener(this)
         callbackManager = CallbackManager.Factory.create()
         fblogin.setFragment(this);
+        fblogin.setLoginBehavior(LoginBehavior.WEB_ONLY);
+
 
     }
 
@@ -97,7 +101,7 @@ class MainFragment : BaseFragment() , View.OnClickListener {
                 //ld.showLoadingV2()
                 fbLogin()
             }
-            R.id.btnfblogin -> {
+            R.id.rlfblogin -> {
                 try {
                     ld.showLoadingV2()
                     fbLogin()

@@ -81,6 +81,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
     var isOtpVerified = false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.register_fragment, container, false)
+
         return v
     }
 
@@ -735,7 +736,10 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         State.email = edtEmail.text.toString()
         State.office_email = edtofficeEmail.text.toString()
         State.mobile = mobileNo.text.toString()
-        State.referel_code = ""
+        try {
+            State.referel_code = referral_code.text.toString()
+        } catch (e : Exception){
+        }
         State.vehicle_type = State.type
         if(State.type == State.White_board) {
             State.vehicle_brand = edtVehicleBrand.text.toString()
@@ -1176,6 +1180,7 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                             UserInfoManager.getInstance(activity!!).saveAuthToken(postUserSignupViewModel.obj?.access_token!!)
                             UserInfoManager.getInstance(activity!!).saveAccountName(postUserSignupViewModel.obj?.name!!)
                             UserInfoManager.getInstance(activity!!).saveRoleType(postUserSignupViewModel.obj?.role_type!!)
+                            UserInfoManager.getInstance(activity!!).saveReferralCode(postUserSignupViewModel.obj?.referel_code!!)
                             UserInfoManager.getInstance(activity!!).saveAccountId(
                                 postUserSignupViewModel.obj?.user_id.toString()!!)
                             home().setFragment(ProfilePicUploadFragment())

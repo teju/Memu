@@ -223,6 +223,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/btn_withdrawable"
                     android:text="Withdraw"
+                    android:id="@+id/withdraw"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:paddingBottom="10dp"

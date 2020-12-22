@@ -99,7 +99,6 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         posUserMainDataViewModel.loadData(friend_id)
         postFriendListViewModel.loadData("FR","",0,this)
         postFriendListViewModel.loadData("FR","",1,this)
-
     }
 
     private fun initUI() {
@@ -212,9 +211,24 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
             } else {
                 tvFriends.text = "Add Friends"
             }
-            tvfollowers.text = "Follow"
+            if(getUserWallViewModel.obj != null && getUserWallViewModel.obj?.is_follower!!) {
+                tvfollowers.text = "Following"
+            } else {
+                tvfollowers.text = "Follow"
+            }
+            if(getUserWallViewModel.obj != null && (getUserWallViewModel.obj?.is_freind!!
+                        || getUserWallViewModel.obj?.is_follower!!)) {
+                posts_rl.visibility = View.VISIBLE
+                tv_recents_posts.visibility = View.VISIBLE
+            } else {
+                posts_rl.visibility = View.GONE
+                tv_recents_posts.visibility = View.GONE
+            }
             messages.text = "Message"
             rlFriends.setOnClickListener(this)
+        } else {
+            posts_rl.visibility = View.VISIBLE
+            tv_recents_posts.visibility = View.VISIBLE
         }
     }
 
@@ -316,7 +330,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                     user_list.user_list.get(x).lattitude?.toDouble()!!,
                     user_list.user_list.get(x).longitude?.toDouble()!!)
                 try {
-                    Picasso.get().load(user_list.user_list.get(x).photo.profile_path)
+                    Picasso.get().load(user_list.user_list.get(x).photo.original_path)
                         .into(object : com.squareup.picasso.Target {
                             override fun onBitmapLoaded(
                                 bitmap: Bitmap?,

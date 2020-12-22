@@ -85,6 +85,11 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                                 this.trip_id = which.id
                                 this.trip_type = which.type
                                 this.status = which.status
+                                if(which.type.equals("find_ride",ignoreCase = true)) {
+                                    Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
+                                } else {
+                                    Keys.MAPTYPE  = Keys.POOLING_OFFER_RIDE
+                                }
                             })
                     } else {
                         home().setFragment(MapFragment().apply {
