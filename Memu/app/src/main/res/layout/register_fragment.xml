@@ -32,17 +32,17 @@
             <include layout="@layout/onboarding_four"></include>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-    <Button
+    <pl.droidsonroids.gif.GifImageView
         android:layout_width="70dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:background="@drawable/submit_btn"
         android:layout_margin="15dp"
-        android:src="@drawable/chevron_right"
+        android:src="@drawable/next_button"
         android:id="@+id/btnNExt"
         android:layout_height="60dp">
 
-    </Button>
+    </pl.droidsonroids.gif.GifImageView>
     <com.iapps.libs.views.LoadingCompound
         android:id="@+id/ld"
         android:layout_width="match_parent"

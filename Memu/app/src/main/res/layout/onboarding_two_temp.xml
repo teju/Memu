@@ -58,10 +58,10 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:textSize="25dp"
-                            android:fontFamily="@font/opensanssemibold"
+                            android:fontFamily="@font/opensansregular"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="10dp"
-                            android:text="Can you add following details of your vehicle?"
+                            android:text="Please add following details of your vehicle"
                             android:textColor="@color/DarkBlue"
                             android:id="@+id/cab_tv3"
                             android:layout_below="@+id/cab_tv2"

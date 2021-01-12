@@ -46,7 +46,7 @@
                         android:layout_width="wrap_content"
                         android:textSize="30dp"
                         android:fontFamily="@font/opensanssemibold"
-                        android:text="All set…"
+                        android:text="Great!"
                         android:textColor="@color/DarkBlue"
                         android:id="@+id/tv2"
                         android:layout_below="@+id/memu_logo"
@@ -56,8 +56,8 @@
                         android:layout_width="wrap_content"
                         android:textSize="25dp"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="@font/opensanssemibold"
-                        android:text="Please add your Office address &amp; Work email"
+                        android:fontFamily="@font/opensansregular"
+                        android:text="Please add your Office address &amp; Work email (if applicable)"
                         android:textColor="@color/DarkBlue"
                         android:id="@+id/tv3"
                         android:layout_below="@+id/tv2"
@@ -66,7 +66,7 @@
 
                     <TextView
                         android:layout_width="match_parent"
-                        android:hint="Office address (Optional)"
+                        android:hint="Office address (if applicable)"
                         android:fontFamily="@font/opensansregular"
                         android:paddingTop="7dp"
                         android:textSize="15dp"
@@ -96,7 +96,7 @@
 
                     <EditText
                         android:layout_width="match_parent"
-                        android:hint="Work email (Optional)"
+                        android:hint="Work email (if applicable)"
                         android:textSize="15dp"
                         android:fontFamily="@font/opensansregular"
                         android:inputType="textEmailAddress"

@@ -33,16 +33,27 @@
                 android:id="@+id/memu_logo"
                 android:layout_height="50dp">
             </ImageView>
+
+            <TextView
+                android:id="@+id/tv1start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/memu_logo"
+                android:fontFamily="@font/opensanssemibold"
+                android:text="Let’s get you started"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/DarkBlue"
+                android:textSize="22dp"></TextView>
             <TextView
                 android:layout_width="wrap_content"
-                android:textSize="30dp"
-                android:fontFamily="@font/opensanssemibold"
-                android:layout_alignParentRight="true"
+                android:textSize="18dp"
+                android:fontFamily="@font/opensansregular"
+                android:textAlignment="viewStart"
                 android:text="Do you drive a vehicle?"
                 android:textColor="@color/DarkBlue"
                 android:id="@+id/tv1"
-                android:layout_marginLeft="10dp"
-                android:layout_below="@+id/memu_logo"
+                android:layout_marginLeft="15dp"
+                android:layout_below="@+id/tv1start"
                 android:layout_height="wrap_content">
             </TextView>
             <ImageView
@@ -80,14 +91,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="NO"
+                            android:textColor="@color/black"
                             android:fontFamily="@font/opensanssemibold"
                             android:layout_height="wrap_content">
-
                         </TextView>
                         <TextView
                             android:layout_width="wrap_content"
                             android:fontFamily="@font/opensansregular"
-                            android:text="I prefer public transport or\nCar/bike pooling"
+                            android:text="(I use Car/bike pooling/ public transport)"
                             android:layout_toRightOf="@+id/radio_connector"
                             android:layout_height="wrap_content">
 
@@ -140,6 +151,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="Yes,Private"
+                            android:textColor="@color/black"
                             android:fontFamily="@font/opensanssemibold"
                             android:layout_height="wrap_content">
 
@@ -168,7 +180,6 @@
                     android:layout_width="50dp"
                     android:layout_marginLeft="20dp"
                     android:id="@+id/cab_vehicle_btn"
-
                     android:background="@drawable/radio_btn"
                     android:layout_height="65dp">
                 </Button>
@@ -192,13 +203,13 @@
                         android:layout_height="wrap_content">
                         <TextView
                             android:layout_width="wrap_content"
-                            android:text="Yes,Cab/Taxi"
-                            android:fontFamily="@font/opensansregular"
+                            android:text="Yes, Cab/Taxi/TT/Bike (Yellow Board)"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/opensansbold"
                             android:layout_height="wrap_content">
                         </TextView>
                         <TextView
                             android:layout_width="wrap_content"
-                            android:text="(Yellow Board)"
                             android:fontFamily="@font/opensansregular"
                             android:layout_toRightOf="@+id/radio_connector"
                             android:layout_height="wrap_content">

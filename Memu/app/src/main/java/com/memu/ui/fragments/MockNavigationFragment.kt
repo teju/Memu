@@ -3,13 +3,16 @@ package com.memu.ui.activity
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -71,7 +74,6 @@ import com.paytm.pgsdk.PaytmPGService
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_mock_navigation.*
-import kotlinx.android.synthetic.main.activity_mock_navigation.ld
 import okhttp3.Cache
 import retrofit2.Call
 import retrofit2.Callback
@@ -127,6 +129,10 @@ class MockNavigationFragment(
     var invoive_id = ""
     var amount_to_pay = 0.0
     var orderId="1000"
+    private var cameraOutputUri: Uri? = null
+    val PICK_PHOTO_PHOTO = 10010
+    lateinit var postUploadDocViewModel: PostUploadDocViewModel
+
     private val callback = RerouteActivityLocationCallback(this)
     private class MyBroadcastReceiver internal constructor(navigation: MapboxNavigation) :
         BroadcastReceiver() {
@@ -156,14 +162,18 @@ class MockNavigationFragment(
     }
     fun showAlertsDialog() {
         try {
-            System.out.println("showAlertsDialog map_feeds " + postGetAlertListViewModel.obj?.map_feeds!!)
             showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!!, object : NotifyListener {
                 override fun onButtonClicked(which: Int) {
-                    postMApFeedAddViewModel.loadData(
-                        postGetAlertListViewModel.obj?.map_feeds!!.get(
-                            which
-                        ).id
-                    )
+                    System.out.println("showAlertsDialog map_feeds "
+                            + postGetAlertListViewModel.obj?.map_feeds!!.get(which).id)
+
+                    if(postGetAlertListViewModel.obj?.map_feeds!!.get(which).id.equals("4")) {
+                        pickImage()
+                    } else {
+                        postMApFeedAddViewModel.loadData(
+                            postGetAlertListViewModel.obj?.map_feeds!!.get(which).id
+                        )
+                    }
                 }
             })
         } catch (e : Exception){
@@ -171,6 +181,29 @@ class MockNavigationFragment(
             postGetAlertListViewModel.loadData()
         }
     }
+    fun pickImage() {
+        cameraOutputUri = activity!!.contentResolver
+            .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())
+        val intent: Intent = BaseHelper.getPickIntent(cameraOutputUri,activity!!)
+        startActivityForResult(intent, PICK_PHOTO_PHOTO)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        try {
+            var imageuri:Uri? = null;
+            if(data != null) {
+                imageuri = data?.getData();// Get intent
+            } else {
+                imageuri = cameraOutputUri
+            }
+            val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
+            postUploadDocViewModel.loadData(PostUploadDocViewModel.ACTIVITY_PHOTO, real_Path)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -185,6 +218,7 @@ class MockNavigationFragment(
         setCustomerEndTripAPIObserver()
         setCustomerEndTripIDAPIObserver()
         setCustomerStartTripAPIObserver()
+        setUploadActivityPhotoObserver()
         routeRefresh = RouteRefresh(Mapbox.getAccessToken(), this)
         mapView = v?.findViewById(R.id.mapView)
         mapView = v?.findViewById(R.id.mapView)
@@ -1068,6 +1102,37 @@ class MockNavigationFragment(
             return LatLng(randomLat, randomLon)
         }
     }
+    fun setUploadActivityPhotoObserver() {
+        postUploadDocViewModel = ViewModelProviders.of(this).get(PostUploadDocViewModel::class.java).apply {
+            this@MockNavigationFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostUploadDocViewModel.NEXT_STEP -> {
+                            ld.hide()
+
+                        }
+                    }
+                })
+            }
+        }
+    }
+
     private class RerouteActivityLocationCallback internal constructor(activity: MockNavigationFragment) :
         LocationEngineCallback<LocationEngineResult> {
         private val activityWeakReference: WeakReference<MockNavigationFragment>

@@ -86,15 +86,17 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation-ui:0.42.6'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-places-v9:0.11.+'
-    implementation 'com.android.support:appcompat-v7:24.2.1'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-navigation:0.42.6'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-core:3.0.0'
+
     //implementation 'com.mapbox.navigation:core:1.0.+'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
 
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.2.0'
     implementation 'com.google.firebase:firebase-core:11.8.0'
     implementation 'com.google.firebase:firebase-messaging:11.8.0'
     implementation 'com.google.android.libraries.places:places:1.0.0'
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-core:3.0.0'
+    implementation 'com.android.support:appcompat-v7:24.2.1'
 
     implementation("com.google.android.gms:play-services-places:$project.ext.googleServiceVersion") {
         exclude module: 'support-v4'

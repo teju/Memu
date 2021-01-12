@@ -62,8 +62,8 @@
                             android:layout_below="@+id/tv2"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="10dp"
-                            android:fontFamily="@font/opensanssemibold"
-                            android:text="Can you add following details of your vehicle?"
+                            android:fontFamily="@font/opensansregular"
+                            android:text="Please add following details of your vehicle"
                             android:textColor="@color/DarkBlue"
                             android:textSize="25dp"></TextView>
 

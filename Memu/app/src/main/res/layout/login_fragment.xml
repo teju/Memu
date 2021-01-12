@@ -36,7 +36,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:textSize="30dp"
-                            android:fontFamily="@font/opensanssemibold"
+                            android:fontFamily="@font/opensansbold"
                             android:text="Awesome!"
                             android:textColor="@color/DarkBlue"
                             android:id="@+id/tv2"
@@ -58,7 +58,7 @@
                             android:textSize="20dp"
                             android:fontFamily="@font/opensansregular"
                             android:layout_marginTop="10dp"
-                            android:text="Your mobile to sign-in "
+                            android:text="Sign-in with your mobile number"
                             android:textColor="@color/DarkBlue"
                             android:id="@+id/tv3"
                             android:layout_below="@+id/tv2"

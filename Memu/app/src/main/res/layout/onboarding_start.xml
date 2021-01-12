@@ -15,10 +15,22 @@
     </ImageView>
     <TextView
         android:layout_width="wrap_content"
-        android:text="Let’s get you started…"
+        android:text="Welcome to"
+        android:fontFamily="@font/opensansregular"
+        android:layout_below="@+id/memu_logo"
+        android:textColor="@color/DarkBlue"
+        android:textSize="30dp"
+        android:id="@+id/welcome"
+        android:layout_marginLeft="25dp"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="memu.world"
         android:fontFamily="@font/opensanssemibold"
         android:id="@+id/lets_start"
-        android:layout_below="@+id/memu_logo"
+        android:layout_below="@+id/welcome"
         android:textColor="@color/DarkBlue"
         android:textSize="30dp"
         android:layout_marginLeft="25dp"
@@ -39,7 +51,7 @@
         android:id="@+id/rl1"
         android:visibility="visible"
         android:layout_below="@+id/midnight"
-        android:layout_marginTop="-50dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:layout_height="wrap_content">
         <ImageView
@@ -47,8 +59,10 @@
             android:src="@drawable/profile"
             android:layout_weight="1"
             android:scaleType="fitXY"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="-100dp"
             android:adjustViewBounds="true"
-            android:layout_height="340dp">
+            android:layout_height="280dp">
         </ImageView>
         <LinearLayout
             android:layout_width="0dp"
