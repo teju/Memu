@@ -380,6 +380,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
             }
             R.id.rlprofile -> {
+                home().setFragment(ProfileWallFragment())
 
             }
             R.id.seatstv -> {

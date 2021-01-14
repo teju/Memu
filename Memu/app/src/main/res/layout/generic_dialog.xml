@@ -49,7 +49,6 @@
                     android:layout_width="100dp"
                     android:src="@drawable/myfriends"
                     android:id="@+id/right_img"
-                    android:layout_marginRight="-20dp"
                     android:visibility="gone"
                     android:layout_marginTop="-0dp"
                     android:layout_alignParentRight="true"
