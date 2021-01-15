@@ -56,13 +56,15 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
             imgRight.setImageResource(R.drawable.myfriends)
             tvTxt1.text = "My friends List"
             txtfollow.text = ""
+            tvfollowtxt.text = ""
             postPendingFriendListViewModel.loadData("FR","to_me")
-            postFriendListViewModel.loadData("FR", "", 0, this, UserInfoManager.getInstance(activity!!).getAccountId())
+            postFriendListViewModel.loadData("FR", "", 0,
+                this, UserInfoManager.getInstance(activity!!).getAccountId())
 
         } else {
             imgRight.setImageResource(R.drawable.notificationsmain)
             tvTxt1.text = "My Followers list"
-            txtfollow.text = "I Follow"
+            txtfollow.text = "People I Follow"
             postPendingFriendListViewModel.loadData("FL","by_me")
             postFollowersListViewModel.loadData("FL","to_me")
         }

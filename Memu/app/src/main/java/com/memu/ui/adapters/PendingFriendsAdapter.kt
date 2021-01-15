@@ -35,9 +35,7 @@ class PendingFriendsAdapter(val context: Context) : RecyclerView.Adapter<Pending
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.pos = position
-        holder.llfollowers_rect.background = context.getDrawable(R.drawable.followers_rect)
         if(isFriendsRequest) {
-            holder.accept_remove.setTextColor(context.resources.getColor(R.color.DarkGreen))
             holder.accept_remove.text = "Accept"
         }
         holder.user_name.text = obj.get(position).name

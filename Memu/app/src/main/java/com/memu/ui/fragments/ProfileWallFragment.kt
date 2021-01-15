@@ -156,6 +156,12 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     }
 
     override fun onResult(result: FriendList?, searchByLoc: Int) {
+        if(result?.user_list?.size == 0){
+            friens_rl.visibility = View.GONE
+        } else{
+            friens_rl.visibility = View.VISIBLE
+
+        }
         if(searchByLoc == 0) {
             val adapter = FriendsAdapter(context!!)
             if(result?.user_list?.size != 0) {

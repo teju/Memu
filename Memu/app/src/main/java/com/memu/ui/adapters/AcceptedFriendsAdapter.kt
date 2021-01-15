@@ -34,8 +34,8 @@ class AcceptedFriendsAdapter(val context: Context) : RecyclerView.Adapter<Accept
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.pos = position
-        holder.llfollowers_rect.background = context.getDrawable(R.drawable.followers_rect_green)
         if(isFriendsRequest) {
+            holder.rl.background = (context.resources.getDrawable(R.drawable.red_start_btn_new))
             holder.accept_remove.text = "Remove"
         }
         try {
@@ -67,6 +67,7 @@ class AcceptedFriendsAdapter(val context: Context) : RecyclerView.Adapter<Accept
         var user_name = view.user_name
         var profile_icon = view.profile_icon
         var clRoot = view.clRoot
+        var rl = view.rl
 
     }
 

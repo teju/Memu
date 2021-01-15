@@ -205,6 +205,8 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.recharge -> {
+                llwithdraw.visibility = View.GONE
+
                 orderId = "ID"+Random().nextInt()
                 getchecksumviewmodel.loadData(custid,orderId,amount.text.toString().toDouble())
             }
@@ -228,15 +230,13 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
                 amount.setText(amt.toString())
             }
             R.id.refer_now -> {
-
+                referFriend()
             }
             R.id.withdraw -> {
-                showNotifyDialog(
-                    "", "Coming Soon",
-                    "Great","",object : NotifyListener {
-                        override fun onButtonClicked(which: Int) { }
-                    }
-                )
+                scrollView.post {
+                    scrollView.fullScroll(View.FOCUS_DOWN)
+                }
+                llwithdraw.visibility = View.VISIBLE
             }
         }
     }
@@ -244,6 +244,5 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
     override fun walletBalanceResponse(balance: WalletBalance) {
         wallet_Balance = balance.balance!!
         walletBalance.setText(wallet_Balance)
-        referral_points.setText(balance.referral_balance!!)
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:id="@+id/scrollView"
     android:background="@color/WhiteSmoke"
     xmlns:android="http://schemas.android.com/apk/res/android" >
     <FrameLayout
@@ -21,111 +22,92 @@
                     android:src="@drawable/money_profile"
                     android:layout_height="wrap_content">
                 </ImageView>
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
-                    android:orientation="vertical"
+                    android:text="My Earnings"
+                    android:textColor="#1B245C"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
+                    android:layout_marginRight="50dp"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/opensansbold"
+                    android:textSize="18dp"
                     android:layout_height="wrap_content">
-                    <RelativeLayout
-                        android:layout_width="150dp"
-                        android:id="@+id/rlButtons"
-                        android:visibility="gone"
-                        android:background="@drawable/btn_pink"
-                        android:layout_height="80dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:text="Followers"
-                            android:id="@+id/tvfollowers"
-                            android:paddingTop="16dp"
-                            android:textSize="13dp"
-                            android:layout_centerHorizontal="true"
-                            android:textAlignment="center"
-                            android:textColor="@color/White"
-                            android:layout_height="80dp">
-                        </TextView>
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:layout_width="150dp"
-                        android:background="@drawable/btn_green"
-                        android:id="@+id/refer_now"
-                        android:layout_marginTop="0dp"
-                        android:layout_height="80dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:text="Refer Now"
-                            android:paddingTop="16dp"
-                            android:textSize="13dp"
-                            android:layout_centerHorizontal="true"
-                            android:textAlignment="center"
-                            android:textColor="@color/White"
-                            android:layout_height="80dp">
-                        </TextView>
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:layout_width="150dp"
-                        android:background="@drawable/btn_pink"
-                        android:visibility="gone"
-                        android:layout_marginTop="-30dp"
-                        android:layout_height="80dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:text="My Wallet"
-                            android:paddingTop="16dp"
-                            android:textSize="13dp"
-                            android:layout_centerHorizontal="true"
-                            android:textAlignment="center"
-                            android:textColor="@color/White"
-                            android:layout_height="80dp">
-                        </TextView>
-                    </RelativeLayout>
+                </TextView>
 
-                </LinearLayout>
             </RelativeLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/referal_invite"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_width="150dp"
+                    android:background="@drawable/red_start_btn"
+                    android:id="@+id/refer_now"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="80dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Invite now"
+                        android:paddingTop="20dp"
+                        android:textSize="13dp"
+                        android:layout_centerHorizontal="true"
+                        android:textAlignment="center"
+                        android:textColor="@color/White"
+                        android:layout_height="80dp">
+                    </TextView>
+                </RelativeLayout>
+
+            </FrameLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="Refer and get 5000 Reputation Coins"
+                android:textColor="#002AFF"
+                android:layout_marginTop="10dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/opensansbold"
+                android:textSize="18dp"
+                android:layout_height="wrap_content">
+            </TextView>
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:src="@drawable/pocket_icon"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_height="wrap_content">
             </ImageView>
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
-                android:orientation="horizontal"
+                android:text="My Money Wallet"
+                android:textColor="#1B245C"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
                 android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/opensansbold"
+                android:textSize="18dp"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="100dp"
-                    android:text="Total points:"
-                    android:textSize="13dp"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/Black"
-                    android:layout_height="wrap_content">
-                </TextView>
-                <TextView
-                    android:layout_width="100dp"
-                    android:text="0"
-                    android:id="@+id/referral_points"
-                    android:background="@color/white"
-                    android:padding="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="13dp"
-                    android:layout_centerHorizontal="true"
-                    android:textAlignment="center"
-                    android:textColor="@color/Black"
-                    android:layout_height="wrap_content">
-                </TextView>
+            </TextView>
 
-            </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:layout_marginTop="30dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="100dp"
-                    android:text="Wallet Balance:"
+                    android:text="Total Balance::"
                     android:textSize="13dp"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/Black"
@@ -230,6 +212,73 @@
                     android:layout_height="wrap_content">
                 </Button>
             </LinearLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/rectanglebox"
+                android:id="@+id/llwithdraw"
+                android:visibility="gone"
+                android:layout_margin="20dp"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:text="Add your bank account details"
+                        android:layout_marginTop="20dp"
+                        android:textColor="@color/black"
+                        android:layout_gravity="center_horizontal"
+                        android:fontFamily="@font/opensansregular"
+                        android:background="#EEEEEE"
+                        android:padding="10dp"
+                        android:textSize="18dp"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:hint="Name on Bank Account"
+                        android:layout_marginTop="15dp"
+                        android:layout_height="wrap_content">
+                    </EditText>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:hint="Account Number"
+                        android:layout_marginTop="15dp"
+                        android:layout_height="wrap_content">
+                    </EditText>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:hint="IFSC Code"
+                        android:layout_marginTop="15dp"
+                        android:layout_height="wrap_content">
+                    </EditText>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:hint="Amount"
+                        android:layout_marginTop="15dp"
+                        android:layout_height="wrap_content">
+                    </EditText>
+                    <Button
+                        android:layout_width="150dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="30dp"
+                        android:background="@drawable/btn_withdrawable"
+                        android:text="Withdraw"
+                        android:id="@+id/btnwithdraw"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:paddingBottom="10dp"
+                        android:layout_height="wrap_content">
+                    </Button>
+
+                </LinearLayout>
+            </FrameLayout>
         </LinearLayout>
 
         <com.iapps.libs.views.LoadingCompound

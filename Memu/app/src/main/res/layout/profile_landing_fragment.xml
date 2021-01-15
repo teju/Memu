@@ -81,53 +81,75 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:orientation="horizontal"
-                        android:id="@+id/llinvite"
                         android:layout_below="@+id/friens_rl"
                         android:layout_gravity="center_horizontal"
                         android:layout_height="wrap_content">
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="100dp"
-                            android:id="@+id/rlFriends"
-                            app:cardCornerRadius="20dp"
-                            android:elevation="11dp"
-                            app:cardBackgroundColor="#ED08A7"
-                            android:layout_height="30dp">
+                        <RelativeLayout
+                            android:layout_width="140dp"
+                            android:id="@+id/find_more"
+                            android:background="@drawable/pink_button_friends"
+                            android:layout_height="80dp">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:text="Find More"
-                                android:id="@+id/find_more"
-                                android:textSize="12dp"
+                                android:paddingTop="15dp"
+                                android:textSize="13dp"
                                 android:layout_centerHorizontal="true"
-                                android:fontFamily="@font/opensansbold"
                                 android:textAlignment="center"
-                                android:layout_gravity="center"
                                 android:textColor="@color/White"
+                                android:layout_height="80dp">
+                            </TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:visibility="gone"
+                                android:textColor="@color/White"
+                                android:textSize="10dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="25dp"
+                                android:textAlignment="center"
+                                android:background="@drawable/ic_circle"
+                                android:backgroundTint="@color/Red"
+                                android:layout_marginLeft="-10dp"
+                                android:padding="5dp"
                                 android:layout_height="wrap_content">
+
                             </TextView>
 
-                        </androidx.cardview.widget.CardView>
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="100dp"
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="140dp"
+                            android:layout_marginLeft="-40dp"
                             android:id="@+id/rlInvite"
-                            app:cardCornerRadius="20dp"
-                            android:elevation="11dp"
-                            app:cardBackgroundColor="#FF3342"
-                            android:layout_marginLeft="20dp"
-                            android:layout_height="30dp">
+                            android:background="@drawable/button_red_followers"
+                            android:layout_height="80dp">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:text="Invite"
-                                android:textSize="12dp"
+                                android:paddingTop="15dp"
+                                android:textSize="13dp"
                                 android:layout_centerHorizontal="true"
-                                android:fontFamily="@font/opensansbold"
                                 android:textAlignment="center"
-                                android:layout_gravity="center"
                                 android:textColor="@color/White"
+                                android:layout_height="80dp">
+                            </TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:visibility="gone"
+                                android:textAlignment="center"
+                                android:textSize="10dp"
+                                android:textColor="@color/White"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="25dp"
+                                android:background="@drawable/ic_circle"
+                                android:backgroundTint="@color/Red"
+                                android:layout_marginLeft="-10dp"
+                                android:padding="5dp"
                                 android:layout_height="wrap_content">
+
                             </TextView>
 
-                        </androidx.cardview.widget.CardView>
-
+                        </RelativeLayout>
                     </LinearLayout>
 
                 </RelativeLayout>
