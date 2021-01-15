@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
@@ -51,7 +50,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.map_view.*
 import kotlinx.android.synthetic.main.profile_header.*
 import kotlinx.android.synthetic.main.profile_wall.*
-import java.io.File
 
 class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     PostFriendListViewModel.FriendsSearchResListener , OnMapReadyCallback{
@@ -85,8 +83,8 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         }
         getUserWallViewModel.loadData(friend_id,type)
         posUserMainDataViewModel.loadData(friend_id)
-        postFriendListViewModel.loadData("FR","",0,this)
-        postFriendListViewModel.loadData("FR","",1,this)
+        postFriendListViewModel.loadData("FR", "", 0, this, friend_id)
+        postFriendListViewModel.loadData("FR", "", 1, this, friend_id)
     }
 
     override fun onResume() {
@@ -97,12 +95,13 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         }
         getUserWallViewModel.loadData(friend_id,type)
         posUserMainDataViewModel.loadData(friend_id)
-        postFriendListViewModel.loadData("FR","",0,this)
-        postFriendListViewModel.loadData("FR","",1,this)
+        postFriendListViewModel.loadData("FR","",0,this,friend_id)
+        postFriendListViewModel.loadData("FR", "", 1, this, friend_id)
     }
 
     private fun initUI() {
         find_more.setOnClickListener(this)
+        rlInvite.setOnClickListener(this)
         arrow_left.setOnClickListener(this)
         tvfollowers.setOnClickListener(this)
         tvFriends.setOnClickListener(this)
@@ -136,7 +135,9 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         }
         profile_pic.setOnClickListener {
             uploadImageType = PostUploadDocViewModel.PROFILE_PHOTO
-            pickImage()
+            if(!isPubLicWall) {
+                pickImage()
+            }
         }
     }
 
@@ -196,8 +197,11 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     fun privateWallSettings() {
         upload_activity.visibility = View.GONE
         frame_layout.visibility = View.GONE
-        llFriends.visibility = View.GONE
         find_more.visibility = View.GONE
+        rlInvite.visibility = View.GONE
+        user_searchll.visibility = View.GONE
+        tvFindMyFriends.visibility = View.GONE
+        tv_recents_posts.text = "Recent Posts"
     }
 
     override fun setUserMainData() {
@@ -236,6 +240,9 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
         when(v?.id) {
             R.id.find_more -> {
                 home().setFragment(FriendsFragment())
+            }
+            R.id.rlInvite -> {
+                referFriend()
             }
             R.id.arrow_left -> {
                 home().onBackPressed()
@@ -336,16 +343,20 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                                 bitmap: Bitmap?,
                                 from: Picasso.LoadedFrom?
                             ) {
-                                val bmp = BaseHelper.ScaleBitmap(bitmap, 150)
-                                // loaded bitmap is here (bitmap)
-                                val iconFactory = IconFactory.getInstance(activity!!);
-                                val icon = iconFactory.fromBitmap(bmp!!);
+                                try {
+                                    val bmp = BaseHelper.ScaleBitmap(bitmap, 150)
+                                    // loaded bitmap is here (bitmap)
+                                    val iconFactory = IconFactory.getInstance(activity!!);
+                                    val icon = iconFactory.fromBitmap(bmp!!);
 
-                                mapboxMap!!.addMarker(
-                                    MarkerOptions()
-                                        .position(latLng)
-                                        .icon(icon)
-                                )
+                                    mapboxMap!!.addMarker(
+                                        MarkerOptions()
+                                            .position(latLng)
+                                            .icon(icon)
+                                    )
+                                } catch (e: Exception){
+
+                                }
                             }
 
 

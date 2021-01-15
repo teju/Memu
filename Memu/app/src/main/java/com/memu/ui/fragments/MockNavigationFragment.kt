@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -67,6 +68,7 @@ import com.memu.modules.checksum.WalletBalance
 import com.memu.ui.BaseFragment
 import com.memu.ui.fragments.HistoryFragment
 import com.memu.ui.fragments.HomeFragment
+import com.memu.ui.fragments.TripCompletedFragment
 import com.memu.ui.fragments.WalletFragment
 import com.memu.webservices.*
 import com.paytm.pgsdk.PaytmOrder
@@ -962,14 +964,13 @@ class MockNavigationFragment(
                                     }
                                 }
                                 AFTER_PAYMENT -> {
-                                    showNotifyDialog(
-                                        "", "Payment Successful",
-                                        getString(R.string.ok),"",object : NotifyListener {
-                                            override fun onButtonClicked(which: Int) {
-                                                home().setFragment(HomeFragment())
-                                            }
-                                        }
-                                    )
+
+                                    home().setFragment(TripCompletedFragment().apply {
+                                        this.distanceCompleted = this@MockNavigationFragment.distanceTravelled!!.toString()
+                                        this.amountPaid = this@MockNavigationFragment.amount_to_pay!!.toString()
+                                        this.timeTaken = this@MockNavigationFragment.duration_left!!.text.toString()
+                                        this.coinsEarned = "100"
+                                    })
 
                                 }
                             }
@@ -1055,7 +1056,9 @@ class MockNavigationFragment(
                     showNotifyDialog(
                         s.title, s.message!!,
                         getString(R.string.ok),"",object : NotifyListener {
-                            override fun onButtonClicked(which: Int) { }
+                            override fun onButtonClicked(which: Int) {
+
+                            }
                         }
                     )
                 })
@@ -1063,15 +1066,8 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostMApFeedAddViewModel.NEXT_STEP -> {
-                            showNotifyDialog(
-                                "Thank you", postMApFeedAddViewModel.obj?.message!!,
-                                getString(R.string.ok),"",object : NotifyListener {
-                                    override fun onButtonClicked(which: Int) { }
-                                }
-                            )
-
-                            postMApFeedDataViewModel.loadData()
-
+                            showAlertSentDialog("THANKS! for Alert","05",
+                                "You have received","","",false)
                         }
                     }
                 })

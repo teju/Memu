@@ -329,7 +329,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 Keys.MAPTYPE = Keys.SHORTESTROUTE
             }
             R.id.my_profile -> {
-                home().setFragment(ProfileWallFragment())
+                home().setFragment(ProfileLandingFragment())
             }
             R.id.findcab -> {
                 showNotifyDialog(
@@ -380,7 +380,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
             }
             R.id.rlprofile -> {
-                home().setFragment(ProfileWallFragment())
+                home().setFragment(ProfileLandingFragment())
 
             }
             R.id.seatstv -> {
@@ -544,6 +544,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         llPooling.visibility = View.VISIBLE
         cancel.visibility = View.GONE
         rlTopBar.visibility = View.GONE
+        find_offer_ride.visibility = View.VISIBLE
         //vehicle_detail.visibility = View.VISIBLE
         cv.visibility = View.VISIBLE
         home_map_bg.alpha = 0.5f
@@ -616,6 +617,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         cancel.visibility = View.GONE
         rlTopBar.visibility = View.GONE
         llPooling.visibility = View.GONE
+        find_offer_ride.visibility = View.GONE
         vehicle_detail.visibility = View.GONE
         cv.visibility = View.GONE
         arrow_left.visibility = View.VISIBLE

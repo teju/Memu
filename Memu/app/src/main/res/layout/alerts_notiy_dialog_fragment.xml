@@ -1,100 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_margin="10dp"
-    android:backgroundTint="@color/WhiteSmoke"
-    android:background="@drawable/theme_rounded_rectangle"
-    android:layout_height="wrap_content">
-    <RelativeLayout
+<FrameLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:padding="10dp"
-
+        android:layout_margin="10dp"
+        android:backgroundTint="@color/WhiteSmoke"
+        android:background="@drawable/theme_rounded_rectangle"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:background="@drawable/rounded_corner_btn_border_enabled"
-            android:backgroundTint="@color/white"
-            android:orientation="horizontal"
-            android:layout_marginRight="60dp"
-            android:textColor="@color/white"
-            android:text="Traffic jam expected"
-            android:padding="5dp"
-            android:layout_height="wrap_content">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="40dp"
-                android:id="@+id/profile_pic"
-                android:src="@drawable/default_profile_icon"
-                android:layout_height="40dp">
-            </de.hdodenhof.circleimageview.CircleImageView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
-                android:text="@string/username"
-                android:textColor="@color/black"
-                android:layout_height="wrap_content">
-            </TextView>
-        </LinearLayout>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:src="@drawable/like_btn"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_height="wrap_content">
-
-        </ImageView>
-    </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
+            android:padding="10dp"
+            android:id="@+id/user_info"
             android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
-                android:text="Liked your alert"
-                android:textColor="#1A73E8"
-                android:fontFamily="@font/opensansbold"
-                android:layout_height="wrap_content">
-            </TextView>
             <LinearLayout
                 android:layout_width="match_parent"
+                android:background="@drawable/rounded_corner_btn_border_enabled"
+                android:backgroundTint="@color/white"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
+                android:layout_marginRight="60dp"
+                android:textColor="@color/white"
+                android:text="Traffic jam expected"
+                android:padding="5dp"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="40dp"
+                    android:id="@+id/profile_pic"
+                    android:src="@drawable/default_profile_icon"
+                    android:layout_height="40dp">
+                </de.hdodenhof.circleimageview.CircleImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/name"
+                    android:text="@string/username"
+                    android:textColor="@color/black"
+                    android:layout_height="wrap_content">
+                </TextView>
+            </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/like_btn"
+                android:id="@+id/like_dislike_btn"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content">
+
+            </ImageView>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="15dp"
+                    android:id="@+id/header_title"
+                    android:layout_marginTop="15dp"
+                    android:text="Liked your alert"
                     android:textSize="18dp"
-                    android:text="You have received"
-                    android:layout_marginBottom="10dp"
-                    android:textColor="#707070"
+                    android:textColor="#1A73E8"
                     android:fontFamily="@font/opensansbold"
                     android:layout_height="wrap_content">
                 </TextView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
-                    android:textSize="28dp"
-                    android:text="20"
-                    android:layout_marginBottom="10dp"
-                    android:textColor="#FF9300"
-                    android:fontFamily="@font/opensansbold"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
                     android:layout_height="wrap_content">
-                </TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="15dp"
+                        android:textSize="15dp"
+                        android:id="@+id/desc"
+                        android:text="You have received"
+                        android:layout_marginBottom="10dp"
+                        android:textColor="#707070"
+                        android:fontFamily="@font/opensansbold"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/coins"
+                        android:layout_marginLeft="15dp"
+                        android:textSize="28dp"
+                        android:text="20"
+                        android:layout_marginBottom="10dp"
+                        android:textColor="#FF9300"
+                        android:fontFamily="@font/opensansbold"
+                        android:layout_height="wrap_content">
+                    </TextView>
+
+                </LinearLayout>
 
             </LinearLayout>
+            <ImageView
+                android:layout_width="70dp"
+                android:src="@drawable/reputation_coins"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:layout_height="70dp">
 
-        </LinearLayout>
+            </ImageView>
+        </RelativeLayout>
 
-    </RelativeLayout>
-
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>

@@ -1,6 +1,7 @@
 package com.memu.ui
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Bundle
@@ -34,10 +35,7 @@ import com.memu.modules.poolerVehicleList.Vehicle
 import com.memu.modules.riderList.Rider
 import com.memu.modules.userMainData.UserMainData
 import com.memu.ui.activity.ActivityMain
-import com.memu.ui.dialog.AlertsDialogFragment
-import com.memu.ui.dialog.FindRideDialogFragment
-import com.memu.ui.dialog.MatchingRidersFragment
-import com.memu.ui.dialog.NotifyDialogFragment
+import com.memu.ui.dialog.*
 import com.memu.webservices.GetWalletBalanceViewModel
 import com.memu.webservices.PosUserMainDataViewModel
 import com.memu.webservices.PostFriendListViewModel
@@ -419,6 +417,26 @@ open class BaseFragment : GenericFragment() {
         }
 
     }
+    open fun showAlertSentDialog(
+        tittle: String?,
+        coinsReceived: String?,
+        description: String?,
+        userName:String?,
+        userImage: String?,
+        isLiked: Boolean?){
+        val f = AlertsNotifyDialogFragment()
+        f.coinsReceived = coinsReceived!!
+        f.username = userName!!
+        f.title = tittle!!
+        f.user_image = userImage!!
+        f.isLiked = isLiked!!
+        f.description = description!!
+
+        f.isCancelable = false
+        f.show(activity!!.supportFragmentManager, AlertsNotifyDialogFragment.TAG)
+
+    }
+
     open fun showFindRideDialog(vehicle_list : List<Vehicle>,
         n: FindRideDialogListener
     ){
@@ -599,6 +617,24 @@ open class BaseFragment : GenericFragment() {
                     }
                 })
             }
+        }
+    }
+    fun referFriend(){
+        var referral_code =""
+        if(UserInfoManager.getInstance(activity!!).getReferralCode() != null) {
+            referral_code = UserInfoManager.getInstance(activity!!).getReferralCode()
+        }
+        try {
+
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "text/plain"
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, activity?.getString(R.string.app_name))
+            var shareMessage = "Give a friend 2,000 points and get 2,000 points when they install app, " +
+                    "use my referal code "+referral_code+"\nhttps://memu.world"
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+            startActivity(Intent.createChooser(shareIntent, "choose one"))
+        } catch (e: Exception) {
+            //e.toString();
         }
     }
 

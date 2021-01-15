@@ -32,7 +32,13 @@ class PostFriendListViewModel(application: Application) : BaseViewModel(applicat
         this.apl = application
     }
 
-    fun loadData(type: String, search_word : String, searchByLoc : Int, friendsSearchAPIListner : FriendsSearchResListener) {
+    fun loadData(
+        type: String,
+        search_word: String,
+        searchByLoc: Int,
+        friendsSearchAPIListner: FriendsSearchResListener,
+        friendId: String
+    ) {
         genericHttpAsyncTask = Helper.GenericHttpAsyncTask(object : Helper.GenericHttpAsyncTask.TaskListener {
 
             override fun onPreExecute() {
@@ -78,7 +84,7 @@ class PostFriendListViewModel(application: Application) : BaseViewModel(applicat
         genericHttpAsyncTask.setPostParams(Keys.TYPE,type)
         genericHttpAsyncTask.setPostParams(Keys.SEARCH_WORD,search_word)
         genericHttpAsyncTask.setPostParams(Keys.SEARCHBYLOC,searchByLoc.toString())
-        genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
+        genericHttpAsyncTask.setPostParams(Keys.USER_ID, friendId)
         if(searchByLoc == 1) {
             var gpsTracker: GPSTracker? = null
             gpsTracker = GPSTracker(apl)
