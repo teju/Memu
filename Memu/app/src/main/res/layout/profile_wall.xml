@@ -6,6 +6,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <com.iapps.libs.views.LoadingCompound
+            android:id="@+id/ld"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:visibility="gone" />
+
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
@@ -224,13 +232,6 @@
 
                 </RelativeLayout>
             </RelativeLayout>
-            <com.iapps.libs.views.LoadingCompound
-                android:id="@+id/ld"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/transparent"
-                android:clickable="true"
-                android:visibility="gone" />
 
             <RelativeLayout
                 android:layout_width="140dp"

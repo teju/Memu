@@ -148,7 +148,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:layout_marginTop="-20dp"
+            android:layout_marginTop="-25dp"
             android:id="@+id/bottom_view"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
@@ -156,22 +156,21 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:id="@+id/coins_earned"
                 android:text="Coins Earned : 00"
-                android:background="@color/White"
-                android:layout_height="wrap_content">
+                android:background="@drawable/bottom_heading_bg"
+                android:layout_height="40dp">
             </TextView>
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:id="@+id/coins_spent"
                 android:text="Coins Spent : 00"
-                android:background="@color/White"
-                android:layout_marginLeft="15dp"
-                android:layout_height="wrap_content">
-
+                android:background="@drawable/bottom_heading_bg"
+                android:layout_height="40dp">
             </TextView>
-
         </LinearLayout>
     </LinearLayout>
 

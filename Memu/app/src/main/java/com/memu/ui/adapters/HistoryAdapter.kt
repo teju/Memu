@@ -43,7 +43,7 @@ class HistoryAdapter(
         holder.pos = position
         when(type) {
             TYPE_COMPLETED -> {
-                holder.bottom_view.visibility = View.GONE
+                holder.bottom_view.visibility = View.VISIBLE
                 holder.coins_earned.text = "Coins Earned : "+Rides.get(position).coins_earned
                 holder.coins_spent.text = "Coins Spent : "+Rides.get(position).coins_spent
             }

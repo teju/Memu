@@ -101,7 +101,7 @@ class ProfileLandingFragment : BaseFragment(), PostFriendListViewModel.FriendsSe
                 home().setFragment(WalletFragment())
             }
             R.id.rep_coins -> {
-
+                home().setFragment(ReferralDetailsFragment())
             }
             R.id.settings -> {
 

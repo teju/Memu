@@ -16,8 +16,8 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_height="wrap_content">
                 <ImageView
                     android:layout_width="wrap_content"
@@ -26,9 +26,11 @@
                 </ImageView>
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="People you may know"
+                    android:textAlignment="center"
+                    android:text="Find your friends\n&amp; family in memu world"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/DarkBlue"
+                    android:layout_marginLeft="10dp"
                     android:fontFamily="@font/opensansbold"
                     android:textSize="20dp"
                     android:layout_height="wrap_content">

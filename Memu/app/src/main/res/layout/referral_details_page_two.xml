@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="match_parent"
+        android:adjustViewBounds="true"
+        android:src="@drawable/group_one"
+        android:layout_marginLeft="30dp"
+        android:layout_height="wrap_content">
+    </ImageView>
+    <ImageView
+        android:layout_width="match_parent"
+        android:adjustViewBounds="true"
+        android:src="@drawable/redeem_coins_txt"
+        android:layout_marginLeft="30dp"
+        android:layout_height="wrap_content">
+    </ImageView>
+    <ImageView
+        android:layout_width="match_parent"
+        android:adjustViewBounds="true"
+        android:src="@drawable/faq_main_header"
+        android:layout_marginLeft="30dp"
+        android:layout_height="wrap_content">
+    </ImageView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="How can I make money?"
+            android:textColor="#606060"
+            android:fontFamily="@font/opensansbold"
+            android:textSize="29dp"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="You make money by earning"
+            android:textColor="#606060"
+            android:fontFamily="@font/opensansbold"
+            android:textSize="18dp"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Reputation Coins"
+            android:textColor="#CC5800"
+            android:fontFamily="@font/opensansbold"
+            android:textSize="29dp"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="in 1, 2, 3 steps…"
+            android:textColor="#606060"
+            android:fontFamily="@font/opensansregular"
+            android:textSize="16dp"
+            android:layout_height="wrap_content">
+        </TextView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@drawable/rectangle_2216"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="20dp"
+            android:padding="20dp"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:src="@drawable/group_5208"
+                    android:adjustViewBounds="true"
+                    android:layout_height="180dp">
+                </ImageView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="15dp"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="Use “memu” app\nwhen you step out"
+                            android:textColor="#606060"
+                            android:fontFamily="@font/opensansregular"
+                            android:textSize="16dp"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/rectangle_2225"
+                            android:layout_height="wrap_content">
+
+                        </ImageView>
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="Create Alerts to gain\nReputation Coins"
+                            android:textColor="#606060"
+                            android:fontFamily="@font/opensansregular"
+                            android:textSize="16dp"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/bell"
+                            android:layout_height="wrap_content">
+
+                        </ImageView>
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="Use your Reputation\nCoins to buy from in-app\nstore(or)convert coins to real\nmoney"
+                            android:textColor="#606060"
+                            android:fontFamily="@font/opensansregular"
+                            android:textSize="16dp"
+                            android:layout_height="wrap_content">
+                        </TextView>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/dollar"
+                            android:layout_height="wrap_content">
+
+                        </ImageView>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
