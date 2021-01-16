@@ -13,4 +13,5 @@
     <color name="mapboxYellow">#d9d838</color>
     <color name="mapboxRed">#b43b71</color>
     <color name="polylinePink">#8F366B</color>
+    <color name="red_new">#FF0060</color>
 </resources>

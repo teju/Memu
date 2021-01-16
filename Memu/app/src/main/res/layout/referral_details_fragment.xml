@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="#EEEEEE"
     android:layout_height="match_parent">
     <FrameLayout
         android:layout_width="match_parent"
@@ -345,7 +346,6 @@
                         android:layout_height="wrap_content">
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:layout_width="40dp"
-                            android:id="@+id/profile_pic"
                             android:src="@drawable/default_profile_icon"
                             android:layout_height="40dp">
                         </de.hdodenhof.circleimageview.CircleImageView>
@@ -353,7 +353,6 @@
                             android:layout_width="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="15dp"
-                            android:id="@+id/name"
                             android:text="@string/username"
                             android:textColor="@color/black"
                             android:layout_height="wrap_content">
@@ -464,6 +463,16 @@
 
             </LinearLayout>
             <include layout="@layout/referral_details_page_two"></include>
+            <include layout="@layout/referral_details_page_three"></include>
+            <include layout="@layout/referral_details_fragment_four"></include>
         </LinearLayout>
+        <com.iapps.libs.views.LoadingCompound
+            android:id="@+id/ld"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:visibility="gone" />
+
     </FrameLayout>
 </ScrollView>

@@ -20,7 +20,7 @@ import org.json.JSONException
 import com.facebook.GraphResponse
 import org.json.JSONObject
 import com.facebook.GraphRequest
-
+import com.memu.etc.UserInfoManager
 
 
 class ReferralDetailsFragment : BaseFragment()  {
@@ -31,9 +31,6 @@ class ReferralDetailsFragment : BaseFragment()  {
         return v
     }
 
-    override fun onBackTriggered() {
-        home().exitApp()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,6 +38,8 @@ class ReferralDetailsFragment : BaseFragment()  {
     }
 
     private fun initUI() {
+        setUSerMAinDataAPIObserver()
+        posUserMainDataViewModel.loadData(UserInfoManager.getInstance(activity!!).getAccountId())
 
     }
 
