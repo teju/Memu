@@ -21,9 +21,10 @@ import com.facebook.GraphResponse
 import org.json.JSONObject
 import com.facebook.GraphRequest
 import com.memu.etc.UserInfoManager
+import kotlinx.android.synthetic.main.profile_header.*
 
 
-class ReferralDetailsFragment : BaseFragment()  {
+class ReferralDetailsFragment : BaseFragment() ,View.OnClickListener {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -40,7 +41,15 @@ class ReferralDetailsFragment : BaseFragment()  {
     private fun initUI() {
         setUSerMAinDataAPIObserver()
         posUserMainDataViewModel.loadData(UserInfoManager.getInstance(activity!!).getAccountId())
+        arrow_left.setOnClickListener(this)
+    }
 
+    override fun onClick(v: View?) {
+        when(v?.id) {
+            R.id.arrow_left -> {
+                home().proceedDoOnBackPressed()
+            }
+        }
     }
 
 

@@ -37,6 +37,7 @@ class ProfileLandingFragment : BaseFragment(), PostFriendListViewModel.FriendsSe
         setFriendListAPIObserver()
         ll_options.visibility = View.GONE
         initFriendsAdapter()
+        arrow_left.setOnClickListener(this)
 
         profile_wall.setOnClickListener(this)
         walletView.setOnClickListener(this)
@@ -111,6 +112,9 @@ class ProfileLandingFragment : BaseFragment(), PostFriendListViewModel.FriendsSe
             }
             R.id.rlInvite -> {
                 referFriend()
+            }
+            R.id.arrow_left -> {
+                home().proceedDoOnBackPressed()
             }
         }
     }
