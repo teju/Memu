@@ -47,7 +47,7 @@ class MatchingRidersFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         dialog?.let {
             it.window.setBackgroundDrawableResource(R.color.transparent)
-            it.window.setBackgroundDrawable(InsetDrawable(ColorDrawable(Color.TRANSPARENT), 20))
+            //it.window.setBackgroundDrawable(InsetDrawable(ColorDrawable(Color.TRANSPARENT), 20))
 
         }
         recyclerView.layoutManager = LinearLayoutManager(activity)

@@ -67,17 +67,19 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:hint="Office address (if applicable)"
-                        android:fontFamily="@font/opensansregular"
+                        android:fontFamily="@font/opensanslight"
                         android:paddingTop="7dp"
                         android:textSize="15dp"
                         android:imeOptions="actionNext"
                         android:layout_toRightOf="@+id/right_light_2"
                         android:id="@+id/officeAddress"
                         android:layout_below="@+id/tv3"
+                        android:textColorHint="@color/textcolur"
+                        android:textColor="@color/textcolur"
                         android:layout_marginTop="20dp"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
-                        android:background="@color/soft_grey"
+                        android:background="@color/white"
                         android:paddingBottom="7dp"
                         android:layout_height="wrap_content">
                     </TextView>
@@ -98,7 +100,7 @@
                         android:layout_width="match_parent"
                         android:hint="Work email (if applicable)"
                         android:textSize="15dp"
-                        android:fontFamily="@font/opensansregular"
+                        android:fontFamily="@font/opensanslight"
                         android:inputType="textEmailAddress"
                         android:imeOptions="actionDone"
                         android:id="@+id/edtofficeEmail"
@@ -108,7 +110,9 @@
                         android:layout_marginTop="20dp"
                         android:paddingLeft="15dp"
                         android:paddingRight="15dp"
-                        android:background="@color/soft_grey"
+                        android:textColorHint="@color/textcolur"
+                        android:textColor="@color/textcolur"
+                        android:background="@color/white"
                         android:paddingBottom="7dp"
                         android:layout_height="wrap_content">
                     </EditText>

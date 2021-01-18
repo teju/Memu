@@ -329,15 +329,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 Keys.MAPTYPE = Keys.SHORTESTROUTE
             }
             R.id.my_profile -> {
-                home().setFragment(ProfileLandingFragment())
             }
             R.id.findcab -> {
-                showNotifyDialog(
-                    "", "Coming Soon",
-                    getString(R.string.ok),"",object : NotifyListener {
-                        override fun onButtonClicked(which: Int) { }
-                    }
-                )
+
             }
             R.id.rlpooling -> {
                 btnNExt.visibility = View.GONE
@@ -377,7 +371,12 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
             }
             R.id.rlcab -> {
-
+                showNotifyDialog(
+                    "", "Coming Soon",
+                    getString(R.string.ok),"",object : NotifyListener {
+                        override fun onButtonClicked(which: Int) { }
+                    }
+                )
             }
             R.id.rlprofile -> {
                 home().setFragment(ProfileLandingFragment())
@@ -529,10 +528,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         cancel.visibility = View.GONE
         rlTopBar.visibility = View.VISIBLE
         home_map_bg.alpha = 1f
-        rlpooling.alpha = 1f
-        rlcab.alpha = 1f
-        rlprofile.alpha = 1f
-        rlBestRoute.alpha = 1f
+        rlpooling.visibility = View.VISIBLE
+        rlcab.visibility = View.VISIBLE
+        rlprofile.visibility = View.VISIBLE
+        rlBestRoute.visibility = View.VISIBLE
         scrollView.fullScroll(View.FOCUS_UP);
         rlBestRoute.isEnabled = true
     }
@@ -548,10 +547,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         //vehicle_detail.visibility = View.VISIBLE
         cv.visibility = View.VISIBLE
         home_map_bg.alpha = 0.5f
-        rlpooling.alpha = 1f
-        rlcab.alpha = 0.5f
-        rlprofile.alpha = 0.5f
-        rlBestRoute.alpha = 0.5f
+        rlpooling.visibility = View.VISIBLE
+        rlcab.visibility = View.GONE
+        rlprofile.visibility = View.GONE
+        rlBestRoute.visibility = View.GONE
         scrollView.scrollTo(0,Helper.dpToPx(activity!!,200))
         rlBestRoute.isEnabled = false
 
@@ -622,10 +621,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         cv.visibility = View.GONE
         arrow_left.visibility = View.VISIBLE
         home_map_bg.alpha = 0.5f
-        rlpooling.alpha = 0.5f
-        rlcab.alpha = 0.5f
-        rlprofile.alpha = 0.5f
-        rlBestRoute.alpha = 1f
+        rlpooling.visibility = View.GONE
+        rlcab.visibility = View.GONE
+        rlprofile.visibility = View.GONE
+        rlBestRoute.visibility = View.VISIBLE
         scrollView.fullScroll(View.FOCUS_UP);
         rlBestRoute.isEnabled = false
 

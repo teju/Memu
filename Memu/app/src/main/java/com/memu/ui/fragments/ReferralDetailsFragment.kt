@@ -39,6 +39,7 @@ class ReferralDetailsFragment : BaseFragment() ,View.OnClickListener {
     }
 
     private fun initUI() {
+        ll_options.visibility = View.GONE
         setUSerMAinDataAPIObserver()
         posUserMainDataViewModel.loadData(UserInfoManager.getInstance(activity!!).getAccountId())
         arrow_left.setOnClickListener(this)

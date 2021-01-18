@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.memu.R
 import com.memu.etc.Helper
@@ -35,7 +36,7 @@ class AcceptedFriendsAdapter(val context: Context) : RecyclerView.Adapter<Accept
 
         holder.pos = position
         if(isFriendsRequest) {
-            holder.rl.background = (context.resources.getDrawable(R.drawable.red_start_btn_new))
+            holder.rl.backgroundTintList = context.getResources().getColorStateList(R.color.Red)
             holder.accept_remove.text = "Remove"
         }
         try {

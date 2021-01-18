@@ -17,7 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:src="@drawable/we_pay_text"
+                android:src="@drawable/in_your_city"
                 android:adjustViewBounds="true"
                 android:layout_height="wrap_content">
             </ImageView>
@@ -168,7 +168,8 @@
                     android:layout_width="wrap_content"
                     android:text="Friends &amp; Family"
                     android:textColor="#606060"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="50dp"
                     android:layout_gravity="center_vertical"
                     android:fontFamily="@font/opensansbold"
                     android:textSize="18dp"
@@ -202,23 +203,38 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="15dp"
                             android:id="@+id/name"
+                            android:fontFamily="@font/opensansregular"
                             android:text="@string/username"
                             android:textColor="@color/black"
                             android:layout_height="wrap_content">
                         </TextView>
                     </LinearLayout>
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:text="60"
-                        android:layout_alignParentRight="true"
-                        android:textColor="#FF9300"
+                        android:orientation="horizontal"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
-                        android:fontFamily="@font/opensansbold"
-                        android:textSize="25dp"
-                        android:layout_marginRight="70dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
                         android:layout_height="wrap_content">
-                    </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="60"
+                            android:textColor="#FF9300"
+                            android:gravity="center_vertical"
+                            android:fontFamily="@font/opensansbold"
+                            android:textSize="25dp"
+                            android:layout_height="60dp">
+                        </TextView>
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_marginLeft="15dp"
+                            android:gravity="center_vertical"
+                            android:src="@drawable/reputation_coins_right"
+                            android:layout_height="60dp">
+
+                        </ImageView>
+                    </LinearLayout>
 
                 </RelativeLayout>
                 <RelativeLayout
@@ -247,22 +263,37 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="15dp"
                             android:text="@string/username"
+                            android:fontFamily="@font/opensansregular"
                             android:textColor="@color/black"
                             android:layout_height="wrap_content">
                         </TextView>
                     </LinearLayout>
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:text="60"
-                        android:layout_alignParentRight="true"
-                        android:textColor="#FF9300"
+                        android:orientation="horizontal"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
-                        android:fontFamily="@font/opensansbold"
-                        android:textSize="25dp"
-                        android:layout_marginRight="70dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
                         android:layout_height="wrap_content">
-                    </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="60"
+                            android:textColor="#FF9300"
+                            android:gravity="center_vertical"
+                            android:fontFamily="@font/opensansbold"
+                            android:textSize="25dp"
+                            android:layout_height="60dp">
+                        </TextView>
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_marginLeft="15dp"
+                            android:gravity="center_vertical"
+                            android:src="@drawable/reputation_coins_right"
+                            android:layout_height="60dp">
+
+                        </ImageView>
+                    </LinearLayout>
 
                 </RelativeLayout>
                 <RelativeLayout
@@ -291,22 +322,37 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="15dp"
                             android:text="@string/username"
+                            android:fontFamily="@font/opensansregular"
                             android:textColor="@color/black"
                             android:layout_height="wrap_content">
                         </TextView>
                     </LinearLayout>
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:text="60"
-                        android:layout_alignParentRight="true"
-                        android:textColor="#FF9300"
+                        android:orientation="horizontal"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
-                        android:fontFamily="@font/opensansbold"
-                        android:textSize="25dp"
-                        android:layout_marginRight="70dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
                         android:layout_height="wrap_content">
-                    </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="60"
+                            android:textColor="#FF9300"
+                            android:gravity="center_vertical"
+                            android:fontFamily="@font/opensansbold"
+                            android:textSize="25dp"
+                            android:layout_height="60dp">
+                        </TextView>
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_marginLeft="15dp"
+                            android:gravity="center_vertical"
+                            android:src="@drawable/reputation_coins_right"
+                            android:layout_height="60dp">
+
+                        </ImageView>
+                    </LinearLayout>
 
                 </RelativeLayout>
 
@@ -321,7 +367,8 @@
                     android:layout_width="wrap_content"
                     android:text="In your City"
                     android:textColor="#606060"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_gravity="center_vertical"
                     android:fontFamily="@font/opensansbold"
                     android:textSize="18dp"
@@ -353,23 +400,38 @@
                             android:layout_width="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="15dp"
+                            android:fontFamily="@font/opensansregular"
                             android:text="@string/username"
                             android:textColor="@color/black"
                             android:layout_height="wrap_content">
                         </TextView>
                     </LinearLayout>
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:text="60"
-                        android:layout_alignParentRight="true"
-                        android:textColor="#FF9300"
+                        android:orientation="horizontal"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
-                        android:fontFamily="@font/opensansbold"
-                        android:textSize="25dp"
-                        android:layout_marginRight="70dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
                         android:layout_height="wrap_content">
-                    </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="60"
+                            android:textColor="#FF9300"
+                            android:gravity="center_vertical"
+                            android:fontFamily="@font/opensansbold"
+                            android:textSize="25dp"
+                            android:layout_height="60dp">
+                        </TextView>
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_marginLeft="15dp"
+                            android:gravity="center_vertical"
+                            android:src="@drawable/reputation_coins_right"
+                            android:layout_height="60dp">
+
+                        </ImageView>
+                    </LinearLayout>
 
                 </RelativeLayout>
                 <RelativeLayout
@@ -397,23 +459,38 @@
                             android:layout_width="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="15dp"
+                            android:fontFamily="@font/opensansregular"
                             android:text="@string/username"
                             android:textColor="@color/black"
                             android:layout_height="wrap_content">
                         </TextView>
                     </LinearLayout>
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:text="60"
-                        android:layout_alignParentRight="true"
-                        android:textColor="#FF9300"
+                        android:orientation="horizontal"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
-                        android:fontFamily="@font/opensansbold"
-                        android:textSize="25dp"
-                        android:layout_marginRight="70dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
                         android:layout_height="wrap_content">
-                    </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="60"
+                            android:textColor="#FF9300"
+                            android:gravity="center_vertical"
+                            android:fontFamily="@font/opensansbold"
+                            android:textSize="25dp"
+                            android:layout_height="60dp">
+                        </TextView>
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_marginLeft="15dp"
+                            android:gravity="center_vertical"
+                            android:src="@drawable/reputation_coins_right"
+                            android:layout_height="60dp">
+
+                        </ImageView>
+                    </LinearLayout>
 
                 </RelativeLayout>
                 <RelativeLayout
@@ -441,23 +518,38 @@
                             android:layout_width="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="15dp"
+                            android:fontFamily="@font/opensansregular"
                             android:text="@string/username"
                             android:textColor="@color/black"
                             android:layout_height="wrap_content">
                         </TextView>
                     </LinearLayout>
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:text="60"
-                        android:layout_alignParentRight="true"
-                        android:textColor="#FF9300"
+                        android:orientation="horizontal"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
-                        android:fontFamily="@font/opensansbold"
-                        android:textSize="25dp"
-                        android:layout_marginRight="70dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
                         android:layout_height="wrap_content">
-                    </TextView>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:text="60"
+                            android:textColor="#FF9300"
+                            android:gravity="center_vertical"
+                            android:fontFamily="@font/opensansbold"
+                            android:textSize="25dp"
+                            android:layout_height="60dp">
+                        </TextView>
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_marginLeft="15dp"
+                            android:gravity="center_vertical"
+                            android:src="@drawable/reputation_coins_right"
+                            android:layout_height="60dp">
+
+                        </ImageView>
+                    </LinearLayout>
 
                 </RelativeLayout>
 

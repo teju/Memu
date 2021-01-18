@@ -48,9 +48,9 @@
                     android:id="@+id/tvfollowtxt"
                     android:layout_marginLeft="20dp"
                     android:textColor="@color/DarkBlue"
-                    android:fontFamily="@font/opensansregular"
+                    android:fontFamily="@font/opensanssemibold"
                     android:layout_marginRight="20dp"
-                    android:textSize="14dp"
+                    android:textSize="16dp"
                     android:layout_height="wrap_content">
                 </TextView>
 
@@ -75,8 +75,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/DarkBlue"
-                    android:fontFamily="@font/opensansregular"
-                    android:textSize="14dp"
+                    android:fontFamily="@font/opensanssemibold"
+                    android:textSize="16dp"
                     android:layout_height="wrap_content">
                 </TextView>
                 <androidx.recyclerview.widget.RecyclerView

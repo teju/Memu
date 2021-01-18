@@ -457,44 +457,6 @@ public abstract class HTTPAsyncTask
 //				disableSSLCertificateChecking();
 
 			if (httpsEnabled) {
-
-//				if(Build.VERSION.SDK_INT < 21) {
-//					try {
-//
-//						SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-//						TrustManager[] trustManagers = new TrustManager[] { new TrustManagerManipulator() };
-//						sslContext.init(null, trustManagers, new SecureRandom());
-//						SSLSocketFactory noSSLv3Factory = new TLSSocketFactory(sslContext.getSocketFactory());
-//						HttpsURLConnection.setDefaultSSLSocketFactory(noSSLv3Factory);
-//
-//						String[] pins = new String[] {BaseConstants.PIN_FROM_CERT_PEM_FOR_PINNING_INFO_JSON};
-//						if (context != null) {
-//							conn = PinningHelper.getPinnedHttpsURLConnection(context, pins, url);
-//						}
-//						if (url != null) {
-//							conn = (HttpsURLConnection) url.openConnection();
-//						}
-//
-//					} catch (Exception e) {
-//						conn = (HttpsURLConnection) url.openConnection();
-//					}
-//				} else {
-//					//				String[] pins = new String[] {BaseConstants.PIN_FROM_CERT_PEM_FOR_PINNING};
-//					String[] pins = new String[] {BaseConstants.PIN_FROM_CERT_PEM_FOR_PINNING_INFO_JSON};
-//					if (context != null) {
-//						conn = PinningHelper.getPinnedHttpsURLConnection(context, pins, url);
-//					}
-//					if (url != null) {
-//						conn = (HttpsURLConnection) url.openConnection();
-//					}
-//				}
-//
-//			}
-//			else {
-//				if (url != null) {
-//					conn = (HttpsURLConnection) url.openConnection();
-//				}
-
                 if (url != null) {
 
 					if(Build.VERSION.SDK_INT < 21) {

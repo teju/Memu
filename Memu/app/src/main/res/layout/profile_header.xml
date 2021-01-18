@@ -63,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="60dp"
                         android:fontFamily="@font/opensansbold"
-                        android:textColor="@color/Black"
+                        android:textColor="@color/textcolur"
                         android:textSize="15dp"
                         android:textStyle="bold"></TextView>
                     <TextView
@@ -112,6 +112,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/posts"
+                            android:fontFamily="@font/opensanssemibold"
                             android:textColor="@color/Black"
                             android:textSize="10dp"></TextView>
 
@@ -123,19 +124,11 @@
                             android:textSize="10dp"></TextView>
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="8dp"
-                        android:background="@color/Black">
-
-                    </View>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="20dp"
                         android:visibility="gone"
                         android:orientation="vertical">
 
@@ -143,6 +136,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/likes"
+                            android:fontFamily="@font/opensanssemibold"
                             android:textColor="@color/Black"
                             android:textSize="10dp"></TextView>
 
@@ -154,26 +148,18 @@
                             android:textSize="10dp"></TextView>
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="8dp"
-                        android:visibility="gone"
-                        android:background="@color/Black">
-
-                    </View>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="20dp"
                         android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/followers_cnt"
+                            android:fontFamily="@font/opensanssemibold"
                             android:textColor="@color/Black"
                             android:textSize="10dp"></TextView>
                         <TextView
@@ -184,19 +170,11 @@
                             android:textSize="10dp"></TextView>
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="8dp"
-                        android:background="@color/Black">
-
-                    </View>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="20dp"
                         android:orientation="vertical">
                         <TextView
                             android:layout_width="wrap_content"
@@ -239,6 +217,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:text="Friends"
+                android:fontFamily="@font/opensanssemibold"
                 android:id="@+id/tvFriends"
                 android:paddingTop="15dp"
                 android:textSize="13dp"
@@ -276,6 +255,7 @@
                 android:text="Followers"
                 android:id="@+id/tvfollowers"
                 android:paddingTop="15dp"
+                android:fontFamily="@font/opensanssemibold"
                 android:textSize="13dp"
                 android:layout_centerHorizontal="true"
                 android:textAlignment="center"

@@ -54,6 +54,7 @@
                         android:id="@+id/rides_shared"
                         android:textColor="@color/Black"
                         android:textSize="10dp"
+                        android:fontFamily="@font/opensansregular"
                         android:layout_height="wrap_content">
                     </TextView>
                 </LinearLayout>
@@ -84,6 +85,7 @@
                         android:layout_width="wrap_content"
                         android:id="@+id/dist_shared"
                         android:textColor="@color/Black"
+                        android:fontFamily="@font/opensansregular"
                         android:textSize="10dp"
                         android:layout_height="wrap_content">
                     </TextView>
@@ -172,6 +174,7 @@
                                 android:text="Find More"
                                 android:paddingTop="15dp"
                                 android:textSize="13dp"
+                                android:fontFamily="@font/opensanssemibold"
                                 android:layout_centerHorizontal="true"
                                 android:textAlignment="center"
                                 android:textColor="@color/White"
@@ -206,6 +209,7 @@
                                 android:text="Invite"
                                 android:paddingTop="15dp"
                                 android:textSize="13dp"
+                                android:fontFamily="@font/opensanssemibold"
                                 android:layout_centerHorizontal="true"
                                 android:textAlignment="center"
                                 android:textColor="@color/White"

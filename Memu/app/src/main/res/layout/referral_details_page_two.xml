@@ -14,7 +14,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:adjustViewBounds="true"
-        android:src="@drawable/redeem_coins_txt"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/redem_rep_points"
         android:layout_marginLeft="30dp"
         android:layout_height="wrap_content">
     </ImageView>

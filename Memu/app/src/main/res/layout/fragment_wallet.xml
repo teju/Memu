@@ -55,6 +55,7 @@
                         android:layout_width="wrap_content"
                         android:text="Invite now"
                         android:paddingTop="20dp"
+                        android:fontFamily="@font/opensanssemibold"
                         android:textSize="13dp"
                         android:layout_centerHorizontal="true"
                         android:textAlignment="center"
@@ -110,7 +111,8 @@
                     android:text="Total Balance::"
                     android:textSize="13dp"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@color/Black"
+                    android:textColor="@color/textcolur"
+                    android:fontFamily="@font/opensansregular"
                     android:layout_height="wrap_content">
                 </TextView>
                 <TextView
@@ -122,9 +124,10 @@
                     android:layout_marginLeft="10dp"
                     android:layout_gravity="center_horizontal"
                     android:textSize="13dp"
+                    android:fontFamily="@font/opensanssemibold"
                     android:layout_centerHorizontal="true"
                     android:textAlignment="center"
-                    android:textColor="@color/Black"
+                    android:textColor="@color/textcolur"
                     android:layout_height="wrap_content">
                 </TextView>
 
@@ -193,7 +196,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:background="@drawable/btn_recharge"
-                    android:text="Recharge"
+                    android:text="Add Money"
+                    android:fontFamily="@font/opensansbold"
                     android:id="@+id/recharge"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
@@ -206,6 +210,7 @@
                     android:background="@drawable/btn_withdrawable"
                     android:text="Withdraw"
                     android:id="@+id/withdraw"
+                    android:fontFamily="@font/opensansbold"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:paddingBottom="10dp"
@@ -241,24 +246,28 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:hint="Name on Bank Account"
+                        android:fontFamily="@font/opensansregular"
                         android:layout_marginTop="15dp"
                         android:layout_height="wrap_content">
                     </EditText>
                     <EditText
                         android:layout_width="match_parent"
                         android:hint="Account Number"
+                        android:fontFamily="@font/opensansregular"
                         android:layout_marginTop="15dp"
                         android:layout_height="wrap_content">
                     </EditText>
                     <EditText
                         android:layout_width="match_parent"
                         android:hint="IFSC Code"
+                        android:fontFamily="@font/opensansregular"
                         android:layout_marginTop="15dp"
                         android:layout_height="wrap_content">
                     </EditText>
                     <EditText
                         android:layout_width="match_parent"
                         android:hint="Amount"
+                        android:fontFamily="@font/opensansregular"
                         android:layout_marginTop="15dp"
                         android:layout_height="wrap_content">
                     </EditText>
@@ -270,6 +279,7 @@
                         android:layout_marginBottom="30dp"
                         android:background="@drawable/btn_withdrawable"
                         android:text="Withdraw"
+                        android:fontFamily="@font/opensansbold"
                         android:id="@+id/btnwithdraw"
                         android:textAllCaps="false"
                         android:textColor="@color/white"

@@ -49,7 +49,7 @@
                 android:textSize="18dp"
                 android:fontFamily="@font/opensansregular"
                 android:textAlignment="viewStart"
-                android:text="Do you drive a vehicle?"
+                android:text="Do you own/drive a\nvehicle?"
                 android:textColor="@color/DarkBlue"
                 android:id="@+id/tv1"
                 android:layout_marginLeft="15dp"
@@ -91,13 +91,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="NO"
-                            android:textColor="@color/black"
-                            android:fontFamily="@font/opensanssemibold"
+                            android:textColor="#272727"
+                            android:fontFamily="@font/opensansbold"
                             android:layout_height="wrap_content">
                         </TextView>
                         <TextView
                             android:layout_width="wrap_content"
                             android:fontFamily="@font/opensansregular"
+                            android:textColor="#1B245C"
                             android:text="(I use Car/bike pooling/ public transport)"
                             android:layout_toRightOf="@+id/radio_connector"
                             android:layout_height="wrap_content">
@@ -151,8 +152,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="Yes,Private"
-                            android:textColor="@color/black"
-                            android:fontFamily="@font/opensanssemibold"
+                            android:textColor="#272727"
+                            android:fontFamily="@font/opensansbold"
                             android:layout_height="wrap_content">
 
                         </TextView>
@@ -160,6 +161,7 @@
                             android:layout_width="wrap_content"
                             android:fontFamily="@font/opensansregular"
                             android:text="(White Board - Car/Motorbike)"
+                            android:textColor="#1B245C"
                             android:layout_toRightOf="@+id/radio_connector"
                             android:layout_height="wrap_content">
 
@@ -204,7 +206,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:text="Yes, Cab/Taxi/TT/Bike (Yellow Board)"
-                            android:textColor="@color/black"
+                            android:textColor="#272727"
                             android:fontFamily="@font/opensansbold"
                             android:layout_height="wrap_content">
                         </TextView>

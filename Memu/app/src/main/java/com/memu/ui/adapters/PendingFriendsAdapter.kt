@@ -36,6 +36,7 @@ class PendingFriendsAdapter(val context: Context) : RecyclerView.Adapter<Pending
 
         holder.pos = position
         if(isFriendsRequest) {
+            holder.rl.backgroundTintList = context.getResources().getColorStateList(R.color.mapboxPink)
             holder.accept_remove.text = "Accept"
         }
         holder.user_name.text = obj.get(position).name
@@ -65,6 +66,7 @@ class PendingFriendsAdapter(val context: Context) : RecyclerView.Adapter<Pending
         var accept_remove = view.accept_remove
         var user_name = view.user_name
         var profile_icon = view.profile_icon
+        var rl = view.rl
 
 
     }

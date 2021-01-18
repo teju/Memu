@@ -68,7 +68,7 @@
             android:layout_width="0dp"
             android:orientation="vertical"
             android:layout_weight="1"
-            android:background="@color/soft_grey"
+            android:background="@color/white"
             android:layout_alignParentRight="true"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
-                android:text="What's your\nname ?"
+                android:text="What’s your name?"
                 android:textColor="@color/DarkBlue"
                 android:textSize="30dp"
                 android:fontFamily="@font/opensanssemibold"
@@ -87,7 +87,9 @@
                 android:layout_width="match_parent"
                 android:id="@+id/first_name"
                 android:imeOptions="actionNext"
-                android:fontFamily="@font/opensansregular"
+                android:fontFamily="@font/opensanslight"
+                android:textColor="@color/textcolur"
+                android:textColorHint="@color/textcolur"
                 android:background="@color/transparent"
                 android:inputType="text"
                 android:layout_marginTop="20dp"
@@ -121,7 +123,9 @@
                 android:layout_width="match_parent"
                 android:background="@color/transparent"
                 android:imeOptions="actionDone"
-                android:fontFamily="@font/opensansregular"
+                android:fontFamily="@font/opensanslight"
+                android:textColorHint="@color/textcolur"
+                android:textColor="@color/textcolur"
                 android:inputType="text"
                 android:id="@+id/last_name"
                 android:hint="Last Name"
@@ -204,6 +208,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:textAlignment="center"
+            android:textColor="#1B245C"
             android:text="Select your\nGender"
             android:layout_height="wrap_content">
 
@@ -236,24 +241,24 @@
             android:gravity="center_vertical"
             android:fontFamily="@font/opensansregular"
             android:textSize="15dp"
-            android:imeOptions="actionNext"
-            android:inputType="text"
-            android:text="Enter referal code"></TextView>
+            android:text="Do You have a\nreferral code?"></TextView>
         <EditText
             android:layout_width="180dp"
-            android:hint="Referral code"
+            android:hint="put referral code\n(optional)"
             android:layout_gravity="center_vertical"
             android:id="@+id/referral_code"
-            android:fontFamily="@font/opensansregular"
+            android:fontFamily="@font/opensanslight"
+            android:textColorHint="@color/textcolur"
             android:textSize="15dp"
             android:layout_marginLeft="10dp"
             android:inputType="text"
             android:imeOptions="actionNext"
+            android:textColor="@color/textcolur"
             android:paddingTop="7dp"
             android:layout_below="@+id/get_otp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:background="@color/soft_grey"
+            android:background="@color/white"
             android:paddingBottom="7dp"
             android:layout_height="wrap_content">
         </EditText>

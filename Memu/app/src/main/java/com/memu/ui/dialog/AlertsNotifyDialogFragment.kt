@@ -55,12 +55,14 @@ class AlertsNotifyDialogFragment : BaseDialogFragment() {
         } catch (e : java.lang.Exception){
 
         }
-        if(isLiked) {
-            like_dislike_btn.setImageResource(R.drawable.like_btn)
-            desc.setTextColor(resources.getColor(R.color.Green))
-        } else {
-            like_dislike_btn.setImageResource(R.drawable.dislike_btn)
-            desc.setTextColor(resources.getColor(R.color.Red))
+        if(!username.isEmpty()) {
+            if (isLiked) {
+                like_dislike_btn.setImageResource(R.drawable.like_btn)
+                desc.setTextColor(resources.getColor(R.color.Green))
+            } else {
+                like_dislike_btn.setImageResource(R.drawable.dislike_btn)
+                desc.setTextColor(resources.getColor(R.color.Red))
+            }
         }
         Handler().postDelayed(
             {

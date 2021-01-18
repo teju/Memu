@@ -171,11 +171,12 @@
     <color name="DarkGreen">#006400</color>
     <color name="Blue">#0000FF</color>
     <color name="MediumBlue">#0000CD</color>
-    <color name="DarkBlue">#00008B</color>
+    <color name="DarkBlue">#172676</color>
     <color name="Navy">#000080</color>
     <color name="Black">#000000</color>
     <color name="unable_Black">#8D8D8D</color>
     <color name="whitegray">#FEFEFE</color>
     <color name="themeBlue">#063D7A</color>
+    <color name="textcolur">#1B245C</color>
 
 </resources>
