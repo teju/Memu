@@ -48,7 +48,7 @@
                 android:backgroundTint="@color/Orange"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_height="wrap_content">
+                android:layout_height="50dp">
             </Button>
 
             <Button
@@ -65,7 +65,7 @@
                 android:backgroundTint="@color/DeepSkyBlue"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_height="wrap_content">
+                android:layout_height="50dp">
             </Button>
 
             <com.facebook.login.widget.LoginButton

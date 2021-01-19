@@ -86,7 +86,7 @@
             android:textColor="@color/White"
             android:src="@drawable/chevron_right"
             android:id="@+id/btnNExt"
-            android:layout_height="wrap_content">
+            android:layout_height="50dp">
 
         </Button>
 

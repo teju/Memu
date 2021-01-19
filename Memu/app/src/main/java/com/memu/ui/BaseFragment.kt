@@ -448,6 +448,7 @@ open class BaseFragment : GenericFragment() {
         f.show(activity!!.supportFragmentManager, FindRideDialogFragment.TAG)
     }
 
+
     open fun showAlertsDialog(mapfeed : List<MapFeed>, n: NotifyListener){
         val f = AlertsDialogFragment().apply {
             this.listener = n
@@ -455,6 +456,14 @@ open class BaseFragment : GenericFragment() {
         }
         f.isCancelable = true
         f.show(activity!!.supportFragmentManager, AlertsDialogFragment.TAG)
+    }
+
+    open fun showCompletedDialog(n: NotifyListener){
+        val f = TripCompletedDialogFragment().apply {
+            this.listener = n
+        }
+        f.isCancelable = true
+        f.show(activity!!.supportFragmentManager, TripCompletedDialogFragment.TAG)
     }
 
     open fun showMatchingRiders(

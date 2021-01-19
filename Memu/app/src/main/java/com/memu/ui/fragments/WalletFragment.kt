@@ -199,6 +199,7 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
 
     override fun onBackPressedCancelTransaction() {
         Log.d(TAG,"onBackPressedCancelTransaction ")
+
         BaseHelper.showAlert(activity,"Transaction Cancelled")
     }
 

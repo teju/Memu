@@ -429,7 +429,7 @@ class MockNavigationFragment(
                 val title =  postMApFeedDataViewModel.obj?.list?.get(x)?.feed_name
                 Picasso.get().load(postMApFeedDataViewModel.obj?.list?.get(x)?.logo).into(object : com.squareup.picasso.Target {
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                        val bmp = BaseHelper.ScaleBitmap(bitmap,120)
+                        val bmp = BaseHelper.ScaleBitmap(bitmap,220)
                         // loaded bitmap is here (bitmap)
                         val iconFactory = IconFactory.getInstance(activity!!);
                         val icon = iconFactory.fromBitmap(bmp!!);
@@ -851,14 +851,11 @@ class MockNavigationFragment(
                     when (state) {
                         PostEndNavigationViewModel.NEXT_STEP -> {
                             isTRipStarted = false
-                            showNotifyDialog(
-                                "",postEndNavigationViewModel.obj?.message,
-                                getString(R.string.ok),"",object : NotifyListener {
-                                    override fun onButtonClicked(which: Int) {
-                                        home().setFragment(HomeFragment())
-                                    }
+                            showCompletedDialog(object :NotifyListener {
+                                override fun onButtonClicked(which: Int) {
+                                    home().backToMainScreen()
                                 }
-                            )
+                            })
                         }
                     }
                 })
@@ -890,24 +887,16 @@ class MockNavigationFragment(
                     when (state) {
                         PostEndNavigationViewModel.NEXT_STEP -> {
                             amountToPAy()
-                            showNotifyDialog(
-                                "","Your Wallet balance is "+walletBalance +"\nDistance Travelled : "
-                                        +String.format("%.2f", distanceTravelled)+"\nPay Now amount of Rs "+amount_to_pay,
-                                getString(R.string.ok),"",object : NotifyListener {
-                                    override fun onButtonClicked(which: Int) {
-                                        var amt = 0.0
-                                        if( amount_to_pay > walletBalance.toDouble()) {
-                                            amt = amount_to_pay - walletBalance.toDouble()
-                                        }
-                                        paymentStates = BEFORE_PAYMENT
-                                        postMakePaymentViewModel.loadData("before",amt.toString(),
-                                            walletBalance,
-                                            postCustomerEndNavigationViewModel.obj?.trip_details?.driver_id!!,
-                                            postCustomerEndNavigationViewModel.obj?.trip_details?.trip_id!!,
-                                            "online", invoive_id,amount_to_pay.toString(),"pending")
-                                    }
-                                }
-                            )
+                            var amt = 0.0
+                            if( amount_to_pay > walletBalance.toDouble()) {
+                                amt = amount_to_pay - walletBalance.toDouble()
+                            }
+                            paymentStates = BEFORE_PAYMENT
+                            postMakePaymentViewModel.loadData("before",amt.toString(),
+                                walletBalance,
+                                postCustomerEndNavigationViewModel.obj?.trip_details?.driver_id!!,
+                                postCustomerEndNavigationViewModel.obj?.trip_details?.trip_id!!,
+                                "online", invoive_id,amount_to_pay.toString(),"pending")
                         }
                     }
                 })
@@ -964,14 +953,20 @@ class MockNavigationFragment(
                                     }
                                 }
                                 AFTER_PAYMENT -> {
-
-                                    home().setFragment(TripCompletedFragment().apply {
-                                        this.distanceCompleted = this@MockNavigationFragment.distanceTravelled!!.toString()
-                                        this.amountPaid = this@MockNavigationFragment.amount_to_pay!!.toString()
-                                        this.timeTaken = this@MockNavigationFragment.duration_left!!.text.toString()
-                                        this.coinsEarned = "100"
-                                    })
-
+                                    if(Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
+                                        home().setFragment(TripCompletedFragment().apply {
+                                            this.distanceCompleted = this@MockNavigationFragment.distanceTravelled!!.toString()
+                                            this.amountPaid = this@MockNavigationFragment.amount_to_pay!!.toString()
+                                            this.timeTaken = this@MockNavigationFragment.duration_left!!.text.toString()
+                                            this.coinsEarned = "90"
+                                        })
+                                    } else{
+                                        showCompletedDialog(object :NotifyListener {
+                                            override fun onButtonClicked(which: Int) {
+                                                home().backToMainScreen()
+                                            }
+                                        })
+                                    }
                                 }
                             }
                         }

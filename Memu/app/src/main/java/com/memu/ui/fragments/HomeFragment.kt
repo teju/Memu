@@ -15,11 +15,14 @@ import android.app.AlarmManager
 import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.app.TimePickerDialog
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
+import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProviders
@@ -72,6 +75,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     lateinit var postUpdateNotiTokenViewModel: PostUpdateNotiTokenViewModel
     lateinit var postFindRideViewModel: PostFindRideViewModel
     lateinit var postUserVehicleListViewModel: PostUserVehicleListViewModel
+    lateinit var postGetAlertListViewModel: PostGetAlertListViewModel
+    lateinit var postMApFeedAddViewModel: PostMApFeedAddViewModel
     var viaLatitide:Double = 0.0
     var destLatitide:Double = 0.0
     var destLongitude:Double = 0.0
@@ -79,6 +84,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     var srcLongitude:Double = 0.0
     var srcLatitude:Double = 0.0
     private var mapboxMap: MapboxMap? = null
+    var showDialog : Boolean = false
+    lateinit var postUploadDocViewModel: PostUploadDocViewModel
 
     private val REQUEST_CODE_AUTOCOMPLETE = 1
     private val REQUEST_CODE_AUTOCOMPLETEDEST = 2
@@ -86,6 +93,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
     private var permissionsManager: PermissionsManager? = null
     private var locationComponent: LocationComponent? = null
     var weekdays : ArrayList<String> =  ArrayList<String>()
+    private var cameraOutputUri: Uri? = null
+    val PICK_PHOTO_PHOTO = 10010
 
     var type = 1
     var strdate =""
@@ -170,6 +179,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         setUpdateNotiTokenAPIObserver()
         setFindTripAPIObserver()
         setPoolerVehicleListAPIObserver()
+        setAddAlertAPIObserver()
+        setGetAlertsAPIObserver()
+        setUploadActivityPhotoObserver()
         setWalletBalanceObserver(this)
         cv.setCardBackgroundColor(activity!!.resources.getColor(R.color.Purple));
         gpsTracker = GPSTracker(activity)
@@ -210,6 +222,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         getWalletBalanceViewModel.loadData()
 
         rlBestRoute.setOnClickListener(this)
+        alert_icon.setOnClickListener(this)
         rlpooling.setOnClickListener(this)
         rlcab.setOnClickListener(this)
         rlprofile.setOnClickListener(this)
@@ -331,6 +344,10 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             R.id.my_profile -> {
             }
             R.id.findcab -> {
+
+            }
+            R.id.alert_icon -> {
+                postGetAlertListViewModel.loadData()
 
             }
             R.id.rlpooling -> {
@@ -629,6 +646,35 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         rlBestRoute.isEnabled = false
 
     }
+    fun pickImage() {
+        cameraOutputUri = activity!!.contentResolver
+            .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())
+        val intent: Intent = BaseHelper.getPickIntent(cameraOutputUri,activity!!)
+        startActivityForResult(intent, PICK_PHOTO_PHOTO)
+    }
+
+
+    fun showAlertsDialog() {
+        try {
+            showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!!, object : NotifyListener {
+                override fun onButtonClicked(which: Int) {
+                    System.out.println("showAlertsDialog map_feeds "
+                            + postGetAlertListViewModel.obj?.map_feeds!!.get(which).id)
+
+                    if(postGetAlertListViewModel.obj?.map_feeds!!.get(which).id.equals("4")) {
+                        pickImage()
+                    } else {
+                        postMApFeedAddViewModel.loadData(
+                            postGetAlertListViewModel.obj?.map_feeds!!.get(which).id
+                        )
+                    }
+                }
+            })
+        } catch (e : Exception){
+
+        }
+    }
+
     override fun onMapReady(@io.reactivex.annotations.NonNull mapboxMap: MapboxMap) {
         this.mapboxMap = mapboxMap
         mapboxMap.setStyle(getString(R.string.navigation_guidance_day)) { style ->
@@ -705,7 +751,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         if (PermissionsManager.areLocationPermissionsGranted(activity)) {
             locationComponent = mapboxMap!!.locationComponent
             locationComponent!!.activateLocationComponent(activity!!, loadedMapStyle!!)
-            locationComponent!!.isLocationComponentEnabled = true
+           // locationComponent!!.isLocationComponentEnabled = true
             // Set the component's camera mode
             locationComponent!!.cameraMode = CameraMode.TRACKING
             locationComponent!!.zoomWhileTracking(12.0);
@@ -769,6 +815,98 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                     }
                 })
 
+            }
+        }
+    }
+    fun setAddAlertAPIObserver() {
+        postMApFeedAddViewModel = ViewModelProviders.of(this).get(PostMApFeedAddViewModel::class.java).apply {
+            this@HomeFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) {
+
+                            }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostMApFeedAddViewModel.NEXT_STEP -> {
+                            showAlertSentDialog("THANKS! for Alert","05",
+                                "You have received","","",false)
+                        }
+                    }
+                })
+            }
+        }
+    }
+    fun setUploadActivityPhotoObserver() {
+        postUploadDocViewModel = ViewModelProviders.of(this).get(PostUploadDocViewModel::class.java).apply {
+            this@HomeFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostUploadDocViewModel.NEXT_STEP -> {
+                            ld.hide()
+
+                        }
+                    }
+                })
+            }
+        }
+    }
+
+    fun setGetAlertsAPIObserver() {
+        postGetAlertListViewModel = ViewModelProviders.of(this).get(PostGetAlertListViewModel::class.java).apply {
+            this@HomeFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostGetAlertListViewModel.NEXT_STEP -> {
+                          showAlertsDialog()
+                        }
+                    }
+                })
             }
         }
     }
@@ -926,6 +1064,20 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 viaLongitude = lng!!
 
 
+            }
+            if(requestCode == PICK_PHOTO_PHOTO) {
+                try {
+                    var imageuri:Uri? = null;
+                    if(data != null) {
+                        imageuri = data?.getData();// Get intent
+                    } else {
+                        imageuri = cameraOutputUri
+                    }
+                    val real_Path = BaseHelper.getRealPathFromUri(activity, imageuri);
+                    postUploadDocViewModel.loadData(PostUploadDocViewModel.ACTIVITY_PHOTO, real_Path)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         } catch (e : Exception){
             BaseHelper.showAlert(activity!!,e.toString())

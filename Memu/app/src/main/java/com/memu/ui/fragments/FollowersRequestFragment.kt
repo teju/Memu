@@ -53,6 +53,8 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
         me_followers.layoutManager = LinearLayoutManager(activity)
 
         if(isFriendsRequest) {
+            v2.visibility = View.GONE
+            v1.visibility = View.GONE
             imgRight.setImageResource(R.drawable.myfriends)
             tvTxt1.text = "My friends List"
             txtfollow.text = ""
@@ -62,6 +64,8 @@ class FollowersRequestFragment : BaseFragment() ,View.OnClickListener ,
                 this, UserInfoManager.getInstance(activity!!).getAccountId())
 
         } else {
+            v2.visibility = View.VISIBLE
+            v1.visibility = View.VISIBLE
             imgRight.setImageResource(R.drawable.notificationsmain)
             tvTxt1.text = "My Followers list"
             txtfollow.text = "People I Follow"

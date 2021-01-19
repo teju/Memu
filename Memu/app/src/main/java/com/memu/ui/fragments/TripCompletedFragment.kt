@@ -37,7 +37,6 @@ class TripCompletedFragment : BaseFragment()  {
     override fun onBackTriggered() {
         home().backToMainScreen()
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI();
@@ -48,6 +47,9 @@ class TripCompletedFragment : BaseFragment()  {
         time.setText(timeTaken)
         amount.setText(amountPaid+"\nRupees")
         coins.setText(coinsEarned+"\nCoins")
+        arrow_left.setOnClickListener {
+            home().backToMainScreen()
+        }
     }
 
 }

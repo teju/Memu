@@ -733,6 +733,16 @@
 
         </RelativeLayout>
     </ScrollView>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="40dp"
+        android:id="@+id/alert_icon"
+        android:src="@drawable/alert_bottom_img"
+        android:layout_marginRight="30dp"
+        android:layout_height="wrap_content">
+
+    </ImageView>
     <com.iapps.libs.views.LoadingCompound
         android:id="@+id/ld"
         android:layout_width="match_parent"

@@ -9,6 +9,7 @@
         android:adjustViewBounds="true"
         android:src="@drawable/group_one"
         android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:layout_height="wrap_content">
     </ImageView>
     <ImageView
@@ -24,6 +25,7 @@
         android:adjustViewBounds="true"
         android:src="@drawable/faq_main_header"
         android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:layout_height="wrap_content">
     </ImageView>
     <LinearLayout
