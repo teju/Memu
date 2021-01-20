@@ -140,5 +140,9 @@ class APIs : BaseKeys() {
 
         val postPay: String
             get() = BASE_URL!!  + PAYMENT+ "pay"
+
+
+        val gettopearners : String
+            get() = BASE_URL!!  + PROFILE+ "top-earners"
     }
 }

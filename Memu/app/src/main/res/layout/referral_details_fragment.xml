@@ -7,6 +7,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <com.iapps.libs.views.LoadingCompound
+            android:id="@+id/ld"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
@@ -92,6 +100,7 @@
                         android:text="60"
                         android:layout_alignParentRight="true"
                         android:textColor="#FF9300"
+                        android:id="@+id/reputation_coins"
                         android:layout_gravity="center_vertical"
                         android:fontFamily="@font/opensansbold"
                         android:textSize="25dp"
@@ -120,6 +129,7 @@
                         android:text="00"
                         android:layout_alignParentRight="true"
                         android:textColor="#FF9300"
+                        android:id="@+id/levels"
                         android:layout_gravity="center_vertical"
                         android:fontFamily="@font/opensansbold"
                         android:textSize="25dp"
@@ -152,7 +162,6 @@
                     android:layout_height="wrap_content">
 
                 </ImageView>
-
             </LinearLayout>
             <ImageView
                 android:layout_width="match_parent"
@@ -162,411 +171,118 @@
                 android:layout_marginRight="30dp"
                 android:layout_height="wrap_content">
             </ImageView>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:padding="15dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/top_family"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Friends &amp; Family"
-                    android:textColor="#606060"
+                <FrameLayout
+                    android:layout_width="match_parent"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="50dp"
-                    android:layout_gravity="center_vertical"
-                    android:fontFamily="@font/opensansbold"
-                    android:textSize="18dp"
-                    android:layout_height="wrap_content">
-                </TextView>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:paddingTop="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="25dp"
                     android:layout_height="wrap_content">
                     <LinearLayout
-                        android:layout_width="210dp"
-                        android:background="@drawable/rounded_corner_btn_border_enabled"
-                        android:backgroundTint="@color/white"
-                        android:orientation="horizontal"
-                        android:textColor="@color/white"
-                        android:text="Traffic jam expected"
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
                         android:padding="5dp"
+                        android:background="@drawable/rectangle_city"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:layout_height="wrap_content">
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="40dp"
-                            android:id="@+id/profile_pic"
-                            android:src="@drawable/default_profile_icon"
-                            android:layout_height="40dp">
-                        </de.hdodenhof.circleimageview.CircleImageView>
                         <TextView
                             android:layout_width="wrap_content"
+                            android:text="In your City"
+                            android:textColor="#606060"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginLeft="10dp"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="15dp"
-                            android:id="@+id/name"
-                            android:fontFamily="@font/opensansregular"
-                            android:text="@string/username"
-                            android:textColor="@color/black"
+                            android:fontFamily="@font/opensansbold"
+                            android:textSize="18dp"
                             android:layout_height="wrap_content">
                         </TextView>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
-                        android:layout_alignParentRight="true"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:text="60"
-                            android:textColor="#FF9300"
-                            android:gravity="center_vertical"
-                            android:fontFamily="@font/opensansbold"
-                            android:textSize="25dp"
-                            android:layout_height="60dp">
-                        </TextView>
-                        <ImageView
-                            android:layout_width="60dp"
-                            android:layout_marginLeft="6dp"
-                            android:gravity="center_vertical"
-                            android:src="@drawable/reputation_coins_right"
-                            android:layout_height="60dp">
 
-                        </ImageView>
-                    </LinearLayout>
-
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:layout_width="210dp"
-                        android:paddingRight="20dp"
-                        android:background="@drawable/rounded_corner_btn_border_enabled"
-                        android:backgroundTint="@color/white"
-                        android:orientation="horizontal"
-                        android:layout_marginRight="60dp"
-                        android:textColor="@color/white"
-                        android:text="Traffic jam expected"
-                        android:padding="5dp"
-                        android:layout_height="wrap_content">
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="40dp"
-                            android:src="@drawable/default_profile_icon"
-                            android:layout_height="40dp">
-                        </de.hdodenhof.circleimageview.CircleImageView>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="15dp"
-                            android:text="@string/username"
-                            android:fontFamily="@font/opensansregular"
-                            android:textColor="@color/black"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:id="@+id/friends_rv"
+                            android:layout_marginTop="20dp"
                             android:layout_height="wrap_content">
-                        </TextView>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
-                        android:layout_alignParentRight="true"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:text="60"
-                            android:textColor="#FF9300"
-                            android:gravity="center_vertical"
-                            android:fontFamily="@font/opensansbold"
-                            android:textSize="25dp"
-                            android:layout_height="60dp">
-                        </TextView>
-                        <ImageView
-                            android:layout_width="60dp"
-                            android:layout_marginLeft="6dp"
-                            android:gravity="center_vertical"
-                            android:src="@drawable/reputation_coins_right"
-                            android:layout_height="60dp">
 
-                        </ImageView>
+                        </androidx.recyclerview.widget.RecyclerView>
+
                     </LinearLayout>
 
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:layout_width="210dp"
-                        android:paddingRight="20dp"
-                        android:background="@drawable/rounded_corner_btn_border_enabled"
-                        android:backgroundTint="@color/white"
-                        android:orientation="horizontal"
-                        android:layout_marginRight="60dp"
-                        android:textColor="@color/white"
-                        android:text="Traffic jam expected"
-                        android:padding="5dp"
-                        android:layout_height="wrap_content">
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="40dp"
-                            android:src="@drawable/default_profile_icon"
-                            android:layout_height="40dp">
-                        </de.hdodenhof.circleimageview.CircleImageView>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="15dp"
-                            android:text="@string/username"
-                            android:fontFamily="@font/opensansregular"
-                            android:textColor="@color/black"
-                            android:layout_height="wrap_content">
-                        </TextView>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
-                        android:paddingBottom="10dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:text="60"
-                            android:textColor="#FF9300"
-                            android:gravity="center_vertical"
-                            android:fontFamily="@font/opensansbold"
-                            android:textSize="25dp"
-                            android:layout_height="60dp">
-                        </TextView>
-                        <ImageView
-                            android:layout_width="60dp"
-                            android:layout_marginLeft="6dp"
-                            android:gravity="center_vertical"
-                            android:src="@drawable/reputation_coins_right"
-                            android:layout_height="60dp">
+                </FrameLayout>
+                <ImageView
+                    android:layout_width="70dp"
+                    android:src="@drawable/myfriends"
+                    android:layout_marginBottom="-170dp"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="0dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="70dp">
 
-                        </ImageView>
-                    </LinearLayout>
+                </ImageView>
 
-                </RelativeLayout>
+            </RelativeLayout>
 
-            </LinearLayout>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:padding="15dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/top_family"
+                android:layout_marginTop="20dp"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="In your City"
-                    android:textColor="#606060"
-                    android:layout_marginTop="50dp"
+
+                <FrameLayout
+                    android:layout_width="match_parent"
                     android:layout_marginLeft="10dp"
-                    android:layout_gravity="center_vertical"
-                    android:fontFamily="@font/opensansbold"
-                    android:textSize="18dp"
-                    android:layout_height="wrap_content">
-                </TextView>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:paddingTop="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="25dp"
                     android:layout_height="wrap_content">
                     <LinearLayout
-                        android:layout_width="210dp"
-                        android:paddingRight="20dp"
-                        android:background="@drawable/rounded_corner_btn_border_enabled"
-                        android:backgroundTint="@color/white"
-                        android:orientation="horizontal"
-                        android:layout_marginRight="60dp"
-                        android:textColor="@color/white"
-                        android:text="Traffic jam expected"
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
                         android:padding="5dp"
+                        android:background="@drawable/rectangle_city"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:layout_height="wrap_content">
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="40dp"
-                            android:src="@drawable/default_profile_icon"
-                            android:layout_height="40dp">
-                        </de.hdodenhof.circleimageview.CircleImageView>
                         <TextView
                             android:layout_width="wrap_content"
+                            android:text="In your City"
+                            android:textColor="#606060"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginLeft="10dp"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="15dp"
-                            android:fontFamily="@font/opensansregular"
-                            android:text="@string/username"
-                            android:textColor="@color/black"
+                            android:fontFamily="@font/opensansbold"
+                            android:textSize="18dp"
                             android:layout_height="wrap_content">
                         </TextView>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
-                        android:layout_alignParentRight="true"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:text="60"
-                            android:textColor="#FF9300"
-                            android:gravity="center_vertical"
-                            android:fontFamily="@font/opensansbold"
-                            android:textSize="25dp"
-                            android:layout_height="60dp">
-                        </TextView>
-                        <ImageView
-                            android:layout_width="60dp"
-                            android:layout_marginLeft="6dp"
-                            android:gravity="center_vertical"
-                            android:src="@drawable/reputation_coins_right"
-                            android:layout_height="60dp">
 
-                        </ImageView>
-                    </LinearLayout>
-
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:layout_width="210dp"
-                        android:paddingRight="20dp"
-                        android:background="@drawable/rounded_corner_btn_border_enabled"
-                        android:backgroundTint="@color/white"
-                        android:orientation="horizontal"
-                        android:layout_marginRight="60dp"
-                        android:textColor="@color/white"
-                        android:text="Traffic jam expected"
-                        android:padding="5dp"
-                        android:layout_height="wrap_content">
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="40dp"
-                            android:src="@drawable/default_profile_icon"
-                            android:layout_height="40dp">
-                        </de.hdodenhof.circleimageview.CircleImageView>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="15dp"
-                            android:fontFamily="@font/opensansregular"
-                            android:text="@string/username"
-                            android:textColor="@color/black"
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:layout_width="match_parent"
+                            android:id="@+id/city_rv"
+                            android:layout_marginTop="20dp"
                             android:layout_height="wrap_content">
-                        </TextView>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
-                        android:layout_alignParentRight="true"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:text="60"
-                            android:textColor="#FF9300"
-                            android:gravity="center_vertical"
-                            android:fontFamily="@font/opensansbold"
-                            android:textSize="25dp"
-                            android:layout_height="60dp">
-                        </TextView>
-                        <ImageView
-                            android:layout_width="60dp"
-                            android:layout_marginLeft="6dp"
-                            android:gravity="center_vertical"
-                            android:src="@drawable/reputation_coins_right"
-                            android:layout_height="60dp">
 
-                        </ImageView>
+                        </androidx.recyclerview.widget.RecyclerView>
+
                     </LinearLayout>
 
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:layout_width="210dp"
-                        android:paddingRight="20dp"
-                        android:background="@drawable/rounded_corner_btn_border_enabled"
-                        android:backgroundTint="@color/white"
-                        android:orientation="horizontal"
-                        android:layout_marginRight="60dp"
-                        android:textColor="@color/white"
-                        android:text="Traffic jam expected"
-                        android:padding="5dp"
-                        android:layout_height="wrap_content">
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="40dp"
-                            android:src="@drawable/default_profile_icon"
-                            android:layout_height="40dp">
-                        </de.hdodenhof.circleimageview.CircleImageView>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="15dp"
-                            android:fontFamily="@font/opensansregular"
-                            android:text="@string/username"
-                            android:textColor="@color/black"
-                            android:layout_height="wrap_content">
-                        </TextView>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
-                        android:layout_alignParentRight="true"
-                        android:paddingBottom="10dp"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:text="60"
-                            android:textColor="#FF9300"
-                            android:gravity="center_vertical"
-                            android:fontFamily="@font/opensansbold"
-                            android:textSize="25dp"
-                            android:layout_height="60dp">
-                        </TextView>
-                        <ImageView
-                            android:layout_width="60dp"
-                            android:layout_marginLeft="6dp"
-                            android:gravity="center_vertical"
-                            android:src="@drawable/reputation_coins_right"
-                            android:layout_height="60dp">
+                </FrameLayout>
+                <ImageView
+                    android:layout_width="60dp"
+                    android:src="@drawable/city_img"
+                    android:layout_marginBottom="-240dp"
+                    android:layout_gravity="end"
+                    android:layout_marginRight="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="60dp">
 
-                        </ImageView>
-                    </LinearLayout>
+                </ImageView>
 
-                </RelativeLayout>
+            </RelativeLayout>
 
-            </LinearLayout>
             <include layout="@layout/referral_details_page_two"></include>
             <include layout="@layout/referral_details_page_three"></include>
             <include layout="@layout/referral_details_fragment_four"></include>
         </LinearLayout>
-        <com.iapps.libs.views.LoadingCompound
-            android:id="@+id/ld"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:clickable="true"
-            android:visibility="gone" />
 
     </FrameLayout>
 </ScrollView>

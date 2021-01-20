@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:paddingTop="20dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="190dp"
+            android:background="@drawable/rounded_corner_btn_border_enabled"
+            android:backgroundTint="@color/white"
+            android:orientation="horizontal"
+            android:textColor="@color/white"
+            android:text="Traffic jam expected"
+            android:padding="5dp"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="40dp"
+                android:id="@+id/profile_pic"
+                android:src="@drawable/default_profile_icon"
+                android:layout_height="40dp">
+            </de.hdodenhof.circleimageview.CircleImageView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:id="@+id/name"
+                android:textSize="12dp"
+                android:fontFamily="@font/opensansregular"
+                android:text="@string/username"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content">
+            </TextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="60"
+                android:textColor="#FF9300"
+                android:gravity="center_vertical"
+                android:id="@+id/points"
+                android:fontFamily="@font/opensansbold"
+                android:textSize="15dp"
+                android:layout_height="70dp">
+            </TextView>
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_marginLeft="6dp"
+                android:gravity="center_vertical"
+                android:src="@drawable/reputation_coins_right"
+                android:layout_height="60dp">
+
+            </ImageView>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
