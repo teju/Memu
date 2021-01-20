@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="match_parent"
-                    android:fontFamily="@font/poppins_regular"
+                    android:fontFamily="@font/opensansregular"
                     android:id="@+id/vw_text"
                     android:layout_marginRight="100dp"
                     android:layout_marginTop="20dp"
@@ -47,7 +47,7 @@
 
                 <ImageView
                     android:layout_width="100dp"
-                    android:src="@drawable/myfriends"
+                    android:src="@drawable/followers_noti"
                     android:id="@+id/right_img"
                     android:visibility="gone"
                     android:layout_marginTop="-0dp"
@@ -71,7 +71,7 @@
                 </de.hdodenhof.circleimageview.CircleImageView>
                 <TextView
                     android:layout_width="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
+                    android:fontFamily="@font/opensansregular"
                     android:id="@+id/user_name"
                     android:layout_marginRight="100dp"
                     android:textSize="18dp"
@@ -97,20 +97,21 @@
                     android:visibility="visible"
                     android:textSize="13dp"
                     android:textColor="@color/white"
-                    android:backgroundTint="#414141"
-                    android:background="@drawable/rounded_corner_btn_border_enabled"
+                    android:fontFamily="@font/opensansbold"
+                    android:background="@drawable/gray_btn"
                     android:layout_marginEnd="30dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_height="50dp">
                 </androidx.appcompat.widget.AppCompatButton>
                 <androidx.appcompat.widget.AppCompatButton
                     android:layout_width="120dp"
+                    android:fontFamily="@font/opensansbold"
                     android:text="@string/ok"
                     android:id="@+id/btn_positive"
                     android:textSize="13dp"
                     android:textColor="@color/white"
-                    android:backgroundTint="#0028FF"
-                    android:background="@drawable/rounded_corner_btn_border_enabled"
+                    android:backgroundTint="@color/mapboxPink"
+                    android:background="@drawable/red_start_btn_new"
                     android:layout_gravity="center_horizontal"
                     android:layout_height="50dp">
                 </androidx.appcompat.widget.AppCompatButton>

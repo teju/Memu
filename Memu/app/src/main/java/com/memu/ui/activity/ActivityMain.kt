@@ -108,7 +108,7 @@ class ActivityMain : AppCompatActivity(){
                     btn_positive = "Accept"
                     btn_negative = "Ignore"
                 } else {
-                    btn_positive = "Great"
+                    btn_positive = "Okay"
                     btn_negative = ""
                 }
 
@@ -120,7 +120,7 @@ class ActivityMain : AppCompatActivity(){
                 } else if(obj.type.equals("FR",ignoreCase = true)) {
                     drawable = R.drawable.myfriends
                 }else if(obj.type.equals("FL",ignoreCase = true)) {
-                    drawable = R.drawable.notificationsmain
+                    drawable = R.drawable.followers_noti
                 }
                 showNotifyDialog(
                 intent.getExtras()?.getString("title"),

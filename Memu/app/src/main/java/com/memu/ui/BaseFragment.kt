@@ -477,6 +477,28 @@ open class BaseFragment : GenericFragment() {
         f.show(activity!!.supportFragmentManager, MatchingRidersFragment.TAG)
     }
 
+    open fun showNotifyDialog(
+        tittle: String?,
+        messsage: String?,
+        button_positive:String?,
+        button_negative: String?,
+        n: NotifyListener,drawable : Int){
+        try {
+            val f = NotifyDialogFragment().apply {
+                this.listener = n
+            }
+            f.notify_tittle = tittle
+            f.notify_messsage = messsage
+            f.button_positive = button_positive
+            f.button_negative = button_negative
+            f.image_drawable = drawable
+            f.isCancelable = true
+            f.show(activity!!.supportFragmentManager, NotifyDialogFragment.TAG)
+        } catch (e : Exception){
+            System.out.println("Notification_received Exception " +e.toString())
+        }
+    }
+
     open fun showHTMLNotifyDialog(
         tittle: String?,
         messsage: String?,

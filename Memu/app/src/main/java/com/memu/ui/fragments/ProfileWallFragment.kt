@@ -65,6 +65,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
     private var mapboxMap: MapboxMap? = null
     private var locationComponent: LocationComponent? = null
     var uploadImageType = PostUploadDocViewModel.ACTIVITY_PHOTO
+    var type = ""
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.profile_wall, container, false)
         return v
@@ -256,8 +257,8 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
             R.id.tvfollowers -> {
                 System.out.println("tvfollowers clicked "+isPubLicWall)
                 if(isPubLicWall) {
-                        postFriendRequestViewModel.loadData("FL", friend_id)
-
+                    type = "FL"
+                    postFriendRequestViewModel.loadData("FL", friend_id)
                 } else {
                     home().setFragment(FollowersRequestFragment())
                 }
@@ -273,6 +274,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
             R.id.tvFriends -> {
                 if(isPubLicWall) {
                     if(getUserWallViewModel.obj != null && !getUserWallViewModel.obj?.is_freind!!) {
+                        type = "FR"
                         postFriendRequestViewModel.loadData("FR", friend_id)
                     }
                 } else {
@@ -464,12 +466,15 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostUploadDocViewModel.NEXT_STEP -> {
+                            var drawable = R.drawable.myfriends
+                            if(type.equals("FL",ignoreCase = true)) {
+                                drawable = R.drawable.followers_noti
+                            }
                             showNotifyDialog(
                                 "", postFriendRequestViewModel.obj?.message,
-                                getString(R.string.ok),"",object : NotifyListener {
+                                "Great","",object : NotifyListener {
                                     override fun onButtonClicked(which: Int) { }
-                                }
-                            )
+                                },drawable)
                         }
                     }
                 })
