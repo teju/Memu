@@ -96,6 +96,7 @@ class Keys : BaseKeys() {
         val AMOUNT = "amount"
         val WALLET_DETAILS = "wallet_details"
         val MODE = "mode"
+        val ACTION = "action"
         val PAYMENT_DETAILS = "payment_details"
 
         @kotlin.jvm.JvmField

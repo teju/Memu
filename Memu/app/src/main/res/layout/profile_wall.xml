@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
+    android:background="#EEEEEE"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <FrameLayout
         android:layout_width="match_parent"
@@ -29,10 +29,12 @@
                 android:background="@drawable/earth_points_bg"
                 android:layout_marginTop="5dp"
                 android:paddingTop="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:id="@+id/dist_shared_data"
                 android:paddingBottom="10dp"
                 android:gravity="center_horizontal"
-                android:layout_height="wrap_content">
+                android:layout_height="60dp">
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -44,7 +46,7 @@
                         android:layout_width="wrap_content"
                         android:text="Rides Shared"
                         android:gravity="center_vertical"
-                        android:fontFamily="@font/opensanssemibold"
+                        android:fontFamily="@font/opensansbold"
                         android:textColor="@color/Black"
                         android:textSize="10dp"
                         android:layout_height="wrap_content">
@@ -62,7 +64,7 @@
                     android:layout_width="1dp"
                     android:layout_gravity="center_vertical"
                     android:background="@color/Black"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="0dp"
                     android:layout_height="25dp">
 
                 </View>
@@ -70,14 +72,14 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="40dp"
+                    android:layout_marginRight="20dp"
                     android:orientation="vertical"
                     android:layout_marginLeft="20dp"
                     android:layout_height="wrap_content">
                     <TextView
                         android:layout_width="match_parent"
                         android:text="Distance Shared"
-                        android:fontFamily="@font/opensanssemibold"                android:textColor="@color/Black"
+                        android:fontFamily="@font/opensansbold"                android:textColor="@color/Black"
                         android:textSize="10dp"
                         android:layout_height="wrap_content">
                     </TextView>
@@ -130,17 +132,19 @@
                     android:id="@+id/flImage"
                     android:layout_height="wrap_content">
                     <ImageView
-                        android:layout_width="70dp"
+                        android:layout_width="60dp"
                         android:scaleType="fitXY"
                         android:background="@drawable/friends_heading_bg"
-                        android:layout_height="150dp">
+                        android:layout_height="140dp">
                     </ImageView>
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="100dp"
                         android:text="My Friends"
-                        android:layout_marginTop="60dp"
-                        android:rotation="90"
-                        android:textColor="@color/Black"
+                        android:layout_marginTop="50dp"
+                        android:rotation="-90"
+                        android:layout_marginLeft="-25dp"
+                        android:textColor="@color/textcolur"
+                        android:fontFamily="@font/opensansbold"
                         android:textSize="15dp"
                         android:layout_height="wrap_content">
                     </TextView>
@@ -171,10 +175,10 @@
                             android:layout_height="80dp">
                             <TextView
                                 android:layout_width="wrap_content"
-                                android:text="Find More"
+                                android:text="Find more"
                                 android:paddingTop="15dp"
                                 android:textSize="13dp"
-                                android:fontFamily="@font/opensanssemibold"
+                                android:fontFamily="@font/opensansbold"
                                 android:layout_centerHorizontal="true"
                                 android:textAlignment="center"
                                 android:textColor="@color/White"
@@ -209,7 +213,7 @@
                                 android:text="Invite"
                                 android:paddingTop="15dp"
                                 android:textSize="13dp"
-                                android:fontFamily="@font/opensanssemibold"
+                                android:fontFamily="@font/opensansbold"
                                 android:layout_centerHorizontal="true"
                                 android:textAlignment="center"
                                 android:textColor="@color/White"
@@ -240,7 +244,7 @@
             <RelativeLayout
                 android:layout_width="140dp"
                 android:layout_gravity="center_horizontal"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:id="@+id/upload_activity"
                 android:background="@drawable/button_blue_msg"
                 android:layout_height="80dp">

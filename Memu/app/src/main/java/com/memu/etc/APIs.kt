@@ -144,5 +144,8 @@ class APIs : BaseKeys() {
 
         val gettopearners : String
             get() = BASE_URL!!  + PROFILE+ "top-earners"
+
+        val shortestpathstartstop : String
+            get() = BASE_URL!!  + PROFILE+ "shortest-path-start-stop"
     }
 }

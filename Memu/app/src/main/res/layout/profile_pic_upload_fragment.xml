@@ -78,15 +78,16 @@
             android:layout_height="wrap_content">
         </TextView>
         <Button
-            android:layout_width="150dp"
+            android:layout_width="160dp"
             android:layout_gravity="center_horizontal"
             android:text="Upload"
-            android:background="@drawable/orange_button"
+            android:backgroundTint="@color/Orange"
+            android:background="@drawable/red_start_btn_new"
             android:layout_marginTop="30dp"
             android:textColor="@color/White"
             android:src="@drawable/chevron_right"
             android:id="@+id/btnNExt"
-            android:layout_height="50dp">
+            android:layout_height="60dp">
 
         </Button>
 

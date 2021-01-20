@@ -50,6 +50,7 @@ class TripCompletedFragment : BaseFragment()  {
         arrow_left.setOnClickListener {
             home().backToMainScreen()
         }
+
     }
 
 }

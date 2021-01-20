@@ -28,11 +28,10 @@ class CityFriendsAdapter(var obj : List<CityEarner>,val context: Context) : Recy
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         holder.pos = position
         holder.name.setText(obj.get(position).name)
         holder.points.setText(obj.get(position).total_points)
-        Helper.loadImage(context,obj.get(position).city,holder.profile_pic,R.drawable.default_profile_icon)
+        Helper.loadImage(context,obj.get(position).photo.original_path,holder.profile_pic,R.drawable.default_profile_icon)
     }
 
 

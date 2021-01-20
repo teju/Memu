@@ -110,6 +110,7 @@ class MockNavigationFragment(
     lateinit var postStartNavigationViewModel: PostStartNavigationViewModel
     lateinit var postCustomerStartNavigationViewModel: PostCustomerStartNavigationViewModel
     lateinit var postCustomerEndNavigationIDViewModel: PostCustomerEndNavigationIDViewModel
+    lateinit var postShortestPAthStartEndNavigationIDViewModel: PostShortestPAthStartEndNavigationIDViewModel
     lateinit var postEndNavigationViewModel: PostEndNavigationViewModel
     lateinit var postMakePaymentViewModel: PostMakePaymentViewModel
     lateinit var getchecksumviewmodel: GetCheckSumViewModel
@@ -221,6 +222,7 @@ class MockNavigationFragment(
         setCustomerEndTripIDAPIObserver()
         setCustomerStartTripAPIObserver()
         setUploadActivityPhotoObserver()
+        setSHORTESTPATHAPIDAPIObserver()
         routeRefresh = RouteRefresh(Mapbox.getAccessToken(), this)
         mapView = v?.findViewById(R.id.mapView)
         mapView = v?.findViewById(R.id.mapView)
@@ -255,7 +257,8 @@ class MockNavigationFragment(
             showAlertsDialog()
         }
         if(BaseHelper.isEmpty(trip_id)) {
-            endButton.visibility = View.GONE
+            endButton.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Green)));
+            txtendbtn.text = "Start Ride"
         }
         if(!status.equals("started",ignoreCase = true) ) {
             endButton.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Green)));
@@ -265,7 +268,14 @@ class MockNavigationFragment(
             txtendbtn.text = "End Ride"
         }
         endButton.setOnClickListener {
-            if(distanceTravelled != 0.0) {
+            if(BaseHelper.isEmpty(trip_id)) {
+                if(!isTRipStarted) {
+                    postShortestPAthStartEndNavigationIDViewModel.loadData("start")
+                } else{
+                    postShortestPAthStartEndNavigationIDViewModel.loadData("stop")
+                }
+            }
+            else if(distanceTravelled != 0.0) {
                 if (!status.equals("started", ignoreCase = true) && !isTRipStarted) {
                     if (!BaseHelper.isEmpty(trip_id)) {
                         if (Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
@@ -784,6 +794,44 @@ class MockNavigationFragment(
                             endButton.setBackgroundTintList(null);
                             txtendbtn.text = "End Ride"
                             isTRipStarted = true
+                        }
+                    }
+                })
+            }
+        }
+    }
+
+    fun setSHORTESTPATHAPIDAPIObserver() {
+        postShortestPAthStartEndNavigationIDViewModel = ViewModelProviders.of(this).get(PostShortestPAthStartEndNavigationIDViewModel::class.java).apply {
+            this@MockNavigationFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    endButton.setBackgroundTintList(null);
+                    txtendbtn.text = "End Ride"
+                    isTRipStarted = true
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostShortestPAthStartEndNavigationIDViewModel.NEXT_STEP -> {
+
+                            if(isTRipStarted) {
+                                showCompletedDialog(object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) {
+                                        home().backToMainScreen()
+                                    }
+                                })
+                            } else{
+                                endButton.setBackgroundTintList(null);
+                                txtendbtn.text = "End Ride"
+                                isTRipStarted = true
+                            }
                         }
                     }
                 })
