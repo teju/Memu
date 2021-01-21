@@ -40,6 +40,7 @@ import com.memu.ui.dialog.AlertsIncomingNotificationDialogFragment
 import com.memu.ui.dialog.AlertsNotifyDialogFragment
 import com.memu.ui.fragments.*
 import com.memu.webservices.PostAcceptFriendRequestViewModel
+import com.memu.webservices.PostLikeDisLikeRequestViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.home_fragment.ld
 
@@ -57,6 +58,7 @@ class ActivityMain : AppCompatActivity(){
     private var mIntentFilter: IntentFilter? = null
     lateinit var postacceptRejectViewModel: PostacceptRejectViewModel
     lateinit var postAcceptFriendRequestViewModel: PostAcceptFriendRequestViewModel
+    lateinit var postLikeDisLikeRequestViewModel: PostLikeDisLikeRequestViewModel
     var isFriendsReques = true
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +91,7 @@ class ActivityMain : AppCompatActivity(){
         mIntentFilter = IntentFilter("OPEN_NEW_ACTIVITY")
         BaseHelper.getHAshKey(this)
         setAcceptFriendRequestObserver()
+        setLikeDisLikeRequestObserver()
     }
 
     fun showDialog(intent : Intent){
@@ -574,6 +577,35 @@ class ActivityMain : AppCompatActivity(){
                             } else {
 
                             }
+                        }
+                    }
+                })
+            }
+        }
+    }
+    fun setLikeDisLikeRequestObserver() {
+        postLikeDisLikeRequestViewModel = ViewModelProviders.of(this).get(
+            PostLikeDisLikeRequestViewModel::class.java).apply {
+            this@ActivityMain.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) { }
+                        },0)
+                })
+                getTrigger().observe(thisFragReference, Observer { state ->
+
+                    when (state) {
+                        PostAcceptFriendRequestViewModel.NEXT_STEP -> {
+
                         }
                     }
                 })

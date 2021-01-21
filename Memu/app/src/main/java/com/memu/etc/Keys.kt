@@ -98,6 +98,8 @@ class Keys : BaseKeys() {
         val MODE = "mode"
         val ACTION = "action"
         val PAYMENT_DETAILS = "payment_details"
+        val USER_MAP_FEED_ID = "user_map_feed_id"
+        val FLAG = "flag"
 
         @kotlin.jvm.JvmField
         var GCM_DT : String = "dt"

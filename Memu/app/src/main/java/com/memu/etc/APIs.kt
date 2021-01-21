@@ -147,5 +147,8 @@ class APIs : BaseKeys() {
 
         val shortestpathstartstop : String
             get() = BASE_URL!!  + PROFILE+ "shortest-path-start-stop"
+
+        val usermapfeedlike : String
+            get() = BASE_URL!!  + PROFILE+ "user-map-feed-like"
     }
 }

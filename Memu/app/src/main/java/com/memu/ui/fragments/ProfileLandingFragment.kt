@@ -105,7 +105,7 @@ class ProfileLandingFragment : BaseFragment(), PostFriendListViewModel.FriendsSe
                 home().setFragment(ReferralDetailsFragment())
             }
             R.id.settings -> {
-
+                home().setFragment(SettingsFragment())
             }
             R.id.find_more -> {
                 home().setFragment(FriendsFragment())
