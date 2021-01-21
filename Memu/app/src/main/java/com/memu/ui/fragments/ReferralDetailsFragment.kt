@@ -64,7 +64,9 @@ class ReferralDetailsFragment : BaseFragment() ,View.OnClickListener , WalletBal
 
     fun initAdapter() {
         city_rv.layoutManager = LinearLayoutManager(activity)
+        city_rv.isNestedScrollingEnabled = false
         friends_rv.layoutManager = LinearLayoutManager(activity)
+        friends_rv.isNestedScrollingEnabled = false
         city_rv.adapter = CityFriendsAdapter(getTopEarnersViewModel.obj?.city_earners!!,activity!!)
         friends_rv.adapter = CityFriendsAdapter(getTopEarnersViewModel.obj?.friend_earners!!,activity!!)
     }
@@ -104,7 +106,7 @@ class ReferralDetailsFragment : BaseFragment() ,View.OnClickListener , WalletBal
     }
 
     override fun walletBalanceResponse(balance: WalletBalance) {
-        reputation_coins.setText(balance.referral_balance)
+        reputation_coins.setText((balance.referral_balance.toInt()).toString())
        if(balance.referral_balance.toInt() >= 10000) {
            levels.setText("01")
        } else if(balance.referral_balance.toInt() >= 20000) {

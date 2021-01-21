@@ -15,23 +15,24 @@
         app:mapbox_cameraZoom="14"
         app:mapbox_uiAttribution="false"/>
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
+        android:layout_width="100dp"
+        android:layout_gravity="bottom"
         android:id="@+id/endButton"
+        android:layout_marginLeft="15dp"
         android:layout_marginBottom="100dp"
         android:background="@drawable/end_ride_bg"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="11dp"
             android:id="@+id/txtendbtn"
             android:fontFamily="@font/opensansregular"
             android:text="End Ride"
             android:textColor="@color/White"
-            android:textSize="20dp"
+            android:textSize="14dp"
             android:textStyle="bold">
         </TextView>
     </RelativeLayout>
@@ -107,14 +108,13 @@
         android:layout_height="match_parent">
     </com.mapbox.services.android.navigation.ui.v5.instruction.InstructionView>
     <ImageView
-        android:layout_width="40dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="30dp"
-        android:visibility="gone"
-        android:id="@+id/arrow_left"
-        android:layout_marginRight="30dp"
-        android:background="@drawable/arrow_left"
-        android:layout_height="40dp">
+        android:layout_width="90dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="90dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/thumb_up_memu_logo"
+        android:src="@drawable/thumb_up_memu_logo"
+        android:layout_height="wrap_content">
     </ImageView>
     <TextView
         android:layout_width="wrap_content"

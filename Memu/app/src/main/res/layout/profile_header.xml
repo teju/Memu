@@ -210,23 +210,31 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="40dp"
         android:layout_height="wrap_content">
-        <RelativeLayout
-            android:layout_width="140dp"
-            android:id="@+id/rlFriends"
-            android:background="@drawable/pink_button_friends"
-            android:layout_height="80dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="Friends"
-                android:fontFamily="@font/opensanssemibold"
-                android:id="@+id/tvFriends"
-                android:paddingTop="15dp"
-                android:textSize="13dp"
-                android:layout_centerHorizontal="true"
-                android:textAlignment="center"
-                android:textColor="@color/White"
-                android:layout_height="80dp">
-            </TextView>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="100dp"
+                android:id="@+id/rlFriends"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/red_start_btn_new"
+                android:backgroundTint="@color/mapboxPink"
+                android:layout_height="40dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Friends"
+                    android:fontFamily="@font/opensanssemibold"
+                    android:id="@+id/tvFriends"
+                    android:paddingTop="10dp"
+                    android:textSize="13dp"
+                    android:layout_centerHorizontal="true"
+                    android:textAlignment="center"
+                    android:textColor="@color/White"
+                    android:layout_height="80dp">
+                </TextView>
+
+            </RelativeLayout>
             <TextView
                 android:layout_width="wrap_content"
                 android:id="@+id/friends_cnt"
@@ -234,53 +242,58 @@
                 android:textColor="@color/White"
                 android:textSize="10dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="25dp"
                 android:textAlignment="center"
                 android:background="@drawable/ic_circle"
                 android:backgroundTint="@color/Red"
-                android:layout_marginLeft="-10dp"
+                android:layout_gravity="end"
                 android:padding="5dp"
                 android:layout_height="wrap_content">
 
             </TextView>
 
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="140dp"
-            android:layout_marginLeft="-40dp"
-            android:id="@+id/rlButtons"
-            android:background="@drawable/button_red_followers"
-            android:layout_height="80dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="Followers"
-                android:id="@+id/tvfollowers"
-                android:paddingTop="15dp"
-                android:fontFamily="@font/opensanssemibold"
-                android:textSize="13dp"
-                android:layout_centerHorizontal="true"
-                android:textAlignment="center"
-                android:textColor="@color/White"
-                android:layout_height="80dp">
-            </TextView>
+        </FrameLayout>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="100dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/rlButtons"
+                android:background="@drawable/red_start_btn_new"
+                android:layout_height="40dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Followers"
+                    android:id="@+id/tvfollowers"
+                    android:paddingTop="10dp"
+                    android:fontFamily="@font/opensanssemibold"
+                    android:textSize="13dp"
+                    android:layout_centerHorizontal="true"
+                    android:textAlignment="center"
+                    android:textColor="@color/White"
+                    android:layout_height="80dp">
+                </TextView>
+
+            </RelativeLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:id="@+id/followers_cnt_"
                 android:visibility="gone"
                 android:textAlignment="center"
+                android:layout_marginTop="0dp"
                 android:textSize="10dp"
                 android:textColor="@color/White"
+                android:layout_gravity="end"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="25dp"
                 android:background="@drawable/ic_circle"
                 android:backgroundTint="@color/Red"
-                android:layout_marginLeft="-10dp"
                 android:padding="5dp"
                 android:layout_height="wrap_content">
-
             </TextView>
 
-        </RelativeLayout>
+        </FrameLayout>
         <RelativeLayout
             android:layout_width="140dp"
             android:layout_marginLeft="-40dp"

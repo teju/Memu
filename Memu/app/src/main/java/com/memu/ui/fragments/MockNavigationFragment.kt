@@ -65,6 +65,7 @@ import com.memu.etc.Helper
 import com.memu.etc.Keys
 import com.memu.etc.UserInfoManager
 import com.memu.modules.checksum.WalletBalance
+import com.memu.modules.mapFeeds.MapFeed
 import com.memu.ui.BaseFragment
 import com.memu.ui.fragments.HistoryFragment
 import com.memu.ui.fragments.HomeFragment
@@ -87,6 +88,7 @@ import java.math.BigDecimal
 import java.security.Key
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MockNavigationFragment(
     var desrpoint: Point,
@@ -124,7 +126,6 @@ class MockNavigationFragment(
     private var routeRefresh: RouteRefresh? = null
     private var isRefreshing = false
     private var mapView: MapView? = null
-    var showDialog : Boolean = false
     var distanceTravelled = 0.0
     private var mockLocationEngine: ReplayRouteLocationEngine? = null
     private var tracking = false
@@ -165,23 +166,28 @@ class MockNavigationFragment(
     }
     fun showAlertsDialog() {
         try {
-            showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!!, object : NotifyListener {
+            showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!! as ArrayList<MapFeed>, object : NotifyListener {
                 override fun onButtonClicked(which: Int) {
-                    System.out.println("showAlertsDialog map_feeds "
-                            + postGetAlertListViewModel.obj?.map_feeds!!.get(which).id)
-
-                    if(postGetAlertListViewModel.obj?.map_feeds!!.get(which).id.equals("4")) {
-                        pickImage()
-                    } else {
-                        postMApFeedAddViewModel.loadData(
-                            postGetAlertListViewModel.obj?.map_feeds!!.get(which).id
+                    try {
+                        System.out.println(
+                            "showAlertsDialog map_feeds "
+                                    + postGetAlertListViewModel.obj?.map_feeds!!.get(which).id
                         )
+
+                        if (postGetAlertListViewModel.obj?.map_feeds!!.get(which).id.equals("4")) {
+                            pickImage()
+                        } else {
+                            postMApFeedAddViewModel.loadData(
+                                postGetAlertListViewModel.obj?.map_feeds!!.get(which).id
+                            )
+                        }
+                    } catch (e : Exception) {
+
                     }
                 }
             })
         } catch (e : Exception){
-            showDialog = true
-            postGetAlertListViewModel.loadData()
+
         }
     }
     fun pickImage() {
@@ -228,7 +234,6 @@ class MockNavigationFragment(
         mapView = v?.findViewById(R.id.mapView)
         mapView!!.onCreate(savedInstanceState)
         mapView!!.getMapAsync(this)
-        postGetAlertListViewModel.loadData()
         postMApFeedDataViewModel.loadData()
         val context = activity!!
         val customNotification = CustomNavigationNotification(context)
@@ -254,49 +259,41 @@ class MockNavigationFragment(
         )
        // customNotification.register(MyBroadcastReceiver(navigation!!), context)
         alert.setOnClickListener {
-            showAlertsDialog()
+            postGetAlertListViewModel.loadData()
+
         }
         if(BaseHelper.isEmpty(trip_id)) {
-            endButton.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Green)));
-            txtendbtn.text = "Start Ride"
-        }
-        if(!status.equals("started",ignoreCase = true) ) {
-            endButton.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.Green)));
-            txtendbtn.text = "Start Ride"
+            postShortestPAthStartEndNavigationIDViewModel.loadData("start")
         } else {
-            endButton.setBackgroundTintList(null);
-            txtendbtn.text = "End Ride"
-        }
-        endButton.setOnClickListener {
-            if(BaseHelper.isEmpty(trip_id)) {
-                if(!isTRipStarted) {
-                    postShortestPAthStartEndNavigationIDViewModel.loadData("start")
-                } else{
-                    postShortestPAthStartEndNavigationIDViewModel.loadData("stop")
+            if (!status.equals("started", ignoreCase = true) && !isTRipStarted) {
+                if (!BaseHelper.isEmpty(trip_id)) {
+                    if (Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
+                        postCustomerStartNavigationViewModel.loadData(
+                            trip_id,
+                            distanceTravelled.toString()
+                        )
+                    } else {
+                        postStartNavigationViewModel.loadData(
+                            trip_id,
+                            distanceTravelled.toString()
+                        )
+                    }
                 }
             }
+        }
+
+        endButton.setBackgroundTintList(null);
+        txtendbtn.text = "End Ride"
+        endButton.setOnClickListener {
+            if(BaseHelper.isEmpty(trip_id)) {
+                postShortestPAthStartEndNavigationIDViewModel.loadData("stop")
+            }
             else if(distanceTravelled != 0.0) {
-                if (!status.equals("started", ignoreCase = true) && !isTRipStarted) {
-                    if (!BaseHelper.isEmpty(trip_id)) {
-                        if (Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
-                            postCustomerStartNavigationViewModel.loadData(
-                                trip_id,
-                                distanceTravelled.toString()
-                            )
-                        } else {
-                            postStartNavigationViewModel.loadData(
-                                trip_id,
-                                distanceTravelled.toString()
-                            )
-                        }
-                    }
+                navigation!!.stopNavigation()
+                if (Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
+                    postCustomerEndNavigationIDViewModel.loadData(trip_id)
                 } else {
-                    navigation!!.stopNavigation()
-                    if (Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
-                        postCustomerEndNavigationIDViewModel.loadData(trip_id)
-                    } else {
-                        postEndNavigationViewModel.loadData(trip_id, distanceTravelled)
-                    }
+                    postEndNavigationViewModel.loadData(trip_id, distanceTravelled)
                 }
             } else {
                 showNotifyDialog(
@@ -306,9 +303,6 @@ class MockNavigationFragment(
 
                     })
             }
-        }
-        arrow_left.setOnClickListener {
-            home().proceedDoOnBackPressed()
         }
 
         recenture.setOnClickListener {
@@ -680,18 +674,7 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostGetAlertListViewModel.NEXT_STEP -> {
-                            if(showDialog) {
-                                showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!!, object : NotifyListener {
-                                    override fun onButtonClicked(which: Int) {
-                                        postMApFeedAddViewModel.loadData(
-                                            postGetAlertListViewModel.obj?.map_feeds!!.get(
-                                                which
-                                            ).id
-                                        )
-                                    }
-                                })
-                                showDialog = false
-                            }
+                           showAlertsDialog()
                         }
                     }
                 })
@@ -756,8 +739,6 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostStartNavigationViewModel.NEXT_STEP -> {
-                            endButton.setBackgroundTintList(null);
-                            txtendbtn.text = "End Ride"
                             isTRipStarted = true
                         }
                     }
@@ -812,8 +793,6 @@ class MockNavigationFragment(
                     }
                 })
                 errorMessage.observe(thisFragReference, Observer { s ->
-                    endButton.setBackgroundTintList(null);
-                    txtendbtn.text = "End Ride"
                     isTRipStarted = true
                 })
                 isNetworkAvailable.observe(thisFragReference, obsNoInternet)
@@ -828,8 +807,6 @@ class MockNavigationFragment(
                                     }
                                 })
                             } else{
-                                endButton.setBackgroundTintList(null);
-                                txtendbtn.text = "End Ride"
                                 isTRipStarted = true
                             }
                         }
@@ -1109,7 +1086,8 @@ class MockNavigationFragment(
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostMApFeedAddViewModel.NEXT_STEP -> {
-                            showAlertSentDialog("THANKS! for Alert","05",
+                            postMApFeedDataViewModel.loadData()
+                            home().showAlertSentDialog("THANKS! for Alert","05",
                                 "You have received","","",false)
                         }
                     }

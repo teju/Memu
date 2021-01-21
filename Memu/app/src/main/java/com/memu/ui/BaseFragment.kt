@@ -18,8 +18,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.bumptech.glide.GenericTransitionOptions.with
-import com.bumptech.glide.Glide.with
 import com.iapps.gon.etc.callback.*
 import com.iapps.libs.generics.GenericFragment
 import com.iapps.libs.helpers.BaseHelper
@@ -40,12 +38,11 @@ import com.memu.webservices.GetWalletBalanceViewModel
 import com.memu.webservices.PosUserMainDataViewModel
 import com.memu.webservices.PostFriendListViewModel
 import com.memu.webservices.PostUpdateLocationViewModel
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.ld
 import kotlinx.android.synthetic.main.profile_header.*
 import kotlinx.android.synthetic.main.profile_wall.*
 import kotlinx.coroutines.*
-import java.util.*
+import kotlin.collections.ArrayList
 
 open class BaseFragment : GenericFragment() {
 
@@ -417,25 +414,6 @@ open class BaseFragment : GenericFragment() {
         }
 
     }
-    open fun showAlertSentDialog(
-        tittle: String?,
-        coinsReceived: String?,
-        description: String?,
-        userName:String?,
-        userImage: String?,
-        isLiked: Boolean?){
-        val f = AlertsNotifyDialogFragment()
-        f.coinsReceived = coinsReceived!!
-        f.username = userName!!
-        f.title = tittle!!
-        f.user_image = userImage!!
-        f.isLiked = isLiked!!
-        f.description = description!!
-
-        f.isCancelable = false
-        f.show(activity!!.supportFragmentManager, AlertsNotifyDialogFragment.TAG)
-
-    }
 
     open fun showFindRideDialog(vehicle_list : List<Vehicle>,
         n: FindRideDialogListener
@@ -449,13 +427,13 @@ open class BaseFragment : GenericFragment() {
     }
 
 
-    open fun showAlertsDialog(mapfeed : List<MapFeed>, n: NotifyListener){
-        val f = AlertsDialogFragment().apply {
+    open fun showAlertsDialog(mapfeed : ArrayList<MapFeed>, n: NotifyListener){
+        val f = MapFeedAlertsDialogFragment().apply {
             this.listener = n
             this.mapfeed = mapfeed
         }
         f.isCancelable = true
-        f.show(activity!!.supportFragmentManager, AlertsDialogFragment.TAG)
+        f.show(activity!!.supportFragmentManager, MapFeedAlertsDialogFragment.TAG)
     }
 
     open fun showCompletedDialog(n: NotifyListener){

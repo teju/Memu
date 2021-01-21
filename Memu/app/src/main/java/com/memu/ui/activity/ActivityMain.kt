@@ -30,17 +30,17 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import com.google.gson.GsonBuilder
-import com.memu.modules.notification.NotificationResponse
 import android.os.Handler
 import android.view.View
 import androidx.core.app.NotificationCompat
 import com.mapbox.mapboxsdk.MapStrictMode
 import com.memu.R
+import com.memu.modules.notification.NotificationResponse
+import com.memu.ui.dialog.AlertsIncomingNotificationDialogFragment
+import com.memu.ui.dialog.AlertsNotifyDialogFragment
 import com.memu.ui.fragments.*
 import com.memu.webservices.PostAcceptFriendRequestViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.followers_request_fragment.*
-import kotlinx.android.synthetic.main.generic_dialog.*
 import kotlinx.android.synthetic.main.home_fragment.ld
 
 
@@ -95,7 +95,6 @@ class ActivityMain : AppCompatActivity(){
         val gson = GsonBuilder().create()
 
         if(intent.getExtras()?.getString("title") != null) {
-
             try {
                 val obj = gson.fromJson(
                     intent.getExtras()?.getString("body"),
@@ -180,8 +179,41 @@ class ActivityMain : AppCompatActivity(){
                 println("Notification_received Exception " +e.toString())
 
             }
-
         }
+
+    }
+    open fun showAlertIncomingNotifyDialog(
+        tittle: String?,
+        n: NotifyListener){
+        try {
+            val f = AlertsIncomingNotificationDialogFragment().apply {
+                this.listener = n
+            }
+            f.notify_tittle = tittle!!
+            f.isCancelable = true
+            f.show(supportFragmentManager, NotifyDialogFragment.TAG)
+        } catch (e : Exception){
+            System.out.println("Notification_received Exception " +e.toString())
+        }
+    }
+
+    open fun showAlertSentDialog(
+        tittle: String?,
+        coinsReceived: String?,
+        description: String?,
+        userName:String?,
+        userImage: String?,
+        isLiked: Boolean?){
+        val f = AlertsNotifyDialogFragment()
+        f.coinsReceived = coinsReceived!!
+        f.username = userName!!
+        f.title = tittle!!
+        f.user_image = userImage!!
+        f.isLiked = isLiked!!
+        f.description = description!!
+
+        f.isCancelable = false
+        f.show(supportFragmentManager, AlertsNotifyDialogFragment.TAG)
 
     }
 

@@ -12,7 +12,7 @@ import com.memu.modules.mapFeeds.MapFeed
 import com.memu.ui.adapters.AlertsAdapter
 import kotlinx.android.synthetic.main.alerts_dialog_fragment.*
 
-class AlertsDialogFragment : BaseDialogFragment() {
+class MapFeedAlertsDialogFragment : BaseDialogFragment() {
 
     val DATEPICKERFRAGMENT_LAYOUT = R.layout.alerts_dialog_fragment
 
@@ -23,7 +23,7 @@ class AlertsDialogFragment : BaseDialogFragment() {
     }
 
     lateinit var listener: NotifyListener
-    var  mapfeed : List<MapFeed> = listOf()
+    var  mapfeed : ArrayList<MapFeed> = ArrayList()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(DATEPICKERFRAGMENT_LAYOUT, container, false)
         return v
@@ -89,6 +89,11 @@ class AlertsDialogFragment : BaseDialogFragment() {
         alertList.setNestedScrollingEnabled(false)
         alertList.addItemDecoration(SpacesItemDecoration(3, spacingInPixels, true))
         val adapter = AlertsAdapter(context!!)
+        var mapFeed = MapFeed()
+        mapFeed.id = ""
+        mapFeed.logo = ""
+        mapFeed.name = ""
+        mapfeed.add(1,mapFeed)
         adapter.obj = mapfeed as ArrayList<MapFeed>
         alertList.adapter = adapter
         (alertList.adapter as AlertsAdapter).productAdapterListener =

@@ -58,7 +58,6 @@ class AlertsNotifyDialogFragment : BaseDialogFragment() {
         if(!username.isEmpty()) {
             if (isLiked) {
                 like_dislike_btn.setImageResource(R.drawable.like_btn)
-                desc.setTextColor(resources.getColor(R.color.Green))
             } else {
                 like_dislike_btn.setImageResource(R.drawable.dislike_btn)
                 desc.setTextColor(resources.getColor(R.color.Red))
@@ -66,7 +65,7 @@ class AlertsNotifyDialogFragment : BaseDialogFragment() {
         }
         Handler().postDelayed(
             {
-                dismiss()
+                //dismiss()
             },
             5000 // value in milliseconds
         )

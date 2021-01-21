@@ -54,6 +54,7 @@ import com.memu.bgTasks.LocationBroadCastReceiver
 import com.memu.etc.*
 import com.memu.modules.PlaceHolder
 import com.memu.modules.checksum.WalletBalance
+import com.memu.modules.mapFeeds.MapFeed
 import com.memu.ui.activity.SearchActivity
 import com.memu.ui.adapters.WeekAdapter
 import com.memu.ui.dialog.NotifyDialogFragment
@@ -62,6 +63,7 @@ import kotlinx.android.synthetic.main.map_view.*
 import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : BaseFragment() , View.OnClickListener,
@@ -656,7 +658,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
     fun showAlertsDialog() {
         try {
-            showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!!, object : NotifyListener {
+            showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!! as ArrayList<MapFeed>, object : NotifyListener {
                 override fun onButtonClicked(which: Int) {
                     System.out.println("showAlertsDialog map_feeds "
                             + postGetAlertListViewModel.obj?.map_feeds!!.get(which).id)
@@ -842,7 +844,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostMApFeedAddViewModel.NEXT_STEP -> {
-                            showAlertSentDialog("THANKS! for Alert","05",
+                            home().showAlertSentDialog("THANKS! for Alert","05",
                                 "You have received","","",false)
                         }
                     }
@@ -1080,7 +1082,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
                 }
             }
         } catch (e : Exception){
-            BaseHelper.showAlert(activity!!,e.toString())
+
         }
 
 

@@ -10,11 +10,12 @@ import com.memu.R
 import com.memu.etc.SpacesItemDecoration
 import com.memu.modules.mapFeeds.MapFeed
 import com.memu.ui.adapters.AlertsAdapter
+import kotlinx.android.synthetic.main.alerts_noti_dialog_fragment.*
 
-class AlertsNotificationDialogFragment : BaseDialogFragment() {
+class AlertsIncomingNotificationDialogFragment : BaseDialogFragment() {
 
     val DATEPICKERFRAGMENT_LAYOUT = R.layout.alerts_noti_dialog_fragment
-
+    var notify_tittle:String = ""
     companion object {
         val TAG = "NotifyDialogFragment"
         val BUTTON_POSITIVE = 1
@@ -30,6 +31,8 @@ class AlertsNotificationDialogFragment : BaseDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        tittle.text = notify_tittle
     }
 
 

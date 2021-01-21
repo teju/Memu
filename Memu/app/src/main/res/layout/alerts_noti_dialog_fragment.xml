@@ -1,77 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_margin="10dp"
-    android:layout_height="180dp">
-    <LinearLayout
+<FrameLayout android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:padding="10dp"
-        android:backgroundTint="@color/WhiteSmoke"
-        android:background="@drawable/theme_rounded_rectangle"
+        android:layout_margin="10dp"
+        android:background="@color/transparent"
         android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="match_parent"
-            android:background="@drawable/rounded_corners"
-            android:backgroundTint="@color/DarkBlue"
-            android:textColor="@color/white"
-            android:text="Traffic jam expected"
-            android:padding="15dp"
-            android:layout_height="wrap_content">
-
-        </TextView>
         <LinearLayout
             android:layout_width="match_parent"
-            android:background="@drawable/rounded_corner_btn_border_enabled"
-            android:backgroundTint="@color/white"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="30dp"
-            android:orientation="horizontal"
-            android:textColor="@color/white"
-            android:text="Traffic jam expected"
-            android:padding="5dp"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:backgroundTint="@color/WhiteSmoke"
+            android:background="@drawable/theme_rounded_rectangle"
             android:layout_height="wrap_content">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="40dp"
-                android:id="@+id/profile_pic"
-                android:src="@drawable/default_profile_icon"
-                android:layout_height="40dp">
-            </de.hdodenhof.circleimageview.CircleImageView>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
-                android:text="@string/username"
-                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="@color/DarkBlue"
+                android:textColor="@color/white"
+                android:id="@+id/tittle"
+                android:text="Traffic jam expected"
+                android:padding="15dp"
                 android:layout_height="wrap_content">
+
             </TextView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/rounded_corner_btn_border_enabled"
+                android:backgroundTint="@color/white"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
+                android:orientation="horizontal"
+                android:textColor="@color/white"
+                android:text="Traffic jam expected"
+                android:padding="5dp"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="40dp"
+                    android:id="@+id/profile_pic"
+                    android:src="@drawable/default_profile_icon"
+                    android:layout_height="40dp">
+                </de.hdodenhof.circleimageview.CircleImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:text="@string/username"
+                    android:textColor="@color/black"
+                    android:layout_height="wrap_content">
+                </TextView>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_marginTop="-90dp"
-        android:gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:src="@drawable/point_alert"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="130dp"
+            android:layout_gravity="bottom"
             android:layout_height="wrap_content">
-        </ImageView>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:src="@drawable/like_btn"
-            android:layout_marginLeft="25dp"
-            android:layout_height="wrap_content">
-        </ImageView>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:src="@drawable/dislike_btn"
-            android:layout_marginLeft="25dp"
-            android:layout_height="wrap_content">
-        </ImageView>
-    </LinearLayout>
-</RelativeLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/point_alert"
+                android:layout_height="wrap_content">
+            </ImageView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/like_btn"
+                android:layout_marginLeft="25dp"
+                android:layout_height="wrap_content">
+            </ImageView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:src="@drawable/dislike_btn"
+                android:layout_marginLeft="25dp"
+                android:layout_height="wrap_content">
+            </ImageView>
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

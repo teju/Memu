@@ -22,6 +22,7 @@ import com.mapbox.services.android.navigation.ui.v5.listeners.NavigationListener
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress
 import com.memu.R
+import com.memu.modules.mapFeeds.MapFeed
 import com.memu.ui.BaseFragment
 import com.memu.webservices.PostMApFeedDataViewModel
 import com.memu.webservices.PostGetAlertListViewModel
@@ -73,7 +74,7 @@ class NavigationFragment : BaseFragment(), OnNavigationReadyCallback, Navigation
 
     fun showAlertsDialog() {
         System.out.println("showAlertsDialog map_feeds "+postGetAlertListViewModel.obj?.map_feeds!!)
-        showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!!,object : NotifyListener {
+        showAlertsDialog(postGetAlertListViewModel.obj?.map_feeds!! as ArrayList<MapFeed> ,object : NotifyListener {
             override fun onButtonClicked(which: Int) {
                 postMApFeedAddViewModel.loadData(postGetAlertListViewModel.obj?.map_feeds!!.get(which).id)
             } }

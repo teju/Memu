@@ -97,7 +97,7 @@
                     </TextView>
                     <TextView
                         android:layout_width="wrap_content"
-                        android:text="60"
+                        android:text="0"
                         android:layout_alignParentRight="true"
                         android:textColor="#FF9300"
                         android:id="@+id/reputation_coins"
@@ -190,7 +190,7 @@
                         android:layout_height="wrap_content">
                         <TextView
                             android:layout_width="wrap_content"
-                            android:text="In your City"
+                            android:text="Top 3 in Friends &amp; Family"
                             android:textColor="#606060"
                             android:layout_marginTop="20dp"
                             android:layout_marginLeft="10dp"
@@ -245,7 +245,7 @@
                         android:layout_height="wrap_content">
                         <TextView
                             android:layout_width="wrap_content"
-                            android:text="In your City"
+                            android:text="Top 3 In your City"
                             android:textColor="#606060"
                             android:layout_marginTop="20dp"
                             android:layout_marginLeft="10dp"
@@ -254,7 +254,6 @@
                             android:textSize="18dp"
                             android:layout_height="wrap_content">
                         </TextView>
-
                         <androidx.recyclerview.widget.RecyclerView
                             android:layout_width="match_parent"
                             android:id="@+id/city_rv"

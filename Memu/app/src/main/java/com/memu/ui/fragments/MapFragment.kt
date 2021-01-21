@@ -5,6 +5,7 @@ import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,6 +63,7 @@ import com.memu.ui.activity.MockNavigationFragment
 import com.memu.ui.activity.SearchActivity
 import com.memu.ui.adapters.WeekAdapter
 import com.memu.webservices.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.map_fragment.*
 import kotlinx.android.synthetic.main.map_fragment.ld
 import kotlinx.android.synthetic.main.map_view.*
@@ -193,7 +195,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 GetRoutes()
             }
         } catch (e : Exception){
-
+            e.printStackTrace()
         }
     }
 
@@ -470,11 +472,20 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                     .zoom(15.0)
                     .tilt(20.0)
                     .build();
-                mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
+                Handler().postDelayed(
+                    Runnable // Using handler with postDelayed called runnable run method
+
+                    {
+
+                        mapboxMap?.animateCamera(CameraUpdateFactory.newCameraPosition(position), 100);
+
+                    }, 1000
+                ) // wait for 5 s
+
             }
 
         } catch (e : Exception){
-
+            e.printStackTrace()
         }
     }
     override fun onClick(v: View?) {
