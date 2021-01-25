@@ -14,11 +14,11 @@
     <application
         android:name=".MemuApplication"
         android:allowBackup="true"
-        android:icon="@drawable/memo_logo_icon"
+        android:icon="@drawable/favicon"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/provider_paths3"
-        android:roundIcon="@drawable/memo_logo_icon"
+        android:roundIcon="@drawable/favicon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 <!--        <activity android:name=".ui.fragments.SearchActivity"></activity>-->

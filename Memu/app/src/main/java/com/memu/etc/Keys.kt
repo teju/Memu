@@ -44,6 +44,7 @@ class Keys : BaseKeys() {
         val DRIVING_LICENCE = "driving_licence"
         val REGISTRATION_CERTIFICATE = "registration_certificate"
         val VEHICLE = "vehicle"
+        val VEHICLE1 = "Vehicle"
         val ContentType = "Content-Type"
         val Authorization = "Authorization"
         val USER_ID = "user_id"
@@ -100,6 +101,7 @@ class Keys : BaseKeys() {
         val PAYMENT_DETAILS = "payment_details"
         val USER_MAP_FEED_ID = "user_map_feed_id"
         val FLAG = "flag"
+        val USERINFO = "userInfo"
 
         @kotlin.jvm.JvmField
         var GCM_DT : String = "dt"

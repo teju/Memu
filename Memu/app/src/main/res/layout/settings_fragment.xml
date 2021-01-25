@@ -47,6 +47,19 @@
                     android:layout_height="wrap_content">
                 </TextView>
             </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_margin="20dp"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="100dp"
+                    android:layout_centerInParent="true"
+                    android:id="@+id/profile_icon"
+                    android:src="@drawable/default_profile_icon"
+                    android:layout_height="100dp">
+
+                </de.hdodenhof.circleimageview.CircleImageView>
+            </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
@@ -67,6 +80,8 @@
                     android:layout_width="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
+                    android:id="@+id/name"
+                    android:inputType="text"
                     android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content">
                 </EditText>
@@ -78,7 +93,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="Gender:"
+                    android:text="Last Name:"
                     android:textColor="@color/textcolur"
                     android:fontFamily="@font/opensansregular"
                     android:layout_marginLeft="16dp"
@@ -91,9 +106,33 @@
                     android:layout_width="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
+                    android:id="@+id/lastname"
+                    android:inputType="text"
                     android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content">
                 </EditText>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_margin="20dp"
+                android:layout_height="wrap_content">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:text="Male"
+                    android:id="@+id/male"
+                    android:padding="10dp"
+                    android:layout_height="wrap_content">
+                </RadioButton>
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:text="Female"
+                    android:id="@+id/female"
+                    android:padding="10dp"
+                    android:layout_height="wrap_content">
+                </RadioButton>
+
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -115,6 +154,8 @@
                     android:layout_width="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
+                    android:inputType="number"
+                    android:id="@+id/mobileNumber"
                     android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content">
                 </EditText>
@@ -139,6 +180,8 @@
                     android:layout_width="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
+                    android:id="@+id/emailID"
+                    android:inputType="textEmailAddress"
                     android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content">
                 </EditText>
@@ -163,6 +206,8 @@
                     android:layout_width="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
+                    android:id="@+id/work_email"
+                    android:inputType="textEmailAddress"
                     android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content">
                 </EditText>
@@ -171,6 +216,7 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_margin="15dp"
+                android:id="@+id/llhomeaddress"
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
@@ -187,6 +233,8 @@
                     android:layout_width="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
+                    android:id="@+id/home_address"
+                    android:inputType="textPostalAddress"
                     android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content">
                 </EditText>
@@ -195,6 +243,7 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_margin="15dp"
+                android:id="@+id/llofficeAddress"
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
@@ -211,6 +260,8 @@
                     android:layout_width="match_parent"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
+                    android:id="@+id/office_address"
+                    android:inputType="textPostalAddress"
                     android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content">
                 </EditText>
@@ -234,6 +285,8 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_marginLeft="15dp"
+                    android:id="@+id/driving_ls"
+                    android:inputType="text"
                     android:layout_marginRight="15dp"
                     android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content">
@@ -276,125 +329,16 @@
                     android:layout_height="wrap_content">
                 </TextView>
             </RelativeLayout>
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_margin="20dp"
+                android:id="@+id/vehicle_details"
                 android:layout_height="wrap_content">
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:text="Whiteboard"
-                    android:padding="10dp"
-                    android:layout_height="wrap_content">
-                </RadioButton>
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:text="Yellowboard"
-                    android:padding="10dp"
-                    android:layout_height="wrap_content">
-                </RadioButton>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_margin="15dp"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Registration:"
-                    android:textColor="@color/textcolur"
-                    android:fontFamily="@font/opensansregular"
-                    android:layout_marginLeft="16dp"
-                    android:textSize="16dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_centerVertical="true"
-                    android:layout_height="wrap_content">
-                </TextView>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_height="wrap_content">
-                </EditText>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_margin="15dp"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Type:"
-                    android:textColor="@color/textcolur"
-                    android:fontFamily="@font/opensansregular"
-                    android:layout_marginLeft="16dp"
-                    android:textSize="16dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_centerVertical="true"
-                    android:layout_height="wrap_content">
-                </TextView>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_height="wrap_content">
-                </EditText>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_margin="15dp"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Brand:"
-                    android:textColor="@color/textcolur"
-                    android:fontFamily="@font/opensansregular"
-                    android:layout_marginLeft="16dp"
-                    android:textSize="16dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_centerVertical="true"
-                    android:layout_height="wrap_content">
-                </TextView>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_height="wrap_content">
-                </EditText>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_margin="15dp"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Model:"
-                    android:textColor="@color/textcolur"
-                    android:fontFamily="@font/opensansregular"
-                    android:layout_marginLeft="16dp"
-                    android:textSize="16dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_centerVertical="true"
-                    android:layout_height="wrap_content">
-                </TextView>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_height="wrap_content">
-                </EditText>
-            </LinearLayout>
+            </androidx.recyclerview.widget.RecyclerView>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:background="@drawable/settingsmainbg"
                 android:layout_marginTop="15dp"
+                android:id="@+id/rl_add_other_vehicle"
                 android:layout_marginBottom="40dp"
                 android:backgroundTint="#ABDFF9"
                 android:layout_height="50dp">
@@ -412,4 +356,21 @@
 
         </LinearLayout>
     </ScrollView>
+    <com.iapps.libs.views.LoadingCompound
+        android:id="@+id/ld"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:clickable="true"
+        android:visibility="gone" />
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="70dp"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="15dp"
+        android:src="@drawable/next_button"
+        android:id="@+id/btnNExt"
+        android:layout_height="60dp">
+
+    </pl.droidsonroids.gif.GifImageView>
+
 </FrameLayout>

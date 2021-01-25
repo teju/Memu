@@ -14,6 +14,7 @@ import com.memu.etc.UserInfoManager
 import com.memu.modules.mapFeeds.MapFeed
 import com.memu.ui.adapters.AlertsAdapter
 import kotlinx.android.synthetic.main.alerts_notiy_dialog_fragment.*
+import java.lang.Exception
 
 class AlertsNotifyDialogFragment : BaseDialogFragment() {
 
@@ -63,12 +64,16 @@ class AlertsNotifyDialogFragment : BaseDialogFragment() {
                 desc.setTextColor(resources.getColor(R.color.Red))
             }
         }
-        Handler().postDelayed(
-            {
-                //dismiss()
-            },
-            5000 // value in milliseconds
-        )
+        try {
+            Handler().postDelayed(
+                {
+                    dismiss()
+                },
+                5000 // value in milliseconds
+            )
+        } catch (e : Exception) {
+
+        }
     }
 
 }

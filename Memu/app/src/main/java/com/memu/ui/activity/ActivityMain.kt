@@ -6,46 +6,49 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.franmontiel.localechanger.LocaleChanger
+import com.google.gson.GsonBuilder
 import com.iapps.gon.etc.callback.NotifyListener
+import com.iapps.gon.etc.callback.NotifyPointerListener
 import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.helpers.BaseUIHelper
+import com.mapbox.mapboxsdk.MapStrictMode
 import com.mapbox.mapboxsdk.Mapbox
+import com.memu.R
 import com.memu.etc.Helper
 import com.memu.etc.UserInfoManager
-import com.memu.ui.BaseFragment
-import com.memu.ui.dialog.NotifyDialogFragment
-import com.memu.webservices.PostacceptRejectViewModel
-import io.paperdb.Paper
-import java.util.ArrayList
-import android.content.Intent
-import android.content.IntentFilter
-import android.graphics.Color
-import com.google.gson.GsonBuilder
-import android.os.Handler
-import android.view.View
-import androidx.core.app.NotificationCompat
-import com.mapbox.mapboxsdk.MapStrictMode
-import com.memu.R
 import com.memu.modules.notification.NotificationResponse
+import com.memu.ui.BaseFragment
 import com.memu.ui.dialog.AlertsIncomingNotificationDialogFragment
 import com.memu.ui.dialog.AlertsNotifyDialogFragment
-import com.memu.ui.fragments.*
+import com.memu.ui.dialog.NotifyDialogFragment
+import com.memu.ui.fragments.FollowersRequestFragment
+import com.memu.ui.fragments.HomeFragment
+import com.memu.ui.fragments.MainFragment
 import com.memu.webservices.PostAcceptFriendRequestViewModel
 import com.memu.webservices.PostLikeDisLikeRequestViewModel
+import com.memu.webservices.PostacceptRejectViewModel
+import io.paperdb.Paper
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.home_fragment.ld
+import java.util.*
 
 
-class ActivityMain : AppCompatActivity(){
+class ActivityMain() : AppCompatActivity(){
 
     companion object {
         private var MAIN_FLOW_INDEX = 0
@@ -53,7 +56,7 @@ class ActivityMain : AppCompatActivity(){
 
     }
     var submitPressed = true;
-
+    lateinit var listner: NotifyPointerListener
     private var mReceiver: BroadcastReceiver? = null
     private var mIntentFilter: IntentFilter? = null
     lateinit var postacceptRejectViewModel: PostacceptRejectViewModel
@@ -102,82 +105,131 @@ class ActivityMain : AppCompatActivity(){
                 val obj = gson.fromJson(
                     intent.getExtras()?.getString("body"),
                     NotificationResponse::class.java)
-                println("Notification_received showDialog " +obj)
+                println("Notification_received showDialog " +currentFragment)
+                if(obj.type.equals("map_alerts") ) {
+                    if(currentFragment is MockNavigationFragment) {
+                        if (!BaseHelper.isEmpty(intent.getExtras()?.getString("message"))) {
+                            showAlertIncomingNotifyDialog(intent.getExtras()?.getString("message"),
+                                obj.name, obj.photo.original_path, obj.logo,
+                                object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) {
+                                        if (which == AlertsIncomingNotificationDialogFragment.BUTTON_POSITIVE) {
+                                            postLikeDisLikeRequestViewModel.loadData(
+                                                obj.user_map_feeds_id,
+                                                "like"
+                                            )
+                                        } else if (which == AlertsIncomingNotificationDialogFragment.POINT_ALERT) {
+                                            listner?.let {
+                                                listner.onPointerClicked(obj.lattitude.toDouble(), obj.longitude.toDouble())
+                                            }
 
-                var btn_positive = "OK"
-                var btn_negative = ""
-                if(obj.isAccept) {
-                    btn_positive = "Accept"
-                    btn_negative = "Ignore"
-                } else {
-                    btn_positive = "Okay"
-                    btn_negative = ""
-                }
+                                        }else {
+                                            postLikeDisLikeRequestViewModel.loadData(
+                                                obj.user_map_feeds_id,
+                                                "dis_like"
+                                            )
+                                        }
+                                    }
 
-               // sendNotification(intent.getExtras()?.getString("title")!!,
-                 //   intent.getExtras()?.getString("message")!!)
-                var drawable =0
-                if (obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
-                    drawable = R.drawable.carpoolcar
-                } else if(obj.type.equals("FR",ignoreCase = true)) {
-                    drawable = R.drawable.myfriends
-                }else if(obj.type.equals("FL",ignoreCase = true)) {
-                    drawable = R.drawable.followers_noti
-                }
-                showNotifyDialog(
-                intent.getExtras()?.getString("title"),
-                intent.getExtras()?.getString("message"),
-                btn_positive, btn_negative, object : NotifyListener {
-                    override fun onButtonClicked(which: Int) {
-                        if (obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
-                            var trip_id = obj.trip_id
-                            var trip_rider_id = obj.trip_rider_id
-                            var status = ""
-                            var type = obj.type
-                            status = "accept"
-
-                            if (which == NotifyDialogFragment.BUTTON_NEGATIVE) {
-                                status = "reject"
-                            }
-                            if (which == NotifyDialogFragment.BUTTON_POSITIVE) {
-                                status = "accept"
-                            }
-
-                            if (trip_id != null && status != null && trip_rider_id != null
-                                && obj.type != null
-                            ) {
-                                postacceptRejectViewModel?.loadData(
-                                    trip_id,
-                                    status,
-                                    trip_rider_id,
-                                    obj.type
-                                )
-                            }
-                        } else {
-                            if(obj.type.equals("FR",ignoreCase = true)) {
-                                isFriendsReques = true
-
-                                if(which == NotifyDialogFragment.BUTTON_POSITIVE) {
-                                    isFriendsReques = true
-                                    postAcceptFriendRequestViewModel.loadData(
-                                        "FR",
-                                        obj.freind_id, "Accepted","to_me")
-                                } else {
-                                    isFriendsReques = true
-                                    postAcceptFriendRequestViewModel.loadData(
-                                        "FR",
-                                        obj.freind_id, "Remove","to_me")
-                                }
-
-                            } else if(obj.type.equals("FL",ignoreCase = true)) {
-                                isFriendsReques = false
-                                if(which == NotifyDialogFragment.BUTTON_POSITIVE) {
-                                    setFragment(FollowersRequestFragment())
-                                }
-                            }
+                                })
                         }
                     }
-                },drawable)
+                } else if(obj.type.equals("like_alerts")){
+                    var liektitle = ""
+                    var message = ""
+                    var coins = ""
+                    var  liked = false
+                    if(obj.flag.equals("like")) {
+                        liektitle = "Liked your alert"
+                        message = "You have received"
+                        coins = "10"
+                        liked = true
+                    } else {
+                        liektitle = "Disliked your alert"
+                        message = "You have lost"
+                        coins = "30"
+                        liked = false
+                    }
+                    showAlertSentDialog(liektitle,coins,message,obj.name,obj.photo.original_path,liked)
+                } else {
+                    var btn_positive = "OK"
+                    var btn_negative = ""
+                    if (obj.isAccept) {
+                        btn_positive = "Accept"
+                        btn_negative = "Ignore"
+                    } else {
+                        btn_positive = "Okay"
+                        btn_negative = ""
+                    }
+
+                    // sendNotification(intent.getExtras()?.getString("title")!!,
+                    //   intent.getExtras()?.getString("message")!!)
+                    var drawable = 0
+                    if (obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
+                        drawable = R.drawable.carpoolcar
+                    } else if (obj.type.equals("FR", ignoreCase = true)) {
+                        drawable = R.drawable.myfriends
+                    } else if (obj.type.equals("FL", ignoreCase = true)) {
+                        drawable = R.drawable.followers_noti
+                    }
+                    showNotifyDialog(
+                        intent.getExtras()?.getString("title"),
+                        intent.getExtras()?.getString("message"),
+                        btn_positive, btn_negative, object : NotifyListener {
+                            override fun onButtonClicked(which: Int) {
+                                if (obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
+                                    var trip_id = obj.trip_id
+                                    var trip_rider_id = obj.trip_rider_id
+                                    var status = ""
+                                    var type = obj.type
+                                    status = "accept"
+
+                                    if (which == NotifyDialogFragment.BUTTON_NEGATIVE) {
+                                        status = "reject"
+                                    }
+                                    if (which == NotifyDialogFragment.BUTTON_POSITIVE) {
+                                        status = "accept"
+                                    }
+
+                                    if (trip_id != null && status != null && trip_rider_id != null
+                                        && obj.type != null
+                                    ) {
+                                        postacceptRejectViewModel?.loadData(
+                                            trip_id,
+                                            status,
+                                            trip_rider_id,
+                                            obj.type
+                                        )
+                                    }
+                                } else {
+                                    if (obj.type.equals("FR", ignoreCase = true)) {
+                                        isFriendsReques = true
+
+                                        if (which == NotifyDialogFragment.BUTTON_POSITIVE) {
+                                            isFriendsReques = true
+                                            postAcceptFriendRequestViewModel.loadData(
+                                                "FR",
+                                                obj.freind_id, "Accepted", "to_me"
+                                            )
+                                        } else {
+                                            isFriendsReques = true
+                                            postAcceptFriendRequestViewModel.loadData(
+                                                "FR",
+                                                obj.freind_id, "Remove", "to_me"
+                                            )
+                                        }
+
+                                    } else if (obj.type.equals("FL", ignoreCase = true)) {
+                                        isFriendsReques = false
+                                        if (which == NotifyDialogFragment.BUTTON_POSITIVE) {
+                                            setFragment(FollowersRequestFragment())
+                                        }
+                                    }
+                                }
+                            }
+                        }, drawable
+                    )
+                }
             } catch (e : Exception){
                 println("Notification_received Exception " +e.toString())
 
@@ -187,12 +239,18 @@ class ActivityMain : AppCompatActivity(){
     }
     open fun showAlertIncomingNotifyDialog(
         tittle: String?,
+        name:String,
+        photo:String,
+        logo:String,
         n: NotifyListener){
         try {
             val f = AlertsIncomingNotificationDialogFragment().apply {
                 this.listener = n
             }
             f.notify_tittle = tittle!!
+            f.notify_userNAme = name!!
+            f.notify_image = photo!!
+            f.notify_logo = logo!!
             f.isCancelable = true
             f.show(supportFragmentManager, NotifyDialogFragment.TAG)
         } catch (e : Exception){
@@ -360,7 +418,9 @@ class ActivityMain : AppCompatActivity(){
         else
             setFragment(MainFragment())
     }
-
+    fun setNotifyListner(listner : NotifyPointerListener) {
+        this.listner = listner
+    }
 
     fun setFragment(frag: Fragment) {
         try {

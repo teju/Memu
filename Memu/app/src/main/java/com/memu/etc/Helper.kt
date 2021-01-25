@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.Nullable
 import com.bumptech.glide.Glide
+import com.iapps.libs.helpers.BaseHelper
 import com.iapps.libs.helpers.HTTPAsyncTask
 import com.iapps.libs.objects.Response
 import com.memu.R
@@ -260,7 +261,11 @@ open class Helper  {
             obj.put("state", getAddress(context)?.get(0)?.getAdminArea())
 
             obj.put("city", getAddress(context)?.get(0)?.locality)
-            obj.put("location", getAddress(context)?.get(0)?.subLocality)
+            if(BaseHelper.isEmpty( getAddress(context)?.get(0)?.subLocality)) {
+                obj.put("location", getAddress(context)?.get(0)?.locality)
+            } else{
+                obj.put("location", getAddress(context)?.get(0)?.subLocality)
+            }
             obj.put("pincode", getAddress(context)?.get(0)?.postalCode)
             obj.put("lattitude", gpsTracker.latitude.toString())
             obj.put("longitude", gpsTracker.longitude.toString())

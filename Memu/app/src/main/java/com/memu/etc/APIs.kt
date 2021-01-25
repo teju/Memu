@@ -150,5 +150,11 @@ class APIs : BaseKeys() {
 
         val usermapfeedlike : String
             get() = BASE_URL!!  + PROFILE+ "user-map-feed-like"
+
+        val userDetails : String
+            get() = BASE_URL!!  + PROFILE+ "user-details"
+
+        val userupdate : String
+            get() = BASE_URL!!  + PROFILE+ "user-update"
     }
 }

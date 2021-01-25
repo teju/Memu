@@ -78,10 +78,9 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
                             which.to_address.lattitude.toDouble()
                         )
                         home().setFragment(
-                            MockNavigationFragment(
-                                destinationPoint!!,
-                                maporiginPoint!!
-                            ).apply {
+                            MockNavigationFragment().apply {
+                                this.desrpoint = destinationPoint
+                                this.originpoint = maporiginPoint
                                 this.trip_id = which.id
                                 this.trip_type = which.type
                                 this.status = which.status

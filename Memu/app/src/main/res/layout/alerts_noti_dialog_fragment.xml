@@ -2,6 +2,7 @@
 <FrameLayout android:layout_height="match_parent"
     android:layout_width="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -15,22 +16,28 @@
             android:backgroundTint="@color/WhiteSmoke"
             android:background="@drawable/theme_rounded_rectangle"
             android:layout_height="wrap_content">
-            <TextView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:background="@drawable/rounded_corners"
                 android:backgroundTint="@color/DarkBlue"
-                android:textColor="@color/white"
-                android:id="@+id/tittle"
-                android:text="Traffic jam expected"
-                android:padding="15dp"
                 android:layout_height="wrap_content">
-
-            </TextView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/opensansbold"
+                    android:id="@+id/tittle"
+                    android:layout_marginRight="60dp"
+                    android:maxLines="1"
+                    android:text="Traffic jam expected"
+                    android:padding="10dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+            </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:background="@drawable/rounded_corner_btn_border_enabled"
                 android:backgroundTint="@color/white"
-                android:layout_marginRight="40dp"
+                android:layout_marginRight="80dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="30dp"
                 android:orientation="horizontal"
@@ -49,6 +56,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="15dp"
                     android:text="@string/username"
+                    android:id="@+id/username"
                     android:textColor="@color/black"
                     android:layout_height="wrap_content">
                 </TextView>
@@ -62,22 +70,40 @@
             android:layout_gravity="bottom"
             android:layout_height="wrap_content">
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/point_alert"
                 android:src="@drawable/point_alert"
                 android:layout_height="wrap_content">
             </ImageView>
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:src="@drawable/like_btn"
+                android:id="@+id/like_btn"
                 android:layout_marginLeft="25dp"
                 android:layout_height="wrap_content">
             </ImageView>
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:src="@drawable/dislike_btn"
+                android:id="@+id/dislike_btn"
                 android:layout_marginLeft="25dp"
                 android:layout_height="wrap_content">
             </ImageView>
         </LinearLayout>
     </RelativeLayout>
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="end"
+        android:id="@+id/logo"
+        android:adjustViewBounds="true"
+        android:src="@drawable/accident"
+        android:layout_marginRight="10dp"
+        android:layout_height="100dp">
+
+    </ImageView>
+
 </FrameLayout>

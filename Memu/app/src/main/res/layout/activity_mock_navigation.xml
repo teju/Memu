@@ -116,19 +116,4 @@
         android:src="@drawable/thumb_up_memu_logo"
         android:layout_height="wrap_content">
     </ImageView>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:drawableLeft="@drawable/navigation"
-        android:id="@+id/recenture"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:visibility="gone"
-        android:paddingLeft="10dp"
-        android:paddingRight="20dp"
-        android:text="Recenture"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="100dp"
-        android:layout_height="40dp">
-    </TextView>
 </FrameLayout>

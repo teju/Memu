@@ -512,7 +512,9 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
             }
             R.id.startButton -> {
                 System.out.println("destinationPoint startButton "+tripriderid)
-                home().setFragment(MockNavigationFragment(this!!.destinationPoint!!, this@MapFragment.maporiginPoint!!).apply {
+                home().setFragment(MockNavigationFragment().apply {
+                    this.desrpoint = this@MapFragment.destinationPoint
+                    this.originpoint = this@MapFragment.maporiginPoint!!
                     this.trip_id = tripriderid!!
                     this.trip_type = type!!
                     this.distanceTravelled = FormatDistance(mapcurrentRoute?.distance()!!)

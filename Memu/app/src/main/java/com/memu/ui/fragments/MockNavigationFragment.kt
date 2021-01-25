@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.iapps.gon.etc.callback.NotifyListener
+import com.iapps.gon.etc.callback.NotifyPointerListener
 import com.iapps.gon.etc.callback.WalletBalanceListener
 import com.iapps.libs.helpers.BaseHelper
 import com.mapbox.android.core.location.LocationEngine
@@ -90,12 +91,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MockNavigationFragment(
-    var desrpoint: Point,
-    var originpoint: Point) : BaseFragment(), OnMapReadyCallback, ProgressChangeListener, NavigationEventListener,
+class MockNavigationFragment() : BaseFragment(), OnMapReadyCallback, ProgressChangeListener, NavigationEventListener,
     MilestoneEventListener, OffRouteListener, RefreshCallback,WalletBalanceListener,
-    PaytmPaymentTransactionCallback {
+    PaytmPaymentTransactionCallback ,NotifyPointerListener{
     private var CHECKSUMHASH: String = ""
+    var desrpoint: Point? = null
+    var originpoint: Point? = null
     private var speechPlayer: NavigationSpeechPlayer?= null
     private var navigationViewModel: NavigationViewModel? = null
     private var srcmarker: Marker? = null
@@ -305,13 +306,6 @@ class MockNavigationFragment(
             }
         }
 
-        recenture.setOnClickListener {
-            val gpsTracker = GPSTracker(activity!!)
-            if(gpsTracker.canGetLocation()) {
-                val currentLoc = LatLng(gpsTracker.latitude,gpsTracker.longitude)
-                mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 28.0))
-            }
-        }
         initViewModels()
         instructionView.retrieveSoundButton().hide()
         val soundButton =  instructionView.findViewById<SoundButton>(R.id.soundLayout)
@@ -326,6 +320,7 @@ class MockNavigationFragment(
         println("navigationViewModel originpoint "+originpoint+" desrpoint "+desrpoint+" distanceTravelled "+distanceTravelled)
 
         getWalletBalanceViewModel.loadData()
+        home().listner = this
 
     }
     /*val voiceInstructionsObserver = object : VoiceInstructionsObserver {
@@ -371,7 +366,7 @@ class MockNavigationFragment(
         val gpsTracker = GPSTracker(activity!!)
         if (mapboxMap != null) {
             val latLng = LatLng(point.latitude,point.longitude)
-            val destlatLng = LatLng(desrpoint!!.latitude(),desrpoint.longitude())
+            val destlatLng = LatLng(desrpoint!!.latitude(),desrpoint!!.longitude())
             (locationEngine as ReplayRouteLocationEngine).assignLastLocation(
                 Point.fromLngLat(latLng.longitude, latLng.latitude)
             )
@@ -398,12 +393,12 @@ class MockNavigationFragment(
             navigationMapRoute = NavigationMapRoute(navigation, mapView!!, mapboxMap)
             locationComponent.zoomWhileTracking(32.0)
             locationEngine = ReplayRouteLocationEngine()
-            newOrigin(LatLng(originpoint.latitude(),originpoint.longitude()))
+            newOrigin(LatLng(originpoint!!.latitude(),originpoint!!.longitude()))
             if(currentRoute != null) {
                 ld.showLoadingV2()
                 showRoute()
             } else {
-                reroute(originpoint.longitude(),originpoint.latitude())
+                reroute(originpoint!!.longitude(),originpoint!!.latitude())
             }
             val currentCameraPosition =
                 mapboxMap!!.cameraPosition
@@ -1095,7 +1090,10 @@ class MockNavigationFragment(
             }
         }
     }
-
+    fun zoomToaLocation(latitude : Double,longitude :Double) {
+        val currentLoc = LatLng(latitude,longitude)
+        mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 28.0))
+    }
 
 
     companion object {
@@ -1118,6 +1116,8 @@ class MockNavigationFragment(
 
             return LatLng(randomLat, randomLon)
         }
+
+
     }
     fun setUploadActivityPhotoObserver() {
         postUploadDocViewModel = ViewModelProviders.of(this).get(PostUploadDocViewModel::class.java).apply {
@@ -1149,7 +1149,6 @@ class MockNavigationFragment(
             }
         }
     }
-
     private class RerouteActivityLocationCallback internal constructor(activity: MockNavigationFragment) :
         LocationEngineCallback<LocationEngineResult> {
         private val activityWeakReference: WeakReference<MockNavigationFragment>
@@ -1230,4 +1229,11 @@ class MockNavigationFragment(
         com.paytm.pgsdk.Log.d(TAG,"onBackPressedCancelTransaction ")
         BaseHelper.showAlert(activity,"Transaction Cancelled")
     }
+
+    override fun onPointerClicked(latitide: Double, longitude: Double) {
+        val currentLoc = LatLng(latitide,longitude)
+        mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 28.0))
+    }
+
+
 }
