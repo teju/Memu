@@ -127,6 +127,8 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
 
             }
         }
+        postUserVehicleListViewModel.loadData()
+
         if(Keys.MAPTYPE == Keys.POOLING_BACK) {
             poolingUI()
         }

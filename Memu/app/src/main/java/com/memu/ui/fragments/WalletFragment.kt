@@ -163,24 +163,44 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
         if(inResponse!!.getString("RESPCODE") == "01"){
             postMakePaymentViewModel.loadData("wallet",amount.text.toString(),wallet_Balance,"","","","","","")
         } else {
-           BaseHelper.showAlert(activity,inResponse.getString("RESPMSG"))
+            showNotifyDialog(
+                "", inResponse.getString("RESPMSG"),
+                getString(R.string.ok),"",object : NotifyListener {
+                    override fun onButtonClicked(which: Int) { }
+                }
+            )
         }
     }
 
     override fun clientAuthenticationFailed(inErrorMessage: String?) {
         Log.d(TAG,"inErrorMessage "+inErrorMessage.toString())
-        BaseHelper.showAlert(activity,inErrorMessage.toString())
+        showNotifyDialog(
+            "", inErrorMessage.toString(),
+            getString(R.string.ok),"",object : NotifyListener {
+                override fun onButtonClicked(which: Int) { }
+            }
+        )
 
     }
 
     override fun someUIErrorOccurred(inErrorMessage: String?) {
         Log.d(TAG,"someUIErrorOccurred "+inErrorMessage.toString())
-        BaseHelper.showAlert(activity,inErrorMessage.toString())
+        showNotifyDialog(
+            "", inErrorMessage.toString(),
+            getString(R.string.ok),"",object : NotifyListener {
+                override fun onButtonClicked(which: Int) { }
+            }
+        )
     }
 
     override fun onTransactionCancel(inErrorMessage: String?, inResponse: Bundle?) {
         Log.d(TAG,"onTransactionCancel "+inErrorMessage.toString())
-        BaseHelper.showAlert(activity,inErrorMessage.toString())
+        showNotifyDialog(
+            "", inErrorMessage.toString(),
+            getString(R.string.ok),"",object : NotifyListener {
+                override fun onButtonClicked(which: Int) { }
+            }
+        )
     }
 
     override fun networkNotAvailable() {
@@ -193,14 +213,22 @@ class WalletFragment : BaseFragment(), PaytmPaymentTransactionCallback,View.OnCl
         inFailingUrl: String?
     ) {
         Log.d(TAG,"onErrorLoadingWebPage "+inErrorMessage)
-        BaseHelper.showAlert(activity,inErrorMessage.toString())
-
+        showNotifyDialog(
+            "", inErrorMessage.toString(),
+            getString(R.string.ok),"",object : NotifyListener {
+                override fun onButtonClicked(which: Int) { }
+            }
+        )
     }
 
     override fun onBackPressedCancelTransaction() {
         Log.d(TAG,"onBackPressedCancelTransaction ")
-
-        BaseHelper.showAlert(activity,"Transaction Cancelled")
+        showNotifyDialog(
+            "", "Transaction Cancelled",
+            getString(R.string.ok),"",object : NotifyListener {
+                override fun onButtonClicked(which: Int) { }
+            }
+        )
     }
 
     override fun onClick(v: View?) {

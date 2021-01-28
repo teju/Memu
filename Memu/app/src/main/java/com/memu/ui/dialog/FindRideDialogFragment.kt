@@ -72,6 +72,8 @@ class FindRideDialogFragment : BaseDialogFragment() {
                 id: Long
             ) {
                 selectedPos = position
+                vehicle_name.setText(vehicle_list.get(selectedPos).vehicle_name)
+                vehicle_brand.setText(vehicle_list.get(selectedPos).vehicle_brand)
             }
 
         }

@@ -352,6 +352,15 @@
                     android:layout_centerVertical="true"
                     android:layout_height="wrap_content">
                 </TextView>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/settings_plus"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:layout_height="wrap_content">
+
+                </ImageView>
             </RelativeLayout>
 
         </LinearLayout>
@@ -363,14 +372,18 @@
         android:background="@color/transparent"
         android:clickable="true"
         android:visibility="gone" />
-    <pl.droidsonroids.gif.GifImageView
-        android:layout_width="70dp"
-        android:layout_gravity="end|bottom"
+    <Button
+        android:layout_width="100dp"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="15dp"
-        android:src="@drawable/next_button"
         android:id="@+id/btnNExt"
-        android:layout_height="60dp">
+        android:text="Save"
+        android:textColor="@color/white"
+        android:fontFamily="@font/opensansbold"
+        android:backgroundTint="@color/mapboxPink"
+        android:background="@drawable/red_start_btn_new"
+        android:layout_height="40dp">
 
-    </pl.droidsonroids.gif.GifImageView>
+    </Button>
 
 </FrameLayout>

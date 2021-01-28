@@ -156,5 +156,8 @@ class APIs : BaseKeys() {
 
         val userupdate : String
             get() = BASE_URL!!  + PROFILE+ "user-update"
+
+        val tripsummary : String
+            get() = BASE_URL!!  + BOOKING+ "trip-summary"
     }
 }

@@ -134,6 +134,7 @@ class MockNavigationFragment() : BaseFragment(), OnMapReadyCallback, ProgressCha
     var invoive_id = ""
     var amount_to_pay = 0.0
     var orderId="1000"
+    var tripEndID=""
     private var cameraOutputUri: Uri? = null
     val PICK_PHOTO_PHOTO = 10010
     lateinit var postUploadDocViewModel: PostUploadDocViewModel
@@ -428,7 +429,7 @@ class MockNavigationFragment() : BaseFragment(), OnMapReadyCallback, ProgressCha
                 val title =  postMApFeedDataViewModel.obj?.list?.get(x)?.feed_name
                 Picasso.get().load(postMApFeedDataViewModel.obj?.list?.get(x)?.logo).into(object : com.squareup.picasso.Target {
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                        val bmp = BaseHelper.ScaleBitmap(bitmap,220)
+                        val bmp = BaseHelper.ScaleBitmap(bitmap,160)
                         // loaded bitmap is here (bitmap)
                         val iconFactory = IconFactory.getInstance(activity!!);
                         val icon = iconFactory.fromBitmap(bmp!!);
@@ -871,10 +872,9 @@ class MockNavigationFragment() : BaseFragment(), OnMapReadyCallback, ProgressCha
                     when (state) {
                         PostEndNavigationViewModel.NEXT_STEP -> {
                             isTRipStarted = false
-                            showCompletedDialog(object :NotifyListener {
-                                override fun onButtonClicked(which: Int) {
-                                    home().backToMainScreen()
-                                }
+                            tripEndID = this@MockNavigationFragment.trip_id
+                            home().setFragment(TripCompletedFragment().apply {
+                                this.ID = this@MockNavigationFragment.tripEndID
                             })
                         }
                     }
@@ -906,6 +906,7 @@ class MockNavigationFragment() : BaseFragment(), OnMapReadyCallback, ProgressCha
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostEndNavigationViewModel.NEXT_STEP -> {
+                            tripEndID = postCustomerEndNavigationViewModel.obj?.trip_details?.trip_id!!
                             amountToPAy()
                             var amt = 0.0
                             if( amount_to_pay > walletBalance.toDouble()) {
@@ -973,20 +974,9 @@ class MockNavigationFragment() : BaseFragment(), OnMapReadyCallback, ProgressCha
                                     }
                                 }
                                 AFTER_PAYMENT -> {
-                                    if(Keys.MAPTYPE == Keys.POOLING_FIND_RIDE) {
-                                        home().setFragment(TripCompletedFragment().apply {
-                                            this.distanceCompleted = this@MockNavigationFragment.distanceTravelled!!.toString()
-                                            this.amountPaid = this@MockNavigationFragment.amount_to_pay!!.toString()
-                                            this.timeTaken = this@MockNavigationFragment.duration_left!!.text.toString()
-                                            this.coinsEarned = "90"
-                                        })
-                                    } else{
-                                        showCompletedDialog(object :NotifyListener {
-                                            override fun onButtonClicked(which: Int) {
-                                                home().backToMainScreen()
-                                            }
-                                        })
-                                    }
+                                    home().setFragment(TripCompletedFragment().apply {
+                                        this.ID = this@MockNavigationFragment.tripEndID
+                                    })
                                 }
                             }
                         }

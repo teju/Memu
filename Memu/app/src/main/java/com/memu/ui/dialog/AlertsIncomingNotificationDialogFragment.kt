@@ -42,7 +42,7 @@ class AlertsIncomingNotificationDialogFragment : BaseDialogFragment() {
         tittle.text = notify_tittle
         username.text = notify_userNAme
         Helper.loadImage(activity!!,notify_image,profile_pic,R.drawable.default_profile_icon)
-       // Helper.loadImage(activity!!,notify_logo,logo)
+        Helper.loadImage(activity!!,notify_logo,logo)
         like_btn.setOnClickListener {
             listener.onButtonClicked(BUTTON_POSITIVE)
             dismiss()

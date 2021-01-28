@@ -28,6 +28,7 @@ import androidx.core.os.HandlerCompat.postDelayed
 import android.os.Handler
 import com.mapbox.geojson.Point
 import com.memu.ui.activity.MockNavigationFragment
+import java.lang.Exception
 
 
 class HistoryFragment : BaseFragment() ,View.OnClickListener {
@@ -56,85 +57,100 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
     }
 
     private fun initUI() {
-        setCompletedAPIObserver()
-        setRecuringAPIObserver()
-        history = HistoryAdapter(activity!!)
-        history!!.listener = object  : RecursiveListener {
-            override fun onButtonClicked(which: Completed) {
-                if(which.type.equals("offer_ride",ignoreCase = true)) {
-                    Keys.MAPTYPE = Keys.POOLING_OFFER_RIDE
-                } else {
-                    Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
-                }
-                if(!which.status.contains("complete", ignoreCase = true) && !which.status.contains("cancelled", ignoreCase = true)) {
-                    if (which.status.contains("confirm", ignoreCase = true)
-                        || which.status.contains("started", ignoreCase = true)) {
-                        val maporiginPoint = Point.fromLngLat(
-                            which.from_address.longitude.toDouble(),
-                            which.from_address.lattitude.toDouble()
-                        )
-                        val destinationPoint = Point.fromLngLat(
-                            which.to_address.longitude.toDouble(),
-                            which.to_address.lattitude.toDouble()
-                        )
-                        home().setFragment(
-                            MockNavigationFragment().apply {
-                                this.desrpoint = destinationPoint
-                                this.originpoint = maporiginPoint
-                                this.trip_id = which.id
-                                this.trip_type = which.type
-                                this.status = which.status
-                                if(which.type.equals("find_ride",ignoreCase = true)) {
-                                    Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
-                                } else {
-                                    Keys.MAPTYPE  = Keys.POOLING_OFFER_RIDE
-                                }
-                            })
+        try {
+            setCompletedAPIObserver()
+            setRecuringAPIObserver()
+            history = HistoryAdapter(activity!!)
+            history!!.listener = object : RecursiveListener {
+                override fun onButtonClicked(which: Completed) {
+                    if (which.type.equals("offer_ride", ignoreCase = true)) {
+                        Keys.MAPTYPE = Keys.POOLING_OFFER_RIDE
                     } else {
-                        home().setFragment(MapFragment().apply {
-                            srcLat = which.from_address.lattitude.toDouble()
-                            srcLng = which.from_address.longitude.toDouble()
-                            destLng = which.to_address.longitude.toDouble()
-                            destLat = which.to_address.lattitude.toDouble()
-                            this.type = which.type
-                            this.tripriderid = which.id
-                        })
+                        Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
+                    }
+                    if (!which.status.contains(
+                            "complete",
+                            ignoreCase = true
+                        ) && !which.status.contains("cancelled", ignoreCase = true)
+                    ) {
+                        if (which.status.contains("confirm", ignoreCase = true)
+                            || which.status.contains("started", ignoreCase = true)
+                        ) {
+                            val maporiginPoint = Point.fromLngLat(
+                                which.from_address.longitude.toDouble(),
+                                which.from_address.lattitude.toDouble()
+                            )
+                            val destinationPoint = Point.fromLngLat(
+                                which.to_address.longitude.toDouble(),
+                                which.to_address.lattitude.toDouble()
+                            )
+                            home().setFragment(
+                                MockNavigationFragment().apply {
+                                    this.desrpoint = destinationPoint
+                                    this.originpoint = maporiginPoint
+                                    this.trip_id = which.id
+                                    this.trip_type = which.type
+                                    this.status = which.status
+                                    if (which.type.equals("find_ride", ignoreCase = true)) {
+                                        Keys.MAPTYPE = Keys.POOLING_FIND_RIDE
+                                    } else {
+                                        Keys.MAPTYPE = Keys.POOLING_OFFER_RIDE
+                                    }
+                                })
+                        } else {
+                            home().setFragment(MapFragment().apply {
+                                srcLat = which.from_address.lattitude.toDouble()
+                                srcLng = which.from_address.longitude.toDouble()
+                                destLng = which.to_address.longitude.toDouble()
+                                destLat = which.to_address.lattitude.toDouble()
+                                this.type = which.type
+                                this.tripriderid = which.id
+                            })
+                        }
                     }
                 }
             }
-        }
-        recurringListAdapter = RecurringListAdapter(activity!!)
-        recurringListAdapter!!.listener = object  : RecursiveListener {
-            override fun onButtonClicked(which: Completed) {
-                home().setFragment(MapFragment().apply {
-                    Keys.MAPTYPE = Keys.RECURSIVE_EDIT
-                    srcLat = which.from_address.lattitude.toDouble()
-                    srcLng = which.from_address.longitude.toDouble()
-                    destLng = which.to_address.longitude.toDouble()
-                    destLat = which.to_address.lattitude.toDouble()
-                    this.type = which.type
-                    this.recursivedays = which.days
-                    this.completed = which
-                })
+            recurringListAdapter = RecurringListAdapter(activity!!)
+            recurringListAdapter!!.listener = object : RecursiveListener {
+                override fun onButtonClicked(which: Completed) {
+                    home().setFragment(MapFragment().apply {
+                        Keys.MAPTYPE = Keys.RECURSIVE_EDIT
+                        srcLat = which.from_address.lattitude.toDouble()
+                        srcLng = which.from_address.longitude.toDouble()
+                        destLng = which.to_address.longitude.toDouble()
+                        destLat = which.to_address.lattitude.toDouble()
+                        this.type = which.type
+                        this.recursivedays = which.days
+                        this.completed = which
+                    })
+                }
             }
+            recyclerView.layoutManager = LinearLayoutManager(activity)
+            recurringrecyclerView.layoutManager = LinearLayoutManager(
+                activity,
+                LinearLayoutManager.HORIZONTAL, false
+            )
+            try {
+                Helper.loadImage(
+                    activity!!,
+                    UserInfoManager.getInstance(activity!!).getProfilePic(),
+                    profile_pic,
+                    R.drawable.default_profile_icon
+                )
+            } catch (e: java.lang.Exception) {
+            }
+            completed.setOnClickListener(this)
+            upcoming.setOnClickListener(this)
+            create_new.setOnClickListener(this)
+            arrow_left.setOnClickListener(this)
+            history!!.type = HistoryAdapter.TYPE_SCHEDULED
+            scheduledContent.setSpan(UnderlineSpan(), 0, scheduledContent.length, 0)
+            upcoming.setText(scheduledContent)
+            removeSpam(completedContent, completed)
+            postScheduledCompleteRidesViewModel.loadData(history!!.type)
+            postRecurryingRidesViewModel.loadData()
+        } catch (e :Exception) {
         }
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recurringrecyclerView.layoutManager = LinearLayoutManager(activity,
-            LinearLayoutManager.HORIZONTAL, false)
-        try {
-            Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.default_profile_icon)
-        } catch (e : java.lang.Exception){ }
-        completed.setOnClickListener (this)
-        upcoming.setOnClickListener (this)
-        create_new.setOnClickListener (this)
-        arrow_left.setOnClickListener (this)
-        history!!.type = HistoryAdapter.TYPE_SCHEDULED
-        scheduledContent.setSpan(UnderlineSpan(), 0, scheduledContent.length, 0)
-        upcoming.setText(scheduledContent)
-        removeSpam(completedContent,completed)
-        postScheduledCompleteRidesViewModel.loadData(history!!.type)
-        postRecurryingRidesViewModel.loadData()
-
     }
 
     fun removeSpam(SpannableString : SpannableString,tv : TextView) {

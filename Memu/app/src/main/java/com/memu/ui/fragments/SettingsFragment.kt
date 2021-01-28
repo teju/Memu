@@ -373,7 +373,13 @@ class SettingsFragment : BaseFragment()  {
 
                     when (state) {
                         PostUSerDetailsViewModel.NEXT_STEP -> {
-                           postUSerDetailsViewModel.loadData()
+                            showNotifyDialog(
+                                "", "Profile updated successfully",
+                                getString(R.string.ok),"",object : NotifyListener {
+                                    override fun onButtonClicked(which: Int) {
+                                        home().proceedDoOnBackPressed()
+                                    }
+                                },0)
                         }
                     }
                 })

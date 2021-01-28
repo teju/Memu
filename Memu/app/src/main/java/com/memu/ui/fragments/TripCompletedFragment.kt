@@ -15,20 +15,26 @@ import com.facebook.Profile.getCurrentProfile
 import com.facebook.internal.ImageRequest.getProfilePictureUri
 import com.squareup.picasso.Picasso
 import android.util.Log
+import androidx.lifecycle.ViewModelProviders
 import java.util.*
 import org.json.JSONException
 import com.facebook.GraphResponse
 import org.json.JSONObject
 import com.facebook.GraphRequest
+import com.iapps.gon.etc.callback.NotifyListener
+import com.memu.ui.activity.MockNavigationFragment
+import com.memu.webservices.PostCustomerEndNavigationViewModel
+import com.memu.webservices.PostEndNavigationViewModel
+import com.memu.webservices.PostTripSummaryViewModel
 import kotlinx.android.synthetic.main.trip_complete_dialog_fragment.*
+import androidx.lifecycle.Observer
+import com.memu.etc.Keys
 
 
 class TripCompletedFragment : BaseFragment()  {
+    var ID :String = ""
+    lateinit var postTripSummaryViewModel: PostTripSummaryViewModel
 
-    var distanceCompleted = ""
-    var timeTaken = ""
-    var coinsEarned = ""
-    var amountPaid = ""
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(R.layout.trip_complete_dialog_fragment, container, false)
         return v
@@ -37,20 +43,60 @@ class TripCompletedFragment : BaseFragment()  {
     override fun onBackTriggered() {
         home().backToMainScreen()
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUI();
+        setCustomerEndTripAPIObserver()
+        var type = ""
+        if (Keys.MAPTYPE == Keys.POOLING_OFFER_RIDE) {
+            type = "offer_ride"
+        } else {
+            type = "find_ride"
+        }
+        postTripSummaryViewModel.loadData(type,ID)
     }
 
     private fun initUI() {
-        distance.setText(distanceCompleted+" Km")
-        time.setText(timeTaken)
-        amount.setText(amountPaid+"\nRupees")
-        coins.setText(coinsEarned+"\nCoins")
+        val tripSummary = postTripSummaryViewModel.obj
+        distance.setText(tripSummary?.distance_travelled!!.toString() +" Km")
+        time.setText(tripSummary?.time_taken.toString()!!)
+        amount.setText(tripSummary.money_earned_spent.toString()+"\nRupees")
+        coins.setText(tripSummary.reputation_coin.toString()+"\nCoins")
         arrow_left.setOnClickListener {
             home().backToMainScreen()
         }
+    }
 
+    fun setCustomerEndTripAPIObserver() {
+        postTripSummaryViewModel = ViewModelProviders.of(this).get(
+            PostTripSummaryViewModel::class.java).apply {
+            this@TripCompletedFragment.let { thisFragReference ->
+                isLoading.observe(thisFragReference, Observer { aBoolean ->
+                    if(aBoolean!!) {
+                        ld.showLoadingV2()
+                    } else {
+                        ld.hide()
+                    }
+                })
+                errorMessage.observe(thisFragReference, Observer { s ->
+                    showNotifyDialog(
+                        s.title, s.message!!,
+                        getString(R.string.ok),"",object : NotifyListener {
+                            override fun onButtonClicked(which: Int) {
+                            }
+                        }
+                    )
+                })
+                isNetworkAvailable.observe(thisFragReference, obsNoInternet)
+                getTrigger().observe(thisFragReference, Observer { state ->
+                    when (state) {
+                        PostEndNavigationViewModel.NEXT_STEP -> {
+                            initUI()
+                        }
+                    }
+                })
+            }
+        }
     }
 
 }
