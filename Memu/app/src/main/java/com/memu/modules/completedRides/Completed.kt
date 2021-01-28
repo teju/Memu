@@ -2,7 +2,7 @@ package com.memu.modules.completedRides
 
 data class Completed(
     val coins_earned: String = "",
-    val coins_spent: String = "",
+    val coins_spent: CoinsSpent,
     val date: String = "",
     val from_address: FromAddress = FromAddress(),
     val id: String = "",

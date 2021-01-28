@@ -44,8 +44,11 @@ class HistoryAdapter(
         when(type) {
             TYPE_COMPLETED -> {
                 holder.bottom_view.visibility = View.VISIBLE
-                holder.coins_earned.text = "Money Earned : "+Rides.get(position).coins_earned
-                holder.coins_spent.text = "Money Spent : "+Rides.get(position).coins_spent
+                if(Rides.get(position).coins_earned != null) {
+                    holder.coins_earned.text = "Money Earned : "+Rides.get(position).coins_earned
+                }
+                val coinsSpent = Rides.get(position).coins_spent.amount + Rides.get(position).coins_spent.memu_amount
+                holder.coins_spent.text = "Money Spent : "+coinsSpent
             }
             TYPE_SCHEDULED -> {
                 holder.bottom_view.visibility = View.GONE

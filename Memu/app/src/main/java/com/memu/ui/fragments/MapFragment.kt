@@ -352,7 +352,7 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
                 vehicle_id = completed!!.vehicle_id
             }
             val completed = Completed(
-                "", "", completed?.date!!,
+                "", completed?.coins_spent!!, completed?.date!!,
                 FromAddress(), completed?.id!!, listOf(),
                 status,
                 completed!!.time,
