@@ -39,6 +39,7 @@ import com.memu.ui.dialog.NotifyDialogFragment
 import com.memu.ui.fragments.FollowersRequestFragment
 import com.memu.ui.fragments.HomeFragment
 import com.memu.ui.fragments.MainFragment
+import com.memu.ui.fragments.TripCompletedFragment
 import com.memu.webservices.PostAcceptFriendRequestViewModel
 import com.memu.webservices.PostLikeDisLikeRequestViewModel
 import com.memu.webservices.PostacceptRejectViewModel
@@ -418,9 +419,7 @@ class ActivityMain() : AppCompatActivity(){
         else
             setFragment(MainFragment())
     }
-    fun setNotifyListner(listner : NotifyPointerListener) {
-        this.listner = listner
-    }
+
 
     fun setFragment(frag: Fragment) {
         try {

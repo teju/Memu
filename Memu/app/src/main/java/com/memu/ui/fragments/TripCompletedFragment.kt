@@ -28,7 +28,10 @@ import com.memu.webservices.PostEndNavigationViewModel
 import com.memu.webservices.PostTripSummaryViewModel
 import kotlinx.android.synthetic.main.trip_complete_dialog_fragment.*
 import androidx.lifecycle.Observer
+import com.memu.etc.Helper
 import com.memu.etc.Keys
+import com.memu.etc.UserInfoManager
+
 
 
 class TripCompletedFragment : BaseFragment()  {
@@ -53,18 +56,25 @@ class TripCompletedFragment : BaseFragment()  {
         } else {
             type = "find_ride"
         }
+        try {
+            Helper.loadImage(activity!!,
+                UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.user_default)
+
+        } catch (e : java.lang.Exception){
+
+        }
+        arrow_left.setOnClickListener {
+            home().backToMainScreen()
+        }
         postTripSummaryViewModel.loadData(type,ID)
     }
 
     private fun initUI() {
         val tripSummary = postTripSummaryViewModel.obj
-        distance.setText(tripSummary?.distance_travelled!!.toString() +" Km")
+        distance.setText(tripSummary?.distance_travelled!!)
         time.setText(tripSummary?.time_taken.toString()!!)
-        amount.setText(tripSummary.money_earned_spent.toString()+"\nRupees")
-        coins.setText(tripSummary.reputation_coin.toString()+"\nCoins")
-        arrow_left.setOnClickListener {
-            home().backToMainScreen()
-        }
+        amount.setText(tripSummary.money_earned_spent)
+        coins.setText(tripSummary.reputation_coin)
     }
 
     fun setCustomerEndTripAPIObserver() {
@@ -90,7 +100,7 @@ class TripCompletedFragment : BaseFragment()  {
                 isNetworkAvailable.observe(thisFragReference, obsNoInternet)
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
-                        PostEndNavigationViewModel.NEXT_STEP -> {
+                        PostTripSummaryViewModel.NEXT_STEP -> {
                             initUI()
                         }
                     }

@@ -47,8 +47,9 @@ class HistoryFragment : BaseFragment() ,View.OnClickListener {
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        initUI()
+        if(!hidden) {
+            initUI()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

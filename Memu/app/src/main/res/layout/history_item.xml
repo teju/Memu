@@ -159,7 +159,7 @@
                 android:gravity="center"
                 android:id="@+id/coins_earned"
                 android:singleLine="true"
-                android:text="Coins Earned : 00"
+                android:text="Money Earned : 00"
                 android:background="@drawable/bottom_heading_bg"
                 android:layout_height="40dp">
             </TextView>
@@ -169,7 +169,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:id="@+id/coins_spent"
-                android:text="Coins Spent : 00"
+                android:text="Money Spent : 00"
                 android:background="@drawable/bottom_heading_bg"
                 android:layout_height="40dp">
             </TextView>

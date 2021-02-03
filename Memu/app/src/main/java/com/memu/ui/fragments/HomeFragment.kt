@@ -133,9 +133,7 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
             poolingUI()
         }
         try {
-            System.out.println("loadImage "+UserInfoManager.getInstance(activity!!).getProfilePic())
             Helper.loadImage(activity!!,UserInfoManager.getInstance(activity!!).getProfilePic(),profile_pic,R.drawable.user_default)
-
         } catch (e : java.lang.Exception){
 
         }

@@ -47,7 +47,11 @@ class HistoryAdapter(
                 if(Rides.get(position).coins_earned != null) {
                     holder.coins_earned.text = "Money Earned : "+Rides.get(position).coins_earned
                 }
-                val coinsSpent = Rides.get(position).coins_spent.amount + Rides.get(position).coins_spent.memu_amount
+                var coinsSpent = 0.0
+                if(Rides.get(position).coins_spent != null) {
+                    coinsSpent =
+                        Rides.get(position).coins_spent.amount + Rides.get(position).coins_spent.memu_amount
+                }
                 holder.coins_spent.text = "Money Spent : "+coinsSpent
             }
             TYPE_SCHEDULED -> {

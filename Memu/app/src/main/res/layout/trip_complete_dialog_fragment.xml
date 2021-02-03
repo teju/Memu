@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:background="#EEEEEE"
     xmlns:android="http://schemas.android.com/apk/res/android" >
     <ScrollView android:layout_height="match_parent"
         android:layout_width="match_parent"
@@ -40,10 +41,10 @@
             </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
-                android:text="Thank you\nFor using\nMEMU TODAY!"
-                android:textSize="22dp"
+                android:text="Thank you For using MEMU TODAY!"
+                android:textSize="30dp"
                 android:layout_marginLeft="25dp"
-                android:fontFamily="@font/opensansbold"
+                android:fontFamily="@font/opensansextrabold"
                 android:textColor="@color/Green"
                 android:layout_height="wrap_content">
             </TextView>
@@ -55,7 +56,8 @@
                 android:paddingTop="25dp"
                 android:gravity="center_vertical"
                 android:textSize="16dp"
-                android:layout_marginLeft="25dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:background="@drawable/navisummary"
                 android:fontFamily="@font/opensansbold"
                 android:textColor="@color/black"
@@ -69,8 +71,8 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 app:cardCornerRadius="15dp"
+                app:cardBackgroundColor="@color/whitegray"
                 android:elevation="5dp"
-                app:cardBackgroundColor="#EEEEEE"
                 android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -84,6 +86,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:src="@drawable/distance_travelled"
+                            android:layout_gravity="center_vertical"
                             android:layout_height="50dp">
                         </ImageView>
                         <TextView
@@ -91,10 +94,10 @@
                             android:text="Distance Travelled"
                             android:paddingTop="15dp"
                             android:paddingBottom="15dp"
-                            android:textSize="14dp"
+                            android:textSize="12dp"
                             android:layout_marginLeft="10dp"
                             android:fontFamily="@font/opensansregular"
-                            android:textColor="@color/black"
+                            android:textColor="@color/textcolur"
                             android:layout_height="wrap_content">
                         </TextView>
                         <TextView
@@ -115,11 +118,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="20dp"
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="50dp"
                             android:src="@drawable/time_taken"
+                            android:layout_gravity="center_vertical"
                             android:layout_height="50dp">
                         </ImageView>
                         <TextView
@@ -127,10 +131,10 @@
                             android:text="Time Taken"
                             android:paddingTop="15dp"
                             android:paddingBottom="15dp"
-                            android:textSize="14dp"
+                            android:textSize="12dp"
                             android:layout_marginLeft="10dp"
                             android:fontFamily="@font/opensansregular"
-                            android:textColor="@color/black"
+                            android:textColor="@color/textcolur"
                             android:layout_height="wrap_content">
                         </TextView>
                         <TextView
@@ -151,11 +155,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="20dp"
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="50dp"
                             android:src="@drawable/amount"
+                            android:layout_gravity="center_vertical"
                             android:layout_height="50dp">
                         </ImageView>
                         <TextView
@@ -163,10 +168,10 @@
                             android:text="Money Earned/ Spent\n (Carpool/ bike pool):"
                             android:paddingTop="15dp"
                             android:paddingBottom="15dp"
-                            android:textSize="14dp"
+                            android:textSize="12dp"
                             android:layout_marginLeft="10dp"
                             android:fontFamily="@font/opensansregular"
-                            android:textColor="@color/black"
+                            android:textColor="@color/textcolur"
                             android:layout_height="wrap_content">
                         </TextView>
                         <TextView
@@ -187,11 +192,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="20dp"
                         android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="50dp"
                             android:src="@drawable/reputation_coins"
+                            android:layout_gravity="center_vertical"
                             android:layout_height="50dp">
                         </ImageView>
                         <TextView
@@ -199,10 +205,10 @@
                             android:text="Money Earned/ Spent\n (Carpool/ bike pool):"
                             android:paddingTop="15dp"
                             android:paddingBottom="15dp"
-                            android:textSize="14dp"
+                            android:textSize="12dp"
                             android:layout_marginLeft="10dp"
                             android:fontFamily="@font/opensansregular"
-                            android:textColor="@color/black"
+                            android:textColor="@color/textcolur"
                             android:layout_height="wrap_content">
                         </TextView>
                         <TextView

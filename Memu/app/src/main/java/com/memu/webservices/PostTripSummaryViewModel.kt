@@ -68,7 +68,7 @@ class PostTripSummaryViewModel(application: Application) : BaseViewModel(applica
         genericHttpAsyncTask.method = BaseConstants.POST
         genericHttpAsyncTask.setUrl(APIs.tripsummary)
         genericHttpAsyncTask.setPostParams(Keys.TYPE,type)
-        genericHttpAsyncTask.setPostParams(Keys.ID,id)
+        genericHttpAsyncTask.setPostParams(Keys.TRIP_ID,id)
         genericHttpAsyncTask.setPostParams(Keys.USER_ID, UserInfoManager.getInstance(apl).getAccountId())
         Helper.applyHeader(apl,genericHttpAsyncTask)
         genericHttpAsyncTask.setCache(false)
