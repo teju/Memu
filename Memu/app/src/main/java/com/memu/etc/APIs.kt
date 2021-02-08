@@ -4,7 +4,7 @@ import com.iapps.libs.helpers.BaseKeys
 
 class APIs : BaseKeys() {
     companion object {
-        val BASE_URL = "https://app.memu.world/api/web/"
+        val BASE_URL = "http://15.207.227.137/api/web/"
         val VEHICLE = "vehicle/"
         val BOOKING = "booking/"
         val USER = "user/"

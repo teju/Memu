@@ -21,6 +21,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.franmontiel.localechanger.LocaleChanger
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.credentials.HintRequest
+import com.google.android.gms.common.api.GoogleApiClient
 import com.google.gson.GsonBuilder
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.gon.etc.callback.NotifyPointerListener
@@ -39,7 +42,6 @@ import com.memu.ui.dialog.NotifyDialogFragment
 import com.memu.ui.fragments.FollowersRequestFragment
 import com.memu.ui.fragments.HomeFragment
 import com.memu.ui.fragments.MainFragment
-import com.memu.ui.fragments.TripCompletedFragment
 import com.memu.webservices.PostAcceptFriendRequestViewModel
 import com.memu.webservices.PostLikeDisLikeRequestViewModel
 import com.memu.webservices.PostacceptRejectViewModel
@@ -86,7 +88,7 @@ class ActivityMain() : AppCompatActivity(){
 
             }, 2 * 2000
         ) // wait for 5 s
-        BaseHelper.triggerNotifLog(this);
+        //BaseHelper.triggerNotifLog(this);
         setAcceptRejectAPIObserver()
         val mContext = this.getBaseContext();
         MapStrictMode.setStrictModeEnabled(true)
@@ -842,15 +844,5 @@ class ActivityMain() : AppCompatActivity(){
         MainFragment().onActivityResult(requestCode, resultCode, data);
 
     }
-    /******************************************
-     * COMMON FUNCTIONS
-     */
-
-
-    /******************************************
-     * LOGOUT FUNCTIONS
-     */
-
-
 
 }

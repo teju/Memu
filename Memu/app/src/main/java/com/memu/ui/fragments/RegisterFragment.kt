@@ -31,6 +31,7 @@ import org.json.JSONObject
 import android.util.DisplayMetrics
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
+import com.google.android.gms.auth.api.credentials.Credential
 import com.iapps.deera.etc.OTPExpiryListener
 import com.iapps.gon.etc.callback.PermissionListener
 import com.memu.etc.*
@@ -38,8 +39,13 @@ import com.memu.ui.activity.SearchActivity
 import com.memu.webservices.*
 import kotlinx.android.synthetic.main.cab_radio_button.*
 import kotlinx.android.synthetic.main.onboarding_start.*
+import kotlinx.android.synthetic.main.onboarding_three.er_mtv3
+import kotlinx.android.synthetic.main.onboarding_three.get_otp
+import kotlinx.android.synthetic.main.onboarding_three.mobileNo
+import kotlinx.android.synthetic.main.onboarding_three.otp_number
 import kotlinx.android.synthetic.main.onboarding_two_temp.*
 import kotlinx.android.synthetic.main.radio_button.*
+import kotlinx.android.synthetic.main.register_fragment.ld
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -119,7 +125,15 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
         setUploadDocObserver()
 
         initFb()
-
+        requestHint()
+        SmsReceiver.bindListener { messageText ->
+            var messageText = messageText
+            val msgArr =
+                messageText.split("\\s".toRegex()).toTypedArray()
+            messageText = msgArr[1]
+            //Toast.makeText(Login.this, "Message: " + messageText, Toast.LENGTH_LONG).show();
+            otp_number.setText(messageText)
+        }
         getVehicleTypeViewModel.loadData()
         //onScrolledUp()
 
@@ -387,6 +401,13 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
             State.officelattitude = lat!!
             State.officelongitude =lng!!
             officeAddress.setText(data?.getStringExtra("Address"))
+        } else if(requestCode == RESOLVE_HINT) {
+            if (requestCode === RESOLVE_HINT) {
+                if (resultCode === RESULT_OK) {
+                    val cred: Credential = data?.getParcelableExtra(Credential.EXTRA_KEY)!!
+                    mobileNo.setText(cred.getId().substring(3))
+                }
+            }
         } else {
             try {
                 var imageuri: Uri? = null;

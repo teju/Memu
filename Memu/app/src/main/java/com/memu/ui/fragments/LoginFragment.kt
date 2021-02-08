@@ -1,6 +1,9 @@
 package com.memu.ui.fragments
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,17 +11,20 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.auth.api.credentials.Credential
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import com.memu.R
+import com.memu.etc.AppSignatureHelper
 import com.memu.etc.Helper
+import com.memu.etc.SmsReceiver
 import com.memu.etc.UserInfoManager
 import com.memu.ui.BaseFragment
 import com.memu.webservices.PostLoginViewModel
 import com.memu.webservices.PostOtpViewModel
 import kotlinx.android.synthetic.main.login_fragment.*
-
 import org.json.JSONObject
+
 
 class LoginFragment : BaseFragment() , View.OnClickListener {
 
@@ -58,6 +64,26 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
                 }
             }
         login.setOnClickListener(this)
+        requestHint()
+        SmsReceiver.bindListener { messageText ->
+            var messageText = messageText
+            val msgArr =
+                messageText.split("\\s".toRegex()).toTypedArray()
+            messageText = msgArr[1]
+            //Toast.makeText(Login.this, "Message: " + messageText, Toast.LENGTH_LONG).show();
+            otp_number.setText(messageText)
+        }
+        val appSignatureHelper = AppSignatureHelper(activity!!)
+        Log.v("KeyHash1234 ", appSignatureHelper.appSignatures[0])
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode === RESOLVE_HINT) {
+            if (resultCode === RESULT_OK) {
+                val cred: Credential = data?.getParcelableExtra(Credential.EXTRA_KEY)!!
+                mobileNo.setText(cred.getId().substring(3))
+            }
+        }
     }
 
     override fun onClick(v: View?) {

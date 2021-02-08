@@ -7,6 +7,14 @@ apply plugin: 'io.fabric'
 */
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('/Users/tejaswinin/Documents/Freelancing_Basavaraj/Memu/keystore/memuKey')
+            storePassword 'MemuWorld'
+            keyAlias 'MemuWorld'
+            keyPassword 'MemuWorld'
+        }
+    }
     compileSdkVersion project.ext.myCompileSdkVersion
     buildToolsVersion project.ext.myBuildToolsVersion
     defaultConfig {
@@ -17,6 +25,7 @@ android {
         versionName project.ext.myVersionName
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
 
     kotlinOptions {
@@ -115,6 +124,7 @@ dependencies {
     implementation('com.paytm:pgplussdk:1.4.4') {
         transitive = true;
     }
+    compile 'com.google.android.gms:play-services-auth-api-phone:11.0.4'
 
     compile 'com.makeramen:roundedimageview:2.3.0'
 

@@ -2,6 +2,8 @@ package com.memu.ui
 
 import android.Manifest
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Bundle
@@ -18,6 +20,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.credentials.HintRequest
+import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.gms.auth.api.phone.SmsRetrieverClient
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
 import com.iapps.gon.etc.callback.*
 import com.iapps.libs.generics.GenericFragment
 import com.iapps.libs.helpers.BaseHelper
@@ -27,6 +38,7 @@ import com.memu.BuildConfig
 import com.memu.R
 import com.memu.etc.Constants
 import com.memu.etc.Helper
+import com.memu.etc.SmsReceiver
 import com.memu.etc.UserInfoManager
 import com.memu.modules.mapFeeds.MapFeed
 import com.memu.modules.poolerVehicleList.Vehicle
@@ -42,11 +54,11 @@ import kotlinx.android.synthetic.main.activity_main.ld
 import kotlinx.android.synthetic.main.profile_header.*
 import kotlinx.android.synthetic.main.profile_wall.*
 import kotlinx.coroutines.*
-import kotlin.collections.ArrayList
 
-open class BaseFragment : GenericFragment() {
+open class BaseFragment : GenericFragment(),GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 
+    val RESOLVE_HINT: Int = 2000
     lateinit var userInfo: UserInfoManager
         private set
     lateinit var posUserMainDataViewModel: PosUserMainDataViewModel
@@ -646,5 +658,69 @@ open class BaseFragment : GenericFragment() {
             //e.toString();
         }
     }
+    var apiClient:GoogleApiClient? = null
+    @Throws(IntentSender.SendIntentException::class)
+    open fun requestHint() {
+        requestContactPermission()
+        var hintRequest:HintRequest? = null
 
+        try {
+            apiClient = GoogleApiClient.Builder(activity!!)
+                .addConnectionCallbacks(this)
+                .enableAutoManage(activity!!, this)
+                .addApi(Auth.CREDENTIALS_API)
+                .build()
+            hintRequest = HintRequest.Builder()
+                .setPhoneNumberIdentifierSupported(true)
+                .build()
+        val intent = Auth.CredentialsApi.getHintPickerIntent(
+                apiClient, hintRequest);
+        startIntentSenderForResult(intent.getIntentSender(),
+                RESOLVE_HINT, null, 0, 0, 0,null);
+        } catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+    override fun onPause() {
+        super.onPause()
+        apiClient?.stopAutoManage(activity!!)
+        apiClient?.disconnect()
+    }
+    open fun requestContactPermission() {
+        val client: SmsRetrieverClient = SmsRetriever.getClient(activity!!)
+
+// Starts SmsRetriever, waits for ONE matching SMS message until timeout
+// (5 minutes).
+        val task: Task<Void> = client.startSmsRetriever()
+
+// Listen for success/failure of the start Task.
+        task.addOnSuccessListener(object : OnSuccessListener<Void?> {
+            override fun onSuccess(aVoid: Void?) {}
+        })
+        task.addOnFailureListener(object : OnFailureListener{
+
+            override fun onFailure(p0: java.lang.Exception) {
+            }
+        })
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(SmsRetriever.SMS_RETRIEVED_ACTION)
+        activity!!.registerReceiver(SmsReceiver(), intentFilter)
+
+    }
+
+    override fun onConnected(p0: Bundle?) {
+
+    }
+
+    override fun onConnectionSuspended(p0: Int) {
+
+    }
+
+    override fun onConnectionFailed(p0: ConnectionResult) {
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 }
