@@ -646,12 +646,12 @@ open class BaseFragment : GenericFragment(),GoogleApiClient.ConnectionCallbacks,
             referral_code = UserInfoManager.getInstance(activity!!).getReferralCode()
         }
         try {
-
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, activity?.getString(R.string.app_name))
-            var shareMessage = "Give a friend 2,000 points and get 2,000 points when they install app, " +
-                    "use my referal code "+referral_code+"\nhttps://memu.world"
+            var shareMessage = "Hey, try this app! a nice replacement to Google Maps. We can also earn reputation coins & money. Wow!\n" +
+                    "Use my code - "+referral_code+" \n" +
+                    "https://play.google.com/store/apps/details?id=com.memu"
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
             startActivity(Intent.createChooser(shareIntent, "choose one"))
         } catch (e: Exception) {

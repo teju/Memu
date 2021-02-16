@@ -73,8 +73,6 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
             //Toast.makeText(Login.this, "Message: " + messageText, Toast.LENGTH_LONG).show();
             otp_number.setText(messageText)
         }
-        val appSignatureHelper = AppSignatureHelper(activity!!)
-        Log.v("KeyHash1234 ", appSignatureHelper.appSignatures[0])
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

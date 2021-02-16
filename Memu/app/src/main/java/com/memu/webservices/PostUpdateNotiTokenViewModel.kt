@@ -68,9 +68,12 @@ class PostUpdateNotiTokenViewModel(application: Application) : BaseViewModel(app
         genericHttpAsyncTask.method = BaseConstants.POST
         genericHttpAsyncTask.setUrl(APIs.getUpdateFcmID)
         Helper.applyHeader(apl,genericHttpAsyncTask)
+        val appSignatureHelper = AppSignatureHelper(apl!!)
+
         val jsonObject = JSONObject()
         jsonObject.put("google_fcm_id",UserInfoManager.getInstance(apl).getNotiToken())
         jsonObject.put("user_id",UserInfoManager.getInstance(apl).getAccountId())
+        jsonObject.put("hashKey",appSignatureHelper.appSignatures[0])
         genericHttpAsyncTask.setPostParams(Keys.PUSHNOTIFICATION,jsonObject)
         genericHttpAsyncTask.context = apl.applicationContext
         genericHttpAsyncTask.setCache(false)
