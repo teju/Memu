@@ -34,18 +34,4 @@ public class GenericFragment extends Fragment {
 	public void setTitle(String title){
 		getActivity().setTitle(title);
 	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-
-		if (sChildFragmentManagerField != null) {
-			try {
-				sChildFragmentManagerField.set(this, null);
-			} catch (Exception e) {
-				// Error setting mChildFragmentManager field
-				e.printStackTrace();
-			}
-		}
-	}
 }

@@ -138,7 +138,9 @@ class MockNavigationFragment() : BaseFragment(), OnMapReadyCallback, ProgressCha
     private var cameraOutputUri: Uri? = null
     val PICK_PHOTO_PHOTO = 10010
     lateinit var postUploadDocViewModel: PostUploadDocViewModel
-
+    var pointerLatitude = 0.0
+    var pointerLongitude = 0.0
+    var isFocus = false
     private val callback = RerouteActivityLocationCallback(this)
     private class MyBroadcastReceiver internal constructor(navigation: MapboxNavigation) :
         BroadcastReceiver() {
@@ -705,6 +707,11 @@ class MockNavigationFragment() : BaseFragment(), OnMapReadyCallback, ProgressCha
                             } catch (e  :java.lang.Exception) {
 
                             }
+                            if(isFocus) {
+                                val currentLoc = LatLng(pointerLatitude,pointerLongitude)
+                                mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 28.0))
+                                isFocus = false
+                            }
                         }
                     }
                 })
@@ -1221,8 +1228,10 @@ class MockNavigationFragment() : BaseFragment(), OnMapReadyCallback, ProgressCha
     }
 
     override fun onPointerClicked(latitide: Double, longitude: Double) {
-        val currentLoc = LatLng(latitide,longitude)
-        mapboxMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLoc, 28.0))
+        postMApFeedDataViewModel.loadData()
+        pointerLatitude = latitide
+        pointerLongitude = longitude
+        isFocus = true
     }
 
 

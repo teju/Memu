@@ -7,6 +7,7 @@ import com.iapps.libs.helpers.BaseConstants
 import com.iapps.libs.objects.Response
 import com.memu.etc.*
 import com.memu.modules.GenericResponse
+import com.memu.modules.senRequest.SendRequest
 
 class PostFriendRequestViewModel(application: Application) : BaseViewModel(application) {
 
@@ -16,7 +17,7 @@ class PostFriendRequestViewModel(application: Application) : BaseViewModel(appli
 
     var apl: Application
 
-    var obj: GenericResponse? = null
+    var obj: SendRequest? = null
 
 
     fun getTrigger(): SingleLiveEvent<Integer> {
@@ -47,7 +48,7 @@ class PostFriendRequestViewModel(application: Application) : BaseViewModel(appli
                 if (json != null) {
                     try {
                         val gson = GsonBuilder().create()
-                        obj = gson.fromJson(response!!.content.toString(), GenericResponse::class.java)
+                        obj = gson.fromJson(response!!.content.toString(), SendRequest::class.java)
                         if (obj!!.status.equals(Keys.STATUS_CODE)) {
                             trigger.postValue(NEXT_STEP)
 

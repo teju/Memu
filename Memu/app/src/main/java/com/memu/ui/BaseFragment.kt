@@ -472,7 +472,7 @@ open class BaseFragment : GenericFragment(),GoogleApiClient.ConnectionCallbacks,
         messsage: String?,
         button_positive:String?,
         button_negative: String?,
-        n: NotifyListener,drawable : Int){
+        n: NotifyListener,drawable : Int,userNAme:String,userImage : String){
         try {
             val f = NotifyDialogFragment().apply {
                 this.listener = n
@@ -482,6 +482,8 @@ open class BaseFragment : GenericFragment(),GoogleApiClient.ConnectionCallbacks,
             f.button_positive = button_positive
             f.button_negative = button_negative
             f.image_drawable = drawable
+            f.userName = userNAme
+            f.userImage = userImage
             f.isCancelable = true
             f.show(activity!!.supportFragmentManager, NotifyDialogFragment.TAG)
         } catch (e : Exception){

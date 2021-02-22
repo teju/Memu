@@ -730,6 +730,23 @@
                 </LinearLayout>
 
             </FrameLayout>
+            <Button
+                android:layout_width="match_parent"
+                android:background="@drawable/feedback"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textSize="12dp"
+                android:fontFamily="@font/opensansregular"
+                android:textColor="#1A73E8"
+                android:layout_marginBottom="50dp"
+                android:text="@string/playstore_rating"
+                android:textAllCaps="false"
+                android:padding="15dp"
+                android:id="@+id/playstore_rating"
+                android:layout_alignParentBottom="true"
+                android:layout_height="wrap_content">
+
+            </Button>
 
         </RelativeLayout>
     </ScrollView>

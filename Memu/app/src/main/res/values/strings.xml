@@ -31,6 +31,7 @@
     <string name="resend_OTP_available"> %02d:%02d </string>
     <string name="mid">EYZGKu85499319132530</string>
     <string name="already_have_money">You make  <font color='#1A73E8'>money</font> by earning</string>
+    <string name="playstore_rating">Your feedback shall help us improving the App.\n<b>Click here to share. Thanks!</b></string>
     <string name="ten_points">
         1) Get <font color='#FF0060'>10</font> Reputation Coins for every Kilometre driven.\n\n
         2) Get <font color='#FF0060'>5</font> Reputation Coins for every Alert shared with community..\n\n

@@ -15,6 +15,7 @@ import android.app.AlarmManager
 import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.app.TimePickerDialog
+import android.content.ActivityNotFoundException
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -28,6 +29,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
 import com.iapps.gon.etc.callback.FindRideDialogListener
@@ -115,7 +117,21 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         super.onViewCreated(view, savedInstanceState)
         initUI();
     }
-
+    fun review() {
+        val uri: Uri = Uri.parse("market://details?id="+activity?.packageName)
+        val goToMarket = Intent(Intent.ACTION_VIEW, uri)
+        // To count with Play market backstack, After pressing back button,
+        // to taken back to our application, we need to add following flags to intent.
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+        try {
+            startActivity(goToMarket)
+        } catch (e: ActivityNotFoundException) {
+            startActivity(Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://play.google.com/store/apps/details?id=com.memu")))
+        }
+    }
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if(!hidden) {
@@ -264,7 +280,9 @@ class HomeFragment : BaseFragment() , View.OnClickListener,
         } catch (e : Exception){
 
         }
-
+        playstore_rating.setOnClickListener {
+            review()
+        }
     }
 
     fun spinner() {

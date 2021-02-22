@@ -337,7 +337,7 @@ class SettingsFragment : BaseFragment()  {
                         s.title, s.message!!,
                         getString(R.string.ok),"",object : NotifyListener {
                             override fun onButtonClicked(which: Int) { }
-                        },0)
+                        })
                 })
                 getTrigger().observe(thisFragReference, Observer { state ->
 
@@ -367,7 +367,7 @@ class SettingsFragment : BaseFragment()  {
                         s.title, s.message!!,
                         getString(R.string.ok),"",object : NotifyListener {
                             override fun onButtonClicked(which: Int) { }
-                        },0)
+                        })
                 })
                 getTrigger().observe(thisFragReference, Observer { state ->
 
@@ -379,7 +379,7 @@ class SettingsFragment : BaseFragment()  {
                                     override fun onButtonClicked(which: Int) {
                                         home().proceedDoOnBackPressed()
                                     }
-                                },0)
+                                })
                         }
                     }
                 })

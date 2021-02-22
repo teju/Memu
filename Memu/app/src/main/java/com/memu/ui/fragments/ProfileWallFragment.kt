@@ -465,7 +465,7 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                 isNetworkAvailable.observe(thisFragReference, obsNoInternet)
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
-                        PostUploadDocViewModel.NEXT_STEP -> {
+                        PostFriendRequestViewModel.NEXT_STEP -> {
                             var drawable = R.drawable.myfriends
                             if(type.equals("FL",ignoreCase = true)) {
                                 drawable = R.drawable.followers_noti
@@ -474,7 +474,8 @@ class ProfileWallFragment : BaseFragment() ,View.OnClickListener,
                                 "", postFriendRequestViewModel.obj?.message,
                                 "Great","",object : NotifyListener {
                                     override fun onButtonClicked(which: Int) { }
-                                },drawable)
+                                },drawable,postFriendRequestViewModel.obj?.user_detail?.name!!,
+                                postFriendRequestViewModel.obj?.user_detail?.photo?.profile_path!!)
                         }
                     }
                 })

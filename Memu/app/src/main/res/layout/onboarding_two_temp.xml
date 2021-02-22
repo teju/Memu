@@ -191,7 +191,7 @@
                             android:layout_height="wrap_content">
                             <EditText
                                 android:layout_width="match_parent"
-                                android:hint="Registration No\n(KA 01 JE 1111)"
+                                android:hint="Registration No (Optional)\n(KA 01 JE 1111)"
                                 android:paddingTop="7dp"
                                 android:fontFamily="@font/opensanslight"
                                 android:textColor="@color/textcolur"
@@ -258,7 +258,7 @@
                             android:layout_height="wrap_content">
                             <EditText
                                 android:layout_width="match_parent"
-                                android:hint="Driving License No\n(KA43 202000001111)"
+                                android:hint="DL No (Optional)\n(KA43 202000001111)"
                                 android:paddingTop="7dp"
                                 android:textColor="@color/textcolur"
                                 android:fontFamily="@font/opensanslight"

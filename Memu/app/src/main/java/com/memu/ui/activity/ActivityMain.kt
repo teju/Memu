@@ -108,7 +108,7 @@ class ActivityMain() : AppCompatActivity(){
                 val obj = gson.fromJson(
                     intent.getExtras()?.getString("body"),
                     NotificationResponse::class.java)
-                println("Notification_received showDialog " +currentFragment)
+                println("Notification_received showDialog " +obj)
                 if(obj.type.equals("map_alerts") ) {
                     if(currentFragment is MockNavigationFragment) {
                         if (!BaseHelper.isEmpty(intent.getExtras()?.getString("message"))) {
@@ -175,10 +175,16 @@ class ActivityMain() : AppCompatActivity(){
                     } else if (obj.type.equals("FL", ignoreCase = true)) {
                         drawable = R.drawable.followers_noti
                     }
+                    var name = ""
+                    var image =""
+                    if(!BaseHelper.isEmpty(obj.name)) {
+                        name = obj.name
+                        image = obj.photo.profile_path
+                    }
                     showNotifyDialog(
                         intent.getExtras()?.getString("title"),
                         intent.getExtras()?.getString("message"),
-                        btn_positive, btn_negative, object : NotifyListener {
+                        btn_positive, btn_negative, name,image,object : NotifyListener {
                             override fun onButtonClicked(which: Int) {
                                 if (obj.type.equals("find_ride") || obj.type.equals("offer_ride")) {
                                     var trip_id = obj.trip_id
@@ -286,6 +292,8 @@ class ActivityMain() : AppCompatActivity(){
         messsage: String?,
         button_positive:String?,
         button_negative: String?,
+        name: String?,
+        userImage: String?,
         n: NotifyListener,drawable : Int){
         try {
             val f = NotifyDialogFragment().apply {
@@ -297,6 +305,8 @@ class ActivityMain() : AppCompatActivity(){
             f.button_negative = button_negative
             f.image_drawable = drawable
             f.isCancelable = true
+            f.userName = name!!
+            f.userImage = userImage!!
             f.show(supportFragmentManager, NotifyDialogFragment.TAG)
         } catch (e : Exception){
             System.out.println("Notification_received Exception " +e.toString())
@@ -622,7 +632,7 @@ class ActivityMain() : AppCompatActivity(){
                 errorMessage.observe(thisFragReference, Observer { s ->
                     showNotifyDialog(
                         s.title, s.message!!,
-                        getString(R.string.ok),"",object : NotifyListener {
+                        getString(R.string.ok),"","","",object : NotifyListener {
                             override fun onButtonClicked(which: Int) { }
                         },0)
                 })
@@ -658,7 +668,7 @@ class ActivityMain() : AppCompatActivity(){
                 errorMessage.observe(thisFragReference, Observer { s ->
                     showNotifyDialog(
                         s.title, s.message!!,
-                        getString(R.string.ok),"",object : NotifyListener {
+                        getString(R.string.ok),"","","",object : NotifyListener {
                             override fun onButtonClicked(which: Int) { }
                         },0)
                 })
@@ -687,7 +697,7 @@ class ActivityMain() : AppCompatActivity(){
                 errorMessage.observe(thisFragReference, Observer { s ->
                     showNotifyDialog(
                         s.title, s.message!!,
-                        getString(R.string.ok),"",object : NotifyListener {
+                        getString(R.string.ok),"","","",object : NotifyListener {
                             override fun onButtonClicked(which: Int) { }
                         },0)
                 })
@@ -696,7 +706,7 @@ class ActivityMain() : AppCompatActivity(){
                         PostacceptRejectViewModel.NEXT_STEP -> {
                             showNotifyDialog(
                                 "Request Status", postacceptRejectViewModel.obj?.message,
-                                getString(R.string.ok),"",object : NotifyListener {
+                                getString(R.string.ok),"","","",object : NotifyListener {
                                     override fun onButtonClicked(which: Int) {
 
                                     }

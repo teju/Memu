@@ -11,6 +11,7 @@ import android.widget.RelativeLayout
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.libs.helpers.BaseHelper
 import com.memu.R
+import com.memu.etc.Helper
 import kotlinx.android.synthetic.main.generic_dialog.*
 
 
@@ -30,6 +31,8 @@ class NotifyDialogFragment : BaseDialogFragment() {
     var useHtml = false
     lateinit var listener: NotifyListener
     var image_drawable = 0
+    var userName = ""
+    var userImage = ""
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         v = inflater.inflate(DATEPICKERFRAGMENT_LAYOUT, container, false)
         return v
@@ -85,6 +88,16 @@ class NotifyDialogFragment : BaseDialogFragment() {
             vw_text.layoutParams = params
             vw_text.textAlignment = View.TEXT_ALIGNMENT_CENTER
             vw_text.gravity = Gravity.CENTER_HORIZONTAL
+        }
+        if(!BaseHelper.isEmpty(userName)) {
+            user_name.text = userName
+            lluserInfo.visibility = View.VISIBLE
+        }
+        try {
+            Helper.loadImage(activity!!,
+                userImage,profile_pic,R.drawable.user_default)
+        } catch (e : java.lang.Exception){
+
         }
     }
 
