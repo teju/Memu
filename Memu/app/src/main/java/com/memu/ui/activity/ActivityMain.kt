@@ -88,7 +88,7 @@ class ActivityMain() : AppCompatActivity(){
 
             }, 2 * 2000
         ) // wait for 5 s
-        //BaseHelper.triggerNotifLog(this);
+        BaseHelper.triggerNotifLog(this);
         setAcceptRejectAPIObserver()
         val mContext = this.getBaseContext();
         MapStrictMode.setStrictModeEnabled(true)
