@@ -240,9 +240,8 @@ class MockNavigationFragment() : BaseFragment(), OnMapReadyCallback, ProgressCha
         mapView!!.getMapAsync(this)
         postMApFeedDataViewModel.loadData()
         val context = activity!!
-        val customNotification = CustomNavigationNotification(context)
         val options = MapboxNavigationOptions.builder()
-            .navigationNotification(customNotification)
+          
             .build()
 
 

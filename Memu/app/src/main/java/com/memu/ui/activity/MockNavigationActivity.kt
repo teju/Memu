@@ -116,9 +116,9 @@ class MockNavigationActivity : AppCompatActivity(), OnMapReadyCallback,
         mapView!!.getMapAsync(this)
 
         val context = applicationContext
-        val customNotification = CustomNavigationNotification(context)
+        //val customNotification = CustomNavigationNotification(context)
         val options = MapboxNavigationOptions.builder()
-            .navigationNotification(customNotification)
+          //  .navigationNotification(customNotification)
             .build()
 
         navigation = MapboxNavigation(this, Mapbox.getAccessToken()!!, options)
@@ -135,7 +135,7 @@ class MockNavigationActivity : AppCompatActivity(), OnMapReadyCallback,
                     )
                 ).build()
         )
-        customNotification.register(MyBroadcastReceiver(navigation!!), context)
+       // customNotification.register(MyBroadcastReceiver(navigation!!), context)
         endButton!!.setOnClickListener { onStartRouteClick() }
 //        newLocationFab!!.setOnClickListener { onNewLocationClick() }
     }
