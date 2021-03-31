@@ -10,7 +10,7 @@ import com.memu.modules.GenericResponse
 import com.memu.modules.endnavigation.EndNavigationResponse
 import com.memu.modules.endnavigationid.EndNavigationIDResponse
 
-class PostCustomerEndNavigationIDViewModel(application: Application) : BaseViewModel(application) {
+class   PostCustomerEndNavigationIDViewModel(application: Application) : BaseViewModel(application) {
 
     private val trigger = SingleLiveEvent<Integer>()
 

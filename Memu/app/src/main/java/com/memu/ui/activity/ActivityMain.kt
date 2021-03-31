@@ -179,7 +179,11 @@ class ActivityMain() : AppCompatActivity(){
                     var image =""
                     if(!BaseHelper.isEmpty(obj.name)) {
                         name = obj.name
-                        image = obj.photo.profile_path
+                        try {
+                            image = obj.photo.profile_path
+                        } catch (e:Exception) {
+                            
+                        }
                     }
                     showNotifyDialog(
                         intent.getExtras()?.getString("title"),
