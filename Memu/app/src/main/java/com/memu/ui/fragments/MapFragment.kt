@@ -450,8 +450,8 @@ class MapFragment : BaseFragment() , View.OnClickListener, PermissionsListener ,
         call: Call<DirectionsResponse>,
         response: Response<DirectionsResponse>)
     {
-        ld.hide()
         try {
+            ld.hide()
             if (response.isSuccessful
                 && response.body() != null
                 && !response.body()!!.routes().isEmpty()) {

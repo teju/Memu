@@ -278,4 +278,34 @@ open class Helper  {
         }
         return obj
     }
+    fun CurrentLocation(context : Context) : JSONObject {
+        val obj = JSONObject()
+
+        try {
+            val gpsTracker = GPSTracker(context!!)
+
+            obj.put("country", getAddress(context)?.get(0)?.countryName)
+
+            obj.put("state", getAddress(context)?.get(0)?.getAdminArea())
+
+            obj.put("city", getAddress(context)?.get(0)?.locality)
+            if(BaseHelper.isEmpty( getAddress(context)?.get(0)?.subLocality)) {
+                obj.put("location", getAddress(context)?.get(0)?.locality)
+            } else{
+                obj.put("location", getAddress(context)?.get(0)?.subLocality)
+            }
+            obj.put("pincode", getAddress(context)?.get(0)?.postalCode)
+            obj.put("lattitude", gpsTracker.latitude.toString())
+            obj.put("longitude", gpsTracker.longitude.toString())
+            obj.put("formatted_address", getAddress(context)?.get(0)?.getAddressLine(0))
+            obj.put("address_line1", getAddress(context)?.get(0)?.getAddressLine(0))
+            obj.put("type", "current_location")
+
+
+        } catch (e : java.lang.Exception){
+
+        }
+        return obj
+    }
+
 }
