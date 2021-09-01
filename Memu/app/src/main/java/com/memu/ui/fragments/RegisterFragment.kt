@@ -1204,8 +1204,13 @@ class RegisterFragment : BaseFragment() , View.OnClickListener,View.OnTouchListe
                             UserInfoManager.getInstance(activity!!).saveReferralCode(postUserSignupViewModel.obj?.referel_code!!)
                             UserInfoManager.getInstance(activity!!).saveAccountId(
                                 postUserSignupViewModel.obj?.user_id.toString()!!)
-                            home().setFragment(ProfilePicUploadFragment())
-
+                            if(UserInfoManager.getInstance(activity!!).getFirstTime()) {
+                                home().setFragment(TermsConditionsFragment().apply {
+                                    isLogin = false
+                                })
+                            } else {
+                                home().setFragment(ProfilePicUploadFragment())
+                            }
                         }
                     }
                 })

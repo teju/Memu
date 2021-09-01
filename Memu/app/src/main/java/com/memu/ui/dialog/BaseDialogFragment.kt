@@ -41,7 +41,7 @@ open class BaseDialogFragment : DialogFragment() {
         }
 
         dialog?.let {
-            it.window.setBackgroundDrawableResource(R.color.transparent)
+            it.window?.setBackgroundDrawableResource(R.color.transparent)
         }
 
 

@@ -15,15 +15,13 @@ import android.os.Handler
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.franmontiel.localechanger.LocaleChanger
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.credentials.HintRequest
-import com.google.android.gms.common.api.GoogleApiClient
 import com.google.gson.GsonBuilder
 import com.iapps.gon.etc.callback.NotifyListener
 import com.iapps.gon.etc.callback.NotifyPointerListener
@@ -42,6 +40,7 @@ import com.memu.ui.dialog.NotifyDialogFragment
 import com.memu.ui.fragments.FollowersRequestFragment
 import com.memu.ui.fragments.HomeFragment
 import com.memu.ui.fragments.MainFragment
+import com.memu.ui.fragments.TermsConditionsFragment
 import com.memu.webservices.PostAcceptFriendRequestViewModel
 import com.memu.webservices.PostLikeDisLikeRequestViewModel
 import com.memu.webservices.PostacceptRejectViewModel
@@ -71,7 +70,7 @@ class ActivityMain() : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Paper.init(this);
-
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         mReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 showDialog(intent)
@@ -431,7 +430,14 @@ class ActivityMain() : AppCompatActivity(){
     }
     fun triggerMainProcess(){
         if(!BaseHelper.isEmpty(UserInfoManager.getInstance(this).authToken))
-            setFragment(HomeFragment())
+            if(UserInfoManager.getInstance(this).getFirstTime()) {
+                setFragment(TermsConditionsFragment().apply {
+                    isLogin = true
+                })
+            } else {
+                setFragment(HomeFragment())
+
+            }
         else
             setFragment(MainFragment())
     }

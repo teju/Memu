@@ -12,6 +12,7 @@ class UserInfoManager private constructor() {
     private val REFERRAL_CODE = "referral_code"
     private val KEY_DEVICE_TOKEN = "key_device_token"
     private val KEY_PROFILE_PIC = "key_profile_pic"
+    private val KEY_FIRST_TIME = "key_first_time"
 
     private var accessToken: String? = null
     private var accountName: String? = ""
@@ -22,6 +23,7 @@ class UserInfoManager private constructor() {
     private var deviceToken: String? = ""
     private var otpresendduration: Long? = 0
     private var otpexpirtytimestam: Long? = 0
+    private var first_time: Boolean? = true
 
     private val OTPRESENDDURATIONSAVED = "otp_resend_period_saved"
     private val OTPEXPIRTYTIMESTAMP = "otp_expiry_timestamp"
@@ -66,6 +68,12 @@ class UserInfoManager private constructor() {
         editor.putString(KEY_ACCOUNT_ID, accountId)
         editor.commit()
     }
+    fun saveFirstTime(first_time: Boolean) {
+        this.first_time = first_time
+        val editor = this.prefs!!.edit()
+        editor.putBoolean(KEY_FIRST_TIME, first_time)
+        editor.commit()
+    }
     fun saveProfilePic(profilePic: String) {
         this.profilePic = accountId
         val editor = this.prefs!!.edit()
@@ -75,6 +83,10 @@ class UserInfoManager private constructor() {
     fun getProfilePic(): String {
         this.profilePic = this.prefs!!.getString(KEY_PROFILE_PIC, null)
         return profilePic!!
+    }
+    fun getFirstTime(): Boolean {
+        this.first_time = this.prefs!!.getBoolean(KEY_FIRST_TIME, true)
+        return first_time!!
     }
     fun getAccountId(): String {
         if (accountId == null) {
@@ -128,7 +140,7 @@ class UserInfoManager private constructor() {
 
     }
     fun getNotiToken(): String {
-        return this.prefs!!.getString(KEY_DEVICE_TOKEN, "")
+        return this.prefs!!.getString(KEY_DEVICE_TOKEN, "").toString()
     }
     fun logout() {
         saveAuthToken(null)

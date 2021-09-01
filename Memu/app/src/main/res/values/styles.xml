@@ -11,6 +11,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="popupMenuStyle">@style/MyPopupMenu</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="29">false</item>
 
 
     </style>

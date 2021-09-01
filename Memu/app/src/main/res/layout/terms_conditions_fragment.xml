@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="200dp"
+                android:src="@drawable/thumb_up_memu_logo"
+                android:id="@+id/memu_logo"
+                android:layout_marginTop="18dp"
+                android:layout_gravity="end"
+                android:layout_height="50dp">
+            </ImageView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:textSize="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/opensansbold"
+                android:text="Terms &amp; Conditions!"
+                android:textColor="@color/DarkBlue"
+                android:id="@+id/tv2"
+                android:layout_below="@+id/memu_logo"
+                android:layout_height="wrap_content">
+            </TextView>
+            <com.github.barteksc.pdfviewer.PDFView
+                android:layout_width="match_parent"
+                android:id="@+id/pdfv"
+                android:layout_height="match_parent">
+            </com.github.barteksc.pdfviewer.PDFView>
+
+        </LinearLayout>
+
+    </ScrollView>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/orange_button"
+        android:id="@+id/terms_conditions"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:fontFamily="@font/opensanssemibold"
+        android:textSize="20dp"
+        android:text="I agree"
+        android:textColor="@color/White"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="50dp">
+    </Button>
+
+</RelativeLayout>

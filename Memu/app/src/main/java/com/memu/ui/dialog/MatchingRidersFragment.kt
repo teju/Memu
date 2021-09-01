@@ -46,7 +46,7 @@ class MatchingRidersFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dialog?.let {
-            it.window.setBackgroundDrawableResource(R.color.transparent)
+            it.window?.setBackgroundDrawableResource(R.color.transparent)
             //it.window.setBackgroundDrawable(InsetDrawable(ColorDrawable(Color.TRANSPARENT), 20))
 
         }

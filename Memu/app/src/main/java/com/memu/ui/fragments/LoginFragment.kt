@@ -153,7 +153,14 @@ class LoginFragment : BaseFragment() , View.OnClickListener {
                 getTrigger().observe(thisFragReference, Observer { state ->
                     when (state) {
                         PostOtpViewModel.NEXT_STEP -> {
-                            home().setFragment(HomeFragment())
+                            if(UserInfoManager.getInstance(activity!!).getFirstTime()) {
+                                home().setFragment(TermsConditionsFragment().apply {
+                                    isLogin = true
+                                })
+                            } else {
+                                home().setFragment(HomeFragment())
+                            }
+
                             System.out.println("loadImage "+postOtpViewModel.obj?.photo!!.original_path)
 
                             UserInfoManager.getInstance(activity!!).saveProfilePic(

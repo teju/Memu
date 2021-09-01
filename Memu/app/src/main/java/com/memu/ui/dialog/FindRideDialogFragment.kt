@@ -55,7 +55,7 @@ class FindRideDialogFragment : BaseDialogFragment() {
         }
 
         val dataAdapter = ArrayAdapter<String>(
-            activity,
+            activity!!,
             android.R.layout.simple_spinner_item, list
         )
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
