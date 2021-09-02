@@ -83,8 +83,8 @@ allprojects {
     project.ext.myMinSdkVersion = 21
     project.ext.myTargetSdkVersion = 29
 
-    project.ext.myVersionName = "1.2.0"
-    project.ext.myVersionCode = 4
+    project.ext.myVersionName = "1.2.1"
+    project.ext.myVersionCode = 5
 
     project.ext.androidxversion = "1.0.2"
     project.ext.googleServiceVersion = "17.0.0"
